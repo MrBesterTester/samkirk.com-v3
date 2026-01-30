@@ -201,13 +201,6 @@ description: Commit and push to remote
 Review all staged and unstaged changes using git status and git diff. Stage appropriate files (exclude .env, credentials, and other secrets). Write a clear, descriptive commit message summarizing the work. Commit and push to the remote repository.
 ```
 
-  - [x] **[AI] Create project-local git workflow commands in `/.cursor/commands/` (visibility aid)**  
-    Notes:
-    - Not required by the methodology (which uses global commands), but helpful so commands are discoverable inside the repo too.
-    - Files created:
-      - `/.cursor/commands/git-commit-local.md`
-      - `/.cursor/commands/git-commit-push.md`
-
 ---
 
 ### Phase 0 Summary of Work: Slash Commands Created
