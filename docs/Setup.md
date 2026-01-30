@@ -88,12 +88,12 @@ git commit -m "Initial project scaffold"
 ```bash
 git branch --show-current
 git branch -M main
-git remote set-url origin "https://github.com/MrBesterTester/samkirk.com-v3.git"
+git remote set-url origin "https://github.com/<YOUR_USERNAME>/<YOUR_REPO>.git"
 git push -u origin main
 ```
 
     Evidence:
-    - `origin` is set to `https://github.com/MrBesterTester/samkirk.com-v3.git`
+    - `origin` is set (verify with `git remote -v`)
     - current branch is `main`
 
 - [x] **0.3 [AI] Create Cursor slash commands (project + global)**
