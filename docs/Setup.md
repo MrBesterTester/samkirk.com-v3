@@ -2,6 +2,8 @@
 
 This file is the **meta-process checklist** derived from the section **“The Complete Workflow”** in `docs/Dylan-Davis-50plus-method.md`. It tracks project setup + the three-document workflow (Spec → Blueprint → TODO) + the development loop.
 
+**Model reminders:** Each phase below is annotated with the **recommended model** from the methodology. When starting or continuing a phase, the assistant should remind you which model to use for that phase.
+
 **Checkbox meaning**
 - `- [x]` done in *this* workspace (or done by us in this session)
 - `- [ ]` not done yet / to do
@@ -39,6 +41,8 @@ This file is the **meta-process checklist** derived from the section **“The Co
 ---
 
 ### Phase 0: Minimal Setup (Pre-Specification)
+
+**Model:** Any
 
 - [x] **0.1 [You + AI] Create project folder and load methodology**
   - [x] **[You] Create project folder**  
@@ -209,21 +213,26 @@ Review all staged and unstaged changes using git status and git diff. Stage appr
 ### Phase 0 Summary of Work: Slash Commands Created
 
 **Project slash commands (in this repo: `/.cursor/commands/`)**
-- `/create-spec` → `/.cursor/commands/create-spec.md`
-- `/create-blueprint` → `/.cursor/commands/create-blueprint.md`
-- `/create-todo` → `/.cursor/commands/create-todo.md`
-- `/start-step` → `/.cursor/commands/start-step.md`
-- `/continue-step` → `/.cursor/commands/continue-step.md`
-- `/git-commit-local` → `/.cursor/commands/git-commit-local.md` *(project-local visibility copy)*
-- `/git-commit-push` → `/.cursor/commands/git-commit-push.md` *(project-local visibility copy)*
+- `/create-spec` → `create-spec.md` — Start the specification interview (one question at a time); outputs `docs/SPECIFICATION.md`.
+- `/create-blueprint` → `create-blueprint.md` — Generate blueprint from spec; outputs `docs/BLUEPRINT.md`.
+- `/create-todo` → `create-todo.md` — Generate TODO checklist from blueprint; outputs `docs/TODO.md`.
+- `/start-step` → `start-step.md` — Start a new implementation step from the TODO checklist.
+- `/continue-step` → `continue-step.md` — Continue to the next step in the TODO checklist.
+- `/git-commit-local` → `git-commit-local.md` *(project copy)* — Stage, message, and commit locally; do not push.
+- `/git-commit-push` → `git-commit-push.md` *(project copy)* — Commit and push to remote.
 
 **Global slash commands (for all projects: `~/.cursor/commands/`)**
-- `/git-commit-local` → `~/.cursor/commands/git-commit-local.md`
-- `/git-commit-push` → `~/.cursor/commands/git-commit-push.md`
+- `/git-commit-local` → `git-commit-local.md` — Stage, message, and commit locally; do not push.
+- `/git-commit-push` → `git-commit-push.md` — Commit and push to remote.
+
+**Project Cursor rule (in this repo: `/.cursor/rules/`)**
+- `phase-model-reminder.mdc` — Reminds you which model to use when starting or continuing a phase; applies automatically in every chat (including new sessions)—no slash command needed.
 
 ---
 
 ### Phase 1: Specification (output: `docs/SPECIFICATION.md`)
+
+**Model:** ChatGPT Auto Mode
 
 - [ ] **1.1 [You + AI] Complete specification interview (one question at a time)**
   Steps:
@@ -239,6 +248,8 @@ Review all staged and unstaged changes using git status and git diff. Stage appr
 ---
 
 ### Phase 1.5: Project-Specific Setup (Post-Specification)
+
+**Model:** Any
 
 - [ ] **1.5.1 [AI] Update `.gitignore` for the stack chosen in `docs/SPECIFICATION.md`**
   Steps:
@@ -382,6 +393,8 @@ alwaysApply: true
 
 ### Phase 2: Blueprint (output: `docs/BLUEPRINT.md`)
 
+**Model:** Claude Opus 4.5
+
 - [ ] **2.1 [You + AI] Generate blueprint from `docs/SPECIFICATION.md`**
   Steps:
   - Ensure `docs/SPECIFICATION.md` exists (Phase 1).
@@ -397,6 +410,8 @@ alwaysApply: true
 
 ### Phase 3: TODO Checklist (output: `docs/TODO.md`)
 
+**Model:** Claude Opus 4.5 (same session as Phase 2)
+
 - [ ] **3.1 [AI] Generate TODO checklist from `docs/BLUEPRINT.md`**
   Steps:
   - Ensure `docs/BLUEPRINT.md` exists (Phase 2).
@@ -410,6 +425,8 @@ alwaysApply: true
 ---
 
 ### Phase 4: Development Loop (drives implementation; tracked in `docs/TODO.md`)
+
+**Model:** As specified in `docs/TODO.md` for each task (e.g. Opus 4.5, Codex/GPT-5.2, Gemini 3 Pro, Sonnet 4)
 
 - [ ] **4.1 [You + AI] Start first implementation step in a fresh chat**
   Steps:
@@ -434,6 +451,8 @@ alwaysApply: true
 
 ### Phase 5: Error Resolution (ongoing during Phase 4)
 
+**Model:** Any (match to task: debugging → Gemini 3 Pro; quick fixes → Sonnet 4 or fast model)
+
 - [ ] **5.1 [You + AI] Fix errors and embed lessons**
   Steps:
   - When an error occurs, persist until it’s fixed (don’t abandon the approach prematurely).
@@ -446,6 +465,8 @@ alwaysApply: true
 ---
 
 ### Phase 6: Commit and Wrap Up (ongoing during development)
+
+**Model:** Any
 
 - [ ] **6.1 [You + AI] Commit after milestones**
   Steps:
