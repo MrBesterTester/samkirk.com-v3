@@ -25,14 +25,16 @@ This file is the **meta-process checklist** derived from the section **“The Co
 
 - [x] **[You] Cursor IDE installed** (you’re using Cursor right now)
 - [x] **[You] ChatGPT access for the spec interview** (you’re using GPT-5.2 in Cursor right now)
-- [ ] **[You] Verify access to Claude Opus 4.5 (needed for blueprint generation)**  
+- [x] **[You] Verify access to Claude Opus 4.5 (needed for blueprint generation)**  
   Steps:
   - Confirm you can select **Claude Opus 4.5** in Cursor (or another tool you’ll use for blueprint generation).
   - If not available, pick an alternative high-end reasoning model (document which) and use it consistently for `docs/BLUEPRINT.md`.
-- [ ] **[You] App idea clearly in mind**  
+-  Evidence: You confirmed Opus 4.5 access.
+- [x] **[You] App idea clearly in mind**  
   Steps:
   - Write a 3–10 sentence “idea blurb” (problem, user, core workflow, success criteria).
   - You can paste this into `/create-spec` when ready.
+-  Evidence: You drafted a proposal file and will provide it during Phase 1.
 
 ---
 
@@ -50,7 +52,7 @@ This file is the **meta-process checklist** derived from the section **“The Co
   - [x] **[AI] Review methodology**  
     Evidence: assistant read and extracted “The Complete Workflow” and is converting it into this checklist.
 
-- [ ] **0.2 [AI] Initialize Git**
+- [x] **0.2 [AI] Initialize Git**
   - [x] **[AI] Create `.gitignore` (minimal, language-agnostic)**  
     Steps:
     - Create a file at the repo root: `/.gitignore`
@@ -70,7 +72,7 @@ This file is the **meta-process checklist** derived from the section **“The Co
 git init
 ```
 
-  - [ ] **[AI] Create initial commit**  
+  - [x] **[AI] Create initial commit**  
     Steps (run from repo root):
 
 ```bash
@@ -78,15 +80,21 @@ git add .
 git commit -m "Initial project scaffold"
 ```
 
-  - [ ] **[You] (Optional) Create a remote and push**  
-    Steps (example):
-    - Create a repo on GitHub (private/public as desired)
-    - Then:
+    Evidence: initial commit exists (`d4914d1`).
+
+  - [x] **[You] (Optional) Create a remote and push**  
+    Steps (run from repo root):
 
 ```bash
-git remote add origin <your-repo-url>
+git branch --show-current
+git branch -M main
+git remote set-url origin "https://github.com/MrBesterTester/samkirk.com-v3.git"
 git push -u origin main
 ```
+
+    Evidence:
+    - `origin` is set to `https://github.com/MrBesterTester/samkirk.com-v3.git`
+    - current branch is `main`
 
 - [x] **0.3 [AI] Create Cursor slash commands (project + global)**
 
@@ -195,6 +203,23 @@ Review all staged and unstaged changes using git status and git diff. Stage appr
     - Files created:
       - `/.cursor/commands/git-commit-local.md`
       - `/.cursor/commands/git-commit-push.md`
+
+---
+
+### Phase 0 Summary of Work: Slash Commands Created
+
+**Project slash commands (in this repo: `/.cursor/commands/`)**
+- `/create-spec` → `/.cursor/commands/create-spec.md`
+- `/create-blueprint` → `/.cursor/commands/create-blueprint.md`
+- `/create-todo` → `/.cursor/commands/create-todo.md`
+- `/start-step` → `/.cursor/commands/start-step.md`
+- `/continue-step` → `/.cursor/commands/continue-step.md`
+- `/git-commit-local` → `/.cursor/commands/git-commit-local.md` *(project-local visibility copy)*
+- `/git-commit-push` → `/.cursor/commands/git-commit-push.md` *(project-local visibility copy)*
+
+**Global slash commands (for all projects: `~/.cursor/commands/`)**
+- `/git-commit-local` → `~/.cursor/commands/git-commit-local.md`
+- `/git-commit-push` → `~/.cursor/commands/git-commit-push.md`
 
 ---
 
