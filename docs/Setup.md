@@ -218,8 +218,6 @@ Review all staged and unstaged changes using git status and git diff. Stage appr
 - `/create-todo` → `create-todo.md` — Generate TODO checklist from blueprint; outputs `docs/TODO.md`.
 - `/start-step` → `start-step.md` — Start a new implementation step from the TODO checklist.
 - `/continue-step` → `continue-step.md` — Continue to the next step in the TODO checklist.
-- `/git-commit-local` → `git-commit-local.md` *(project copy)* — Stage, message, and commit locally; do not push.
-- `/git-commit-push` → `git-commit-push.md` *(project copy)* — Commit and push to remote.
 
 **Global slash commands (for all projects: `~/.cursor/commands/`)**
 - `/git-commit-local` → `git-commit-local.md` — Stage, message, and commit locally; do not push.
