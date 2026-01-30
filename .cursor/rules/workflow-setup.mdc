@@ -1,0 +1,26 @@
+---
+description: Workflow setup guardrails (Dylan Davis method)
+alwaysApply: true
+---
+
+# Workflow Setup Guardrails
+
+These rules prevent repeatedly missing (or duplicating) setup steps when starting a new project using `docs/Dylan-Davis-50plus-method.md`.
+
+## Slash commands: global vs project
+
+- Before creating **global** slash commands, always **check whether they already exist** in `~/.cursor/commands/`.
+- If global commands already exist, **do not overwrite them** unless the user explicitly asks to replace/update them.
+- If global commands are missing, create them.
+- Prefer creating **project** commands in `/.cursor/commands/` every new repo (safe and expected).
+
+## Required global git commands to verify (and create if missing)
+
+- `~/.cursor/commands/git-commit-local.md`
+- `~/.cursor/commands/git-commit-push.md`
+
+## Setup checklist hygiene
+
+- When you perform a setup step, immediately update `docs/Setup.md`:
+  - mark the checkbox done
+  - add a short “evidence” note (file exists / command ran)
