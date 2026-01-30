@@ -29,12 +29,12 @@ This file is the **meta-process checklist** derived from the section **“The Co
   Steps:
   - Confirm you can select **Claude Opus 4.5** in Cursor (or another tool you’ll use for blueprint generation).
   - If not available, pick an alternative high-end reasoning model (document which) and use it consistently for `docs/BLUEPRINT.md`.
--  Evidence: You confirmed Opus 4.5 access.
+  - Evidence: You confirmed Opus 4.5 access.
 - [x] **[You] App idea clearly in mind**  
   Steps:
   - Write a 3–10 sentence “idea blurb” (problem, user, core workflow, success criteria).
   - You can paste this into `/create-spec` when ready.
--  Evidence: You drafted a proposal file and will provide it during Phase 1.
+  - Evidence: You drafted a proposal file and will provide it during Phase 1.
 
 ---
 
