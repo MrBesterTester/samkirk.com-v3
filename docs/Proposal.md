@@ -32,7 +32,20 @@ The main feature of www.samkirk.com is set of chatbot functions:  "How Do I Fit?
 - **Interview Me Now** - Allows visitor to ask questions and make requests about my career and only about my career using a very detailed master resume as a RAG document.
     - See "/Users/sam/Library/Mobile Documents/com~apple~CloudDocs/Desktop/SAK Consulting/Resumes/Current Resumes/current_resume.md"
     as software engineering controlled document (but w/o a github repo).
-A.ll discussions and artifacts can be downloadable in a choice of formats: .docx, .md, .pdf and .html (possibly with .svg drawings)
+All discussions and artifacts can be downloadable in a choice of formats: .docx, .md, .pdf and .html (possibly with .svg drawings)
+
+Two important aspects of the implementaton of the aforementioned chatbot service are
+- cost control, such as quota limitations
+- security against both abusive and malicious users who try to run up the bill
+
+I have found that implementing an LLM service with wwww.aistudio.google.com gives me a very good model, Gemini Pro 3 Preview, but doesn't afford any quota protections, only alert levels in the billing service that pays for it.  GCP in general (outside of www.aistudio.google.com) allows for a kill switch with customized, rather awkward "suicide code". Having hosted www.photo-fun.samkirk.com on Vercel, I can rate limitation. But that's it.
+- Please see the project, /Users/sam/Projects/photo-fun5 for details.
+
+I can't say what other LLM providers such OpenAI and Anthropic provide for quota limits. So I want you to research that thoroughly. They both have excellent models. However, in the past I nearly got killed on API charges in Cursor developing:
+- /Users/sam/Projects/JobHunterAI-Claude
+which turned out to a big sloppy mess, i.e., a murky failure. I would be disappointed if the fastidious 
+
+The quota limits (as well as rate limitation) needs to be done down to the granularity of the API key (project level). Doing those safeguards at the account level doesn't work because I do many other projects and activities with all those major LLM vendors. I am not interested at all in self-hosting an open source model on my own. I am happy with the rate limitation the Vercel offers wherein I can specify as little as 10 requests in a 5 minute window. Even that however, may put me at 4x my budget of only $20 per month, viz., $80 / month at which www.aistudio.google.com will purported deny service.
 
 ## Other References
 This proposal is the third version of my personal website, www.samkirk.com. This is why the name of this project's root folder is samkirk.com-v3. The first version is on-line and is the one I've told you NOT to look at. There's a second, partial version here:
