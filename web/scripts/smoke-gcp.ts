@@ -35,6 +35,8 @@ const SMOKE_TEST_PREFIX = "_smoke_test";
 const SMOKE_TEST_GCS_PATH = `${SMOKE_TEST_PREFIX}/test-file.txt`;
 const SMOKE_TEST_FIRESTORE_COLLECTION = `${SMOKE_TEST_PREFIX}`;
 const SMOKE_TEST_FIRESTORE_DOC = "test-doc";
+const SMOKE_TEST_SESSION_COLLECTION = "sessions";
+const SMOKE_TEST_SESSION_PREFIX = "_smoke_session_";
 
 function log(message: string, success?: boolean): void {
   const prefix =
@@ -147,6 +149,74 @@ async function main(): Promise<void> {
     log("Cleanup successful", true);
   } catch (error) {
     log(`Firestore test failed: ${error instanceof Error ? error.message : error}`, false);
+    process.exit(1);
+  }
+
+  // Step 4: Test Session Creation (Firestore-based)
+  console.log("\n--- Session Test ---\n");
+
+  // Generate a smoke test session ID
+  const { randomBytes } = await import("crypto");
+  const testSessionId = `${SMOKE_TEST_SESSION_PREFIX}${randomBytes(16).toString("base64url")}`;
+  const sessionDocRef = firestore
+    .collection(SMOKE_TEST_SESSION_COLLECTION)
+    .doc(testSessionId);
+
+  const now = Date.now();
+  const sessionTtlMs = 7 * 24 * 60 * 60 * 1000; // 7 days
+  const sessionDoc = {
+    createdAt: Timestamp.fromMillis(now),
+    expiresAt: Timestamp.fromMillis(now + sessionTtlMs),
+    ipHash: "smoke_test_ip_hash",
+  };
+
+  try {
+    log(`Creating session ${testSessionId.substring(0, 30)}...`);
+    await sessionDocRef.set(sessionDoc);
+    log("Session write successful", true);
+
+    log("Reading session back...");
+    const sessionSnapshot = await sessionDocRef.get();
+
+    if (!sessionSnapshot.exists) {
+      throw new Error("Session document not found after write");
+    }
+
+    const sessionData = sessionSnapshot.data();
+    if (!sessionData?.createdAt || !sessionData?.expiresAt) {
+      throw new Error("Session document missing required fields");
+    }
+
+    // Verify TTL calculation
+    const createdAtMs = sessionData.createdAt.toMillis();
+    const expiresAtMs = sessionData.expiresAt.toMillis();
+    const actualTtl = expiresAtMs - createdAtMs;
+
+    if (actualTtl !== sessionTtlMs) {
+      throw new Error(
+        `Session TTL mismatch! Expected: ${sessionTtlMs}ms, got: ${actualTtl}ms`
+      );
+    }
+    log("Session TTL verified", true);
+
+    // Verify session is not expired
+    const isExpired = Date.now() >= expiresAtMs;
+    if (isExpired) {
+      throw new Error("Session should not be expired immediately after creation");
+    }
+    log("Session expiry check passed", true);
+
+    log("Cleaning up test session...");
+    await sessionDocRef.delete();
+    log("Session cleanup successful", true);
+  } catch (error) {
+    // Clean up on failure
+    try {
+      await sessionDocRef.delete();
+    } catch {
+      // Ignore cleanup errors
+    }
+    log(`Session test failed: ${error instanceof Error ? error.message : error}`, false);
     process.exit(1);
   }
 

@@ -96,12 +96,12 @@
 
 ### 2.2 Implement session cookie + session doc
 
-- [ ] **[Codex/Opus]** Create `POST /api/session/init` route
-- [ ] **[Codex/Opus]** Implement session id generation (cryptographically random)
-- [ ] **[Codex/Opus]** Set httpOnly, secure (prod), sameSite cookie
-- [ ] **[Codex/Opus]** Create session doc in Firestore with `createdAt`, `expiresAt`
-- [ ] **[Codex/Opus]** Add unit tests for session id/cookie logic
-- [ ] **[Gemini 3 Pro]** TEST: Smoke test session creation with real Firestore (env present)
+- [x] **[Codex/Opus]** Create `POST /api/session/init` route
+- [x] **[Codex/Opus]** Implement session id generation (cryptographically random)
+- [x] **[Codex/Opus]** Set httpOnly, secure (prod), sameSite cookie
+- [x] **[Codex/Opus]** Create session doc in Firestore with `createdAt`, `expiresAt`
+- [x] **[Codex/Opus]** Add unit tests for session id/cookie logic
+- [x] **[Gemini 3 Pro]** TEST: Smoke test session creation with real Firestore (env present)
 
 ---
 
