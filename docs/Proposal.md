@@ -43,7 +43,7 @@ I have found that implementing an LLM service with wwww.aistudio.google.com give
 
 I can't say what other LLM providers such OpenAI and Anthropic provide for quota limits. So I want you to research that thoroughly. They both have excellent models. However, in the past I nearly got killed on API charges in Cursor developing:
 - /Users/sam/Projects/JobHunterAI-Claude
-which turned out to a big sloppy mess, i.e., a murky failure. I would be disappointed if the fastidious 
+which turned out to a big sloppy mess, i.e., a murky failure.
 
 The quota limits (as well as rate limitation) needs to be done down to the granularity of the API key (project level). Doing those safeguards at the account level doesn't work because I do many other projects and activities with all those major LLM vendors. I am not interested at all in self-hosting an open source model on my own. I am happy with the rate limitation the Vercel offers wherein I can specify as little as 10 requests in a 5 minute window. Even that however, may put me at 4x my budget of only $20 per month, viz., $80 / month at which www.aistudio.google.com will purported deny service.
 
