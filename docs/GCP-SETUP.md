@@ -405,13 +405,13 @@ ACTIVE  ACCOUNT
 
 Created new billing account via Google Cloud Console:
 - **Name:** `samkirk-com-billing`
-- **Account ID:** `REDACTED`
+- **Account ID:** `[REDACTED]`
 - **Status:** Open
 
 ```bash
 $ gcloud billing accounts list
 ACCOUNT_ID            NAME                  OPEN   MASTER_ACCOUNT_ID
-REDACTED  samkirk-com-billing   True
+[REDACTED]            samkirk-com-billing   True
 ```
 
 ### Step 1: Project Creation
@@ -426,8 +426,8 @@ Operation finished successfully.
 $ gcloud config set project samkirk-v3
 Updated property [core/project].
 
-$ gcloud billing projects link samkirk-v3 --billing-account=REDACTED
-billingAccountName: billingAccounts/REDACTED
+$ gcloud billing projects link samkirk-v3 --billing-account=[REDACTED]
+billingAccountName: billingAccounts/[REDACTED]
 billingEnabled: true
 name: projects/samkirk-v3/billingInfo
 projectId: samkirk-v3
@@ -492,19 +492,7 @@ Quota project "samkirk-v3" was added to ADC which can be used by Google client l
 
 ### Step 5: Environment Variables
 
-Created `web/.env.local` with:
-
-```bash
-GCP_PROJECT_ID=samkirk-v3
-GCS_PUBLIC_BUCKET=samkirk-v3-public
-GCS_PRIVATE_BUCKET=samkirk-v3-private
-VERTEX_AI_LOCATION=us-central1
-VERTEX_AI_MODEL=gemini-1.5-pro
-RECAPTCHA_SITE_KEY=placeholder-site-key
-RECAPTCHA_SECRET_KEY=placeholder-secret-key
-GOOGLE_OAUTH_CLIENT_ID=placeholder-client-id
-GOOGLE_OAUTH_CLIENT_SECRET=placeholder-client-secret
-```
+Created `web/.env.local` with all required variables (see Step 5 instructions above for the template). Placeholder values used for credentials not yet configured (reCAPTCHA, OAuth).
 
 ### Step 6: Smoke Test Results
 
@@ -544,8 +532,7 @@ $ cd web && npm run smoke:gcp
 | Resource | Value |
 |----------|-------|
 | **Project ID** | `samkirk-v3` |
-| **Project Number** | `REDACTED` |
-| **Billing Account** | `samkirk-com-billing` (REDACTED) |
+| **Billing Account** | `samkirk-com-billing` |
 | **Region** | `us-central1` |
 | **Firestore Database** | `(default)` - Native mode |
 | **Private Bucket** | `gs://samkirk-v3-private` |
