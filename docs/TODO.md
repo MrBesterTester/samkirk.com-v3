@@ -84,14 +84,15 @@
 
 ### 2.1 Create server utilities for Firestore + GCS access
 
-- [ ] **[Codex/Opus]** Create `web/src/lib/firestore.ts` — singleton client + typed collection helpers
-- [ ] **[Codex/Opus]** Create `web/src/lib/storage.ts` — GCS client + read/write helpers
-- [ ] **[Codex/Opus]** Add unit tests for path building and helper functions
-- [ ] **[Codex/Opus]** Create `npm run smoke:gcp` script that:
-  - [ ] Reads/writes test object to private bucket (safe prefix)
-  - [ ] Writes/reads test doc to Firestore (safe collection)
-  - [ ] Fails fast with clear message if env missing
+- [x] **[Codex/Opus]** Create `web/src/lib/firestore.ts` — singleton client + typed collection helpers
+- [x] **[Codex/Opus]** Create `web/src/lib/storage.ts` — GCS client + read/write helpers
+- [x] **[Codex/Opus]** Add unit tests for path building and helper functions
+- [x] **[Codex/Opus]** Create `npm run smoke:gcp` script that:
+  - [x] Reads/writes test object to private bucket (safe prefix)
+  - [x] Writes/reads test doc to Firestore (safe collection)
+  - [x] Fails fast with clear message if env missing
 - [ ] **[Gemini 3 Pro]** TEST: Run smoke script with real GCP credentials to verify integration
+  - [ ] Complete GCP setup checklist in `docs/GCP-SETUP.md`
 
 ### 2.2 Implement session cookie + session doc
 
