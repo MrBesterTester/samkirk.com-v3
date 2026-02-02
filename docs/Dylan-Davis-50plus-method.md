@@ -763,6 +763,7 @@ The checklist below is the **single active meta-process checklist** for this met
 
 - [x] **0.2 [AI] Initialize Git**
   - [x] **[AI] Create `.gitignore` (minimal, language-agnostic)**  
+    Evidence: `/.gitignore` exists with the baseline ignore block.
     Steps:
     - Create a file at the repo root: `/.gitignore`
     - Use this minimal baseline (expand later after spec):
@@ -775,6 +776,7 @@ The checklist below is the **single active meta-process checklist** for this met
 ```
 
   - [x] **[AI] Run `git init`**  
+    Evidence: `.git/` directory exists in the repo root.
     Steps (run from repo root):
 
 ```bash
@@ -808,11 +810,13 @@ git push -u origin main
 - [x] **0.3 [AI] Create Cursor slash commands (project + global)**
 
   - [x] **[AI] Create project commands in `.cursor/commands/`**  
+    Evidence: `/.cursor/commands/` exists and contains the project slash command files.
     Steps:
     - Create the folder: `/.cursor/commands/`
     - Create each file below *exactly* (these implement the three-document workflow).
 
   - [x] **[AI] Create `/.cursor/commands/create-spec.md`**
+    Evidence: `/.cursor/commands/create-spec.md` exists.
 
 ```markdown
 ---
@@ -830,6 +834,7 @@ Here's the idea:
 ```
 
   - [x] **[AI] Create `/.cursor/commands/create-blueprint.md`**
+    Evidence: `/.cursor/commands/create-blueprint.md` exists.
 
 ```markdown
 ---
@@ -851,6 +856,7 @@ When done, please write out the blueprint as @docs/BLUEPRINT.md.
 ```
 
   - [x] **[AI] Create `/.cursor/commands/create-todo.md`**
+    Evidence: `/.cursor/commands/create-todo.md` exists.
 
 ```markdown
 ---
@@ -862,6 +868,7 @@ Can you make a TODO.md that I can use as a checklist? Be thorough. Include model
 ```
 
   - [x] **[AI] Create `/.cursor/commands/start-step.md`**
+    Evidence: `/.cursor/commands/start-step.md` exists.
 
 ```markdown
 ---
@@ -873,6 +880,7 @@ Start with Step
 ```
 
   - [x] **[AI] Create `/.cursor/commands/continue-step.md`**
+    Evidence: `/.cursor/commands/continue-step.md` exists.
 
 ```markdown
 ---
@@ -884,6 +892,7 @@ Continue with Step
 ```
 
   - [x] **[AI] Verify global git workflow commands in `~/.cursor/commands/` (create only if missing)**  
+    Evidence: `~/.cursor/commands/git-commit-local.md` and `~/.cursor/commands/git-commit-push.md` exist.
     Notes:
     - These live in your home folder, not this repo.
     - If you already have equivalents, do not overwrite unless you explicitly want them updated.
