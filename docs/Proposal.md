@@ -38,7 +38,7 @@ Two important aspects of the implementaton of the aforementioned chatbot service
 - cost control, such as quota limitations
 - security against both abusive and malicious users who try to run up the bill
 
-I have found that implementing an LLM service with wwww.aistudio.google.com gives me a very good model, Gemini Pro 3 Preview, but doesn't afford any quota protections, only alert levels in the billing service that pays for it.  GCP in general (outside of www.aistudio.google.com) allows for a kill switch with customized, rather awkward "suicide code". Having hosted www.photo-fun.samkirk.com on Vercel, I can rate limitation. But that's it.
+I have found that implementing an LLM service with www.aistudio.google.com gives me a very good model, Gemini Pro 3 Preview, but doesn't afford any quota protections, only alert levels in the billing service that pays for it.  GCP in general (outside of www.aistudio.google.com) allows for a kill switch with customized, built-in self-terminating code. Having hosted www.photo-fun.samkirk.com on Vercel, I can rate-limit. But that's it.
 - Please see the project, /Users/sam/Projects/photo-fun5 for details.
 
 I can't say what other LLM providers such OpenAI and Anthropic provide for quota limits. So I want you to research that thoroughly. They both have excellent models. However, in the past I nearly got killed on API charges in Cursor developing:
