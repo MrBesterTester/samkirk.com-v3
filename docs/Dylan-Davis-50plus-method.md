@@ -615,15 +615,30 @@ description: Commit outstanding work to local repo
 Review all staged and unstaged changes using git status and git diff. Stage appropriate files (exclude .env, credentials, and other secrets). Write a clear, descriptive commit message summarizing the work. Commit to the local repository only—do not push.
 ```
 
-**`~/.cursor/commands/git-commit-push.md`:**
+**`~/.cursor/commands/git-remote-push-clean-with-squash.md`:**
 ```markdown
 ---
-description: Commit and push to remote
+description: Squash local commits into clean branch and push to remote
 ---
-Review all staged and unstaged changes using git status and git diff. Stage appropriate files (exclude .env, credentials, and other secrets). Write a clear, descriptive commit message summarizing the work. Commit and push to the remote repository.
+Push work to remote with a clean, squashed history. This workflow keeps granular commits local while pushing a single consolidated commit to remote.
+
+Steps:
+1. Save the current branch name
+2. Fetch latest from origin
+3. Create or reset a `clean-main` branch from `origin/main`
+4. Squash merge all changes from the current working branch into `clean-main`
+5. Commit with a clear summary message describing all the work
+6. Push `clean-main` to origin (use `-u` if first push)
+7. Switch back to the original branch
+
+Important:
+- Never push the local working branch directly (it may contain sensitive data in history)
+- The commit message should summarize all squashed work, not just the latest commit
+- If `clean-main` already exists, reset it to `origin/main` before merging
+- Exclude .env, credentials, and other secrets from the commit
 ```
 
-**Usage:** Type `/git-commit-local` or `/git-commit-push` in any project.
+**Usage:** Type `/git-commit-local` for local commits, or `/git-remote-push-clean-with-squash` to push to remote with clean history.
 
 ---
 
@@ -892,7 +907,7 @@ Continue with Step
 ```
 
   - [x] **[AI] Verify global git workflow commands in `~/.cursor/commands/` (create only if missing)**  
-    Evidence: `~/.cursor/commands/git-commit-local.md` and `~/.cursor/commands/git-commit-push.md` exist.
+    Evidence: Verified via `ls ~/.cursor/commands/` - `git-commit-local.md` (pre-existing) and `git-remote-push-clean-with-squash.md` (created 2026-02-02, replacing `git-commit-push.md`) exist.
     Notes:
     - These live in your home folder, not this repo.
     - If you already have equivalents, do not overwrite unless you explicitly want them updated.
@@ -906,13 +921,28 @@ description: Commit outstanding work to local repo
 Review all staged and unstaged changes using git status and git diff. Stage appropriate files (exclude .env, credentials, and other secrets). Write a clear, descriptive commit message summarizing the work. Commit to the local repository only—do not push.
 ```
 
-    Create `~/.cursor/commands/git-commit-push.md`:
+    Create `~/.cursor/commands/git-remote-push-clean-with-squash.md`:
 
 ```markdown
 ---
-description: Commit and push to remote
+description: Squash local commits into clean branch and push to remote
 ---
-Review all staged and unstaged changes using git status and git diff. Stage appropriate files (exclude .env, credentials, and other secrets). Write a clear, descriptive commit message summarizing the work. Commit and push to the remote repository.
+Push work to remote with a clean, squashed history. This workflow keeps granular commits local while pushing a single consolidated commit to remote.
+
+Steps:
+1. Save the current branch name
+2. Fetch latest from origin
+3. Create or reset a `clean-main` branch from `origin/main`
+4. Squash merge all changes from the current working branch into `clean-main`
+5. Commit with a clear summary message describing all the work
+6. Push `clean-main` to origin (use `-u` if first push)
+7. Switch back to the original branch
+
+Important:
+- Never push the local working branch directly (it may contain sensitive data in history)
+- The commit message should summarize all squashed work, not just the latest commit
+- If `clean-main` already exists, reset it to `origin/main` before merging
+- Exclude .env, credentials, and other secrets from the commit
 ```
 
 ---
@@ -927,7 +957,7 @@ Review all staged and unstaged changes using git status and git diff. Stage appr
 - `/continue-step` → `continue-step.md` — Continue to the next step in the TODO checklist.
 
 **Global slash commands (for all projects: `~/.cursor/commands/`)**  
-Git workflow commands live only in your home folder; Phase 0.3 verifies or creates them there. Use `/git-commit-local` and `/git-commit-push` in any repo once they exist globally.
+Git workflow commands live only in your home folder; Phase 0.3 verifies or creates them there. Use `/git-commit-local` and `/git-remote-push-clean-with-squash` in any repo once they exist globally.
 
 **Project Cursor rule (in this repo: `/.cursor/rules/`)**
 - `phase-model-reminder.mdc` — Reminds you which model to use when starting or continuing a phase; applies automatically in every chat (including new sessions)—no slash command needed.
@@ -1189,7 +1219,7 @@ alwaysApply: true
 - [ ] **6.2 [You] Push when ready**
   Steps:
   - When you want to publish changes:
-    - Run `/git-commit-push` (if created) or do `git push`.
+    - Run `/git-remote-push-clean-with-squash` to squash commits into a clean branch and push to remote.
 
 ---
 

@@ -17,7 +17,7 @@ These rules prevent repeatedly missing (or duplicating) setup steps when startin
 ## Required global git commands to verify (and create if missing)
 
 - `~/.cursor/commands/git-commit-local.md`
-- `~/.cursor/commands/git-commit-push.md`
+- `~/.cursor/commands/git-remote-push-clean-with-squash.md`
 
 ## Setup checklist hygiene
 
