@@ -1096,7 +1096,8 @@ alwaysApply: true
 
 **Model:** Claude Opus 4.5
 
-- [ ] **2.1 [You + AI] Generate blueprint from `docs/SPECIFICATION.md`**
+- [x] **2.1 [You + AI] Generate blueprint from `docs/SPECIFICATION.md`**
+  - Evidence: created `docs/BLUEPRINT.md`.
   Steps:
   - Ensure `docs/SPECIFICATION.md` exists (Phase 1).
   - Ensure `/.cursor/commands/create-blueprint.md` exists (Phase 0.3).
