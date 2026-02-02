@@ -998,7 +998,8 @@ Manifest.toml
 .idea/
 ```
 
-- [ ] **1.5.2 [You + AI] Select and configure MCPs (based on `docs/SPECIFICATION.md`)**
+- [x] **1.5.2 [You + AI] Select and configure MCPs (based on `docs/SPECIFICATION.md`)**  
+  - Evidence: using `cursor-browser-extension` for frontend/visual testing; GitHub access via existing `user-github` MCP (no secrets committed).
   Steps:
   - Decide which MCP servers you actually need (examples from methodology):
     - `github-mcp` for issues/PRs (requires token)
@@ -1023,7 +1024,8 @@ Manifest.toml
 }
 ```
 
-- [ ] **1.5.3 [You + AI] Set up LSP/compiler/tooling for the chosen stack**
+- [x] **1.5.3 [You + AI] Set up LSP/compiler/tooling for the chosen stack**  
+  - Evidence: bootstrapped Next.js + TypeScript (strict) app in `web/` via `create-next-app` (includes `web/tsconfig.json` with `"strict": true`).
   Steps (pick what matches the spec):
   - TypeScript:
 
@@ -1049,7 +1051,8 @@ curl -fsSL https://install.julialang.org | sh
 
     Then install the Julia extension in Cursor.
 
-- [ ] **1.5.4 [AI] Create project rules file (project conventions + lessons)**
+- [x] **1.5.4 [AI] Create project rules file (project conventions + lessons)**  
+  - Evidence: created `/.cursor/rules/project.mdc` (stack + conventions filled from `docs/SPECIFICATION.md`).
   Steps:
   - Create `/.cursor/rules/` (if missing).
   - Create `/.cursor/rules/project.mdc` with this template, then fill stack details from `docs/SPECIFICATION.md`:
@@ -1077,7 +1080,8 @@ alwaysApply: true
 <!-- Add brief, information-dense entries when problems are solved -->
 ```
 
-- [ ] **1.5.5 [AI] Create `README.md` + commit**
+- [x] **1.5.5 [AI] Create `README.md` + commit**  
+  - Evidence: created `/README.md` with setup/run instructions and doc pointers.
   Steps:
   - Create `/README.md` with:
     - Project summary

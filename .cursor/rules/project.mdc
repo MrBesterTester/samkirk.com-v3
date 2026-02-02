@@ -1,0 +1,33 @@
+---
+description: Project conventions and lessons
+alwaysApply: true
+---
+
+# Project: samkirk.com v3
+
+## Stack
+- Next.js (App Router) + React
+- TypeScript (`strict: true`)
+- Node.js runtime (backend is Next.js server routes on Cloud Run)
+- Styling: Tailwind CSS
+- LLM: Google Gemini via Vertex AI
+- GCP hosting: Cloud Run (single full-stack service)
+- Storage:
+  - Cloud Storage (public + private buckets for files/artifacts)
+  - Firestore (metadata, counters, rate limiting, spend tracking)
+
+## Conventions
+- **App location**: `web/` contains the Next.js app.
+- **Type safety**: keep TypeScript strict; avoid `any`; validate untrusted inputs at API boundaries.
+- **Secrets**: never commit secrets; use env vars / Secret Manager. Treat phone numbers for future SMS as secrets (do not log or expose).
+- **Artifacts first-class**: persist inputs/outputs/citations for transparency per `docs/SPECIFICATION.md`, with 90-day retention.
+- **Incremental delivery**: prefer small PR-sized changes with working pages/routes.
+
+## Model preferences
+- Frontend/UI: Claude Opus 4.5 (or equivalent high-end UI model)
+- Backend/logic: GPT-5.2 (or equivalent)
+- Debugging/visual testing: Gemini 3 Pro (or equivalent)
+
+## Lessons learned
+<!-- Add brief, information-dense entries when problems are solved -->
+
