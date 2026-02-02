@@ -40,6 +40,13 @@ Use this checklist to track your progress:
 - [x] 6.1 Ran `npm run smoke:gcp`
 - [x] 6.2 All tests passed
 
+### Step 7: Google OAuth for Admin Auth
+- [x] 7.1 Configured OAuth consent screen
+- [x] 7.2 Created OAuth 2.0 client credentials (Web application type)
+- [x] 7.3 Added credentials to `.env.local`
+- [x] 7.4 Generated AUTH_SECRET
+- [x] 7.5 Tested admin login flow
+
 ---
 
 ## Prerequisites
@@ -224,27 +231,35 @@ VERTEX_AI_MODEL=gemini-1.5-pro
 RECAPTCHA_SITE_KEY=placeholder-site-key
 RECAPTCHA_SECRET_KEY=placeholder-secret-key
 
-# === Google OAuth (placeholders for smoke test) ===
+# === Google OAuth (placeholders for smoke test, configure in Step 7) ===
 # Get real credentials at: https://console.cloud.google.com/apis/credentials
 GOOGLE_OAUTH_CLIENT_ID=placeholder-client-id
 GOOGLE_OAUTH_CLIENT_SECRET=placeholder-client-secret
+
+# === Admin Auth (configure in Step 7) ===
+# Generate with: openssl rand -base64 32
+AUTH_SECRET=placeholder-generate-with-openssl-rand-base64-32
+# Email allowed to access /admin
+ADMIN_ALLOWED_EMAIL=your-admin-email@example.com
 ```
 
 > **Important:** Replace `YOUR_PROJECT_ID` with your actual GCP project ID.
 
 ### 5.3 Variables Reference
 
-| Variable | Required for Smoke Test | Description |
-|----------|------------------------|-------------|
-| `GCP_PROJECT_ID` | Yes | Your GCP project ID |
-| `GCS_PRIVATE_BUCKET` | Yes | Private bucket for submissions/artifacts |
-| `GCS_PUBLIC_BUCKET` | No (placeholder OK) | Public bucket for Dance Menu |
-| `VERTEX_AI_LOCATION` | No (placeholder OK) | Vertex AI region |
-| `VERTEX_AI_MODEL` | No (placeholder OK) | Gemini model name |
-| `RECAPTCHA_SITE_KEY` | No (placeholder OK) | reCAPTCHA v2 site key |
-| `RECAPTCHA_SECRET_KEY` | No (placeholder OK) | reCAPTCHA v2 secret key |
-| `GOOGLE_OAUTH_CLIENT_ID` | No (placeholder OK) | OAuth client ID for admin auth |
-| `GOOGLE_OAUTH_CLIENT_SECRET` | No (placeholder OK) | OAuth client secret |
+| Variable | Required for Smoke Test | Required for Admin Auth | Description |
+|----------|------------------------|------------------------|-------------|
+| `GCP_PROJECT_ID` | Yes | No | Your GCP project ID |
+| `GCS_PRIVATE_BUCKET` | Yes | No | Private bucket for submissions/artifacts |
+| `GCS_PUBLIC_BUCKET` | No (placeholder OK) | No | Public bucket for Dance Menu |
+| `VERTEX_AI_LOCATION` | No (placeholder OK) | No | Vertex AI region |
+| `VERTEX_AI_MODEL` | No (placeholder OK) | No | Gemini model name |
+| `RECAPTCHA_SITE_KEY` | No (placeholder OK) | No | reCAPTCHA v2 site key |
+| `RECAPTCHA_SECRET_KEY` | No (placeholder OK) | No | reCAPTCHA v2 secret key |
+| `GOOGLE_OAUTH_CLIENT_ID` | No (placeholder OK) | Yes | OAuth client ID for admin auth |
+| `GOOGLE_OAUTH_CLIENT_SECRET` | No (placeholder OK) | Yes | OAuth client secret |
+| `AUTH_SECRET` | No (placeholder OK) | Yes | NextAuth.js token signing secret (min 32 chars) |
+| `ADMIN_ALLOWED_EMAIL` | No (placeholder OK) | Yes | Email allowed to access admin (e.g., sam@samkirk.com) |
 
 ---
 
@@ -286,6 +301,125 @@ npm run smoke:gcp
 ✓ Cleanup successful
 
 === All smoke tests passed! ===
+```
+
+---
+
+## Step 7: Google OAuth for Admin Auth
+
+This step configures Google OAuth credentials so that admin authentication works. Only the allowed email (e.g., `sam@samkirk.com`) can sign in to the admin area.
+
+### 7.1 Configure OAuth Consent Screen
+
+First, configure the OAuth consent screen. This is required before creating OAuth credentials.
+
+```bash
+# Open the OAuth consent screen configuration page
+# (This must be done in the Google Cloud Console - no gcloud command available)
+open "https://console.cloud.google.com/apis/credentials/consent?project=samkirk-v3"
+```
+
+In the Console:
+1. Select **External** user type (or Internal if using Google Workspace)
+2. Click **Create**
+3. Fill in the required fields:
+   - **App name:** `samkirk.com Admin`
+   - **User support email:** Your email (e.g., `sam@samkirk.com`)
+   - **Developer contact email:** Your email
+4. Click **Save and Continue**
+5. **Scopes page** (if shown): You can skip this or click **Save and Continue** — the default scopes (email, profile, openid) are sufficient for sign-in and are granted automatically.
+6. On **Test users** page (for External apps):
+   - Click **Add Users**
+   - Add your admin email (e.g., `sam@samkirk.com`)
+7. Click **Save and Continue**, then **Back to Dashboard**
+
+### 7.2 Create OAuth 2.0 Client Credentials
+
+```bash
+# Open the credentials page
+open "https://console.cloud.google.com/apis/credentials?project=samkirk-v3"
+```
+
+In the Console:
+1. Click **+ Create Credentials** → **OAuth client ID**
+2. Select **Web application** as the application type
+3. Set the name: `samkirk.com Admin Auth`
+4. Under **Authorized JavaScript origins**, add:
+   - `http://localhost:3000` (for local development)
+5. Under **Authorized redirect URIs**, add:
+   - `http://localhost:3000/api/auth/callback/google` (for local development)
+6. Click **Create**
+7. **Copy the Client ID and Client Secret** - you'll need these for the next step
+
+> **Production URLs:** When deploying to Cloud Run, you'll also add:
+> - Origin: `https://samkirk.com`
+> - Redirect URI: `https://samkirk.com/api/auth/callback/google`
+
+### 7.3 Add Credentials to `.env.local`
+
+Update your `web/.env.local` file with the real OAuth credentials:
+
+```bash
+# Replace the placeholder values with your actual credentials
+GOOGLE_OAUTH_CLIENT_ID=your-client-id-here.apps.googleusercontent.com
+GOOGLE_OAUTH_CLIENT_SECRET=your-client-secret-here
+```
+
+### 7.4 Generate AUTH_SECRET
+
+NextAuth.js requires a secret for signing tokens. Generate a secure random string:
+
+```bash
+# Generate a 32-byte random string (macOS/Linux)
+openssl rand -base64 32
+```
+
+Add it to your `web/.env.local`:
+
+```bash
+AUTH_SECRET=your-generated-secret-here
+```
+
+### 7.5 Add Admin Allowed Email
+
+Add the email address that should have admin access:
+
+```bash
+ADMIN_ALLOWED_EMAIL=sam@samkirk.com
+```
+
+### 7.6 Test Admin Login Flow
+
+1. Start the development server:
+   ```bash
+   cd web
+   npm run dev
+   ```
+
+2. Navigate to `http://localhost:3000/admin`
+
+3. You should be redirected to `/admin/login`
+
+4. Click **Sign in with Google**
+
+5. Sign in with the allowed email address
+
+6. You should be redirected back to `/admin` and see the dashboard with your email displayed
+
+### OAuth Configuration Summary
+
+Your `web/.env.local` should now have these OAuth-related variables:
+
+```bash
+# Google OAuth (from Step 7.2)
+GOOGLE_OAUTH_CLIENT_ID=123456789-abcdefg.apps.googleusercontent.com
+GOOGLE_OAUTH_CLIENT_SECRET=GOCSPX-your-secret-here
+
+# NextAuth.js secret (from Step 7.4)
+AUTH_SECRET=your-32-char-or-longer-secret-here
+
+# Admin allowlist (from Step 7.5)
+ADMIN_ALLOWED_EMAIL=sam@samkirk.com
 ```
 
 ---
@@ -340,16 +474,53 @@ gcloud services enable firestore.googleapis.com
 gcloud services enable storage.googleapis.com
 ```
 
+### OAuth: "Access Denied" Error
+
+**Error:** After clicking "Sign in with Google", you're redirected back with an "Access denied" error.
+
+**Cause:** The email you're signing in with is not in the admin allowlist.
+
+**Solution:** Ensure `ADMIN_ALLOWED_EMAIL` in `.env.local` matches the email you're using:
+```bash
+ADMIN_ALLOWED_EMAIL=your-email@example.com
+```
+
+### OAuth: "redirect_uri_mismatch" Error
+
+**Error:** `Error 400: redirect_uri_mismatch`
+
+**Cause:** The redirect URI in your OAuth client doesn't match the one being used.
+
+**Solution:**
+1. Go to [Google Cloud Console Credentials](https://console.cloud.google.com/apis/credentials)
+2. Click on your OAuth 2.0 client
+3. Ensure **Authorized redirect URIs** includes:
+   - `http://localhost:3000/api/auth/callback/google` (for local dev)
+   - `https://samkirk.com/api/auth/callback/google` (for production)
+
+### OAuth: "invalid_client" Error
+
+**Error:** `Error 401: invalid_client`
+
+**Cause:** The client ID or secret is incorrect.
+
+**Solution:** Double-check `GOOGLE_OAUTH_CLIENT_ID` and `GOOGLE_OAUTH_CLIENT_SECRET` in `.env.local` match exactly what's shown in the Google Cloud Console.
+
+### OAuth: Consent Screen Not Configured
+
+**Error:** `Error 403: access_denied` with message about consent screen
+
+**Solution:** Complete Step 7.1 to configure the OAuth consent screen before testing login.
+
 ---
 
 ## Next Steps
 
-After the smoke test passes:
+After completing the setup above:
 
-1. **Set up real reCAPTCHA keys** at https://www.google.com/recaptcha/admin
-2. **Create OAuth credentials** at https://console.cloud.google.com/apis/credentials
-3. **Configure Vertex AI** for LLM features
-4. **Set up Cloud Run** for deployment
+1. **Set up real reCAPTCHA keys** at https://www.google.com/recaptcha/admin (for public tool forms)
+2. **Configure Vertex AI** for LLM features (when implementing chat tools)
+3. **Set up Cloud Run** for deployment (when ready to go live)
 
 ---
 
@@ -538,3 +709,45 @@ $ cd web && npm run smoke:gcp
 | **Private Bucket** | `gs://samkirk-v3-private` |
 | **Public Bucket** | `gs://samkirk-v3-public` |
 | **ADC Location** | `~/.config/gcloud/application_default_credentials.json` |
+
+### Step 7: Google OAuth for Admin Auth (2026-02-02)
+
+#### 7.1 OAuth Consent Screen
+
+Configured via Google Cloud Console:
+- **User type:** External
+- **App name:** `samkirk.com Admin`
+- **Support email:** `sam@samkirk.com`
+- **Test users:** `sam@samkirk.com`
+
+#### 7.2 OAuth 2.0 Client Credentials
+
+Created via Google Cloud Console:
+- **Application type:** Web application
+- **Name:** `samkirk.com Admin Auth`
+- **Authorized JavaScript origins:** `http://localhost:3000`
+- **Authorized redirect URIs:** `http://localhost:3000/api/auth/callback/google`
+
+> **Note:** Initially created as wrong type (JavaScript app) which doesn't provide a Client Secret. Recreated as "Web application" type to get both Client ID and Client Secret.
+
+#### 7.3-7.4 Environment Variables
+
+Updated `web/.env.local` with:
+- `GOOGLE_OAUTH_CLIENT_ID` — from Web application OAuth client
+- `GOOGLE_OAUTH_CLIENT_SECRET` — from Web application OAuth client
+- `AUTH_SECRET` — generated via `openssl rand -base64 32`
+- `ADMIN_ALLOWED_EMAIL` — set to `sam@samkirk.com`
+
+#### 7.5 Admin Login Test
+
+```
+1. Started dev server: npm run dev
+2. Navigated to http://localhost:3000/admin
+3. Redirected to /admin/login (as expected)
+4. Clicked "Sign in with Google"
+5. Authenticated with sam@samkirk.com
+6. Redirected back to /admin dashboard
+7. Dashboard shows "Signed in as sam@samkirk.com" with sign-out option
+```
+
+**Result:** Admin authentication working correctly. Only `sam@samkirk.com` can access `/admin/**` routes.

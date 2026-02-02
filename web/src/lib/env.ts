@@ -12,6 +12,8 @@ const envSchema = z.object({
   RECAPTCHA_SECRET_KEY: z.string().min(1),
   GOOGLE_OAUTH_CLIENT_ID: z.string().min(1),
   GOOGLE_OAUTH_CLIENT_SECRET: z.string().min(1),
+  ADMIN_ALLOWED_EMAIL: z.string().email(),
+  AUTH_SECRET: z.string().min(32),
 });
 
 export type Env = z.infer<typeof envSchema>;

@@ -11,6 +11,8 @@ const baseEnv = {
   RECAPTCHA_SECRET_KEY: "recaptcha-secret",
   GOOGLE_OAUTH_CLIENT_ID: "oauth-client",
   GOOGLE_OAUTH_CLIENT_SECRET: "oauth-secret",
+  ADMIN_ALLOWED_EMAIL: "admin@example.com",
+  AUTH_SECRET: "this-is-a-32-character-or-longer-secret-key",
 };
 
 describe("parseEnv", () => {

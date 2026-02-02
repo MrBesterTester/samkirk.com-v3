@@ -93,6 +93,7 @@
   - [x] Fails fast with clear message if env missing
 - [x] **[Gemini 3 Pro]** TEST: Run smoke script with real GCP credentials to verify integration
   - [x] Complete GCP setup checklist in `docs/GCP-SETUP.md`
+- [x] **[You]** Full MacBook Pro backup with TimeMachine
 
 ### 2.2 Implement session cookie + session doc
 
@@ -109,12 +110,12 @@
 
 ### 3.1 Add admin authentication (Google OAuth, email allowlist)
 
-- [ ] **[Codex/Opus]** Configure NextAuth.js (or similar) with Google OAuth provider
-- [ ] **[Codex/Opus]** Implement email allowlist check (allowed email from env)
-- [ ] **[Codex/Opus]** Protect `/admin/**` pages with auth middleware
-- [ ] **[Codex/Opus]** Protect `/api/admin/**` routes with auth check
-- [ ] **[Codex/Opus]** Add unit tests for allowlist logic
-- [ ] **[Gemini 3 Pro]** TEST: Manual smoke test OAuth flow in dev with real credentials
+- [x] **[Codex/Opus]** Configure NextAuth.js (or similar) with Google OAuth provider
+- [x] **[Codex/Opus]** Implement email allowlist check (allowed email from env)
+- [x] **[Codex/Opus]** Protect `/admin/**` pages with auth middleware
+- [x] **[Codex/Opus]** Protect `/api/admin/**` routes with auth check
+- [x] **[Codex/Opus]** Add unit tests for allowlist logic
+- [x] **[Gemini 3 Pro]** TEST: Manual smoke test OAuth flow in dev with real credentials
 
 ### 3.2 Admin: upload/replace master resume markdown
 
