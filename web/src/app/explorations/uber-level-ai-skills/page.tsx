@@ -1,3 +1,5 @@
+import { StaticHtmlViewer } from "@/components";
+
 export default function UberLevelAiSkillsPage() {
   return (
     <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
@@ -8,10 +10,12 @@ export default function UberLevelAiSkillsPage() {
         Advanced techniques for getting the most out of AI tools.
       </p>
 
-      <div className="mt-12 rounded-xl border border-zinc-200 bg-zinc-50 p-8 dark:border-zinc-800 dark:bg-zinc-900">
-        <p className="text-center text-zinc-500 dark:text-zinc-400">
-          Static content for this exploration topic will be added here.
-        </p>
+      <div className="mt-12">
+        <StaticHtmlViewer
+          src="uber-level-ai-skills.html"
+          title="Uber Level AI Skills content"
+          minHeight={700}
+        />
       </div>
     </div>
   );

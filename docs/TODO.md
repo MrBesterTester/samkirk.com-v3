@@ -59,24 +59,24 @@
 
 ### 1.1 Add exploration pages with static HTML content
 
-- [ ] **[Codex/Opus]** Create `web/public/static/` folder for static HTML files
-- [ ] **[Codex/Opus]** Add placeholder HTML files for each exploration topic:
-  - [ ] `category-theory.html`
-  - [ ] `pocket-flow.html`
-  - [ ] `dance-instruction.html`
-  - [ ] `uber-level-ai-skills.html`
-- [ ] **[Opus 4.5]** Implement exploration pages that render the static HTML safely (iframe or sanitized)
-- [ ] **[Opus 4.5]** Style exploration pages consistently with site shell
-- [ ] **[Codex/Opus]** Add render tests for exploration routes
-- [ ] **[Codex/Opus]** TEST: Run `npm test` — exploration tests pass
+- [x] **[Codex/Opus]** Create `web/public/static/` folder for static HTML files
+- [x] **[Codex/Opus]** Add placeholder HTML files for each exploration topic:
+  - [x] `category-theory.html`
+  - [x] `pocket-flow.html`
+  - [x] `dance-instruction.html`
+  - [x] `uber-level-ai-skills.html`
+- [x] **[Opus 4.5]** Implement exploration pages that render the static HTML safely (iframe or sanitized)
+- [x] **[Opus 4.5]** Style exploration pages consistently with site shell
+- [x] **[Codex/Opus]** Add render tests for exploration routes
+- [x] **[Codex/Opus]** TEST: Run `npm test` — exploration tests pass
 
 ### 1.2 Add song dedication page
 
-- [ ] **[Opus 4.5]** Create `/song-dedication` page with static content placeholder
-- [ ] **[Opus 4.5]** Add lyrics section + audio link/embed placeholder
-- [ ] **[Opus 4.5]** Style consistently with site shell
-- [ ] **[Codex/Opus]** Add render test for song dedication page
-- [ ] **[Codex/Opus]** TEST: Run `npm test` — song dedication test passes
+- [x] **[Opus 4.5]** Create `/song-dedication` page with static content placeholder
+- [x] **[Opus 4.5]** Add lyrics section + audio link/embed placeholder
+- [x] **[Opus 4.5]** Style consistently with site shell
+- [x] **[Codex/Opus]** Add render test for song dedication page
+- [x] **[Codex/Opus]** TEST: Run `npm test` — song dedication test passes
 
 ---
 

@@ -1,3 +1,5 @@
+import { StaticHtmlViewer } from "@/components";
+
 export default function DanceInstructionPage() {
   return (
     <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
@@ -8,10 +10,12 @@ export default function DanceInstructionPage() {
         Thoughts and resources on teaching and learning dance.
       </p>
 
-      <div className="mt-12 rounded-xl border border-zinc-200 bg-zinc-50 p-8 dark:border-zinc-800 dark:bg-zinc-900">
-        <p className="text-center text-zinc-500 dark:text-zinc-400">
-          Static content for this exploration topic will be added here.
-        </p>
+      <div className="mt-12">
+        <StaticHtmlViewer
+          src="dance-instruction.html"
+          title="Dance Instruction content"
+          minHeight={600}
+        />
       </div>
     </div>
   );
