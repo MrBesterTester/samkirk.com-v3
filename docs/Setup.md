@@ -212,9 +212,8 @@ Review all staged and unstaged changes using git status and git diff. Stage appr
 - `/start-step` → `start-step.md` — Start a new implementation step from the TODO checklist.
 - `/continue-step` → `continue-step.md` — Continue to the next step in the TODO checklist.
 
-**Global slash commands (for all projects: `~/.cursor/commands/`)**
-- `/git-commit-local` → `git-commit-local.md` — Stage, message, and commit locally; do not push.
-- `/git-commit-push` → `git-commit-push.md` — Commit and push to remote.
+**Global slash commands (for all projects: `~/.cursor/commands/`)**  
+Git workflow commands live only in your home folder; Phase 0.3 verifies or creates them there. Use `/git-commit-local` and `/git-commit-push` in any repo once they exist globally.
 
 **Project Cursor rule (in this repo: `/.cursor/rules/`)**
 - `phase-model-reminder.mdc` — Reminds you which model to use when starting or continuing a phase; applies automatically in every chat (including new sessions)—no slash command needed.
