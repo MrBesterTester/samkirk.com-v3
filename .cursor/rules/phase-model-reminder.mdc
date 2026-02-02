@@ -1,13 +1,13 @@
 ---
-description: Remind user which model to use when starting a Setup.md phase
+description: Remind user which model to use when starting a methodology phase
 alwaysApply: true
 ---
 
 # Phase model reminder
 
-When the user is starting or continuing a **phase** from `docs/Setup.md` (e.g. Phase 1 Specification, Phase 2 Blueprint, Phase 4 Development):
+When the user is starting or continuing a **phase** from The Complete Workflow in `docs/Dylan-Davis-50plus-method.md` (e.g. Phase 1 Specification, Phase 2 Blueprint, Phase 4 Development):
 
 1. **Remind them which model to use** for that phase.
-2. The recommended model is written under each phase heading in `docs/Setup.md` (source: `docs/Dylan-Davis-50plus-method.md`).
+2. The recommended model is written under each phase heading in `docs/Dylan-Davis-50plus-method.md`.
 
 Do this in **every chat session**, including new ones—the user relies on this reminder so they can switch to the right model (e.g. ChatGPT Auto for spec, Claude Opus 4.5 for blueprint, or the task-specific model from TODO.md for development steps).

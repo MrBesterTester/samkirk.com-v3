@@ -21,6 +21,6 @@ These rules prevent repeatedly missing (or duplicating) setup steps when startin
 
 ## Setup checklist hygiene
 
-- When you perform a setup step, immediately update `docs/Setup.md`:
+- When you perform a setup step, immediately update the checklist in `docs/Dylan-Davis-50plus-method.md` (The Complete Workflow section):
   - mark the checkbox done
   - add a short “evidence” note (file exists / command ran)
