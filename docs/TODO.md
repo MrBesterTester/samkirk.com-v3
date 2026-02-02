@@ -14,19 +14,19 @@
 
 ### 0.1 Add test tooling (Vitest + React Testing Library)
 
-- [ ] **[Codex/Opus]** Install Vitest + @testing-library/react with TypeScript support
-- [ ] **[Codex/Opus]** Add `"test"` script to `web/package.json`
-- [ ] **[Codex/Opus]** Configure Vitest for jsdom environment
-- [ ] **[Codex/Opus]** Write one sample passing test for an existing page/component
-- [ ] **[Codex/Opus]** TEST: Run `npm test` and `npm run lint` — both pass
+- [x] **[Codex/Opus]** Install Vitest + @testing-library/react with TypeScript support
+- [x] **[Codex/Opus]** Add `"test"` script to `web/package.json`
+- [x] **[Codex/Opus]** Configure Vitest for jsdom environment
+- [x] **[Codex/Opus]** Write one sample passing test for an existing page/component
+- [x] **[Codex/Opus]** TEST: Run `npm test` and `npm run lint` — both pass
 
 ### 0.2 Add typed env validation (server-only secrets)
 
-- [ ] **[Codex/Opus]** Create `web/src/lib/env.ts` with zod schema for env vars
-- [ ] **[Codex/Opus]** Define placeholders for: GCP project id, GCS bucket names, Vertex AI config, reCAPTCHA keys, OAuth client id/secret
-- [ ] **[Codex/Opus]** Ensure server-only secrets are not importable in client components
-- [ ] **[Codex/Opus]** Add unit tests for env parsing (valid/invalid cases)
-- [ ] **[Codex/Opus]** TEST: Run `npm test` — env tests pass
+- [x] **[Codex/Opus]** Create `web/src/lib/env.ts` with zod schema for env vars
+- [x] **[Codex/Opus]** Define placeholders for: GCP project id, GCS bucket names, Vertex AI config, reCAPTCHA keys, OAuth client id/secret
+- [x] **[Codex/Opus]** Ensure server-only secrets are not importable in client components
+- [x] **[Codex/Opus]** Add unit tests for env parsing (valid/invalid cases)
+- [x] **[Codex/Opus]** TEST: Run `npm test` — env tests pass
 
 ### 0.3 Create site layout + navigation skeleton
 

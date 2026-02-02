@@ -1,0 +1,41 @@
+import { describe, expect, it } from "vitest";
+import { parseEnv } from "./env";
+
+const baseEnv = {
+  GCP_PROJECT_ID: "project-123",
+  GCS_PUBLIC_BUCKET: "public-bucket",
+  GCS_PRIVATE_BUCKET: "private-bucket",
+  VERTEX_AI_LOCATION: "us-central1",
+  VERTEX_AI_MODEL: "gemini-2.0-flash-001",
+  RECAPTCHA_SITE_KEY: "recaptcha-site",
+  RECAPTCHA_SECRET_KEY: "recaptcha-secret",
+  GOOGLE_OAUTH_CLIENT_ID: "oauth-client",
+  GOOGLE_OAUTH_CLIENT_SECRET: "oauth-secret",
+};
+
+describe("parseEnv", () => {
+  it("parses a valid environment", () => {
+    const env = parseEnv(baseEnv);
+
+    expect(env.GCP_PROJECT_ID).toBe("project-123");
+    expect(env.GCS_PRIVATE_BUCKET).toBe("private-bucket");
+  });
+
+  it("throws when required values are missing", () => {
+    const rest = { ...baseEnv } as Record<string, string>;
+    delete rest.GCP_PROJECT_ID;
+
+    expect(() => parseEnv(rest)).toThrow(
+      "Invalid environment variables: GCP_PROJECT_ID"
+    );
+  });
+
+  it("throws when required values are empty", () => {
+    expect(() =>
+      parseEnv({
+        ...baseEnv,
+        RECAPTCHA_SECRET_KEY: "",
+      })
+    ).toThrow("Invalid environment variables: RECAPTCHA_SECRET_KEY");
+  });
+});
