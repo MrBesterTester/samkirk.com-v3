@@ -30,28 +30,28 @@
 
 ### 0.3 Create site layout + navigation skeleton
 
-- [ ] **[Opus 4.5]** Create global layout with header/nav + main + footer
-- [ ] **[Opus 4.5]** Add nav links: Home, Tools, Dance Menu, Song Dedication, Explorations, Admin
-- [ ] **[Opus 4.5]** Create placeholder pages for all routes:
-  - [ ] `/` (home)
-  - [ ] `/tools` (tool hub)
-  - [ ] `/tools/fit`
-  - [ ] `/tools/resume`
-  - [ ] `/tools/interview`
-  - [ ] `/dance-menu`
-  - [ ] `/song-dedication`
-  - [ ] `/explorations`
-  - [ ] `/explorations/category-theory`
-  - [ ] `/explorations/pocket-flow`
-  - [ ] `/explorations/dance-instruction`
-  - [ ] `/explorations/uber-level-ai-skills`
-  - [ ] `/admin`
-  - [ ] `/admin/resume`
-  - [ ] `/admin/dance-menu`
-  - [ ] `/admin/submissions`
-- [ ] **[Opus 4.5]** Style with Tailwind — clean, modern look
-- [ ] **[Codex/Opus]** Add basic render tests for layout and nav components
-- [ ] **[Codex/Opus]** TEST: Run `npm test` and `npm run lint` — both pass
+- [x] **[Opus 4.5]** Create global layout with header/nav + main + footer
+- [x] **[Opus 4.5]** Add nav links: Home, Tools, Dance Menu, Song Dedication, Explorations, Admin
+- [x] **[Opus 4.5]** Create placeholder pages for all routes:
+  - [x] `/` (home)
+  - [x] `/tools` (tool hub)
+  - [x] `/tools/fit`
+  - [x] `/tools/resume`
+  - [x] `/tools/interview`
+  - [x] `/dance-menu`
+  - [x] `/song-dedication`
+  - [x] `/explorations`
+  - [x] `/explorations/category-theory`
+  - [x] `/explorations/pocket-flow`
+  - [x] `/explorations/dance-instruction`
+  - [x] `/explorations/uber-level-ai-skills`
+  - [x] `/admin`
+  - [x] `/admin/resume`
+  - [x] `/admin/dance-menu`
+  - [x] `/admin/submissions`
+- [x] **[Opus 4.5]** Style with Tailwind — clean, modern look
+- [x] **[Codex/Opus]** Add basic render tests for layout and nav components
+- [x] **[Codex/Opus]** TEST: Run `npm test` and `npm run lint` — both pass
 
 ---
 

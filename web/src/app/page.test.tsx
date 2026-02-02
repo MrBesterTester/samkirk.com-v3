@@ -1,31 +1,59 @@
-/* eslint-disable @next/next/no-img-element, jsx-a11y/alt-text */
 import { render, screen } from "@testing-library/react";
-import type { ImgHTMLAttributes } from "react";
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 import Home from "./page";
 
-vi.mock("next/image", () => ({
-  default: ({
-    priority,
-    fetchPriority,
-    ...props
-  }: ImgHTMLAttributes<HTMLImageElement> & {
-    priority?: boolean;
-    fetchPriority?: string;
-  }) => {
-    void priority;
-    void fetchPriority;
-
-    return <img {...props} />;
-  },
-}));
-
 describe("Home page", () => {
-  it("renders the starter heading", () => {
+  it("renders the welcome heading", () => {
     render(<Home />);
 
     expect(
-      screen.getByText("To get started, edit the page.tsx file.")
+      screen.getByRole("heading", { name: /hi, i'm sam kirk/i })
     ).toBeInTheDocument();
+  });
+
+  it("renders the hiring manager section", () => {
+    render(<Home />);
+
+    // Use getAllBy since there might be multiple matches and check at least one exists
+    const headings = screen.getAllByRole("heading", { name: /hiring manager/i });
+    expect(headings.length).toBeGreaterThanOrEqual(1);
+  });
+
+  it("renders links to all three AI tools", () => {
+    render(<Home />);
+
+    // Use getAllBy to handle potential duplicates from page structure
+    const fitLinks = screen.getAllByRole("link", { name: /how do i fit/i });
+    expect(fitLinks.length).toBeGreaterThanOrEqual(1);
+    expect(fitLinks[0]).toHaveAttribute("href", "/tools/fit");
+
+    const resumeLinks = screen.getAllByRole("link", { name: /custom resume/i });
+    expect(resumeLinks.length).toBeGreaterThanOrEqual(1);
+    expect(resumeLinks[0]).toHaveAttribute("href", "/tools/resume");
+
+    const interviewLinks = screen.getAllByRole("link", { name: /interview me/i });
+    expect(interviewLinks.length).toBeGreaterThanOrEqual(1);
+    expect(interviewLinks[0]).toHaveAttribute("href", "/tools/interview");
+  });
+
+  it("renders the explore section with navigation links", () => {
+    render(<Home />);
+
+    const explorationsLinks = screen.getAllByRole("link", { name: /explorations/i });
+    expect(explorationsLinks.length).toBeGreaterThanOrEqual(1);
+
+    const danceMenuLinks = screen.getAllByRole("link", { name: /dance menu/i });
+    expect(danceMenuLinks.length).toBeGreaterThanOrEqual(1);
+
+    const songLinks = screen.getAllByRole("link", { name: /song dedication/i });
+    expect(songLinks.length).toBeGreaterThanOrEqual(1);
+  });
+
+  it("renders contact email link", () => {
+    render(<Home />);
+
+    const emailLinks = screen.getAllByRole("link", { name: /sam@samkirk\.com/i });
+    expect(emailLinks.length).toBeGreaterThanOrEqual(1);
+    expect(emailLinks[0]).toHaveAttribute("href", "mailto:sam@samkirk.com");
   });
 });
