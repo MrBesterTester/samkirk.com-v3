@@ -1114,7 +1114,8 @@ alwaysApply: true
 
 **Model:** Claude Opus 4.5 (same session as Phase 2)
 
-- [ ] **3.1 [AI] Generate TODO checklist from `docs/BLUEPRINT.md`**
+- [x] **3.1 [AI] Generate TODO checklist from `docs/BLUEPRINT.md`**
+  - Evidence: created `docs/TODO.md` with checkboxes, phase/step grouping, and model labels.
   Steps:
   - Ensure `docs/BLUEPRINT.md` exists (Phase 2).
   - Ensure `/.cursor/commands/create-todo.md` exists (Phase 0.3).
