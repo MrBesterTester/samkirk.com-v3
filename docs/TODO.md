@@ -91,8 +91,8 @@
   - [x] Reads/writes test object to private bucket (safe prefix)
   - [x] Writes/reads test doc to Firestore (safe collection)
   - [x] Fails fast with clear message if env missing
-- [ ] **[Gemini 3 Pro]** TEST: Run smoke script with real GCP credentials to verify integration
-  - [ ] Complete GCP setup checklist in `docs/GCP-SETUP.md`
+- [x] **[Gemini 3 Pro]** TEST: Run smoke script with real GCP credentials to verify integration
+  - [x] Complete GCP setup checklist in `docs/GCP-SETUP.md`
 
 ### 2.2 Implement session cookie + session doc
 

@@ -11,34 +11,34 @@ Use this checklist to track your progress:
 ### Prerequisites
 - [x] gcloud CLI installed
 - [x] Node.js installed (v18+ recommended)
-- [ ] Google Cloud account with billing enabled
+- [x] Google Cloud account with billing enabled
 
 ### Step 1: GCP Project Setup
-- [ ] 1.1 Authenticated with `gcloud auth login`
-- [ ] 1.2 Created or selected a GCP project
-- [ ] 1.3 Billing enabled for the project
-- [ ] 1.4 Enabled required APIs (Firestore, Storage, Vertex AI)
+- [x] 1.1 Authenticated with `gcloud auth login`
+- [x] 1.2 Created or selected a GCP project
+- [x] 1.3 Billing enabled for the project
+- [x] 1.4 Enabled required APIs (Firestore, Storage, Vertex AI)
 
 ### Step 2: Firestore Database
-- [ ] 2.1 Created Firestore database
-- [ ] 2.2 Verified database exists
+- [x] 2.1 Created Firestore database
+- [x] 2.2 Verified database exists
 
 ### Step 3: Cloud Storage Buckets
-- [ ] 3.1 Created private bucket
-- [ ] 3.2 Created public bucket with public access
-- [ ] 3.3 Verified buckets exist
+- [x] 3.1 Created private bucket
+- [x] 3.2 Created public bucket (public access pending org policy)
+- [x] 3.3 Verified buckets exist
 
 ### Step 4: Application Default Credentials
-- [ ] 4.1 Ran `gcloud auth application-default login`
-- [ ] 4.2 Verified credentials with `print-access-token`
+- [x] 4.1 Ran `gcloud auth application-default login`
+- [x] 4.2 Verified credentials with `print-access-token`
 
 ### Step 5: Environment Variables
-- [ ] 5.1 Created `web/.env.local` file
-- [ ] 5.2 Added all required variables
+- [x] 5.1 Created `web/.env.local` file
+- [x] 5.2 Added all required variables
 
 ### Step 6: Smoke Test
-- [ ] 6.1 Ran `npm run smoke:gcp`
-- [ ] 6.2 All tests passed
+- [x] 6.1 Ran `npm run smoke:gcp`
+- [x] 6.2 All tests passed
 
 ---
 
@@ -378,3 +378,176 @@ gcloud firestore databases list
 # List enabled APIs
 gcloud services list --enabled
 ```
+
+---
+
+## Execution Evidence (2026-02-02)
+
+This section documents the actual commands executed and their results.
+
+### Prerequisites Verification
+
+```bash
+$ gcloud --version
+Google Cloud SDK 551.0.0
+alpha 2026.01.02
+beta 2026.01.02
+bq 2.1.26
+core 2026.01.02
+
+$ gcloud auth list
+     Credentialed Accounts
+ACTIVE  ACCOUNT
+*       sam@samkirk.com
+```
+
+### Billing Account Creation
+
+Created new billing account via Google Cloud Console:
+- **Name:** `samkirk-com-billing`
+- **Account ID:** `REDACTED`
+- **Status:** Open
+
+```bash
+$ gcloud billing accounts list
+ACCOUNT_ID            NAME                  OPEN   MASTER_ACCOUNT_ID
+REDACTED  samkirk-com-billing   True
+```
+
+### Step 1: Project Creation
+
+```bash
+$ gcloud projects create samkirk-v3 --name="samkirk-com v3"
+Create in progress for [https://cloudresourcemanager.googleapis.com/v1/projects/samkirk-v3].
+Waiting for [operations/create_project.global.8695432174497738446] to finish...done.
+Enabling service [cloudapis.googleapis.com] on project [samkirk-v3]...
+Operation finished successfully.
+
+$ gcloud config set project samkirk-v3
+Updated property [core/project].
+
+$ gcloud billing projects link samkirk-v3 --billing-account=REDACTED
+billingAccountName: billingAccounts/REDACTED
+billingEnabled: true
+name: projects/samkirk-v3/billingInfo
+projectId: samkirk-v3
+
+$ gcloud services enable firestore.googleapis.com storage.googleapis.com aiplatform.googleapis.com
+Operation finished successfully.
+```
+
+### Step 2: Firestore Database
+
+```bash
+$ gcloud firestore databases create --location=us-central1
+response:
+  '@type': type.googleapis.com/google.firestore.admin.v1.Database
+  concurrencyMode: PESSIMISTIC
+  createTime: '2026-02-02T20:16:57.511209Z'
+  databaseEdition: STANDARD
+  freeTier: true
+  locationId: us-central1
+  name: projects/samkirk-v3/databases/(default)
+  type: FIRESTORE_NATIVE
+  uid: 654708d6-bac2-4caa-a925-e582ec2cc723
+```
+
+### Step 3: Cloud Storage Buckets
+
+```bash
+$ gcloud storage buckets create gs://samkirk-v3-private \
+    --location=us-central1 \
+    --uniform-bucket-level-access
+Creating gs://samkirk-v3-private/...
+
+$ gcloud storage buckets create gs://samkirk-v3-public \
+    --location=us-central1 \
+    --uniform-bucket-level-access
+Creating gs://samkirk-v3-public/...
+
+$ gcloud storage buckets list --project=samkirk-v3
+name: samkirk-v3-private
+location: US-CENTRAL1
+storage_url: gs://samkirk-v3-private/
+uniform_bucket_level_access: true
+
+name: samkirk-v3-public
+location: US-CENTRAL1
+storage_url: gs://samkirk-v3-public/
+uniform_bucket_level_access: true
+```
+
+> **Note:** Public access binding for `samkirk-v3-public` failed due to organization-level public access prevention policy. This will be addressed separately when needed for Dance Menu publishing.
+
+### Step 4: Application Default Credentials
+
+```bash
+$ gcloud auth application-default login
+Your browser has been opened to visit: https://accounts.google.com/o/oauth2/auth?...
+
+Credentials saved to file: [/Users/sam/.config/gcloud/application_default_credentials.json]
+
+Quota project "samkirk-v3" was added to ADC which can be used by Google client libraries for billing and quota.
+```
+
+### Step 5: Environment Variables
+
+Created `web/.env.local` with:
+
+```bash
+GCP_PROJECT_ID=samkirk-v3
+GCS_PUBLIC_BUCKET=samkirk-v3-public
+GCS_PRIVATE_BUCKET=samkirk-v3-private
+VERTEX_AI_LOCATION=us-central1
+VERTEX_AI_MODEL=gemini-1.5-pro
+RECAPTCHA_SITE_KEY=placeholder-site-key
+RECAPTCHA_SECRET_KEY=placeholder-secret-key
+GOOGLE_OAUTH_CLIENT_ID=placeholder-client-id
+GOOGLE_OAUTH_CLIENT_SECRET=placeholder-client-secret
+```
+
+### Step 6: Smoke Test Results
+
+```bash
+$ cd web && npm run smoke:gcp
+
+=== GCP Smoke Test ===
+
+→ Checking environment variables...
+✓ Environment variables validated
+→   Project: samkirk-v3
+→   Private bucket: samkirk-v3-private
+
+--- Cloud Storage Test ---
+
+→ Writing to _smoke_test/test-file.txt...
+✓ Write successful
+→ Reading from _smoke_test/test-file.txt...
+✓ Read successful, content matches
+→ Cleaning up _smoke_test/test-file.txt...
+✓ Cleanup successful
+
+--- Firestore Test ---
+
+→ Writing to _smoke_test/test-doc...
+✓ Write successful
+→ Reading from _smoke_test/test-doc...
+✓ Read successful, data matches
+→ Cleaning up _smoke_test/test-doc...
+✓ Cleanup successful
+
+=== All smoke tests passed! ===
+```
+
+### Resource Summary
+
+| Resource | Value |
+|----------|-------|
+| **Project ID** | `samkirk-v3` |
+| **Project Number** | `REDACTED` |
+| **Billing Account** | `samkirk-com-billing` (REDACTED) |
+| **Region** | `us-central1` |
+| **Firestore Database** | `(default)` - Native mode |
+| **Private Bucket** | `gs://samkirk-v3-private` |
+| **Public Bucket** | `gs://samkirk-v3-public` |
+| **ADC Location** | `~/.config/gcloud/application_default_credentials.json` |
