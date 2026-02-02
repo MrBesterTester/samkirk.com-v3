@@ -929,7 +929,8 @@ Git workflow commands live only in your home folder; Phase 0.3 verifies or creat
 
 **Model:** ChatGPT Auto Mode
 
-- [ ] **1.1 [You + AI] Complete specification interview (one question at a time)**
+- [x] **1.1 [You + AI] Complete specification interview (one question at a time)**  
+  - Evidence: `docs/SPECIFICATION.md` created (commit `fe7f87c`).
   Steps:
   - Ensure `/.cursor/commands/create-spec.md` exists (Phase 0.3).
   - Start a fresh chat in Cursor.
@@ -946,7 +947,8 @@ Git workflow commands live only in your home folder; Phase 0.3 verifies or creat
 
 **Model:** Any
 
-- [ ] **1.5.1 [AI] Update `.gitignore` for the stack chosen in `docs/SPECIFICATION.md`**
+- [x] **1.5.1 [AI] Update `.gitignore` for the stack chosen in `docs/SPECIFICATION.md`**  
+  - Evidence: updated `/.gitignore` with Next.js/TypeScript ignores (node_modules, `.next`, build outputs, coverage).
   Steps:
   - Read `docs/SPECIFICATION.md` and identify languages/frameworks.
   - Update `/.gitignore` by adding the relevant block below.
