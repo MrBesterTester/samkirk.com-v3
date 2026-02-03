@@ -153,7 +153,8 @@
 - [x] **[Gemini 3 Pro]** TEST: Manual smoke test for public bucket permissions
   - Verified SDK access works via `npm run smoke:gcp`
   - Verified public HTTP access is blocked (as expected)
-  - Proxy implementation ensures downloads work for end users (Verified with `src/app/api/public/[...path]/route.test.ts`)
+  - Proxy integration tests pass (3/3): serve file, 404 handling, directory traversal blocking
+  - Re-verified during Step 5.2: `npm test -- --run --testNamePattern="Public Proxy"` passes all 3 tests
 
 ---
 
@@ -199,13 +200,22 @@
 
 ### 5.2 Rate limiting utility (10 requests / 10 minutes)
 
-- [ ] **[Codex/Opus]** Create rate limit key derivation (session+ip hash)
-- [ ] **[Codex/Opus]** Implement Firestore-backed counter with `windowStart`, `count`, `expiresAt`
-- [ ] **[Codex/Opus]** Create `enforceRateLimit(req)` utility — throws typed error when blocked
-- [ ] **[Codex/Opus]** Apply to all `/api/tools/**` endpoints
-- [ ] **[Codex/Opus]** Return friendly "contact sam@samkirk.com" error payload when blocked
-- [ ] **[Codex/Opus]** Add unit tests for counter increments and window behavior
-- [ ] **[Codex/Opus]** TEST: Run unit tests — all rate limit tests pass
+- [x] **[Codex/Opus]** Create rate limit key derivation (session+ip hash)
+- [x] **[Codex/Opus]** Implement Firestore-backed counter with `windowStart`, `count`, `expiresAt`
+- [x] **[Codex/Opus]** Create `enforceRateLimit(req)` utility — throws typed error when blocked
+- [x] **[Codex/Opus]** Apply to all `/api/tools/**` endpoints
+- [x] **[Codex/Opus]** Return friendly "contact sam@samkirk.com" error payload when blocked
+- [x] **[Codex/Opus]** Add unit tests for counter increments and window behavior
+- [x] **[Codex/Opus]** TEST: Run unit tests — all rate limit tests pass
+  - 50 unit tests in `src/lib/rate-limit.test.ts` covering:
+    - Constants validation (4 tests)
+    - `RateLimitError` class behavior and JSON serialization (6 tests)
+    - IP extraction from `X-Forwarded-For`, `X-Real-IP`, and fallback (9 tests)
+    - Key derivation consistency and format (7 tests)
+    - Window creation and timestamp calculation (7 tests)
+    - Window expiration detection edge cases (6 tests)
+    - Remaining time calculation (5 tests)
+    - Integration scenarios and counter simulation (6 tests)
 
 ### 5.3 Spend cap enforcement ($20/month)
 
