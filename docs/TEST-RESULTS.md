@@ -25,6 +25,7 @@
 - [Unit Tests](#unit-tests)
   - [Results](#results)
   - [Test File Breakdown](#test-file-breakdown)
+  - [Fit Flow State Machine (Step 6.2)](#fit-flow-state-machine-step-62)
 - [Lint Check](#lint-check)
 - [Notes](#notes)
   - [What These Tests Do NOT Cover](#what-these-tests-do-not-cover)
@@ -38,7 +39,7 @@
 | Category | Result | Details |
 |----------|--------|---------|
 | GCP Smoke Tests | **PASS** | 9/9 sections passed |
-| Unit Tests | **PASS** | 556/556 tests passed |
+| Unit Tests | **PASS** | 652/652 tests passed |
 | Lint | **PASS** | 0 errors, 0 warnings |
 
 ---
@@ -313,15 +314,16 @@ This is **not** independent verification via `gcloud` CLI—the script verifies 
 ### Results
 
 ```
-Test Files  28 passed (28)
-     Tests  556 passed (556)
-  Duration  7.93s
+Test Files  29 passed (29)
+     Tests  652 passed (652)
+  Duration  8.51s
 ```
 
 ### Test File Breakdown
 
 | File | Tests | Coverage Area |
 |------|-------|---------------|
+| `fit-flow.test.ts` | 96 | Fit flow state machine ([Step 6.2](#fit-flow-state-machine-step-62)) |
 | `job-ingestion.test.ts` | 74 | Job text ingestion from paste/URL/file (Step 6.1) |
 | `spend-cap.test.ts` | 60 | Spend cap enforcement (Step 5.3) |
 | `markdown-renderer.test.ts` | 56 | Markdown to HTML rendering (Step 4.2) |
@@ -340,6 +342,55 @@ Test Files  28 passed (28)
 | Component tests | 44 | UI components (Header, Footer, etc.) |
 | Page tests | 29 | Page rendering |
 | Route tests | 3 | API route integration |
+
+### Fit Flow State Machine (Step 6.2)
+
+**File:** `src/lib/fit-flow.test.ts`
+
+**Purpose:** Verify the multi-turn Fit flow state machine for the "How Do I Fit?" tool
+
+**Test Categories (96 tests):**
+
+| Category | Tests | Description |
+|----------|-------|-------------|
+| Constants validation | 4 | MAX_FOLLOW_UPS=5, HOME_LOCATION, MAX_COMMUTE_MINUTES=30, MAX_ONSITE_DAYS=2 |
+| Initial state creation | 9 | `createInitialExtractedFields()`, `createInitialFitFlowState()` |
+| Seniority extraction | 11 | C-level, VP, director, principal, staff, senior, mid, entry, unknown patterns |
+| Location type extraction | 7 | Fully remote, hybrid, onsite, unknown detection from job text |
+| Location fit evaluation | 14 | Rules: fully remote=acceptable, hybrid≤2 days+≤30min=acceptable, else unacceptable |
+| Worst-case handling | 3 | `applyWorstCaseLocation()` sets status + marks confirmed |
+| Follow-up generation | 8 | Priority: location → onsite freq → commute → seniority → skills |
+| nextQuestion state machine | 6 | Error states, ready state, question generation, max follow-ups |
+| Follow-up counting (0..5) | 5 | Tracks count correctly, stops at 5, allows 0-4 questions |
+| Answer processing | 5 | Validates pending question, rejects mismatches, updates history |
+| Answer application | 11 | Location, onsite frequency, commute, seniority, skills parsing |
+| Commute estimation | 8 | Bay Area cities: Fremont=10min, SF=55min, unknown=null |
+| Flow initialization | 2 | `initializeFitFlow()` with job input |
+| Flow finalization | 2 | `finalizeForReport()` applies worst-case for unknowns |
+| Helper functions | 5 | `isReadyForReport()`, `getUnknownFields()` |
+| Integration scenarios | 5 | Full flows: remote job, hybrid with follow-ups, worst-case application |
+| Text extraction | 4 | `extractJobTitle()`, `extractCompanyName()`, `extractMustHaveSkills()` |
+
+**Key Behaviors Verified:**
+
+1. **Location Rules (per spec):**
+   - Fully remote → acceptable
+   - Hybrid ≤2 days/week AND ≤30 min commute from Fremont, CA → acceptable
+   - Higher onsite frequency or longer commute → unacceptable
+   - Unknown + user can't clarify → worst_case (treated as poor fit)
+
+2. **Follow-up Limit:**
+   - Maximum 5 follow-up questions enforced
+   - After 5 questions, flow proceeds to report generation
+
+3. **Question Priority:**
+   1. Location type (required)
+   2. Onsite frequency for hybrid (required)
+   3. Commute estimate for hybrid/onsite (required)
+   4. Seniority level (optional)
+   5. Must-have skills (optional)
+
+**Back to:** [TODO.md Step 6.2](TODO.md#62-fit-flow-state-machine-up-to-5-follow-ups)
 
 ---
 
@@ -384,6 +435,7 @@ These should return empty results if cleanup succeeded.
 
 | Date | Changes |
 |------|---------|
+| 2026-02-03 | Added Fit Flow State Machine tests (96 tests, Step 6.2) |
 | 2026-02-03 | Section 9 now automated in smoke script; added section filtering (`--section=N`) |
 | 2026-02-03 | Added Section 9: Job Ingestion URL Fetch Test (Step 6.1) |
 | 2026-02-03 | Initial document with Phase 0–5 test results |

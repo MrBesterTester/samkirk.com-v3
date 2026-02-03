@@ -308,12 +308,13 @@
 
 ### 6.2 Fit flow state machine (up to 5 follow-ups)
 
-- [ ] **[Codex/Opus]** Define Fit state schema: jobText, extracted fields, followUpsAsked, history
-- [ ] **[Codex/Opus]** Implement `nextQuestion(state)` function — returns question or "ready"
-- [ ] **[Codex/Opus]** Apply location rules: assume worst-case if unclear and user can't clarify
-- [ ] **[Codex/Opus]** Limit to max 5 follow-up questions
-- [ ] **[Codex/Opus]** Add unit tests: 0..5 follow-ups, missing fields, worst-case location
-- [ ] **[Codex/Opus]** TEST: Run unit tests — all state machine tests pass
+- [x] **[Codex/Opus]** Define Fit state schema: jobText, extracted fields, followUpsAsked, history
+- [x] **[Codex/Opus]** Implement `nextQuestion(state)` function — returns question or "ready"
+- [x] **[Codex/Opus]** Apply location rules: assume worst-case if unclear and user can't clarify
+- [x] **[Codex/Opus]** Limit to max 5 follow-up questions
+- [x] **[Codex/Opus]** Add unit tests: 0..5 follow-ups, missing fields, worst-case location
+- [x] **[Codex/Opus]** TEST: Run unit tests — all state machine tests pass
+  - 96 unit tests — see [TEST-RESULTS.md § Fit Flow State Machine](TEST-RESULTS.md#fit-flow-state-machine-step-62)
 
 ### 6.3 LLM prompt + structured report generation (+ citations)
 
