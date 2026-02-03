@@ -318,13 +318,18 @@
 
 ### 6.3 LLM prompt + structured report generation (+ citations)
 
-- [ ] **[Codex/Opus]** Create server-only prompt builder using extracted job fields + rules
-- [ ] **[Codex/Opus]** Create LLM wrapper module for Vertex AI Gemini calls
-- [ ] **[Codex/Opus]** Request structured markdown report (Well/Average/Poorly, rationales, unknowns, recommendation)
-- [ ] **[Codex/Opus]** Append citations section at end
-- [ ] **[Codex/Opus]** Store artifacts (.md, .html) in GCS
-- [ ] **[Codex/Opus]** Store submission metadata in Firestore
-- [ ] **[Gemini 3 Pro]** TEST: Smoke test with real Vertex call (env present)
+- [x] **[Codex/Opus]** Create server-only prompt builder using extracted job fields + rules
+- [x] **[Codex/Opus]** Create LLM wrapper module for Vertex AI Gemini calls
+- [x] **[Codex/Opus]** Request structured markdown report (Well/Average/Poorly, rationales, unknowns, recommendation)
+- [x] **[Codex/Opus]** Append citations section at end
+- [x] **[Codex/Opus]** Store artifacts (.md, .html) in GCS
+- [x] **[Codex/Opus]** Store submission metadata in Firestore
+- [x] **[Gemini 3 Pro]** TEST: Smoke test with real Vertex call (env present)
+  - Added Section 10 ("Vertex AI Gemini Test") to `web/scripts/smoke-gcp.ts`
+  - Run with: `npm run smoke:gcp -- --section=10`
+  - Tests: simple generation, structured JSON output, spend tracking integration
+  - Unit tests: 36 tests in `src/lib/fit-report.test.ts`, 19 tests in `src/lib/vertex-ai.test.ts`
+  - See [TEST-RESULTS.md § Vertex AI LLM Wrapper](TEST-RESULTS.md#vertex-ai-llm-wrapper-step-63) and [TEST-RESULTS.md § Fit Report Generator](TEST-RESULTS.md#fit-report-generator-step-63)
 
 ### 6.4 UI wiring for Fit tool (multi-turn UX + downloads)
 

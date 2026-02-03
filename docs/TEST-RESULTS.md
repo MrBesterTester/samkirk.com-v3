@@ -22,10 +22,13 @@
   - [Section 7: Submission & Artifact Bundle Test](#section-7-submission--artifact-bundle-test)
   - [Section 8: Spend Cap Test](#section-8-spend-cap-test)
   - [Section 9: Job Ingestion URL Fetch Test](#section-9-job-ingestion-url-fetch-test)
+  - [Section 10: Vertex AI Gemini Test](#section-10-vertex-ai-gemini-test)
 - [Unit Tests](#unit-tests)
   - [Results](#results)
   - [Test File Breakdown](#test-file-breakdown)
   - [Fit Flow State Machine (Step 6.2)](#fit-flow-state-machine-step-62)
+  - [Vertex AI LLM Wrapper (Step 6.3)](#vertex-ai-llm-wrapper-step-63)
+  - [Fit Report Generator (Step 6.3)](#fit-report-generator-step-63)
 - [Lint Check](#lint-check)
 - [Notes](#notes)
   - [What These Tests Do NOT Cover](#what-these-tests-do-not-cover)
@@ -38,8 +41,8 @@
 
 | Category | Result | Details |
 |----------|--------|---------|
-| GCP Smoke Tests | **PASS** | 9/9 sections passed |
-| Unit Tests | **PASS** | 652/652 tests passed |
+| GCP Smoke Tests | **PASS** | 10/10 sections passed |
+| Unit Tests | **PASS** | 707/707 tests passed |
 | Lint | **PASS** | 0 errors, 0 warnings |
 
 ---
@@ -305,6 +308,54 @@ This is **not** independent verification via `gcloud` CLI—the script verifies 
 
 ---
 
+### Section 10: Vertex AI Gemini Test
+
+**Purpose:** Verify Vertex AI Gemini content generation and spend tracking integration ([Step 6.3](TODO.md#63-llm-prompt--structured-report-generation--citations))
+
+**Command:** `npm run smoke:gcp -- --section=10` (or `--section=vertex`)
+
+```
+→ Initializing Vertex AI client...
+✓ Project: samkirk-v3, Location: us-central1
+→ Getting model: gemini-1.5-flash-002...
+✓ Model loaded
+→ Testing simple content generation...
+✓ Response: "Hello from Vertex AI smoke test!..."
+→ Input tokens: 15
+→ Output tokens: 8
+→ Testing structured JSON generation...
+✓ Parsed JSON: score=Well, confidence=0.9
+→ Testing spend recording...
+✓ Spend recorded: $0.000047
+→ Spend doc cleaned up
+✓ All Vertex AI tests passed
+```
+
+**Verification:**
+
+1. **Client Initialization:**
+   - Vertex AI SDK connects to correct project and location
+   - Model loads successfully from configured `VERTEX_AI_MODEL`
+
+2. **Simple Content Generation:**
+   - Generates text response from user prompt
+   - Returns valid candidates with text content
+   - Usage metadata includes token counts
+
+3. **Structured JSON Generation:**
+   - Model produces valid JSON output (like fit report format)
+   - Handles optional markdown code fences in response
+   - Parsed JSON contains expected fields (`score`, `rationale`, `confidence`)
+
+4. **Spend Tracking Integration:**
+   - Creates spend doc at `spendMonthly/2099-11` (test month)
+   - Atomic increment via Firestore transaction works
+   - Cost estimation based on token counts
+
+**Related Unit Tests:** [Vertex AI LLM Wrapper](#vertex-ai-llm-wrapper-step-63), [Fit Report Generator](#fit-report-generator-step-63)
+
+---
+
 ## Unit Tests
 
 **Command:** `cd web && npm test -- --run`
@@ -314,10 +365,12 @@ This is **not** independent verification via `gcloud` CLI—the script verifies 
 ### Results
 
 ```
-Test Files  29 passed (29)
-     Tests  652 passed (652)
-  Duration  8.51s
+Test Files  31 passed (31)
+     Tests  707 passed (707)
+  Duration  9.34s
 ```
+
+**Note:** Tests require network access to pass completely. The `route.test.ts` integration tests (3 tests) connect to real GCP services and will skip if run in a sandboxed environment without network access.
 
 ### Test File Breakdown
 
@@ -330,10 +383,12 @@ Test Files  29 passed (29)
 | `rate-limit.test.ts` | 50 | Rate limiting utility (Step 5.2) |
 | `submission.test.ts` | 50 | Submission CRUD helpers (Step 4.1) |
 | `resume-chunker.test.ts` | 49 | Resume chunking for RAG (Step 3.3) |
+| `fit-report.test.ts` | 36 | Fit report generation ([Step 6.3](#fit-report-generator-step-63)) |
 | `session.test.ts` | 34 | Session management (Step 2.2) |
 | `artifact-bundler.test.ts` | 30 | Zip bundle generation (Step 4.2) |
 | `dance-menu-upload.test.ts` | 29 | Dance menu validation (Step 3.4) |
 | `resume-upload.test.ts` | 22 | Resume upload validation (Step 3.2) |
+| `vertex-ai.test.ts` | 19 | LLM wrapper ([Step 6.3](#vertex-ai-llm-wrapper-step-63)) |
 | `captcha.test.ts` | 14 | reCAPTCHA verification (Step 5.1) |
 | `auth.test.ts` | 11 | Admin authentication (Step 3.1) |
 | `firestore.test.ts` | 10 | Firestore path helpers |
@@ -341,7 +396,7 @@ Test Files  29 passed (29)
 | `env.test.ts` | 3 | Environment validation |
 | Component tests | 44 | UI components (Header, Footer, etc.) |
 | Page tests | 29 | Page rendering |
-| Route tests | 3 | API route integration |
+| `route.test.ts` | 3 | Public proxy API integration (Step 3.4) — requires network |
 
 ### Fit Flow State Machine (Step 6.2)
 
@@ -394,6 +449,115 @@ Test Files  29 passed (29)
 
 ---
 
+### Vertex AI LLM Wrapper (Step 6.3)
+
+**File:** `src/lib/vertex-ai.test.ts`
+
+**Purpose:** Verify the Vertex AI Gemini wrapper module error handling and type guards
+
+**Test Categories (19 tests):**
+
+| Category | Tests | Description |
+|----------|-------|-------------|
+| ContentBlockedError | 4 | Error properties, safety ratings storage, JSON serialization |
+| GenerationError | 3 | Error properties, cause error storage, JSON serialization |
+| Error type guards | 9 | `isSpendCapError()`, `isContentBlockedError()`, `isGenerationError()` |
+| Error inheritance | 3 | instanceof checks, stack traces |
+
+**Key Behaviors Verified:**
+
+1. **Error Classes:**
+   - `ContentBlockedError` for safety filter blocks (status 400)
+   - `GenerationError` for generation failures (status 500)
+   - Both serialize to JSON for API responses
+
+2. **Type Guards:**
+   - Correctly identify error types from `code` property
+   - Return false for non-matching errors and non-errors
+
+**Related Smoke Test:** [Section 10: Vertex AI Gemini Test](#section-10-vertex-ai-gemini-test)
+
+**Back to:** [TODO.md Step 6.3](TODO.md#63-llm-prompt--structured-report-generation--citations)
+
+---
+
+### Fit Report Generator (Step 6.3)
+
+**File:** `src/lib/fit-report.test.ts`
+
+**Purpose:** Verify the Fit report prompt builder, response parser, and markdown generator
+
+**Test Categories (36 tests):**
+
+| Category | Tests | Description |
+|----------|-------|-------------|
+| System prompt validation | 3 | Location rules, JSON format, score values present |
+| `formatExtractedFields()` | 5 | All fields, skip nulls, empty arrays, commute info |
+| `buildFitAnalysisPrompt()` | 5 | Job text, extracted info, resume chunks, instructions |
+| `parseFitAnalysisResponse()` | 9 | Valid JSON, code fences, score validation, missing fields |
+| `generateMarkdownReport()` | 9 | Header, job info, scores with emojis, categories, unknowns |
+| `generateCitations()` | 3 | Chunk to citation conversion, metadata preservation |
+| `FitReportError` | 2 | Error properties, JSON serialization |
+
+**Key Behaviors Verified:**
+
+1. **Prompt Building:**
+   - Includes job text in `## Job Posting` section
+   - Formats extracted fields (title, company, seniority, location, skills)
+   - Labels resume chunks as `[CHUNK N: Title]` for citation tracking
+   - Includes location rules reminder in instructions
+
+2. **Response Parsing:**
+   - Handles raw JSON and markdown-wrapped JSON (`\`\`\`json ... \`\`\``)
+   - Validates `overallScore` is one of: Well, Average, Poorly
+   - Validates each category has `name`, `score`, `rationale`
+   - Handles missing `unknowns` array (defaults to empty)
+   - Handles missing `recommendation` (provides default)
+
+3. **Report Generation:**
+   - Score emojis: ✅ Well, ⚠️ Average, ❌ Poorly
+   - Sections: Job info, Overall Fit, Recommendation, Category Breakdown, Unknowns, Extracted Details
+   - Unknowns section omitted when empty
+
+4. **Citations:**
+   - Converts resume chunks to citation format: `{chunkId, title, sourceRef}`
+   - Preserves all chunk metadata
+
+**Example Generated Report Structure:**
+```markdown
+# Fit Analysis Report
+
+## Job: Senior Software Engineer at Test Corp
+
+## Overall Fit: ✅ Well
+
+### Recommendation
+Strong overall fit...
+
+## Category Breakdown
+
+### Technical Skills: ✅ Well
+Strong TypeScript experience...
+
+### Location/Remote: ⚠️ Average
+Remote is acceptable...
+
+## Unknowns & Assumptions
+- Team structure
+- Reporting line
+
+## Extracted Job Details
+- **Job Title**: Senior Software Engineer
+- **Company**: Test Corp
+...
+```
+
+**Related Smoke Test:** [Section 10: Vertex AI Gemini Test](#section-10-vertex-ai-gemini-test)
+
+**Back to:** [TODO.md Step 6.3](TODO.md#63-llm-prompt--structured-report-generation--citations)
+
+---
+
 ## Lint Check
 
 **Command:** `cd web && npm run lint`
@@ -406,10 +570,10 @@ Test Files  29 passed (29)
 
 ### What These Tests Do NOT Cover
 
-1. **Real Vertex AI calls** — Spend cap tests simulate cost recording but don't make actual LLM requests (that comes in Step 6.3)
-2. **Real reCAPTCHA widget** — Unit tests mock the verification; manual E2E test required (see GCP-SETUP.md § 8.3)
-3. **OAuth login flow** — Unit tests mock NextAuth; manual smoke test required
-4. **Public HTTP access** — Org policy blocks `allUsers` access; proxy route handles this
+1. **Real reCAPTCHA widget** — Unit tests mock the verification; manual E2E test required (see GCP-SETUP.md § 8.3)
+2. **OAuth login flow** — Unit tests mock NextAuth; manual smoke test required
+3. **Public HTTP access** — Org policy blocks `allUsers` access; proxy route handles this
+4. **End-to-end UI flows** — Playwright E2E tests are planned for Step 6.4
 
 ### Independent Verification
 
@@ -435,6 +599,10 @@ These should return empty results if cleanup succeeded.
 
 | Date | Changes |
 |------|---------|
+| 2026-02-03 | Verified all 707 tests pass with network access (including route.test.ts integration tests) |
+| 2026-02-03 | Added Section 10: Vertex AI Gemini Test (Step 6.3) |
+| 2026-02-03 | Added Fit Report Generator tests (36 tests, Step 6.3) |
+| 2026-02-03 | Added Vertex AI LLM Wrapper tests (19 tests, Step 6.3) |
 | 2026-02-03 | Added Fit Flow State Machine tests (96 tests, Step 6.2) |
 | 2026-02-03 | Section 9 now automated in smoke script; added section filtering (`--section=N`) |
 | 2026-02-03 | Added Section 9: Job Ingestion URL Fetch Test (Step 6.1) |

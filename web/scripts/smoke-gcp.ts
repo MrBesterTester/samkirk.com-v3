@@ -1,5 +1,5 @@
 /**
- * Smoke test script for GCP integration (Firestore + Cloud Storage).
+ * Smoke test script for GCP integration (Firestore + Cloud Storage + Vertex AI).
  *
  * Run with: cd web && npm run smoke:gcp
  *
@@ -23,6 +23,7 @@
  *   7. Submission & Artifact Bundle Test
  *   8. Spend Cap Test
  *   9. Job Ingestion URL Fetch Test
+ *   10. Vertex AI Gemini Test
  */
 
 import { config } from "dotenv";
@@ -33,6 +34,7 @@ config({ path: resolve(__dirname, "../.env.local") });
 
 import { Firestore, Timestamp } from "@google-cloud/firestore";
 import { Storage } from "@google-cloud/storage";
+import { VertexAI } from "@google-cloud/vertexai";
 import { z } from "zod";
 
 // ============================================================================
@@ -55,6 +57,7 @@ const SECTIONS: SectionInfo[] = [
   { number: 7, name: "Submission & Artifact Bundle Test", aliases: ["submission", "artifact"] },
   { number: 8, name: "Spend Cap Test", aliases: ["spend", "spend-cap"] },
   { number: 9, name: "Job Ingestion URL Fetch Test", aliases: ["url-fetch", "job-ingestion", "ingestion"] },
+  { number: 10, name: "Vertex AI Gemini Test", aliases: ["vertex", "gemini", "llm", "fit-report"] },
 ];
 
 function parseArgs(): { sections: number[] | null; listSections: boolean } {
@@ -1461,6 +1464,156 @@ Generated at: ${new Date().toISOString()}
     process.exit(1);
   }
   } // End Section 9
+
+  // Section 10: Vertex AI Gemini Test
+  if (shouldRunSection(10, selectedSections)) {
+  console.log("\n--- Section 10: Vertex AI Gemini Test ---\n");
+  sectionsRun++;
+
+  try {
+    // Initialize Vertex AI client
+    log("Initializing Vertex AI client...");
+    const vertexAI = new VertexAI({
+      project: env.GCP_PROJECT_ID,
+      location: env.VERTEX_AI_LOCATION,
+    });
+    log(`Project: ${env.GCP_PROJECT_ID}, Location: ${env.VERTEX_AI_LOCATION}`, true);
+
+    // Get generative model
+    log(`Getting model: ${env.VERTEX_AI_MODEL}...`);
+    const model = vertexAI.getGenerativeModel({
+      model: env.VERTEX_AI_MODEL,
+      generationConfig: {
+        temperature: 0.3,
+        maxOutputTokens: 256,
+      },
+    });
+    log("Model loaded", true);
+
+    // Test 1: Simple content generation
+    log("Testing simple content generation...");
+    const simplePrompt = "Respond with exactly: 'Hello from Vertex AI smoke test!'";
+    
+    const simpleResult = await model.generateContent({
+      contents: [{ role: "user", parts: [{ text: simplePrompt }] }],
+    });
+
+    const simpleResponse = simpleResult.response;
+    if (!simpleResponse.candidates || simpleResponse.candidates.length === 0) {
+      throw new Error("No candidates in response");
+    }
+
+    const simpleText = simpleResponse.candidates[0].content.parts
+      .filter((p): p is { text: string } => "text" in p)
+      .map((p) => p.text)
+      .join("");
+
+    log(`Response: "${simpleText.substring(0, 100)}..."`, true);
+
+    // Verify usage metadata
+    const usageMetadata = simpleResponse.usageMetadata;
+    if (usageMetadata) {
+      log(`Input tokens: ${usageMetadata.promptTokenCount ?? "unknown"}`);
+      log(`Output tokens: ${usageMetadata.candidatesTokenCount ?? "unknown"}`);
+    }
+
+    // Test 2: Structured JSON generation (like fit report)
+    log("Testing structured JSON generation...");
+    const jsonPrompt = `Respond with valid JSON only, no markdown:
+{
+  "score": "Well",
+  "rationale": "Brief explanation",
+  "confidence": 0.9
+}`;
+
+    const jsonResult = await model.generateContent({
+      contents: [{ role: "user", parts: [{ text: jsonPrompt }] }],
+    });
+
+    const jsonResponse = jsonResult.response;
+    if (!jsonResponse.candidates || jsonResponse.candidates.length === 0) {
+      throw new Error("No candidates in JSON response");
+    }
+
+    const jsonText = jsonResponse.candidates[0].content.parts
+      .filter((p): p is { text: string } => "text" in p)
+      .map((p) => p.text)
+      .join("")
+      .trim();
+
+    // Try to parse as JSON
+    let cleanJson = jsonText;
+    if (cleanJson.startsWith("```json")) cleanJson = cleanJson.slice(7);
+    if (cleanJson.startsWith("```")) cleanJson = cleanJson.slice(3);
+    if (cleanJson.endsWith("```")) cleanJson = cleanJson.slice(0, -3);
+    cleanJson = cleanJson.trim();
+
+    const parsedJson = JSON.parse(cleanJson);
+    if (!parsedJson.score || !parsedJson.rationale) {
+      throw new Error("JSON response missing expected fields");
+    }
+    log(`Parsed JSON: score=${parsedJson.score}, confidence=${parsedJson.confidence}`, true);
+
+    // Test 3: Record spend (simulate spend tracking)
+    log("Testing spend recording...");
+    const testSpendMonthKey = "2099-11"; // Far future month for smoke test
+    const spendRef = firestore.doc(`spendMonthly/${testSpendMonthKey}`);
+
+    // Calculate estimated cost (conservative estimate)
+    const inputTokens = usageMetadata?.promptTokenCount ?? 50;
+    const outputTokens = usageMetadata?.candidatesTokenCount ?? 50;
+    const estimatedCost = (inputTokens / 1000) * 0.00125 + (outputTokens / 1000) * 0.00375;
+    
+    // Record the spend
+    await firestore.runTransaction(async (transaction) => {
+      const snapshot = await transaction.get(spendRef);
+      
+      if (snapshot.exists) {
+        const current = snapshot.data()!;
+        transaction.update(spendRef, {
+          usdUsedEstimated: current.usdUsedEstimated + estimatedCost,
+          updatedAt: Timestamp.now(),
+        });
+      } else {
+        transaction.set(spendRef, {
+          usdBudget: 20,
+          usdUsedEstimated: estimatedCost,
+          updatedAt: Timestamp.now(),
+        });
+      }
+    });
+
+    // Verify spend was recorded
+    const spendSnapshot = await spendRef.get();
+    const spendData = spendSnapshot.data();
+    if (!spendData || spendData.usdUsedEstimated < estimatedCost) {
+      throw new Error("Spend was not recorded correctly");
+    }
+    log(`Spend recorded: $${spendData.usdUsedEstimated.toFixed(6)}`, true);
+
+    // Cleanup spend doc
+    await spendRef.delete();
+    log("Spend doc cleaned up", true);
+
+    log("All Vertex AI tests passed", true);
+    sectionsPassed++;
+
+  } catch (error) {
+    // Cleanup on failure
+    try {
+      const spendRef = firestore.doc(`spendMonthly/2099-11`);
+      await spendRef.delete();
+    } catch {
+      // Ignore cleanup errors
+    }
+
+    log(
+      `Vertex AI test failed: ${error instanceof Error ? error.message : error}`,
+      false
+    );
+    process.exit(1);
+  }
+  } // End Section 10
 
   // Success!
   if (sectionsRun === 0) {
