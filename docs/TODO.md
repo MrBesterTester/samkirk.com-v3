@@ -161,12 +161,12 @@
 
 ### 4.1 Define submission schema + Firestore helpers
 
-- [ ] **[Codex/Opus]** Define typed `Submission` interface (tool, createdAt, expiresAt, status, inputs, extracted, outputs, citations, artifactGcsPrefix)
-- [ ] **[Codex/Opus]** Implement `createSubmission()` helper (sets expiresAt = now + 90 days)
-- [ ] **[Codex/Opus]** Implement `updateSubmission()` helper
-- [ ] **[Codex/Opus]** Implement `completeSubmission()` helper
-- [ ] **[Codex/Opus]** Add unit tests for TTL computation and schema validation
-- [ ] **[Codex/Opus]** TEST: Run unit tests — all submission tests pass
+- [x] **[Codex/Opus]** Define typed `Submission` interface (tool, createdAt, expiresAt, status, inputs, extracted, outputs, citations, artifactGcsPrefix)
+- [x] **[Codex/Opus]** Implement `createSubmission()` helper (sets expiresAt = now + 90 days)
+- [x] **[Codex/Opus]** Implement `updateSubmission()` helper
+- [x] **[Codex/Opus]** Implement `completeSubmission()` helper
+- [x] **[Codex/Opus]** Add unit tests for TTL computation and schema validation
+- [x] **[Codex/Opus]** TEST: Run unit tests — all submission tests pass
 
 ### 4.2 Implement artifact writer + bundle download
 
@@ -176,7 +176,7 @@
 - [ ] **[Codex/Opus]** Return zip containing inputs/extracted/outputs/citations
 - [ ] **[Codex/Opus]** Add unit tests for markdown rendering
 - [ ] **[Codex/Opus]** Add unit tests for bundle file list generation
-- [ ] **[Gemini 3 Pro]** TEST: Smoke test with real GCS write + download (env present)
+- [ ] **[Gemini 3 Pro]** TEST: Smoke test with real GCS write + download + submission CRUD (env present)
 
 ---
 
