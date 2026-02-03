@@ -27,7 +27,7 @@ export function getFirestore(): Firestore {
 export const Collections = {
   SESSIONS: "sessions",
   RATE_LIMITS: "rateLimits",
-  SPEND_MONTHLY: "spend/monthly",
+  SPEND_MONTHLY: "spendMonthly",
   RESUME_INDEX: "resumeIndex",
   RESUME_CHUNKS: "resumeChunks",
   SUBMISSIONS: "submissions",

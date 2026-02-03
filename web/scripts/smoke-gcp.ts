@@ -1067,6 +1067,136 @@ Generated at: ${new Date().toISOString()}
     process.exit(1);
   }
 
+  // Step 9: Test Spend Cap (Monthly Spend Tracking)
+  console.log("\n--- Spend Cap Test ---\n");
+
+  // Generate a test month key (use a far-future month to avoid conflicts)
+  const testMonthKey = "2099-12";
+
+  // Use the same path structure as the code: spendMonthly/{YYYY-MM}
+  const spendMonthlyRef = firestore.doc(`spendMonthly/${testMonthKey}`);
+
+  const testSpendDoc = {
+    usdBudget: 20,
+    usdUsedEstimated: 0,
+    updatedAt: Timestamp.now(),
+  };
+
+  try {
+    // Step 9.1: Create spend document
+    log(`Creating spend tracking doc for ${testMonthKey}...`);
+    await spendMonthlyRef.set(testSpendDoc);
+    log("Spend doc created", true);
+
+    // Step 9.2: Read and verify
+    log("Reading spend doc back...");
+    const spendSnapshot = await spendMonthlyRef.get();
+
+    if (!spendSnapshot.exists) {
+      throw new Error("Spend document not found after creation");
+    }
+
+    const spendData = spendSnapshot.data();
+    if (spendData?.usdBudget !== 20) {
+      throw new Error(`Budget mismatch: expected 20, got ${spendData?.usdBudget}`);
+    }
+    if (spendData?.usdUsedEstimated !== 0) {
+      throw new Error(`Initial spend should be 0, got ${spendData?.usdUsedEstimated}`);
+    }
+    log("Spend doc data verified", true);
+
+    // Step 9.3: Simulate spend recording with atomic increment
+    log("Testing spend increment (simulating LLM call)...");
+    const incrementAmount = 0.005; // ~5 cents
+
+    await firestore.runTransaction(async (transaction) => {
+      const snapshot = await transaction.get(spendMonthlyRef);
+      if (!snapshot.exists) {
+        throw new Error("Document disappeared during transaction");
+      }
+
+      const current = snapshot.data()!;
+      transaction.update(spendMonthlyRef, {
+        usdUsedEstimated: current.usdUsedEstimated + incrementAmount,
+        updatedAt: Timestamp.now(),
+      });
+    });
+    log(`Recorded spend of $${incrementAmount.toFixed(4)}`, true);
+
+    // Step 9.4: Verify increment
+    const afterIncrementSnapshot = await spendMonthlyRef.get();
+    const afterIncrementData = afterIncrementSnapshot.data();
+
+    if (Math.abs(afterIncrementData?.usdUsedEstimated - incrementAmount) > 0.0001) {
+      throw new Error(
+        `Spend mismatch after increment: expected ${incrementAmount}, got ${afterIncrementData?.usdUsedEstimated}`
+      );
+    }
+    log("Spend increment verified", true);
+
+    // Step 9.5: Simulate multiple increments (concurrent-safe via transaction)
+    log("Testing multiple increments...");
+    for (let i = 0; i < 3; i++) {
+      await firestore.runTransaction(async (transaction) => {
+        const snapshot = await transaction.get(spendMonthlyRef);
+        if (!snapshot.exists) {
+          throw new Error("Document disappeared during transaction");
+        }
+
+        const current = snapshot.data()!;
+        transaction.update(spendMonthlyRef, {
+          usdUsedEstimated: current.usdUsedEstimated + 0.001,
+          updatedAt: Timestamp.now(),
+        });
+      });
+    }
+
+    const afterMultiSnapshot = await spendMonthlyRef.get();
+    const afterMultiData = afterMultiSnapshot.data();
+    const expectedTotal = incrementAmount + 0.003;
+
+    if (Math.abs(afterMultiData?.usdUsedEstimated - expectedTotal) > 0.0001) {
+      throw new Error(
+        `Total spend mismatch: expected ~${expectedTotal.toFixed(4)}, got ${afterMultiData?.usdUsedEstimated}`
+      );
+    }
+    log(`Multiple increments verified (total: $${afterMultiData?.usdUsedEstimated.toFixed(4)})`, true);
+
+    // Step 9.6: Test cap detection logic
+    log("Testing cap detection...");
+    await spendMonthlyRef.update({
+      usdUsedEstimated: 20.01,
+      updatedAt: Timestamp.now(),
+    });
+
+    const overCapSnapshot = await spendMonthlyRef.get();
+    const overCapData = overCapSnapshot.data();
+
+    const isCapExceeded = overCapData?.usdUsedEstimated >= overCapData?.usdBudget;
+    if (!isCapExceeded) {
+      throw new Error("Cap detection failed: should be exceeded at $20.01");
+    }
+    log("Cap detection verified ($20.01 >= $20)", true);
+
+    // Cleanup
+    log("Cleaning up test spend doc...");
+    await spendMonthlyRef.delete();
+    log("Test spend doc deleted", true);
+
+  } catch (error) {
+    // Cleanup on failure
+    try {
+      await spendMonthlyRef.delete();
+    } catch {
+      // Ignore cleanup errors
+    }
+    log(
+      `Spend cap test failed: ${error instanceof Error ? error.message : error}`,
+      false
+    );
+    process.exit(1);
+  }
+
   // Success!
   console.log("\n=== All smoke tests passed! ===\n");
 }

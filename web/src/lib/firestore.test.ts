@@ -33,7 +33,7 @@ describe("firestore path helpers", () => {
     it("defines expected collection names", () => {
       expect(Collections.SESSIONS).toBe("sessions");
       expect(Collections.RATE_LIMITS).toBe("rateLimits");
-      expect(Collections.SPEND_MONTHLY).toBe("spend/monthly");
+      expect(Collections.SPEND_MONTHLY).toBe("spendMonthly");
       expect(Collections.RESUME_INDEX).toBe("resumeIndex");
       expect(Collections.RESUME_CHUNKS).toBe("resumeChunks");
       expect(Collections.SUBMISSIONS).toBe("submissions");
@@ -60,8 +60,8 @@ describe("firestore path helpers", () => {
 
   describe("spendMonthlyDocPath", () => {
     it("builds correct path for monthly spend document", () => {
-      expect(spendMonthlyDocPath("2026-02")).toBe("spend/monthly/2026-02");
-      expect(spendMonthlyDocPath("2025-12")).toBe("spend/monthly/2025-12");
+      expect(spendMonthlyDocPath("2026-02")).toBe("spendMonthly/2026-02");
+      expect(spendMonthlyDocPath("2025-12")).toBe("spendMonthly/2025-12");
     });
   });
 
