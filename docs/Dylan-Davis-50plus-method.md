@@ -907,7 +907,7 @@ Continue with Step
 ```
 
   - [x] **[AI] Verify global git workflow commands in `~/.cursor/commands/` (create only if missing)**  
-    Evidence: Verified via `ls ~/.cursor/commands/` - `git-commit-local.md` (pre-existing) and `git-remote-push-clean-with-squash.md` (created 2026-02-02, replacing `git-commit-push.md`) exist.
+    Evidence: Verified via `ls ~/.cursor/commands/` - `git-commit-local.md` (pre-existing) and `git-remote-push-clean-with-squash.md` (created 2026-02-02) exist. Note: Project-level commands in `.cursor/commands/` were removed in favor of using global commands.
     Notes:
     - These live in your home folder, not this repo.
     - If you already have equivalents, do not overwrite unless you explicitly want them updated.
