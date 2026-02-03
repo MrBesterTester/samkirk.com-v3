@@ -1,11 +1,11 @@
 /**
  * Smoke test script for GCP integration (Firestore + Cloud Storage).
  *
- * Run with: npm run smoke:gcp
+ * Run with: cd web && npm run smoke:gcp
  *
  * Prerequisites:
  * - GCP credentials set up (GOOGLE_APPLICATION_CREDENTIALS or gcloud auth)
- * - Required environment variables set (see env.ts)
+ * - web/.env.local file with required environment variables
  *
  * This script:
  * 1. Validates all required environment variables are present
@@ -13,6 +13,12 @@
  * 3. Writes/reads a test document in Firestore
  * 4. Cleans up test artifacts
  */
+
+import { config } from "dotenv";
+import { resolve } from "path";
+
+// Load .env.local from the web directory
+config({ path: resolve(__dirname, "../.env.local") });
 
 import { Firestore, Timestamp } from "@google-cloud/firestore";
 import { Storage } from "@google-cloud/storage";
@@ -217,6 +223,161 @@ async function main(): Promise<void> {
       // Ignore cleanup errors
     }
     log(`Session test failed: ${error instanceof Error ? error.message : error}`, false);
+    process.exit(1);
+  }
+
+  // Step 5: Test Resume Upload Flow (GCS + Firestore metadata)
+  console.log("\n--- Resume Upload Test ---\n");
+
+  const RESUME_GCS_PATH = "resume/master.md";
+  const RESUME_INDEX_COLLECTION = "resumeIndex";
+  const RESUME_INDEX_DOC = "current";
+
+  // Test resume content (markdown)
+  const testResumeContent = `# Test Resume
+
+## Summary
+This is a smoke test resume to verify the upload pipeline.
+
+## Experience
+- **Test Company** (2020-Present)
+  - Did some testing things
+  - Verified smoke tests work
+
+## Skills
+- TypeScript
+- GCP
+- Testing
+
+---
+Generated at: ${new Date().toISOString()}
+`;
+
+  const resumeIndexRef = firestore
+    .collection(RESUME_INDEX_COLLECTION)
+    .doc(RESUME_INDEX_DOC);
+
+  // Store original resume data to restore later
+  let originalResumeExists = false;
+  let originalResumeContent: string | null = null;
+  let originalIndexData: Record<string, unknown> | null = null;
+
+  try {
+    // Check if real resume already exists (we'll restore it after test)
+    log("Checking for existing resume...");
+    try {
+      const [existingContent] = await privateBucket
+        .file(RESUME_GCS_PATH)
+        .download();
+      originalResumeContent = existingContent.toString("utf-8");
+      originalResumeExists = true;
+      log("Found existing resume (will restore after test)", true);
+    } catch {
+      log("No existing resume found", true);
+    }
+
+    // Check for existing index
+    const existingIndex = await resumeIndexRef.get();
+    if (existingIndex.exists) {
+      originalIndexData = existingIndex.data() as Record<string, unknown>;
+      log("Found existing resume index (will restore after test)", true);
+    }
+
+    // Test 1: Write resume to GCS
+    log(`Writing test resume to ${RESUME_GCS_PATH}...`);
+    await privateBucket.file(RESUME_GCS_PATH).save(testResumeContent, {
+      contentType: "text/markdown; charset=utf-8",
+      resumable: false,
+    });
+    log("Resume write to GCS successful", true);
+
+    // Test 2: Read back and verify
+    log(`Reading resume from ${RESUME_GCS_PATH}...`);
+    const [downloadedResume] = await privateBucket
+      .file(RESUME_GCS_PATH)
+      .download();
+    const readResumeContent = downloadedResume.toString("utf-8");
+
+    if (readResumeContent !== testResumeContent) {
+      throw new Error("Resume content mismatch after write!");
+    }
+    log("Resume content verified", true);
+
+    // Test 3: Update Firestore metadata
+    const testVersion = 9999; // Use high number to avoid conflicts
+    const testIndexData = {
+      resumeGcsPath: RESUME_GCS_PATH,
+      indexedAt: Timestamp.now(),
+      chunkCount: 0,
+      version: testVersion,
+    };
+
+    log(`Writing resume index to ${RESUME_INDEX_COLLECTION}/${RESUME_INDEX_DOC}...`);
+    await resumeIndexRef.set(testIndexData);
+    log("Resume index write successful", true);
+
+    // Test 4: Read back and verify Firestore data
+    log("Reading resume index back...");
+    const indexSnapshot = await resumeIndexRef.get();
+
+    if (!indexSnapshot.exists) {
+      throw new Error("Resume index document not found after write");
+    }
+
+    const indexData = indexSnapshot.data();
+    if (indexData?.version !== testVersion) {
+      throw new Error(
+        `Resume index version mismatch! Expected: ${testVersion}, got: ${indexData?.version}`
+      );
+    }
+    if (indexData?.resumeGcsPath !== RESUME_GCS_PATH) {
+      throw new Error("Resume index GCS path mismatch!");
+    }
+    log("Resume index data verified", true);
+
+    // Cleanup / Restore
+    log("Restoring original state...");
+
+    if (originalResumeExists && originalResumeContent) {
+      await privateBucket.file(RESUME_GCS_PATH).save(originalResumeContent, {
+        contentType: "text/markdown; charset=utf-8",
+        resumable: false,
+      });
+      log("Original resume content restored", true);
+    } else {
+      await privateBucket.file(RESUME_GCS_PATH).delete();
+      log("Test resume deleted", true);
+    }
+
+    if (originalIndexData) {
+      await resumeIndexRef.set(originalIndexData);
+      log("Original resume index restored", true);
+    } else {
+      await resumeIndexRef.delete();
+      log("Test resume index deleted", true);
+    }
+  } catch (error) {
+    // Try to restore on failure
+    try {
+      if (originalResumeExists && originalResumeContent) {
+        await privateBucket.file(RESUME_GCS_PATH).save(originalResumeContent, {
+          contentType: "text/markdown; charset=utf-8",
+          resumable: false,
+        });
+      } else {
+        await privateBucket.file(RESUME_GCS_PATH).delete();
+      }
+
+      if (originalIndexData) {
+        await resumeIndexRef.set(originalIndexData);
+      } else {
+        await resumeIndexRef.delete();
+      }
+    } catch {
+      log("Warning: Failed to restore original state during cleanup", false);
+    }
+
+    log(`Resume upload test failed: ${error instanceof Error ? error.message : error}`, false);
     process.exit(1);
   }
 

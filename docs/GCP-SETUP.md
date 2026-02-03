@@ -4,6 +4,88 @@ This guide walks through setting up Google Cloud Platform credentials and resour
 
 ---
 
+## Table of Contents
+
+- [GCP Setup Guide for samkirk.com v3](#gcp-setup-guide-for-samkirkcom-v3)
+  - [Table of Contents](#table-of-contents)
+  - [Setup Checklist](#setup-checklist)
+    - [Prerequisites](#prerequisites)
+    - [Step 1: GCP Project Setup](#step-1-gcp-project-setup)
+    - [Step 2: Firestore Database](#step-2-firestore-database)
+    - [Step 3: Cloud Storage Buckets](#step-3-cloud-storage-buckets)
+    - [Step 4: Application Default Credentials](#step-4-application-default-credentials)
+    - [Step 5: Environment Variables](#step-5-environment-variables)
+    - [Step 6: Smoke Test](#step-6-smoke-test)
+    - [Step 7: Google OAuth for Admin Auth](#step-7-google-oauth-for-admin-auth)
+    - [Step 8: reCAPTCHA v2 Setup](#step-8-recaptcha-v2-setup)
+  - [Prerequisites](#prerequisites-1)
+    - [Verify gcloud CLI Installation](#verify-gcloud-cli-installation)
+    - [Verify Node.js Installation](#verify-nodejs-installation)
+  - [Step 1: GCP Project Setup](#step-1-gcp-project-setup-1)
+    - [1.1 Authenticate with gcloud](#11-authenticate-with-gcloud)
+    - [1.2 Create or Select a Project](#12-create-or-select-a-project)
+    - [1.3 Enable Billing](#13-enable-billing)
+    - [1.4 Enable Required APIs](#14-enable-required-apis)
+  - [Step 2: Create Firestore Database](#step-2-create-firestore-database)
+    - [2.1 Create the Database](#21-create-the-database)
+    - [2.2 Verify Database Creation](#22-verify-database-creation)
+  - [Step 3: Create Cloud Storage Buckets](#step-3-create-cloud-storage-buckets)
+    - [3.1 Create the Private Bucket](#31-create-the-private-bucket)
+    - [3.2 Create the Public Bucket](#32-create-the-public-bucket)
+    - [3.3 Verify Buckets](#33-verify-buckets)
+  - [Step 4: Set Up Application Default Credentials](#step-4-set-up-application-default-credentials)
+    - [Verify Credentials](#verify-credentials)
+- [Step 5: Configure Environment Variables](#step-5-configure-environment-variables)
+  - [5.1 Create the Environment File](#51-create-the-environment-file)
+  - [5.2 Fill In Your Values](#52-fill-in-your-values)
+  - [5.3 Variables Reference](#53-variables-reference)
+  - [Step 6: Run the Smoke Test](#step-6-run-the-smoke-test)
+    - [6.1 Execute the Test](#61-execute-the-test)
+    - [6.2 Expected Output](#62-expected-output)
+  - [Step 7: Google OAuth for Admin Auth](#step-7-google-oauth-for-admin-auth-1)
+    - [7.1 Configure OAuth Consent Screen](#71-configure-oauth-consent-screen)
+    - [7.2 Create OAuth 2.0 Client Credentials](#72-create-oauth-20-client-credentials)
+    - [7.3 Add Credentials to `.env.local`](#73-add-credentials-to-envlocal)
+    - [7.4 Generate AUTH\_SECRET](#74-generate-auth_secret)
+    - [7.5 Add Admin Allowed Email](#75-add-admin-allowed-email)
+    - [7.6 Test Admin Login Flow](#76-test-admin-login-flow)
+    - [OAuth Configuration Summary](#oauth-configuration-summary)
+  - [Step 8: reCAPTCHA v2 Setup](#step-8-recaptcha-v2-setup-1)
+    - [8.1 Create a reCAPTCHA v2 Site](#81-create-a-recaptcha-v2-site)
+    - [8.2 Add Keys to `.env.local`](#82-add-keys-to-envlocal)
+    - [8.3 How reCAPTCHA Works in This App](#83-how-recaptcha-works-in-this-app)
+    - [8.4 Testing reCAPTCHA Locally](#84-testing-recaptcha-locally)
+    - [reCAPTCHA Troubleshooting](#recaptcha-troubleshooting)
+  - [Troubleshooting](#troubleshooting)
+    - [Authentication Errors](#authentication-errors)
+    - [Permission Denied Errors](#permission-denied-errors)
+    - [Bucket Does Not Exist](#bucket-does-not-exist)
+    - [Firestore Not Initialized](#firestore-not-initialized)
+    - [API Not Enabled](#api-not-enabled)
+    - [OAuth: "Access Denied" Error](#oauth-access-denied-error)
+    - [OAuth: "redirect\_uri\_mismatch" Error](#oauth-redirect_uri_mismatch-error)
+    - [OAuth: "invalid\_client" Error](#oauth-invalid_client-error)
+    - [OAuth: Consent Screen Not Configured](#oauth-consent-screen-not-configured)
+  - [Next Steps](#next-steps)
+  - [Quick Reference Commands](#quick-reference-commands)
+  - [Execution Evidence (2026-02-02)](#execution-evidence-2026-02-02)
+    - [Prerequisites Verification](#prerequisites-verification)
+    - [Billing Account Creation](#billing-account-creation)
+    - [Step 1: Project Creation](#step-1-project-creation)
+    - [Step 2: Firestore Database](#step-2-firestore-database-1)
+    - [Step 3: Cloud Storage Buckets](#step-3-cloud-storage-buckets-1)
+    - [Step 4: Application Default Credentials](#step-4-application-default-credentials-1)
+    - [Step 5: Environment Variables](#step-5-environment-variables-1)
+    - [Step 6: Smoke Test Results](#step-6-smoke-test-results)
+    - [Resource Summary](#resource-summary)
+    - [Step 7: Google OAuth for Admin Auth (2026-02-02)](#step-7-google-oauth-for-admin-auth-2026-02-02)
+      - [7.1 OAuth Consent Screen](#71-oauth-consent-screen)
+      - [7.2 OAuth 2.0 Client Credentials](#72-oauth-20-client-credentials)
+      - [7.3-7.4 Environment Variables](#73-74-environment-variables)
+      - [7.5 Admin Login Test](#75-admin-login-test)
+
+---
+
 ## Setup Checklist
 
 Use this checklist to track your progress:
@@ -46,6 +128,11 @@ Use this checklist to track your progress:
 - [x] 7.3 Added credentials to `.env.local`
 - [x] 7.4 Generated AUTH_SECRET
 - [x] 7.5 Tested admin login flow
+
+### Step 8: reCAPTCHA v2 Setup
+- [x] 8.1 Created reCAPTCHA v2 site (checkbox type)
+- [x] 8.2 Added site key and secret key to `.env.local`
+- [x] 8.3 Keys ready (full verification in Phase 5.1 per `docs/TODO.md`)
 
 ---
 
@@ -133,6 +220,8 @@ gcloud firestore databases create --location=us-central1
 > - `us-east1` (South Carolina)
 > - `europe-west1` (Belgium)
 
+> **If the database already exists:** You'll see an error like `Database already exists`. That's fine — just verify it exists in step 2.2.
+
 ### 2.2 Verify Database Creation
 
 ```bash
@@ -169,6 +258,10 @@ gcloud storage buckets add-iam-policy-binding gs://YOUR_PROJECT_ID-public \
   --role=roles/storage.objectViewer
 ```
 
+> **If public access is blocked:** You may see `public access prevention is enforced`. This is an organization-level policy. **Not a blocker** — the public bucket is only needed for Dance Menu (Phase 3.4). When you get there, options include: disabling public access prevention at project level, using signed URLs, or proxying files through Next.js.
+
+> **If buckets already exist:** You'll see an error like `HTTPError 409: Your previous request to create the named bucket succeeded and you already own it`. That's fine — just verify they exist in step 3.3.
+
 ### 3.3 Verify Buckets
 
 ```bash
@@ -203,63 +296,40 @@ If this prints a token, your credentials are configured correctly.
 
 ### 5.1 Create the Environment File
 
-Create a `.env.local` file in the `web/` directory:
+Copy the example file and fill in your values:
 
 ```bash
 cd web
-touch .env.local
+cp .env.local.example .env.local
 ```
 
-### 5.2 Add Required Variables
+### 5.2 Fill In Your Values
 
-Edit `web/.env.local` with the following content:
+Edit `web/.env.local` and replace the placeholder values:
 
-```bash
-# === GCP Core ===
-GCP_PROJECT_ID=YOUR_PROJECT_ID
+- **GCP_PROJECT_ID** — Your project ID (e.g., `samkirk-v3`)
+- **GCS_PUBLIC_BUCKET** — Your public bucket name (e.g., `samkirk-v3-public`)
+- **GCS_PRIVATE_BUCKET** — Your private bucket name (e.g., `samkirk-v3-private`)
+- **OAuth & Auth** — Configure in Step 7
+- **reCAPTCHA** — Configure in Step 8
 
-# === Cloud Storage Buckets ===
-GCS_PUBLIC_BUCKET=YOUR_PROJECT_ID-public
-GCS_PRIVATE_BUCKET=YOUR_PROJECT_ID-private
-
-# === Vertex AI (placeholders for smoke test) ===
-VERTEX_AI_LOCATION=us-central1
-VERTEX_AI_MODEL=gemini-1.5-pro
-
-# === reCAPTCHA (placeholders for smoke test) ===
-# Get real keys at: https://www.google.com/recaptcha/admin
-RECAPTCHA_SITE_KEY=placeholder-site-key
-RECAPTCHA_SECRET_KEY=placeholder-secret-key
-
-# === Google OAuth (placeholders for smoke test, configure in Step 7) ===
-# Get real credentials at: https://console.cloud.google.com/apis/credentials
-GOOGLE_OAUTH_CLIENT_ID=placeholder-client-id
-GOOGLE_OAUTH_CLIENT_SECRET=placeholder-client-secret
-
-# === Admin Auth (configure in Step 7) ===
-# Generate with: openssl rand -base64 32
-AUTH_SECRET=placeholder-generate-with-openssl-rand-base64-32
-# Email allowed to access /admin
-ADMIN_ALLOWED_EMAIL=your-admin-email@example.com
-```
-
-> **Important:** Replace `YOUR_PROJECT_ID` with your actual GCP project ID.
+> **Tip:** For the smoke test, only `GCP_PROJECT_ID`, `GCS_PRIVATE_BUCKET`, and placeholder values for the other fields are needed.
 
 ### 5.3 Variables Reference
 
-| Variable | Required for Smoke Test | Required for Admin Auth | Description |
-|----------|------------------------|------------------------|-------------|
-| `GCP_PROJECT_ID` | Yes | No | Your GCP project ID |
-| `GCS_PRIVATE_BUCKET` | Yes | No | Private bucket for submissions/artifacts |
-| `GCS_PUBLIC_BUCKET` | No (placeholder OK) | No | Public bucket for Dance Menu |
-| `VERTEX_AI_LOCATION` | No (placeholder OK) | No | Vertex AI region |
-| `VERTEX_AI_MODEL` | No (placeholder OK) | No | Gemini model name |
-| `RECAPTCHA_SITE_KEY` | No (placeholder OK) | No | reCAPTCHA v2 site key |
-| `RECAPTCHA_SECRET_KEY` | No (placeholder OK) | No | reCAPTCHA v2 secret key |
-| `GOOGLE_OAUTH_CLIENT_ID` | No (placeholder OK) | Yes | OAuth client ID for admin auth |
-| `GOOGLE_OAUTH_CLIENT_SECRET` | No (placeholder OK) | Yes | OAuth client secret |
-| `AUTH_SECRET` | No (placeholder OK) | Yes | NextAuth.js token signing secret (min 32 chars) |
-| `ADMIN_ALLOWED_EMAIL` | No (placeholder OK) | Yes | Email allowed to access admin (e.g., sam@samkirk.com) |
+| Variable | Required for Smoke Test | Required for Tools | Required for Admin | Description |
+|----------|------------------------|-------------------|-------------------|-------------|
+| `GCP_PROJECT_ID` | Yes | Yes | No | Your GCP project ID |
+| `GCS_PRIVATE_BUCKET` | Yes | Yes | No | Private bucket for submissions/artifacts |
+| `GCS_PUBLIC_BUCKET` | No (placeholder OK) | No | No | Public bucket for Dance Menu |
+| `VERTEX_AI_LOCATION` | No (placeholder OK) | Yes | No | Vertex AI region |
+| `VERTEX_AI_MODEL` | No (placeholder OK) | Yes | No | Gemini model name |
+| `RECAPTCHA_SITE_KEY` | No (placeholder OK) | Yes | No | reCAPTCHA v2 site key (Step 8) |
+| `RECAPTCHA_SECRET_KEY` | No (placeholder OK) | Yes | No | reCAPTCHA v2 secret key (Step 8) |
+| `GOOGLE_OAUTH_CLIENT_ID` | No (placeholder OK) | No | Yes | OAuth client ID for admin auth |
+| `GOOGLE_OAUTH_CLIENT_SECRET` | No (placeholder OK) | No | Yes | OAuth client secret |
+| `AUTH_SECRET` | No (placeholder OK) | No | Yes | NextAuth.js token signing secret (min 32 chars) |
+| `ADMIN_ALLOWED_EMAIL` | No (placeholder OK) | No | Yes | Email allowed to access admin (e.g., sam@samkirk.com) |
 
 ---
 
@@ -424,6 +494,104 @@ ADMIN_ALLOWED_EMAIL=sam@samkirk.com
 
 ---
 
+## Step 8: reCAPTCHA v2 Setup
+
+This project uses **Google reCAPTCHA v2** (the "I'm not a robot" checkbox) to prevent abuse of the public AI tools. This is required once per session before users can access the tools.
+
+> **Why reCAPTCHA v2 Checkbox?**
+> - **v2 Checkbox** — User clicks a checkbox; may show image challenge. Good balance of UX and security.
+> - **v2 Invisible** — No visible checkbox; triggers on form submit. Less visible but can cause confusion.
+> - **v3** — Fully invisible, returns a score (0.0–1.0). Requires you to decide score thresholds. More complex.
+> - **Enterprise** — Advanced features, higher cost. Overkill for this project.
+>
+> We chose **v2 Checkbox** per the specification for simplicity and clear user feedback.
+
+### 8.1 Create a reCAPTCHA v2 Site
+
+1. Go to the [reCAPTCHA Admin Console](https://www.google.com/recaptcha/admin):
+
+   ```bash
+   open "https://www.google.com/recaptcha/admin/create"
+   ```
+
+2. Fill in the registration form:
+   - **Label:** `samkirk.com` (or any descriptive name)
+   - **reCAPTCHA type:** Select **reCAPTCHA v2** → **"I'm not a robot" Checkbox**
+   - **Domains:** Add your domains:
+     - `localhost` (for local development)
+     - `samkirk.com` (for production)
+   - **Owners:** Your email should be pre-filled
+   - **Accept the Terms of Service**
+
+3. Click **Submit**
+
+4. You'll see two keys:
+   - **Site Key** — Used in the frontend (public, embedded in HTML)
+   - **Secret Key** — Used on the server to verify tokens (keep secret!)
+
+### 8.2 Add Keys to `.env.local`
+
+Update your `web/.env.local` with the real keys:
+
+```bash
+# === reCAPTCHA v2 (Checkbox) ===
+RECAPTCHA_SITE_KEY=6LcXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+RECAPTCHA_SECRET_KEY=6LcXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+```
+
+> **Security Note:** The site key is safe to expose in client-side code. The secret key must **never** be exposed to the client — it's only used server-side to verify tokens.
+
+### 8.3 How reCAPTCHA Works in This App
+
+1. **First tool request:** User sees a reCAPTCHA checkbox on the tool page
+2. **User completes checkbox:** May involve an image challenge
+3. **Client sends token:** The reCAPTCHA widget returns a token
+4. **Server verifies:** `POST /api/captcha/verify` sends token + secret to Google
+5. **Session marked:** On success, `captchaPassedAt` is stored in the session
+6. **Subsequent requests:** User can use tools without re-verifying (until session expires)
+
+### 8.4 Testing reCAPTCHA Locally
+
+For local development, you can use test keys that always pass:
+
+| Key Type | Test Key |
+|----------|----------|
+| Site Key | `6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI` |
+| Secret Key | `6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe` |
+
+> **Warning:** Test keys will always pass verification and should **only** be used in development. They won't work in production (Google rejects them for non-localhost domains).
+
+### 8.5 Completing GCP Setup
+
+Once you've added the reCAPTCHA keys to `.env.local`, GCP setup is complete. Return to `docs/TODO.md` **Step 3.2** to run the smoke test:
+
+```bash
+cd web
+npm run smoke:gcp
+```
+
+This verifies GCS and Firestore are working correctly. Full reCAPTCHA verification happens later in **Phase 5.1** when the widget and `/api/captcha/verify` endpoint are implemented.
+
+### reCAPTCHA Troubleshooting
+
+**Error: "Invalid site key"**
+- Ensure the site key in your frontend matches what's in the reCAPTCHA admin console
+- Check that `localhost` is in the allowed domains list
+
+**Error: "Invalid secret key" or verification fails**
+- Double-check `RECAPTCHA_SECRET_KEY` in `.env.local`
+- Ensure you're using the **secret** key (not the site key) for server verification
+
+**Error: "Hostname mismatch"**
+- Add your domain to the allowed domains in [reCAPTCHA Admin](https://www.google.com/recaptcha/admin)
+- For local dev, ensure `localhost` is listed
+
+**Challenge not appearing**
+- Check browser console for JavaScript errors
+- Ensure the site key is correctly passed to the reCAPTCHA widget
+
+---
+
 ## Troubleshooting
 
 ### Authentication Errors
@@ -518,9 +686,9 @@ ADMIN_ALLOWED_EMAIL=your-email@example.com
 
 After completing the setup above:
 
-1. **Set up real reCAPTCHA keys** at https://www.google.com/recaptcha/admin (for public tool forms)
-2. **Configure Vertex AI** for LLM features (when implementing chat tools)
-3. **Set up Cloud Run** for deployment (when ready to go live)
+1. **Configure Vertex AI** for LLM features (when implementing chat tools)
+2. **Set up Cloud Run** for deployment (when ready to go live)
+3. **Configure GCP Billing Budget** alerts to `sam@samkirk.com` (backstop for $20/month spend cap)
 
 ---
 

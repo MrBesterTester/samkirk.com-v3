@@ -119,13 +119,16 @@
 
 ### 3.2 Admin: upload/replace master resume markdown
 
-- [ ] **[Opus 4.5]** Create `/admin/resume` page with file input for `.md` files
-- [ ] **[Codex/Opus]** Create `POST /api/admin/resume` route
-- [ ] **[Codex/Opus]** Validate file type (markdown) and size (max 10MB)
-- [ ] **[Codex/Opus]** Store uploaded file to private GCS as `resume/master.md`
-- [ ] **[Codex/Opus]** Update Firestore `resumeIndex/current` metadata
-- [ ] **[Codex/Opus]** Add unit tests for validation + storage path building
-- [ ] **[Gemini 3 Pro]** TEST: Smoke test with real GCS + Firestore (env present)
+- [x] **[Opus 4.5]** Create `/admin/resume` page with file input for `.md` files
+- [x] **[Codex/Opus]** Create `POST /api/admin/resume` route
+- [x] **[Codex/Opus]** Validate file type (markdown) and size (max 10MB)
+- [x] **[Codex/Opus]** Store uploaded file to private GCS as `resume/master.md`
+- [x] **[Codex/Opus]** Update Firestore `resumeIndex/current` metadata
+- [x] **[Codex/Opus]** Add unit tests for validation + storage path building
+- [x] **[Gemini 3 Pro]** TEST: Smoke test with real GCS + Firestore (env present)
+  - Run from `web/` folder: `npm run smoke:gcp`
+  - Verifies: write resume.md to GCS, update resumeIndex/current in Firestore
+  - Restores original data if resume already exists
 
 ### 3.3 Resume indexing V0 (chunking + citations metadata)
 
