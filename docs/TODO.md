@@ -132,12 +132,12 @@
 
 ### 3.3 Resume indexing V0 (chunking + citations metadata)
 
-- [ ] **[Codex/Opus]** Write markdown chunker that splits by headings + size limits
-- [ ] **[Codex/Opus]** Define chunk schema: `{chunkId, title, sourceRef, content}`
-- [ ] **[Codex/Opus]** Persist chunks to Firestore `resumeChunks` collection (keyed by version)
-- [ ] **[Codex/Opus]** Update `resumeIndex/current` with version + chunk count
-- [ ] **[Codex/Opus]** Add thorough unit tests for chunking + stable chunk ids
-- [ ] **[Codex/Opus]** TEST: Run unit tests — all chunking tests pass
+- [x] **[Codex/Opus]** Write markdown chunker that splits by headings + size limits
+- [x] **[Codex/Opus]** Define chunk schema: `{chunkId, title, sourceRef, content}`
+- [x] **[Codex/Opus]** Persist chunks to Firestore `resumeChunks` collection (keyed by version)
+- [x] **[Codex/Opus]** Update `resumeIndex/current` with version + chunk count
+- [x] **[Codex/Opus]** Add thorough unit tests for chunking + stable chunk ids
+- [x] **[Codex/Opus]** TEST: Run unit tests — all chunking tests pass
 
 ### 3.4 Admin: upload/publish Dance Menu bundle
 

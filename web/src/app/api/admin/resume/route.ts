@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { Timestamp } from "@google-cloud/firestore";
 import { requireAdminAuth } from "@/lib/admin-auth";
 import {
   validateResumeFileMetadata,
@@ -13,6 +12,7 @@ import {
   PrivatePaths,
 } from "@/lib/storage";
 import { getResumeIndexRef, ResumeIndexDoc } from "@/lib/firestore";
+import { indexResume } from "@/lib/resume-chunker";
 
 /**
  * Response type for successful resume upload.
@@ -21,6 +21,7 @@ interface UploadSuccessResponse {
   success: true;
   message: string;
   version: number;
+  chunkCount: number;
   uploadedAt: string;
 }
 
@@ -132,8 +133,7 @@ export async function POST(
       );
     }
 
-    // Update Firestore metadata
-    const now = Timestamp.now();
+    // Determine version number
     let newVersion: number;
 
     try {
@@ -146,24 +146,32 @@ export async function POST(
       } else {
         newVersion = 1;
       }
-
-      const indexData: ResumeIndexDoc = {
-        resumeGcsPath: gcsPath,
-        indexedAt: now,
-        chunkCount: 0, // Will be updated when chunking is implemented
-        version: newVersion,
-      };
-
-      await resumeIndexRef.set(indexData);
     } catch (error) {
-      console.error("Firestore metadata error:", error);
+      console.error("Firestore read error:", error);
+      return NextResponse.json(
+        {
+          success: false,
+          error: "METADATA_ERROR",
+          message: "Failed to determine resume version",
+        },
+        { status: 500 }
+      );
+    }
+
+    // Index the resume: chunk content and update Firestore
+    let chunkCount: number;
+    try {
+      const result = await indexResume(content, gcsPath, newVersion);
+      chunkCount = result.chunks.length;
+    } catch (error) {
+      console.error("Resume indexing error:", error);
       // Note: File is already uploaded to GCS at this point
       // In a production system, you might want to handle this with a transaction
       return NextResponse.json(
         {
           success: false,
-          error: "METADATA_ERROR",
-          message: "File uploaded but failed to update metadata",
+          error: "INDEXING_ERROR",
+          message: "File uploaded but failed to index resume",
         },
         { status: 500 }
       );
@@ -171,9 +179,10 @@ export async function POST(
 
     return NextResponse.json({
       success: true,
-      message: `Resume uploaded successfully (version ${newVersion})`,
+      message: `Resume uploaded and indexed successfully (version ${newVersion}, ${chunkCount} chunks)`,
       version: newVersion,
-      uploadedAt: now.toDate().toISOString(),
+      chunkCount,
+      uploadedAt: new Date().toISOString(),
     });
   } catch (error) {
     // Handle known error types
