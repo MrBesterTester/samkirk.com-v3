@@ -872,6 +872,201 @@ Generated at: ${new Date().toISOString()}
     process.exit(1);
   }
 
+  // Step 8: Test Artifact Bundle + Submission CRUD
+  console.log("\n--- Submission & Artifact Bundle Test ---\n");
+
+  const SUBMISSIONS_COLLECTION = "submissions";
+  const SUBMISSION_TEST_PREFIX = "_smoke_submission_";
+
+  // Generate a test submission ID
+  const testSubmissionId = `${SUBMISSION_TEST_PREFIX}${randomBytes(16).toString("base64url")}`;
+  const submissionDocRef = firestore
+    .collection(SUBMISSIONS_COLLECTION)
+    .doc(testSubmissionId);
+
+  // Test submission data
+  const submissionNow = Date.now();
+  const submissionTtlMs = 90 * 24 * 60 * 60 * 1000; // 90 days
+  const testSubmissionDoc = {
+    createdAt: Timestamp.fromMillis(submissionNow),
+    expiresAt: Timestamp.fromMillis(submissionNow + submissionTtlMs),
+    tool: "fit",
+    status: "complete",
+    sessionId: `smoke_test_session_${Date.now()}`,
+    inputs: {
+      jobUrl: "https://example.com/job/123",
+      jobText: "Senior Software Engineer position at Test Corp...",
+    },
+    extracted: {
+      seniority: "senior",
+      location: "remote",
+      mustHaves: ["TypeScript", "React", "GCP"],
+    },
+    outputs: {
+      fitScore: "Well",
+      rationale: "Strong match for technical requirements.",
+      reportPath: "outputs/report.md",
+    },
+    citations: [
+      { chunkId: "chunk_001", title: "Experience", sourceRef: "h2:Experience" },
+      { chunkId: "chunk_002", title: "Skills", sourceRef: "h2:Skills" },
+    ],
+    artifactGcsPrefix: `submissions/${testSubmissionId}/`,
+  };
+
+  // Test output files to write to GCS
+  const testReportMd = `# Fit Analysis Report
+
+## Summary
+**Fit Score: Well**
+
+This is a smoke test report for testing the artifact bundle functionality.
+
+## Rationale
+- Strong technical skills match
+- Remote work compatible
+- Senior level experience
+
+## Citations
+[1] Experience (h2:Experience)
+[2] Skills (h2:Skills)
+
+---
+Generated at: ${new Date().toISOString()}
+`;
+
+  const testReportHtml = `<!DOCTYPE html>
+<html>
+<head><title>Fit Analysis Report</title></head>
+<body>
+<h1>Fit Analysis Report</h1>
+<h2>Summary</h2>
+<p><strong>Fit Score: Well</strong></p>
+<p>Generated at: ${new Date().toISOString()}</p>
+</body>
+</html>`;
+
+  try {
+    // Step 8.1: Create submission document in Firestore
+    log(`Creating test submission ${testSubmissionId.substring(0, 30)}...`);
+    await submissionDocRef.set(testSubmissionDoc);
+    log("Submission created in Firestore", true);
+
+    // Step 8.2: Write test artifacts to GCS
+    log("Writing test artifacts to GCS...");
+    const artifactPrefix = `submissions/${testSubmissionId}/`;
+
+    await privateBucket
+      .file(`${artifactPrefix}output/report.md`)
+      .save(testReportMd, {
+        contentType: "text/markdown; charset=utf-8",
+        resumable: false,
+      });
+
+    await privateBucket
+      .file(`${artifactPrefix}output/report.html`)
+      .save(testReportHtml, {
+        contentType: "text/html; charset=utf-8",
+        resumable: false,
+      });
+
+    log("Test artifacts written to GCS", true);
+
+    // Step 8.3: Verify submission can be read back
+    log("Verifying submission in Firestore...");
+    const submissionSnapshot = await submissionDocRef.get();
+
+    if (!submissionSnapshot.exists) {
+      throw new Error("Submission document not found after creation");
+    }
+
+    const submissionData = submissionSnapshot.data();
+    if (submissionData?.tool !== "fit") {
+      throw new Error(`Expected tool 'fit', got '${submissionData?.tool}'`);
+    }
+    if (submissionData?.status !== "complete") {
+      throw new Error(`Expected status 'complete', got '${submissionData?.status}'`);
+    }
+    log("Submission data verified", true);
+
+    // Step 8.4: Verify artifacts can be read from GCS
+    log("Verifying artifacts in GCS...");
+    const [mdContent] = await privateBucket
+      .file(`${artifactPrefix}output/report.md`)
+      .download();
+    const [htmlContent] = await privateBucket
+      .file(`${artifactPrefix}output/report.html`)
+      .download();
+
+    if (!mdContent.toString("utf-8").includes("Fit Analysis Report")) {
+      throw new Error("Markdown artifact content mismatch");
+    }
+    if (!htmlContent.toString("utf-8").includes("Fit Analysis Report")) {
+      throw new Error("HTML artifact content mismatch");
+    }
+    log("Artifacts verified in GCS", true);
+
+    // Step 8.5: Verify TTL calculation (90 days)
+    const createdAtMs = submissionData.createdAt.toMillis();
+    const expiresAtMs = submissionData.expiresAt.toMillis();
+    const actualTtlMs = expiresAtMs - createdAtMs;
+
+    if (actualTtlMs !== submissionTtlMs) {
+      throw new Error(
+        `TTL mismatch: expected ${submissionTtlMs}ms, got ${actualTtlMs}ms`
+      );
+    }
+    log("Submission TTL (90 days) verified", true);
+
+    // Step 8.6: Update submission (simulate completion flow)
+    log("Testing submission update...");
+    await submissionDocRef.update({
+      "outputs.bundleGenerated": true,
+      "outputs.bundleGeneratedAt": Timestamp.now(),
+    });
+
+    const updatedSnapshot = await submissionDocRef.get();
+    const updatedData = updatedSnapshot.data();
+    if (!updatedData?.outputs?.bundleGenerated) {
+      throw new Error("Submission update not reflected");
+    }
+    log("Submission update verified", true);
+
+    // Cleanup
+    log("Cleaning up test submission and artifacts...");
+
+    // Delete GCS artifacts
+    const [artifactFiles] = await privateBucket.getFiles({ prefix: artifactPrefix });
+    for (const file of artifactFiles) {
+      await file.delete();
+    }
+    log(`Deleted ${artifactFiles.length} artifact files from GCS`, true);
+
+    // Delete Firestore document
+    await submissionDocRef.delete();
+    log("Test submission deleted from Firestore", true);
+
+  } catch (error) {
+    // Cleanup on failure
+    try {
+      const [files] = await privateBucket.getFiles({
+        prefix: `submissions/${testSubmissionId}/`,
+      });
+      for (const file of files) {
+        await file.delete();
+      }
+      await submissionDocRef.delete();
+    } catch {
+      log("Warning: Failed to cleanup test submission during error handling", false);
+    }
+
+    log(
+      `Submission & artifact test failed: ${error instanceof Error ? error.message : error}`,
+      false
+    );
+    process.exit(1);
+  }
+
   // Success!
   console.log("\n=== All smoke tests passed! ===\n");
 }

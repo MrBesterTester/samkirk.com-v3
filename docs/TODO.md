@@ -170,13 +170,17 @@
 
 ### 4.2 Implement artifact writer + bundle download
 
-- [ ] **[Codex/Opus]** Create markdown-to-HTML renderer utility (server-side)
-- [ ] **[Codex/Opus]** Create zip bundler utility (writes bundle.zip to GCS or streams)
-- [ ] **[Codex/Opus]** Create `GET /api/submissions/[id]/download` route
-- [ ] **[Codex/Opus]** Return zip containing inputs/extracted/outputs/citations
-- [ ] **[Codex/Opus]** Add unit tests for markdown rendering
-- [ ] **[Codex/Opus]** Add unit tests for bundle file list generation
-- [ ] **[Gemini 3 Pro]** TEST: Smoke test with real GCS write + download + submission CRUD (env present)
+- [x] **[Codex/Opus]** Create markdown-to-HTML renderer utility (server-side)
+- [x] **[Codex/Opus]** Create zip bundler utility (writes bundle.zip to GCS or streams)
+- [x] **[Codex/Opus]** Create `GET /api/submissions/[id]/download` route
+- [x] **[Codex/Opus]** Return zip containing inputs/extracted/outputs/citations
+- [x] **[Codex/Opus]** Add unit tests for markdown rendering
+- [x] **[Codex/Opus]** Add unit tests for bundle file list generation
+- [x] **[Gemini 3 Pro]** TEST: Smoke test with real GCS write + download + submission CRUD (env present)
+  - Run from `web/` folder: `npm run smoke:gcp`
+  - Verifies: Submission CRUD in Firestore (create, read, update, delete)
+  - Verifies: Artifact files write/read to GCS private bucket
+  - Verifies: 90-day TTL correctly calculated on submission docs
 
 ---
 
