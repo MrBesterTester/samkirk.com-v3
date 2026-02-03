@@ -30,4 +30,5 @@ alwaysApply: true
 
 ## Lessons learned
 <!-- Add brief, information-dense entries when problems are solved -->
+- **Avoid Gemini Pro 3 for file edits** (2026-02-03): Gemini Pro 3 overwrote `docs/GCP-SETUP.md` (900+ lines) with just 33 lines when asked to add Step 8 content. Only use Gemini Pro 3 when image processing is required; prefer other models for document editing.
 

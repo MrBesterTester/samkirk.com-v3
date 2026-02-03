@@ -2,6 +2,15 @@
 
 This guide walks through setting up Google Cloud Platform credentials and resources needed to run the smoke test (`npm run smoke:gcp`) and the full application.
 
+> **Document structure note:** This guide has three main parts:
+> 1. **Setup Checklist** — checkboxes to track progress
+> 2. **Step-by-step instructions** (Steps 1–8) — how to set up each resource
+> 3. **Execution Evidence** (at the end) — records of what was actually done, with dates
+>
+> The "Execution Evidence" section mirrors the step numbers but serves a different purpose (documenting completed work vs. providing instructions). If you're looking for test procedures or verification steps, check both the relevant Step section AND the corresponding Execution Evidence entry.
+>
+> **Related:** This guide is referenced from [`docs/TODO.md`](TODO.md) (the main implementation checklist). This document currently lacks backlinks to TODO.md — when completing steps here, manually check off the corresponding items in TODO.md.
+
 ---
 
 ## Table of Contents
@@ -83,6 +92,10 @@ This guide walks through setting up Google Cloud Platform credentials and resour
       - [7.2 OAuth 2.0 Client Credentials](#72-oauth-20-client-credentials)
       - [7.3-7.4 Environment Variables](#73-74-environment-variables)
       - [7.5 Admin Login Test](#75-admin-login-test)
+    - [Step 8: reCAPTCHA v2 Setup (2026-02-03)](#step-8-recaptcha-v2-setup-2026-02-03)
+      - [8.1 Create reCAPTCHA v2 Site](#81-create-recaptcha-v2-site)
+      - [8.2 Environment Variables](#82-environment-variables)
+      - [8.3 Manual E2E Test Procedure](#83-manual-e2e-test-procedure)
 
 ---
 
@@ -919,3 +932,72 @@ Updated `web/.env.local` with:
 ```
 
 **Result:** Admin authentication working correctly. Only `sam@samkirk.com` can access `/admin/**` routes.
+
+### Step 8: reCAPTCHA v2 Setup (2026-02-03)
+
+#### 8.1 Create reCAPTCHA v2 Site
+
+Created via [reCAPTCHA Admin Console](https://www.google.com/recaptcha/admin/create):
+- **Label:** `samkirk.com`
+- **Type:** reCAPTCHA v2 ("I'm not a robot" Checkbox)
+- **Domains:** `localhost`, `samkirk.com`
+
+#### 8.2 Environment Variables
+
+Updated `web/.env.local` with:
+- `RECAPTCHA_SITE_KEY` - from Admin Console
+- `RECAPTCHA_SECRET_KEY` - from Admin Console
+- `NEXT_PUBLIC_RECAPTCHA_SITE_KEY` - matches `RECAPTCHA_SITE_KEY` (for client-side access)
+
+#### 8.3 Manual E2E Test Procedure
+
+To verify the integration:
+
+1. **Start Dev Server:** `npm run dev`
+2. **Visit Tool Page:** Navigate to `http://localhost:3000/tools/fit` (incognito recommended)
+3. **Verify Gate:**
+   - Page shows "Verify to use How Do I Fit?"
+   - Content "Tool implementation coming soon" is **hidden**
+   - "I'm not a robot" checkbox is visible
+4. **Complete Captcha:** Click checkbox and solve challenge if presented
+5. **Verify Success:**
+   - Widget disappears
+   - Protected content "Tool implementation coming soon..." appears
+6. **Verify Backend:** Run the following from the `web/` directory to query Firestore:
+
+   ```bash
+   npx tsx -e "
+   const { Firestore } = require('@google-cloud/firestore');
+   const db = new Firestore({ projectId: 'samkirk-v3' });
+
+   async function main() {
+     const snapshot = await db.collection('sessions')
+       .orderBy('createdAt', 'desc')
+       .limit(3)
+       .get();
+     
+     console.log('Recent sessions:');
+     snapshot.forEach(doc => {
+       const data = doc.data();
+       console.log('---');
+       console.log('Session ID:', doc.id);
+       console.log('createdAt:', data.createdAt?.toDate?.() || data.createdAt);
+       console.log('captchaPassedAt:', data.captchaPassedAt?.toDate?.() || data.captchaPassedAt || '(not set)');
+     });
+   }
+   main().catch(console.error);
+   "
+   ```
+
+   **Expected output:** The most recent session should show a `captchaPassedAt` timestamp set shortly after `createdAt`.
+
+   **Actual result (2026-02-03):**
+   ```
+   Recent sessions:
+   ---
+   Session ID: GMFBEDb84ELaPDfWXiVMjx0z6zaTw_PSAbUKgHcGzpA
+   createdAt: 2026-02-03T17:17:36.274Z
+   captchaPassedAt: 2026-02-03T17:18:10.067Z
+   ```
+
+**Result:** reCAPTCHA gate correctly blocks access until verification, and server-side verification succeeds.

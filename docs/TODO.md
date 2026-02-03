@@ -188,13 +188,14 @@
 
 ### 5.1 reCAPTCHA verification endpoint + client widget
 
-- [ ] **[Opus 4.5]** Create reCAPTCHA v2 checkbox client component (uses site key env var)
-- [ ] **[Codex/Opus]** Create `POST /api/captcha/verify` route
-- [ ] **[Codex/Opus]** Verify token with Google reCAPTCHA API (server-only secret)
-- [ ] **[Codex/Opus]** Store `captchaPassedAt` on session doc in Firestore
-- [ ] **[Codex/Opus]** Wire tool pages to require captcha before calling tool endpoints
-- [ ] **[Codex/Opus]** Add unit tests for verification request formatting
-- [ ] **[Gemini 3 Pro]** TEST: Manual E2E test with real reCAPTCHA keys
+- [x] **[Opus 4.5]** Create reCAPTCHA v2 checkbox client component (uses site key env var)
+- [x] **[Codex/Opus]** Create `POST /api/captcha/verify` route
+- [x] **[Codex/Opus]** Verify token with Google reCAPTCHA API (server-only secret)
+- [x] **[Codex/Opus]** Store `captchaPassedAt` on session doc in Firestore
+- [x] **[Codex/Opus]** Wire tool pages to require captcha before calling tool endpoints
+- [x] **[Codex/Opus]** Add unit tests for verification request formatting
+- [x] **[Gemini 3 Pro]** TEST: Manual E2E test with real reCAPTCHA keys
+  - See [GCP-SETUP.md § 8.3 Manual E2E Test Procedure](GCP-SETUP.md#83-manual-e2e-test-procedure)
 
 ### 5.2 Rate limiting utility (10 requests / 10 minutes)
 
