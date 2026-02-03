@@ -31,6 +31,8 @@
   - [Fit Report Generator (Step 6.3)](#fit-report-generator-step-63)
 - [E2E Tests (Playwright)](#e2e-tests-playwright)
   - [Fit Tool Happy Path (Step 6.4)](#fit-tool-happy-path-step-64)
+- [Resume Seeding Workflow](#resume-seeding-workflow)
+- [Real-LLM E2E Test (Step 6.4)](#real-llm-e2e-test-step-64)
 - [Lint Check](#lint-check)
 - [Notes](#notes)
   - [What These Tests Do NOT Cover](#what-these-tests-do-not-cover)
@@ -45,7 +47,8 @@
 |----------|--------|---------|
 | GCP Smoke Tests | **PASS** | 10/10 sections passed |
 | Unit Tests | **PASS** | 707/707 tests passed |
-| E2E Tests | **PASS** | 5/5 Playwright tests passed |
+| E2E Tests (Playwright) | **PASS** | 5/5 Playwright tests passed |
+| E2E Tests (Real LLM) | **PASS** | Full flow with gemini-2.0-flash |
 | Lint | **PASS** | 0 errors, 0 warnings |
 
 ---
@@ -490,7 +493,9 @@ Test Files  31 passed (31)
 
 **Purpose:** Verify the Fit report prompt builder, response parser, and markdown generator
 
-**Test Fixtures:** [`web/test-fixtures/fit-report/`](../web/test-fixtures/fit-report/)
+**Test Fixtures (Reference Only):** [`web/test-fixtures/fit-report/`](../web/test-fixtures/fit-report/)
+
+> ⚠️ **Note:** These fixtures are **documentation reference only** and may become stale. The unit tests use inline mock data (via helper functions like `createMockExtractedFields()`) rather than reading from these files. The E2E tests use a built-in mock generator (`generateMockFitReport()`). These fixtures are not automatically generated or updated by any tests.
 
 | File | Description |
 |------|-------------|
@@ -593,6 +598,223 @@ cd web && npx playwright test --headed
 
 ---
 
+## Resume Seeding Workflow
+
+The resume seeding workflow allows you to upload and index a baseline resume for testing and development.
+
+### Scripts
+
+| Script | Command | Description |
+|--------|---------|-------------|
+| `validate:resume` | `npm run validate:resume -- path/to/resume.md` | Local validation of resume chunking (no GCP needed) |
+| `seed:resume` | `npm run seed:resume` | Upload baseline resume to GCS and index in Firestore |
+| `test:e2e:real` | `npm run test:e2e:real` | Full E2E test with real Vertex AI |
+
+### Validation Script
+
+Validates resume chunking locally without GCP credentials:
+
+```bash
+cd web
+npm run validate:resume -- data/baseline-resume.md
+```
+
+**Output:**
+```
+=== Resume Validation ===
+
+File: baseline-resume.md
+Path: /path/to/web/data/baseline-resume.md
+
+→ Reading file...
+✓ Read 3245 characters, 113 lines
+→ Analyzing structure...
+✓ Found 12 headings
+
+--- Heading Structure ---
+
+# Sam Kirk
+## Summary
+## Experience
+### Senior Software Engineer at Tech Company (2020-Present)
+### Software Engineer at Startup Inc (2017-2020)
+...
+
+--- Chunking Results ---
+
+→ Running chunker...
+✓ Generated 10 chunks
+
+--- Chunk Summary ---
+
+  Total chunks: 10
+  Total chars:  2847
+  Min size:     128 chars
+  Max size:     487 chars
+  Avg size:     284 chars
+
+--- Result ---
+
+✓ Validation passed!
+
+Your resume chunks correctly and is ready for seeding.
+```
+
+### Seed Script
+
+Uploads the baseline resume and indexes it for RAG:
+
+```bash
+cd web
+npm run seed:resume
+```
+
+**Output:**
+```
+=== Seed Resume Script ===
+
+→ Checking environment variables...
+✓ Environment validated
+→   Project: samkirk-v3
+→   Bucket: samkirk-v3-private
+→ Reading baseline resume from /path/to/web/data/baseline-resume.md...
+✓ Read 3245 characters, 113 lines
+→ Uploading to gs://samkirk-v3-private/resume/master.md...
+✓ Upload complete
+→ Chunking resume content...
+→ Version: 0 -> 1
+✓ Generated 10 chunks
+  • Sam Kirk > Summary (234 chars)
+  • Sam Kirk > Experience > Senior Software Engineer... (487 chars)
+  ...
+→ Deleting old chunks...
+✓ No previous version
+→ Writing new chunks to Firestore...
+✓ Wrote 10 chunks
+→ Updating resume index...
+✓ Resume index updated
+
+=== Seed complete ===
+
+Resume seeded successfully!
+  GCS: gs://samkirk-v3-private/resume/master.md
+  Chunks: 10
+  Version: 1
+```
+
+---
+
+## Real-LLM E2E Test (Step 6.4)
+
+**Command:** `cd web && npm run test:e2e:real`
+
+**Script:** `web/scripts/e2e-real-llm.ts`
+
+**Prerequisites:**
+- GCP credentials configured
+- Seeded resume data (`npm run seed:resume`)
+
+**Cost:** ~$0.01-0.05 per run (real Vertex AI calls)
+
+### Test Flow
+
+1. Verifies resume is seeded in GCS/Firestore
+2. Creates test session and submission
+3. Extracts job fields from sample job posting
+4. Builds LLM prompt with resume chunks
+5. Calls Vertex AI Gemini for fit analysis
+6. Validates JSON response structure
+7. Stores report artifacts in GCS
+8. Cleans up test data
+
+### Sample Output (Verified 2026-02-03)
+
+```
+=== E2E Test with Real Vertex AI ===
+
+→ Checking environment variables...
+✓ Environment validated
+→   Project: samkirk-v3
+→   Model: gemini-2.0-flash
+→ Checking for seeded resume data...
+✓ Found resume version 1 with 11 chunks
+→ Loading resume chunks...
+✓ Loaded 11 chunks
+→ Creating test session...
+✓ Test session created
+→ Creating test submission...
+✓ Test submission created
+→ Extracting job fields...
+✓   Title: Senior Software Engineer - AI Platform
+→   Company: TechCorp Inc
+→   Seniority: senior
+→   Location: fully_remote
+→   Skills: TypeScript, Python, GCP, AWS, TensorFlow, PyTorch, Docker, Kubernetes
+→ Creating flow state...
+✓ Flow state created
+→ Initializing Vertex AI...
+✓ Vertex AI initialized
+→ Building LLM prompt...
+✓ Prompt: 6913 characters
+→ Calling Vertex AI (this may take 10-30 seconds)...
+✓ Response received in 13178ms
+→ Response: 1801 characters
+→ Parsing response...
+✓ Response parsed successfully
+→ Validating response structure...
+✓ Response structure valid
+→ Token usage: 1579 input, 461 output
+→ Estimated cost: $0.0037
+→ Storing report artifacts...
+✓ Report artifacts stored
+✓ Submission updated to complete
+
+--- Analysis Results ---
+
+Overall Score: Well
+Recommendation: Sam is an excellent fit for this role, possessing the required 
+technical skills and experience. His background in AI/ML, cloud infrastructure, 
+and full-stack development aligns well with the job description.
+
+Categories:
+  Technical Skills: Well
+    Sam demonstrates strong proficiency in all required technical skills, 
+    including TypeScript, Python, GCP, AWS, TensorFlow, PyTorch, Docker, and 
+    Kubernetes. He also possesses experience with LLMs and RAG systems, which 
+    is listed as a 'nice to have'.
+  Experience Level: Well
+    With over 10 years of experience, Sam exceeds the requirement of 5+ years 
+    of software engineering experience. His experience at both startups and 
+    larger tech companies makes him well-suited for a senior role.
+  Location Fit: Well
+    The job is fully remote within the US, and there is no indication that 
+    Sam is not located in the US.
+
+=== E2E Test Passed ===
+
+✓ Full fit analysis flow completed successfully!
+
+--- Cleanup ---
+
+✓ Test submission cleaned up
+✓ Test session cleaned up
+```
+
+### Validation Checks
+
+| Check | Validation |
+|-------|------------|
+| Resume seeded | `resumeIndex/current` exists with `chunkCount > 0` |
+| Vertex AI response | Candidates array not empty |
+| Overall score | One of: `Well`, `Partial`, `Poor` |
+| Categories | Each has `name`, `score`, `rationale` |
+| Category scores | Each is `Well`, `Partial`, or `Poor` |
+| Artifacts stored | Report MD and JSON written to GCS |
+
+**Back to:** [TODO.md Step 6.4](TODO.md#64-ui-wiring-for-fit-tool-multi-turn-ux--downloads)
+
+---
+
 ## Lint Check
 
 **Command:** `cd web && npm run lint`
@@ -634,6 +856,9 @@ These should return empty results if cleanup succeeded.
 
 | Date | Changes |
 |------|---------|
+| 2026-02-03 | Verified Real-LLM E2E test with gemini-2.0-flash model (1579 input, 469 output tokens, $0.0037) |
+| 2026-02-03 | Added Resume Seeding Workflow and Real-LLM E2E Test sections |
+| 2026-02-03 | Clarified that test fixtures are reference-only and may become stale (not used by automated tests) |
 | 2026-02-03 | Added test fixtures folder `web/test-fixtures/fit-report/` with input/output examples (Step 6.3) |
 | 2026-02-03 | Added E2E tests section: 5 Playwright tests for Fit Tool happy path (Step 6.4) |
 | 2026-02-03 | Verified all 707 tests pass with network access (including route.test.ts integration tests) |

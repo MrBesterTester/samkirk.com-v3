@@ -9,8 +9,11 @@
     "test": "vitest run",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
+    "test:e2e:real": "npx tsx scripts/e2e-real-llm.ts",
     "lint": "eslint",
-    "smoke:gcp": "npx tsx scripts/smoke-gcp.ts"
+    "smoke:gcp": "npx tsx scripts/smoke-gcp.ts",
+    "seed:resume": "npx tsx scripts/seed-resume.ts",
+    "validate:resume": "npx tsx scripts/validate-resume.ts"
   },
   "dependencies": {
     "@google-cloud/firestore": "^8.2.0",

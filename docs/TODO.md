@@ -356,6 +356,10 @@
   - Uses E2E test mode for captcha bypass (`E2E_TESTING=true`)
   - Uses mock fit report when no resume chunks available in E2E mode
   - Run with: `cd web && npx playwright test --headed`
+- [x] **[Gemini 3 Pro]** TEST: Real LLM E2E test with seeded resume data
+  - Full flow test with real Vertex AI (gemini-2.0-flash)
+  - Run with: `cd web && npm run test:e2e:real`
+  - See [TEST-RESULTS.md § Real-LLM E2E Test](TEST-RESULTS.md#real-llm-e2e-test)
 
 ---
 

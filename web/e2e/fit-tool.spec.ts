@@ -135,7 +135,7 @@ test.describe("Fit Tool Happy Path", () => {
     if (await generatingText.isVisible({ timeout: 1000 }).catch(() => false)) {
       // Wait for the report to complete (this can take time due to LLM call)
       await expect(page.getByText(/fit analysis complete/i)).toBeVisible({
-        timeout: 120000, // 2 minutes for LLM generation
+        timeout: 240000, // 4 minutes for LLM generation
       });
     }
 
