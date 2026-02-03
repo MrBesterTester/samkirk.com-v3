@@ -9,7 +9,7 @@ This guide walks through setting up Google Cloud Platform credentials and resour
 >
 > The "Execution Evidence" section mirrors the step numbers but serves a different purpose (documenting completed work vs. providing instructions). If you're looking for test procedures or verification steps, check both the relevant Step section AND the corresponding Execution Evidence entry.
 >
-> **Related:** This guide is referenced from [`docs/TODO.md`](TODO.md) (the main implementation checklist). This document currently lacks backlinks to TODO.md — when completing steps here, manually check off the corresponding items in TODO.md.
+> **Related:** This guide is referenced from [`docs/TODO.md`](TODO.md) (the main implementation checklist). Backlinks to TODO.md are included at each step.
 
 ---
 
@@ -135,6 +135,8 @@ Use this checklist to track your progress:
 - [x] 6.1 Ran `npm run smoke:gcp`
 - [x] 6.2 All tests passed
 
+> **→ TODO.md:** Steps 1–6 correspond to [TODO.md § 2.1](TODO.md#21-create-server-utilities-for-firestore--gcs-access) (GCP Integration Primitives)
+
 ### Step 7: Google OAuth for Admin Auth
 - [x] 7.1 Configured OAuth consent screen
 - [x] 7.2 Created OAuth 2.0 client credentials (Web application type)
@@ -142,10 +144,14 @@ Use this checklist to track your progress:
 - [x] 7.4 Generated AUTH_SECRET
 - [x] 7.5 Tested admin login flow
 
+> **→ TODO.md:** Step 7 corresponds to [TODO.md § 3.1](TODO.md#31-add-admin-authentication-google-oauth-email-allowlist) (Admin authentication with Google OAuth)
+
 ### Step 8: reCAPTCHA v2 Setup
 - [x] 8.1 Created reCAPTCHA v2 site (checkbox type)
 - [x] 8.2 Added site key and secret key to `.env.local`
 - [x] 8.3 Keys ready (full verification in Phase 5.1 per `docs/TODO.md`)
+
+> **→ TODO.md:** Step 8 corresponds to [TODO.md § 5.1](TODO.md#51-recaptcha-verification-endpoint--client-widget) (reCAPTCHA verification endpoint + client widget)
 
 ---
 
@@ -386,6 +392,8 @@ npm run smoke:gcp
 === All smoke tests passed! ===
 ```
 
+> **→ TODO.md:** After completing Steps 1–6, mark [TODO.md § 2.1](TODO.md#21-create-server-utilities-for-firestore--gcs-access) as complete.
+
 ---
 
 ## Step 7: Google OAuth for Admin Auth
@@ -505,6 +513,8 @@ AUTH_SECRET=your-32-char-or-longer-secret-here
 ADMIN_ALLOWED_EMAIL=sam@samkirk.com
 ```
 
+> **→ TODO.md:** After completing Step 7, mark [TODO.md § 3.1](TODO.md#31-add-admin-authentication-google-oauth-email-allowlist) items related to OAuth as complete.
+
 ---
 
 ## Step 8: reCAPTCHA v2 Setup
@@ -576,14 +586,14 @@ For local development, you can use test keys that always pass:
 
 ### 8.5 Completing GCP Setup
 
-Once you've added the reCAPTCHA keys to `.env.local`, GCP setup is complete. Return to `docs/TODO.md` **Step 2.1** to run the smoke test:
+Once you've added the reCAPTCHA keys to `.env.local`, GCP setup is complete. Run the smoke test to verify GCS and Firestore:
 
 ```bash
 cd web
 npm run smoke:gcp
 ```
 
-This verifies GCS and Firestore are working correctly. Full reCAPTCHA verification happens later in **Phase 5.1** when the widget and `/api/captcha/verify` endpoint are implemented.
+> **→ TODO.md:** Return to [TODO.md § 2.1](TODO.md#21-create-server-utilities-for-firestore--gcs-access) to mark the smoke test complete. Full reCAPTCHA verification is implemented in [TODO.md § 5.1](TODO.md#51-recaptcha-verification-endpoint--client-widget).
 
 ### reCAPTCHA Troubleshooting
 
@@ -602,6 +612,8 @@ This verifies GCS and Firestore are working correctly. Full reCAPTCHA verificati
 **Challenge not appearing**
 - Check browser console for JavaScript errors
 - Ensure the site key is correctly passed to the reCAPTCHA widget
+
+> **→ TODO.md:** After completing Step 8, the reCAPTCHA keys are ready. Full implementation and testing is in [TODO.md § 5.1](TODO.md#51-recaptcha-verification-endpoint--client-widget) (reCAPTCHA verification endpoint + client widget).
 
 ---
 
