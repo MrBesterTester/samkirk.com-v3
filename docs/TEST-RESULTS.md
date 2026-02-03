@@ -21,9 +21,14 @@
   - [Section 6: Dance Menu Upload Test](#section-6-dance-menu-upload-test)
   - [Section 7: Submission & Artifact Bundle Test](#section-7-submission--artifact-bundle-test)
   - [Section 8: Spend Cap Test](#section-8-spend-cap-test)
+  - [Section 9: Job Ingestion URL Fetch Test](#section-9-job-ingestion-url-fetch-test)
 - [Unit Tests](#unit-tests)
+  - [Results](#results)
+  - [Test File Breakdown](#test-file-breakdown)
 - [Lint Check](#lint-check)
 - [Notes](#notes)
+  - [What These Tests Do NOT Cover](#what-these-tests-do-not-cover)
+  - [Independent Verification](#independent-verification)
 - [Revision History](#revision-history)
 
 ---
@@ -33,7 +38,7 @@
 | Category | Result | Details |
 |----------|--------|---------|
 | GCP Smoke Tests | **PASS** | 9/9 sections passed |
-| Unit Tests | **PASS** | 482/482 tests passed |
+| Unit Tests | **PASS** | 556/556 tests passed |
 | Lint | **PASS** | 0 errors, 0 warnings |
 
 ---
@@ -257,6 +262,48 @@ This is **not** independent verification via `gcloud` CLI—the script verifies 
 
 ---
 
+### Section 9: Job Ingestion URL Fetch Test
+
+**Purpose:** Verify server-side URL fetch extracts job text from public URLs (Step 6.1)
+
+**Command:** `npm run smoke:gcp -- --section=9` (or `--section=url-fetch`)
+
+```
+→ Testing: Simple HTML page (httpbin.org)...
+→   URL: https://httpbin.org/html
+✓   Characters: 3595
+→   Words: 605
+→   Preview: "Herman Melville - Moby-Dick  Availing himself of the mild..."
+✓ URL fetch successful
+→ Testing: Example.com landing page...
+→   URL: https://example.com
+✓   Characters: 144
+→   Words: 21
+→   Preview: "Example Domain  This domain is for use in documentation..."
+✓ URL fetch successful
+✓ All URL fetch tests passed
+```
+
+**Verification:**
+- Fetches real URLs over HTTPS with 15-second timeout
+- Extracts text from HTML (removes scripts, styles, tags)
+- Word count meets minimum threshold for each test URL
+- Mirrors the logic in `src/lib/job-ingestion.ts`
+
+**Test URLs:**
+
+| URL | Expected | Result |
+|-----|----------|--------|
+| `httpbin.org/html` | ≥10 words | ✓ 605 words |
+| `example.com` | ≥5 words | ✓ 21 words |
+
+**Notes:**
+- This test uses stable public URLs that won't change
+- Real job posting URLs (LinkedIn, Greenhouse) are not tested here because they may require auth or block bots
+- The `shouldPromptPaste` fallback logic is covered by unit tests
+
+---
+
 ## Unit Tests
 
 **Command:** `cd web && npm test -- --run`
@@ -266,20 +313,21 @@ This is **not** independent verification via `gcloud` CLI—the script verifies 
 ### Results
 
 ```
-Test Files  27 passed (27)
-     Tests  482 passed (482)
-  Duration  9.17s
+Test Files  28 passed (28)
+     Tests  556 passed (556)
+  Duration  7.93s
 ```
 
 ### Test File Breakdown
 
 | File | Tests | Coverage Area |
 |------|-------|---------------|
+| `job-ingestion.test.ts` | 74 | Job text ingestion from paste/URL/file (Step 6.1) |
 | `spend-cap.test.ts` | 60 | Spend cap enforcement (Step 5.3) |
+| `markdown-renderer.test.ts` | 56 | Markdown to HTML rendering (Step 4.2) |
 | `rate-limit.test.ts` | 50 | Rate limiting utility (Step 5.2) |
 | `submission.test.ts` | 50 | Submission CRUD helpers (Step 4.1) |
 | `resume-chunker.test.ts` | 49 | Resume chunking for RAG (Step 3.3) |
-| `markdown-renderer.test.ts` | 56 | Markdown to HTML rendering (Step 4.2) |
 | `session.test.ts` | 34 | Session management (Step 2.2) |
 | `artifact-bundler.test.ts` | 30 | Zip bundle generation (Step 4.2) |
 | `dance-menu-upload.test.ts` | 29 | Dance menu validation (Step 3.4) |
@@ -307,7 +355,7 @@ Test Files  27 passed (27)
 
 ### What These Tests Do NOT Cover
 
-1. **Real Vertex AI calls** — Spend cap tests simulate cost recording but don't make actual LLM requests (that comes in Phase 6)
+1. **Real Vertex AI calls** — Spend cap tests simulate cost recording but don't make actual LLM requests (that comes in Step 6.3)
 2. **Real reCAPTCHA widget** — Unit tests mock the verification; manual E2E test required (see GCP-SETUP.md § 8.3)
 3. **OAuth login flow** — Unit tests mock NextAuth; manual smoke test required
 4. **Public HTTP access** — Org policy blocks `allUsers` access; proxy route handles this
@@ -336,4 +384,6 @@ These should return empty results if cleanup succeeded.
 
 | Date | Changes |
 |------|---------|
+| 2026-02-03 | Section 9 now automated in smoke script; added section filtering (`--section=N`) |
+| 2026-02-03 | Added Section 9: Job Ingestion URL Fetch Test (Step 6.1) |
 | 2026-02-03 | Initial document with Phase 0–5 test results |

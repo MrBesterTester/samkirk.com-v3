@@ -12,6 +12,53 @@
 
 ---
 
+## Table of Contents
+
+- [Phase 0 — Project Foundation](#phase-0--project-foundation-tests-env-ui-shell)
+  - [0.1 Add test tooling](#01-add-test-tooling-vitest--react-testing-library)
+  - [0.2 Add typed env validation](#02-add-typed-env-validation-server-only-secrets)
+  - [0.3 Create site layout + navigation skeleton](#03-create-site-layout--navigation-skeleton)
+- [Phase 1 — Static Content Pages](#phase-1--static-content-pages-song--explorations)
+  - [1.1 Add exploration pages](#11-add-exploration-pages-with-static-html-content)
+  - [1.2 Add song dedication page](#12-add-song-dedication-page)
+- [Phase 2 — GCP Integration Primitives](#phase-2--gcp-integration-primitives-firestore--gcs--sessions)
+  - [2.1 Create server utilities](#21-create-server-utilities-for-firestore--gcs-access)
+  - [2.2 Implement session cookie](#22-implement-session-cookie--session-doc)
+- [Phase 3 — Admin Auth + Uploads](#phase-3--admin-auth--uploads-resume--dance-menu)
+  - [3.1 Add admin authentication](#31-add-admin-authentication-google-oauth-email-allowlist)
+  - [3.2 Admin: upload master resume](#32-admin-uploadreplace-master-resume-markdown)
+  - [3.3 Resume indexing V0](#33-resume-indexing-v0-chunking--citations-metadata)
+  - [3.4 Admin: upload Dance Menu](#34-admin-uploadpublish-dance-menu-bundle)
+- [Phase 4 — Shared "Artifact" Plumbing](#phase-4--shared-artifact-plumbing-submissions--downloads)
+  - [4.1 Define submission schema](#41-define-submission-schema--firestore-helpers)
+  - [4.2 Implement artifact writer](#42-implement-artifact-writer--bundle-download)
+- [Phase 5 — Guardrails](#phase-5--guardrails-captcha-rate-limit-spend-cap)
+  - [5.1 reCAPTCHA verification](#51-recaptcha-verification-endpoint--client-widget)
+  - [5.2 Rate limiting utility](#52-rate-limiting-utility-10-requests--10-minutes)
+  - [5.3 Spend cap enforcement](#53-spend-cap-enforcement-20month)
+- [Phase 6 — Tool: "How Do I Fit?"](#phase-6--tool-how-do-i-fit-multi-turn)
+  - [6.1 Job ingestion](#61-job-ingestion-pasteurlfile--normalized-job-text)
+  - [6.2 Fit flow state machine](#62-fit-flow-state-machine-up-to-5-follow-ups)
+  - [6.3 LLM prompt + report generation](#63-llm-prompt--structured-report-generation--citations)
+  - [6.4 UI wiring for Fit tool](#64-ui-wiring-for-fit-tool-multi-turn-ux--downloads)
+- [Phase 7 — Tool: "Get a Custom Resume"](#phase-7--tool-get-a-custom-resume)
+  - [7.1 Job ingestion reuse + RAG](#71-job-ingestion-reuse--resume-context-retrieval-rag-v0)
+  - [7.2 Resume generation](#72-resume-generation-2-page-factual-only--artifacts)
+  - [7.3 UI wiring for Custom Resume](#73-ui-wiring-for-custom-resume)
+- [Phase 8 — Tool: "Interview Me Now"](#phase-8--tool-interview-me-now-career-only-chat)
+  - [8.1 Career-only policy + guardrails](#81-career-only-policy--guardrails)
+  - [8.2 Chat endpoint + transcript](#82-chat-endpoint--transcript-artifact)
+  - [8.3 UI wiring for Interview tool](#83-ui-wiring-for-interview-tool)
+- [Phase 9 — Retention Cleanup + Admin](#phase-9--retention-cleanup--admin-submissions-viewer)
+  - [9.1 Admin submissions list](#91-admin-submissions-list--details-view)
+  - [9.2 Retention deletion route](#92-retention-deletion-route-90-day--scheduler-integration)
+- [Phase 10 — Hardening + Deployment](#phase-10--hardening--deployment-checklist-cloud-run)
+  - [10.1 Observability and error handling](#101-observability-and-error-handling)
+  - [10.2 Cloud Run configuration](#102-cloud-run-configuration-non-code-checklist)
+- [Summary](#summary)
+
+---
+
 ## Phase 0 — Project Foundation (tests, env, UI shell)
 
 ### 0.1 Add test tooling (Vitest + React Testing Library)
@@ -247,14 +294,17 @@
 
 ### 6.1 Job ingestion (paste/url/file) → normalized job text
 
-- [ ] **[Codex/Opus]** Implement text normalization from pasted content
-- [ ] **[Codex/Opus]** Implement server-side URL fetch with typed failure response
-- [ ] **[Codex/Opus]** Implement file extraction for PDF/DOCX/TXT/MD (max 10MB)
-- [ ] **[Codex/Opus]** Validate allowed extensions and file size
-- [ ] **[Codex/Opus]** Return typed failure that triggers "please paste" UI on fetch failure
-- [ ] **[Codex/Opus]** Add unit tests for TXT/MD extraction
-- [ ] **[Codex/Opus]** Add unit tests for input validation
-- [ ] **[Gemini 3 Pro]** TEST: Optional smoke test for URL fetch on known public URL
+- [x] **[Codex/Opus]** Implement text normalization from pasted content
+- [x] **[Codex/Opus]** Implement server-side URL fetch with typed failure response
+- [x] **[Codex/Opus]** Implement file extraction for PDF/DOCX/TXT/MD (max 10MB)
+- [x] **[Codex/Opus]** Validate allowed extensions and file size
+- [x] **[Codex/Opus]** Return typed failure that triggers "please paste" UI on fetch failure
+- [x] **[Codex/Opus]** Add unit tests for TXT/MD extraction
+- [x] **[Codex/Opus]** Add unit tests for input validation
+- [x] **[Gemini 3 Pro]** TEST: Optional smoke test for URL fetch on known public URL
+  - Added as Section 9 to `npm run smoke:gcp`
+  - Tests httpbin.org/html and example.com
+  - Run with: `npm run smoke:gcp -- --section=9`
 
 ### 6.2 Fit flow state machine (up to 5 follow-ups)
 

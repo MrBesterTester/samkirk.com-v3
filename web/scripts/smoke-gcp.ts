@@ -3,15 +3,26 @@
  *
  * Run with: cd web && npm run smoke:gcp
  *
+ * Run specific sections:
+ *   npm run smoke:gcp -- --section=1        # Run only Section 1
+ *   npm run smoke:gcp -- --section=1,3,5    # Run Sections 1, 3, and 5
+ *   npm run smoke:gcp -- --section=storage  # Run by name
+ *   npm run smoke:gcp -- --list             # List available sections
+ *
  * Prerequisites:
  * - GCP credentials set up (GOOGLE_APPLICATION_CREDENTIALS or gcloud auth)
  * - web/.env.local file with required environment variables
  *
- * This script:
- * 1. Validates all required environment variables are present
- * 2. Writes/reads a test object in the private GCS bucket
- * 3. Writes/reads a test document in Firestore
- * 4. Cleans up test artifacts
+ * Sections:
+ *   1. Cloud Storage Test
+ *   2. Firestore Test
+ *   3. Session Test
+ *   4. Resume Upload Test
+ *   5. Resume Chunking Test
+ *   6. Dance Menu Upload Test
+ *   7. Submission & Artifact Bundle Test
+ *   8. Spend Cap Test
+ *   9. Job Ingestion URL Fetch Test
  */
 
 import { config } from "dotenv";
@@ -23,6 +34,90 @@ config({ path: resolve(__dirname, "../.env.local") });
 import { Firestore, Timestamp } from "@google-cloud/firestore";
 import { Storage } from "@google-cloud/storage";
 import { z } from "zod";
+
+// ============================================================================
+// Section Registry
+// ============================================================================
+
+interface SectionInfo {
+  number: number;
+  name: string;
+  aliases: string[];
+}
+
+const SECTIONS: SectionInfo[] = [
+  { number: 1, name: "Cloud Storage Test", aliases: ["storage", "gcs"] },
+  { number: 2, name: "Firestore Test", aliases: ["firestore", "fs"] },
+  { number: 3, name: "Session Test", aliases: ["session"] },
+  { number: 4, name: "Resume Upload Test", aliases: ["resume-upload", "resume"] },
+  { number: 5, name: "Resume Chunking Test", aliases: ["chunking", "chunks"] },
+  { number: 6, name: "Dance Menu Upload Test", aliases: ["dance-menu", "dance"] },
+  { number: 7, name: "Submission & Artifact Bundle Test", aliases: ["submission", "artifact"] },
+  { number: 8, name: "Spend Cap Test", aliases: ["spend", "spend-cap"] },
+  { number: 9, name: "Job Ingestion URL Fetch Test", aliases: ["url-fetch", "job-ingestion", "ingestion"] },
+];
+
+function parseArgs(): { sections: number[] | null; listSections: boolean } {
+  const args = process.argv.slice(2);
+  
+  if (args.includes("--list") || args.includes("-l")) {
+    return { sections: null, listSections: true };
+  }
+
+  const sectionArg = args.find((arg) => arg.startsWith("--section=") || arg.startsWith("-s="));
+  if (!sectionArg) {
+    return { sections: null, listSections: false }; // Run all sections
+  }
+
+  const value = sectionArg.split("=")[1];
+  const parts = value.split(",").map((p) => p.trim().toLowerCase());
+  const sectionNumbers: number[] = [];
+
+  for (const part of parts) {
+    // Try to parse as number
+    const num = parseInt(part, 10);
+    if (!isNaN(num)) {
+      if (num >= 1 && num <= SECTIONS.length) {
+        sectionNumbers.push(num);
+      } else {
+        console.error(`Invalid section number: ${num}. Valid range: 1-${SECTIONS.length}`);
+        process.exit(1);
+      }
+    } else {
+      // Try to find by alias
+      const section = SECTIONS.find(
+        (s) => s.aliases.includes(part) || s.name.toLowerCase().includes(part)
+      );
+      if (section) {
+        sectionNumbers.push(section.number);
+      } else {
+        console.error(`Unknown section: "${part}". Use --list to see available sections.`);
+        process.exit(1);
+      }
+    }
+  }
+
+  return { sections: [...new Set(sectionNumbers)].sort((a, b) => a - b), listSections: false };
+}
+
+function listAvailableSections(): void {
+  console.log("\n=== Available Smoke Test Sections ===\n");
+  for (const section of SECTIONS) {
+    console.log(`  ${section.number}. ${section.name}`);
+    console.log(`     Aliases: ${section.aliases.join(", ")}`);
+  }
+  console.log("\nUsage:");
+  console.log("  npm run smoke:gcp                    # Run all sections");
+  console.log("  npm run smoke:gcp -- --section=1     # Run Section 1 only");
+  console.log("  npm run smoke:gcp -- --section=1,3   # Run Sections 1 and 3");
+  console.log("  npm run smoke:gcp -- --section=storage,spend  # Run by alias");
+  console.log("");
+}
+
+function shouldRunSection(sectionNumber: number, selectedSections: number[] | null): boolean {
+  if (selectedSections === null) return true; // Run all
+  return selectedSections.includes(sectionNumber);
+}
 
 // Redefine env schema here to avoid server-only import issues in CLI
 const envSchema = z.object({
@@ -51,7 +146,20 @@ function log(message: string, success?: boolean): void {
 }
 
 async function main(): Promise<void> {
+  // Parse command line arguments
+  const { sections: selectedSections, listSections } = parseArgs();
+
+  if (listSections) {
+    listAvailableSections();
+    process.exit(0);
+  }
+
   console.log("\n=== GCP Smoke Test ===\n");
+
+  if (selectedSections) {
+    const sectionNames = selectedSections.map((n) => `${n}. ${SECTIONS[n - 1].name}`);
+    console.log(`Running selected sections: ${sectionNames.join(", ")}\n`);
+  }
 
   // Step 1: Validate environment variables
   log("Checking environment variables...");
@@ -85,8 +193,14 @@ async function main(): Promise<void> {
   const firestore = new Firestore({ projectId: env.GCP_PROJECT_ID });
   const privateBucket = storage.bucket(env.GCS_PRIVATE_BUCKET);
 
-  // Step 2: Test Cloud Storage
-  console.log("\n--- Cloud Storage Test ---\n");
+  // Track completed sections for summary
+  let sectionsRun = 0;
+  let sectionsPassed = 0;
+
+  // Section 1: Test Cloud Storage
+  if (shouldRunSection(1, selectedSections)) {
+  console.log("\n--- Section 1: Cloud Storage Test ---\n");
+  sectionsRun++;
 
   const testContent = `Smoke test at ${new Date().toISOString()}`;
 
@@ -112,13 +226,17 @@ async function main(): Promise<void> {
     log(`Cleaning up ${SMOKE_TEST_GCS_PATH}...`);
     await privateBucket.file(SMOKE_TEST_GCS_PATH).delete();
     log("Cleanup successful", true);
+    sectionsPassed++;
   } catch (error) {
     log(`Cloud Storage test failed: ${error instanceof Error ? error.message : error}`, false);
     process.exit(1);
   }
+  } // End Section 1
 
-  // Step 3: Test Firestore
-  console.log("\n--- Firestore Test ---\n");
+  // Section 2: Test Firestore
+  if (shouldRunSection(2, selectedSections)) {
+  console.log("\n--- Section 2: Firestore Test ---\n");
+  sectionsRun++;
 
   const testDoc = {
     message: "Smoke test document",
@@ -153,13 +271,17 @@ async function main(): Promise<void> {
     log(`Cleaning up ${SMOKE_TEST_FIRESTORE_COLLECTION}/${SMOKE_TEST_FIRESTORE_DOC}...`);
     await docRef.delete();
     log("Cleanup successful", true);
+    sectionsPassed++;
   } catch (error) {
     log(`Firestore test failed: ${error instanceof Error ? error.message : error}`, false);
     process.exit(1);
   }
+  } // End Section 2
 
-  // Step 4: Test Session Creation (Firestore-based)
-  console.log("\n--- Session Test ---\n");
+  // Section 3: Test Session Creation (Firestore-based)
+  if (shouldRunSection(3, selectedSections)) {
+  console.log("\n--- Section 3: Session Test ---\n");
+  sectionsRun++;
 
   // Generate a smoke test session ID
   const { randomBytes } = await import("crypto");
@@ -215,6 +337,7 @@ async function main(): Promise<void> {
     log("Cleaning up test session...");
     await sessionDocRef.delete();
     log("Session cleanup successful", true);
+    sectionsPassed++;
   } catch (error) {
     // Clean up on failure
     try {
@@ -225,9 +348,12 @@ async function main(): Promise<void> {
     log(`Session test failed: ${error instanceof Error ? error.message : error}`, false);
     process.exit(1);
   }
+  } // End Section 3
 
-  // Step 5: Test Resume Upload Flow (GCS + Firestore metadata)
-  console.log("\n--- Resume Upload Test ---\n");
+  // Section 4: Test Resume Upload Flow (GCS + Firestore metadata)
+  if (shouldRunSection(4, selectedSections)) {
+  console.log("\n--- Section 4: Resume Upload Test ---\n");
+  sectionsRun++;
 
   const RESUME_GCS_PATH = "resume/master.md";
   const RESUME_INDEX_COLLECTION = "resumeIndex";
@@ -356,6 +482,7 @@ Generated at: ${new Date().toISOString()}
       await resumeIndexRef.delete();
       log("Test resume index deleted", true);
     }
+    sectionsPassed++;
   } catch (error) {
     // Try to restore on failure
     try {
@@ -380,9 +507,12 @@ Generated at: ${new Date().toISOString()}
     log(`Resume upload test failed: ${error instanceof Error ? error.message : error}`, false);
     process.exit(1);
   }
+  } // End Section 4
 
-  // Step 6: Test Resume Chunking (Step 3.3 verification)
-  console.log("\n--- Resume Chunking Test ---\n");
+  // Section 5: Test Resume Chunking (Step 3.3 verification)
+  if (shouldRunSection(5, selectedSections)) {
+  console.log("\n--- Section 5: Resume Chunking Test ---\n");
+  sectionsRun++;
 
   const RESUME_CHUNKS_COLLECTION = "resumeChunks";
 
@@ -641,6 +771,7 @@ Generated for smoke test at: ${new Date().toISOString()}
       await restoreBatch.commit();
       log("Original chunks restored", true);
     }
+    sectionsPassed++;
   } catch (error) {
     // Try to cleanup on failure
     try {
@@ -702,9 +833,12 @@ Generated for smoke test at: ${new Date().toISOString()}
     );
     process.exit(1);
   }
+  } // End Section 5
 
-  // Step 7: Test Dance Menu Upload Flow (Public GCS bucket)
-  console.log("\n--- Dance Menu Upload Test ---\n");
+  // Section 6: Test Dance Menu Upload Flow (Public GCS bucket)
+  if (shouldRunSection(6, selectedSections)) {
+  console.log("\n--- Section 6: Dance Menu Upload Test ---\n");
+  sectionsRun++;
 
   const publicBucket = storage.bucket(env.GCS_PUBLIC_BUCKET);
   const DANCE_MENU_PREFIX = "dance-menu/current/";
@@ -853,6 +987,7 @@ Generated at: ${new Date().toISOString()}
       await file.delete();
     }
     log("Test dance menu files deleted", true);
+    sectionsPassed++;
 
   } catch (error) {
     // Try to cleanup on failure
@@ -871,9 +1006,12 @@ Generated at: ${new Date().toISOString()}
     );
     process.exit(1);
   }
+  } // End Section 6
 
-  // Step 8: Test Artifact Bundle + Submission CRUD
-  console.log("\n--- Submission & Artifact Bundle Test ---\n");
+  // Section 7: Test Artifact Bundle + Submission CRUD
+  if (shouldRunSection(7, selectedSections)) {
+  console.log("\n--- Section 7: Submission & Artifact Bundle Test ---\n");
+  sectionsRun++;
 
   const SUBMISSIONS_COLLECTION = "submissions";
   const SUBMISSION_TEST_PREFIX = "_smoke_submission_";
@@ -1045,6 +1183,7 @@ Generated at: ${new Date().toISOString()}
     // Delete Firestore document
     await submissionDocRef.delete();
     log("Test submission deleted from Firestore", true);
+    sectionsPassed++;
 
   } catch (error) {
     // Cleanup on failure
@@ -1066,9 +1205,12 @@ Generated at: ${new Date().toISOString()}
     );
     process.exit(1);
   }
+  } // End Section 7
 
-  // Step 9: Test Spend Cap (Monthly Spend Tracking)
-  console.log("\n--- Spend Cap Test ---\n");
+  // Section 8: Test Spend Cap (Monthly Spend Tracking)
+  if (shouldRunSection(8, selectedSections)) {
+  console.log("\n--- Section 8: Spend Cap Test ---\n");
+  sectionsRun++;
 
   // Generate a test month key (use a far-future month to avoid conflicts)
   const testMonthKey = "2099-12";
@@ -1182,6 +1324,7 @@ Generated at: ${new Date().toISOString()}
     log("Cleaning up test spend doc...");
     await spendMonthlyRef.delete();
     log("Test spend doc deleted", true);
+    sectionsPassed++;
 
   } catch (error) {
     // Cleanup on failure
@@ -1196,9 +1339,135 @@ Generated at: ${new Date().toISOString()}
     );
     process.exit(1);
   }
+  } // End Section 8
+
+  // Section 9: Job Ingestion URL Fetch Test
+  // Note: We implement the fetch logic directly here since job-ingestion.ts uses "server-only"
+  if (shouldRunSection(9, selectedSections)) {
+  console.log("\n--- Section 9: Job Ingestion URL Fetch Test ---\n");
+  sectionsRun++;
+
+  const URL_FETCH_TIMEOUT = 15000;
+
+  // Simple HTML text extractor (mirrors job-ingestion.ts logic)
+  function extractTextFromHtml(html: string): string {
+    if (!html) return "";
+    let text = html;
+    text = text.replace(/<script[^>]*>[\s\S]*?<\/script>/gi, "");
+    text = text.replace(/<style[^>]*>[\s\S]*?<\/style>/gi, "");
+    text = text.replace(/<noscript[^>]*>[\s\S]*?<\/noscript>/gi, "");
+    text = text.replace(/<!--[\s\S]*?-->/g, "");
+    text = text.replace(/<\/?(?:p|div|br|hr|h[1-6]|li|tr|td|th|article|section|header|footer|nav|aside|main|blockquote|pre|ul|ol)[^>]*>/gi, "\n");
+    text = text.replace(/<[^>]+>/g, " ");
+    // Decode common entities
+    text = text.replace(/&amp;/gi, "&").replace(/&lt;/gi, "<").replace(/&gt;/gi, ">")
+      .replace(/&quot;/gi, '"').replace(/&nbsp;/gi, " ");
+    text = text.replace(/[ \t]+/g, " ").replace(/\n[ \t]+/g, "\n")
+      .replace(/[ \t]+\n/g, "\n").replace(/\n{3,}/g, "\n\n");
+    return text.trim();
+  }
+
+  function countWords(text: string): number {
+    if (!text) return 0;
+    return text.split(/\s+/).filter((w) => w.length > 0).length;
+  }
+
+  // Test URLs with expected outcomes
+  const testUrls = [
+    {
+      url: "https://httpbin.org/html",
+      description: "Simple HTML page (httpbin.org)",
+      shouldSucceed: true,
+      minWords: 10,
+    },
+    {
+      url: "https://example.com",
+      description: "Example.com landing page",
+      shouldSucceed: true,
+      minWords: 5,
+    },
+  ];
+
+  try {
+    for (const testCase of testUrls) {
+      log(`Testing: ${testCase.description}...`);
+      log(`  URL: ${testCase.url}`);
+
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), URL_FETCH_TIMEOUT);
+
+      try {
+        const response = await fetch(testCase.url, {
+          signal: controller.signal,
+          headers: {
+            "User-Agent": "Mozilla/5.0 (compatible; SamKirkBot/1.0; +https://samkirk.com)",
+            Accept: "text/html,application/xhtml+xml,text/plain,*/*",
+          },
+          redirect: "follow",
+        });
+        clearTimeout(timeoutId);
+
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
+
+        const html = await response.text();
+        const text = extractTextFromHtml(html);
+        const wordCount = countWords(text);
+        const charCount = text.length;
+
+        if (!testCase.shouldSucceed) {
+          throw new Error(`Expected failure but got success for ${testCase.url}`);
+        }
+
+        log(`  Characters: ${charCount}`, true);
+        log(`  Words: ${wordCount}`);
+
+        if (wordCount < testCase.minWords) {
+          throw new Error(
+            `Expected at least ${testCase.minWords} words, got ${wordCount}`
+          );
+        }
+
+        // Show preview (first 200 chars)
+        const preview = text.slice(0, 200).replace(/\n/g, " ").trim();
+        log(`  Preview: "${preview}..."`);
+        log("URL fetch successful", true);
+
+      } catch (error) {
+        clearTimeout(timeoutId);
+        
+        if (error instanceof Error && error.name === "AbortError") {
+          if (testCase.shouldSucceed) {
+            throw new Error(`Timeout fetching ${testCase.url}`);
+          }
+          log("  Expected timeout", true);
+        } else if (!testCase.shouldSucceed) {
+          log(`  Expected failure: ${error instanceof Error ? error.message : error}`, true);
+        } else {
+          throw error;
+        }
+      }
+    }
+
+    log("All URL fetch tests passed", true);
+    sectionsPassed++;
+
+  } catch (error) {
+    log(
+      `Job ingestion URL fetch test failed: ${error instanceof Error ? error.message : error}`,
+      false
+    );
+    process.exit(1);
+  }
+  } // End Section 9
 
   // Success!
-  console.log("\n=== All smoke tests passed! ===\n");
+  if (sectionsRun === 0) {
+    console.log("\n⚠️  No sections were run. Use --list to see available sections.\n");
+  } else {
+    console.log(`\n=== Smoke tests complete: ${sectionsPassed}/${sectionsRun} sections passed ===\n`);
+  }
 }
 
 main().catch((error) => {
