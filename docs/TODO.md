@@ -333,11 +333,24 @@
 
 ### 6.4 UI wiring for Fit tool (multi-turn UX + downloads)
 
-- [ ] **[Opus 4.5]** Build `/tools/fit` input form (paste/url/file modes)
-- [ ] **[Opus 4.5]** Build follow-up Q&A UI (up to 5 questions)
-- [ ] **[Opus 4.5]** Build results page with report preview
-- [ ] **[Opus 4.5]** Add download button for artifact bundle
-- [ ] **[Opus 4.5]** Ensure no dead ends in UI flow
+- [x] **[Opus 4.5]** Build `/tools/fit` input form (paste/url/file modes)
+  - Paste mode: full textarea for job text
+  - URL mode: input field with server-side fetch
+  - File mode: upload UI (stub - redirects to paste for now)
+- [x] **[Opus 4.5]** Build follow-up Q&A UI (up to 5 questions)
+  - Radio button options for predefined answers
+  - Free text input for open questions
+  - Progress indicator showing question X of 5
+- [x] **[Opus 4.5]** Build results page with report preview
+  - Overall score badge (Well/Average/Poorly with icons)
+  - Category breakdown cards with individual scores
+  - Unknowns/assumptions section
+- [x] **[Opus 4.5]** Add download button for artifact bundle
+  - Downloads zip via `/api/submissions/[id]/download`
+- [x] **[Opus 4.5]** Ensure no dead ends in UI flow
+  - Error states have "Try Again" button
+  - Complete state has "Analyze Another Job" button
+  - Loading states show spinners with descriptive text
 - [ ] **[Gemini 3 Pro]** TEST: Playwright E2E test for happy path (use dev toggles if needed for reCAPTCHA)
 
 ---

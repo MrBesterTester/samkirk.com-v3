@@ -1,0 +1,339 @@
+import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
+import {
+  ingestFromPaste,
+  ingestFromUrl,
+  JobIngestionError,
+  type JobIngestionResult,
+} from "@/lib/job-ingestion";
+import {
+  initializeFitFlow,
+  nextQuestion,
+  setPendingQuestion,
+  type NextQuestionResult,
+} from "@/lib/fit-flow";
+import {
+  getSessionIdFromCookies,
+  isSessionValid,
+  getSession,
+} from "@/lib/session";
+import { enforceRateLimit, RateLimitError } from "@/lib/rate-limit";
+import { enforceSpendCap, SpendCapError } from "@/lib/spend-cap";
+import { createSubmission } from "@/lib/submission";
+import { randomBytes } from "crypto";
+
+// ============================================================================
+// Request/Response Types
+// ============================================================================
+
+const StartRequestSchema = z.object({
+  mode: z.enum(["paste", "url"]),
+  text: z.string().optional(),
+  url: z.string().url().optional(),
+}).refine(
+  (data) => {
+    if (data.mode === "paste") {
+      return typeof data.text === "string" && data.text.trim().length > 0;
+    }
+    if (data.mode === "url") {
+      return typeof data.url === "string" && data.url.trim().length > 0;
+    }
+    return false;
+  },
+  { message: "Invalid input for the selected mode" }
+);
+
+interface StartSuccessResponse {
+  success: true;
+  flowId: string;
+  submissionId: string;
+  status: "question" | "ready";
+  question?: {
+    type: string;
+    text: string;
+    options?: string[];
+    required: boolean;
+  };
+  extracted: {
+    title: string | null;
+    company: string | null;
+    seniority: string;
+    locationType: string;
+  };
+}
+
+interface StartErrorResponse {
+  success: false;
+  error: string;
+  code?: string;
+  shouldPromptPaste?: boolean;
+  contactEmail?: string;
+}
+
+type StartResponse = StartSuccessResponse | StartErrorResponse;
+
+// ============================================================================
+// Helper: Generate Flow ID
+// ============================================================================
+
+function generateFlowId(): string {
+  return randomBytes(16).toString("base64url");
+}
+
+// ============================================================================
+// Helper: Check Captcha Passed
+// ============================================================================
+
+async function hasCaptchaPassed(sessionId: string): Promise<boolean> {
+  const session = await getSession(sessionId);
+  if (!session) return false;
+  return !!session.captchaPassedAt;
+}
+
+// ============================================================================
+// Route Handler
+// ============================================================================
+
+/**
+ * POST /api/tools/fit/start
+ *
+ * Start a new Fit flow with job input (paste or URL).
+ * Requires:
+ * - Valid session
+ * - Captcha passed
+ * - Within rate limits
+ * - Within spend cap
+ *
+ * Request body:
+ * - mode: "paste" | "url"
+ * - text?: string (required if mode === "paste")
+ * - url?: string (required if mode === "url")
+ *
+ * Response:
+ * - flowId: string - Unique ID for this flow session
+ * - submissionId: string - Submission ID for artifacts
+ * - status: "question" | "ready"
+ * - question?: object - Next follow-up question if status is "question"
+ * - extracted: object - Initial extracted fields from job text
+ */
+export async function POST(
+  request: NextRequest
+): Promise<NextResponse<StartResponse>> {
+  try {
+    // 1. Check session
+    const sessionId = await getSessionIdFromCookies();
+    if (!sessionId) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "No session found. Please refresh the page.",
+          code: "NO_SESSION",
+        },
+        { status: 401 }
+      );
+    }
+
+    const sessionValid = await isSessionValid(sessionId);
+    if (!sessionValid) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Session expired. Please refresh the page.",
+          code: "SESSION_EXPIRED",
+        },
+        { status: 401 }
+      );
+    }
+
+    // 2. Check captcha
+    const captchaPassed = await hasCaptchaPassed(sessionId);
+    if (!captchaPassed) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Please complete the captcha verification first.",
+          code: "CAPTCHA_REQUIRED",
+        },
+        { status: 403 }
+      );
+    }
+
+    // 3. Enforce rate limit
+    try {
+      await enforceRateLimit(request);
+    } catch (error) {
+      if (error instanceof RateLimitError) {
+        return NextResponse.json(
+          {
+            success: false,
+            error: error.message,
+            code: "RATE_LIMIT_EXCEEDED",
+            contactEmail: error.contactEmail,
+          },
+          { status: error.statusCode }
+        );
+      }
+      throw error;
+    }
+
+    // 4. Enforce spend cap
+    try {
+      await enforceSpendCap();
+    } catch (error) {
+      if (error instanceof SpendCapError) {
+        return NextResponse.json(
+          {
+            success: false,
+            error: error.message,
+            code: "SPEND_CAP_EXCEEDED",
+            contactEmail: error.contactEmail,
+          },
+          { status: error.statusCode }
+        );
+      }
+      throw error;
+    }
+
+    // 5. Parse request body
+    let body: z.infer<typeof StartRequestSchema>;
+    try {
+      const rawBody = await request.json();
+      const parseResult = StartRequestSchema.safeParse(rawBody);
+      if (!parseResult.success) {
+        return NextResponse.json(
+          {
+            success: false,
+            error: parseResult.error.issues[0]?.message || "Invalid request",
+            code: "INVALID_REQUEST",
+          },
+          { status: 400 }
+        );
+      }
+      body = parseResult.data;
+    } catch {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Invalid request body",
+          code: "INVALID_REQUEST",
+        },
+        { status: 400 }
+      );
+    }
+
+    // 6. Ingest job input
+    let jobIngestion: JobIngestionResult;
+    try {
+      if (body.mode === "paste" && body.text) {
+        jobIngestion = ingestFromPaste(body.text);
+      } else if (body.mode === "url" && body.url) {
+        jobIngestion = await ingestFromUrl(body.url);
+      } else {
+        return NextResponse.json(
+          {
+            success: false,
+            error: "Invalid input mode",
+            code: "INVALID_REQUEST",
+          },
+          { status: 400 }
+        );
+      }
+    } catch (error) {
+      if (error instanceof JobIngestionError) {
+        return NextResponse.json(
+          {
+            success: false,
+            error: error.message,
+            code: error.code,
+            shouldPromptPaste: error.shouldPromptPaste,
+          },
+          { status: 400 }
+        );
+      }
+      throw error;
+    }
+
+    // 7. Create submission record
+    const { id: submissionId } = await createSubmission({
+      tool: "fit",
+      sessionId,
+      inputs: {
+        mode: body.mode,
+        sourceIdentifier: jobIngestion.sourceIdentifier,
+        characterCount: jobIngestion.characterCount,
+        wordCount: jobIngestion.wordCount,
+      },
+    });
+
+    // 8. Initialize fit flow
+    const flowId = generateFlowId();
+    let flowState = initializeFitFlow(flowId, jobIngestion);
+
+    // 9. Determine next action (question or ready for report)
+    const nextResult: NextQuestionResult = nextQuestion(flowState);
+
+    let responseStatus: "question" | "ready";
+    let responseQuestion: StartSuccessResponse["question"] | undefined;
+
+    if (nextResult.status === "question") {
+      // Set pending question on state
+      flowState = setPendingQuestion(flowState, nextResult.question);
+      responseStatus = "question";
+      responseQuestion = {
+        type: nextResult.question.type,
+        text: nextResult.question.text,
+        options: nextResult.question.options,
+        required: nextResult.question.required,
+      };
+    } else if (nextResult.status === "ready") {
+      responseStatus = "ready";
+    } else {
+      // Error status
+      return NextResponse.json(
+        {
+          success: false,
+          error: nextResult.message,
+          code: "FLOW_ERROR",
+        },
+        { status: 400 }
+      );
+    }
+
+    // 10. Return response
+    // Note: In a production app, we'd persist flowState to Firestore or Redis
+    // For now, we'll send the state back to the client to manage
+    const response: StartSuccessResponse = {
+      success: true,
+      flowId,
+      submissionId,
+      status: responseStatus,
+      question: responseQuestion,
+      extracted: {
+        title: flowState.extracted.title,
+        company: flowState.extracted.company,
+        seniority: flowState.extracted.seniority,
+        locationType: flowState.extracted.locationType,
+      },
+    };
+
+    // Include flow state data in a header for the client to send back
+    // This is a simple approach; production would use server-side session storage
+    const responseHeaders = new Headers();
+    responseHeaders.set(
+      "X-Fit-Flow-State",
+      Buffer.from(JSON.stringify(flowState)).toString("base64")
+    );
+
+    return NextResponse.json(response, { headers: responseHeaders });
+  } catch (error) {
+    console.error("Fit start error:", error);
+    return NextResponse.json(
+      {
+        success: false,
+        error: "Internal server error",
+        code: "INTERNAL_ERROR",
+      },
+      { status: 500 }
+    );
+  }
+}
