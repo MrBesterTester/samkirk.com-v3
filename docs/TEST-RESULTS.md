@@ -29,6 +29,7 @@
   - [Fit Flow State Machine (Step 6.2)](#fit-flow-state-machine-step-62)
   - [Vertex AI LLM Wrapper (Step 6.3)](#vertex-ai-llm-wrapper-step-63)
   - [Fit Report Generator (Step 6.3)](#fit-report-generator-step-63)
+  - [Resume Context Retrieval (Step 7.1)](#resume-context-retrieval-step-71)
 - [E2E Tests (Playwright)](#e2e-tests-playwright)
   - [Fit Tool Happy Path (Step 6.4)](#fit-tool-happy-path-step-64)
 - [Resume Seeding Workflow](#resume-seeding-workflow)
@@ -46,7 +47,7 @@
 | Category | Result | Details |
 |----------|--------|---------|
 | GCP Smoke Tests | **PASS** | 10/10 sections passed |
-| Unit Tests | **PASS** | 707/707 tests passed |
+| Unit Tests | **PASS** | 757/757 tests passed |
 | E2E Tests (Playwright) | **PASS** | 5/5 Playwright tests passed |
 | E2E Tests (Real LLM) | **PASS** | Full flow with gemini-2.0-flash |
 | Lint | **PASS** | 0 errors, 0 warnings |
@@ -371,9 +372,9 @@ This is **not** independent verification via `gcloud` CLI—the script verifies 
 ### Results
 
 ```
-Test Files  31 passed (31)
-     Tests  707 passed (707)
-  Duration  9.34s
+Test Files  32 passed (32)
+     Tests  757 passed (757)
+  Duration  9.13s
 ```
 
 **Note:** Tests require network access to pass completely. The `route.test.ts` integration tests (3 tests) connect to real GCP services and will skip if run in a sandboxed environment without network access.
@@ -559,6 +560,60 @@ extracted-fields.json ──► generateMarkdownReport() ──► generated-rep
 **Related Smoke Test:** [Section 10: Vertex AI Gemini Test](#section-10-vertex-ai-gemini-test)
 
 **Back to:** [TODO.md Step 6.3](TODO.md#63-llm-prompt--structured-report-generation--citations)
+
+---
+
+### Resume Context Retrieval (Step 7.1)
+
+**File:** `src/lib/resume-context.test.ts`
+
+**Purpose:** Verify resume context assembly and citation generation for RAG V0 (used by Custom Resume and Interview tools)
+
+**Test Categories (50 tests):**
+
+| Category | Tests | Description |
+|----------|-------|-------------|
+| `formatChunkForContext()` | 8 | Detailed/compact/minimal formats, chunk IDs, 1-indexed numbering |
+| `assembleContextFromChunks()` | 11 | Empty input, assembly, separators, maxChunks, format options, character count |
+| `getResumeContext()` | 3 | Firestore loading, options passthrough, empty result |
+| `generateCitationsFromChunks()` | 4 | All chunks, empty input, field preservation, no content in citations |
+| `generateCitationsForReferencedChunks()` | 5 | Filtered IDs, no matches, empty list, duplicates, order preservation |
+| `createCitationMap()` | 4 | Map creation, lookup, non-existent ID, empty input |
+| `getContextSummary()` | 4 | Summary format, chunk titles, empty handling, locale formatting |
+| `isResumeContextAvailable()` | 2 | True when chunks exist, false when empty |
+| `getResumeContextSize()` | 2 | Character count across chunks, zero for empty |
+| Integration tests | 3 | Context → citations workflow, maxChunks effects, citation map lookup |
+| Edge cases | 4 | Empty content, special characters, long titles, unicode |
+
+**Key Behaviors Verified:**
+
+1. **Context Assembly Formats:**
+   - **Detailed (default):** `[CHUNK N: Title]\nSource: ref\n\ncontent` with `---` separator
+   - **Compact:** `### Title\n\ncontent` with `---` separator
+   - **Minimal:** Content only with `\n\n` separator
+
+2. **Citation Generation:**
+   - Converts chunks to `{chunkId, title, sourceRef}` (no content)
+   - Supports filtered citations by chunk ID
+   - Creates lookup map for quick access
+
+3. **Edge Cases:**
+   - `maxChunks: 0` returns empty result (explicit undefined check)
+   - Unicode content preserved (emojis, CJK, Arabic)
+   - Special characters not escaped in context
+
+**Example Usage:**
+
+```typescript
+// Load and assemble context for LLM
+const context = await getResumeContext({ format: "detailed" });
+console.log(`${context.chunkCount} chunks, ${context.characterCount} chars`);
+
+// Generate citations for report
+const citations = generateCitationsFromChunks(context.usedChunks);
+```
+
+**Back to:** [TODO.md Step 7.1](TODO.md#71-job-ingestion-reuse--resume-context-retrieval-rag-v0)
 
 ---
 
@@ -856,12 +911,13 @@ These should return empty results if cleanup succeeded.
 
 | Date | Changes |
 |------|---------|
+| 2026-02-03 | Added Resume Context Retrieval tests (50 tests, Step 7.1) — context assembly and citation generation |
 | 2026-02-03 | Verified Real-LLM E2E test with gemini-2.0-flash model (1579 input, 469 output tokens, $0.0037) |
 | 2026-02-03 | Added Resume Seeding Workflow and Real-LLM E2E Test sections |
 | 2026-02-03 | Clarified that test fixtures are reference-only and may become stale (not used by automated tests) |
 | 2026-02-03 | Added test fixtures folder `web/test-fixtures/fit-report/` with input/output examples (Step 6.3) |
 | 2026-02-03 | Added E2E tests section: 5 Playwright tests for Fit Tool happy path (Step 6.4) |
-| 2026-02-03 | Verified all 707 tests pass with network access (including route.test.ts integration tests) |
+| 2026-02-03 | Verified all 757 tests pass with network access (including route.test.ts integration tests) |
 | 2026-02-03 | Added Section 10: Vertex AI Gemini Test (Step 6.3) |
 | 2026-02-03 | Added Fit Report Generator tests (36 tests, Step 6.3) |
 | 2026-02-03 | Added Vertex AI LLM Wrapper tests (19 tests, Step 6.3) |

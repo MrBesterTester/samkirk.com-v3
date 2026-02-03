@@ -367,13 +367,21 @@
 
 ### 7.1 Job ingestion reuse + resume context retrieval (RAG V0)
 
-- [ ] **[Codex/Opus]** Reuse job ingestion utilities from Phase 6.1
-- [ ] **[Codex/Opus]** Load resume chunks from index
-- [ ] **[Codex/Opus]** Assemble context string with chunk ids/titles for LLM
-- [ ] **[Codex/Opus]** Create citation entries mapping claims → chunk refs
-- [ ] **[Codex/Opus]** Add unit tests for context assembly
-- [ ] **[Codex/Opus]** Add unit tests for citation formatting
-- [ ] **[Codex/Opus]** TEST: Run unit tests — all context/citation tests pass
+- [x] **[Codex/Opus]** Reuse job ingestion utilities from Phase 6.1
+  - Job ingestion utilities from `src/lib/job-ingestion.ts` can be imported directly
+- [x] **[Codex/Opus]** Load resume chunks from index
+  - Uses `getCurrentChunks()` from `src/lib/resume-chunker.ts`
+- [x] **[Codex/Opus]** Assemble context string with chunk ids/titles for LLM
+  - Created `assembleContextFromChunks()` with detailed/compact/minimal formats
+- [x] **[Codex/Opus]** Create citation entries mapping claims → chunk refs
+  - Created `generateCitationsFromChunks()`, `generateCitationsForReferencedChunks()`, `createCitationMap()`
+- [x] **[Codex/Opus]** Add unit tests for context assembly
+  - 50 unit tests in `src/lib/resume-context.test.ts`
+- [x] **[Codex/Opus]** Add unit tests for citation formatting
+  - Included in the same test file
+- [x] **[Codex/Opus]** TEST: Run unit tests — all context/citation tests pass
+  - `npm test -- --run src/lib/resume-context.test.ts` → 50/50 passed
+  - See [TEST-RESULTS.md § Resume Context Retrieval](TEST-RESULTS.md#resume-context-retrieval-step-71)
 
 ### 7.2 Resume generation (2-page, factual-only) + artifacts
 
