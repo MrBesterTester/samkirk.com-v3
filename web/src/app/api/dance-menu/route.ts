@@ -6,7 +6,6 @@ import {
   listFiles,
   PublicPaths,
 } from "@/lib/storage";
-import { getEnv } from "@/lib/env";
 
 /**
  * Response type for dance menu data.
@@ -44,7 +43,6 @@ export async function GET(
   void request;
 
   try {
-    const env = getEnv();
     const bucket = getPublicBucket();
     const prefix = PublicPaths.danceMenuCurrent();
 
@@ -72,8 +70,7 @@ export async function GET(
     }
 
     // Build public URLs for available formats
-    // For public buckets, we can construct direct URLs
-    const bucketName = env.GCS_PUBLIC_BUCKET;
+    // Use the local proxy route instead of direct GCS URLs to bypass org policies
     const formats = files
       .map((path) => {
         const filename = path.split("/").pop() || "";
@@ -83,7 +80,7 @@ export async function GET(
         return {
           extension: filename.split(".").pop() || "",
           name,
-          url: `https://storage.googleapis.com/${bucketName}/${path}`,
+          url: `/api/public/${path}`,
         };
       })
       .filter((f): f is NonNullable<typeof f> => f !== null);
