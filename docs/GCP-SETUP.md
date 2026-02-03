@@ -563,7 +563,7 @@ For local development, you can use test keys that always pass:
 
 ### 8.5 Completing GCP Setup
 
-Once you've added the reCAPTCHA keys to `.env.local`, GCP setup is complete. Return to `docs/TODO.md` **Step 3.2** to run the smoke test:
+Once you've added the reCAPTCHA keys to `.env.local`, GCP setup is complete. Return to `docs/TODO.md` **Step 2.1** to run the smoke test:
 
 ```bash
 cd web

@@ -34,7 +34,7 @@ The main feature of www.samkirk.com is set of chatbot functions:  "How Do I Fit?
     as software engineering controlled document (but w/o a github repo).
 All discussions and artifacts can be downloadable in a choice of formats: .docx, .md, .pdf and .html (possibly with .svg drawings)
 
-Two important aspects of the implementaton of the aforementioned chatbot service are
+Two important aspects of the implementation of the aforementioned chatbot service are
 - cost control, such as quota limitations
 - security against both abusive and malicious users who try to run up the bill
 
@@ -51,7 +51,7 @@ The quota limits (as well as rate limitation) needs to be done down to the granu
 This proposal is the third version of my personal website, www.samkirk.com. This is why the name of this project's root folder is samkirk.com-v3. The first version is on-line and is the one I've told you NOT to look at. There's a second, partial version here:
 - /Users/sam/Projects/samkirk.com-v2
 
-Please have a look at it with special attention on these file there: 
+Please have a look at it with special attention on these files there: 
 - Proposal-v2.md
 - PRD-v2.md
 

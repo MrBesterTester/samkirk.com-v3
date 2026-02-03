@@ -740,7 +740,7 @@ The checklist below is the **single active meta-process checklist** for this met
 - `docs/Proposal.md` exists
 - Git repository initialized (`.git/` exists)
 - Project slash commands exist in `/.cursor/commands/`
-- No `docs/SPECIFICATION.md`, `docs/BLUEPRINT.md`, or `docs/TODO.md` yet
+- `docs/SPECIFICATION.md`, `docs/BLUEPRINT.md`, and `docs/TODO.md` created (see Phases 1-3)
 - Workflow setup rule exists: `/.cursor/rules/workflow-setup.mdc` (guards against forgetting global git commands)
 
 ---

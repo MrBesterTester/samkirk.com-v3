@@ -7,6 +7,8 @@
 > - **[Opus 4.5]** — UI/Frontend components, layout, styling
 > - **[Gemini 3 Pro]** — Debugging, visual testing, E2E tests with browser
 > - **[Sonnet 4]** — Quick fixes, minor tweaks
+>
+> **Smoke test note:** There is a single GCP smoke test script (`web/scripts/smoke-gcp.ts`) that is progressively extended as new features are implemented. Each phase adds new test sections to this script rather than creating separate test files. Run with `npm run smoke:gcp` from the `web/` folder.
 
 ---
 
