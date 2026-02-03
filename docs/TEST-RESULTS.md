@@ -29,6 +29,8 @@
   - [Fit Flow State Machine (Step 6.2)](#fit-flow-state-machine-step-62)
   - [Vertex AI LLM Wrapper (Step 6.3)](#vertex-ai-llm-wrapper-step-63)
   - [Fit Report Generator (Step 6.3)](#fit-report-generator-step-63)
+- [E2E Tests (Playwright)](#e2e-tests-playwright)
+  - [Fit Tool Happy Path (Step 6.4)](#fit-tool-happy-path-step-64)
 - [Lint Check](#lint-check)
 - [Notes](#notes)
   - [What These Tests Do NOT Cover](#what-these-tests-do-not-cover)
@@ -43,6 +45,7 @@
 |----------|--------|---------|
 | GCP Smoke Tests | **PASS** | 10/10 sections passed |
 | Unit Tests | **PASS** | 707/707 tests passed |
+| E2E Tests | **PASS** | 5/5 Playwright tests passed |
 | Lint | **PASS** | 0 errors, 0 warnings |
 
 ---
@@ -487,6 +490,16 @@ Test Files  31 passed (31)
 
 **Purpose:** Verify the Fit report prompt builder, response parser, and markdown generator
 
+**Test Fixtures:** [`web/test-fixtures/fit-report/`](../web/test-fixtures/fit-report/)
+
+| File | Description |
+|------|-------------|
+| [job-description.txt](../web/test-fixtures/fit-report/job-description.txt) | Sample job posting input (Senior Software Engineer at Test Corp) |
+| [extracted-fields.json](../web/test-fixtures/fit-report/extracted-fields.json) | Structured data extracted from job posting |
+| [resume-chunks.json](../web/test-fixtures/fit-report/resume-chunks.json) | Resume chunks used as LLM context (5 sections) |
+| [llm-response.json](../web/test-fixtures/fit-report/llm-response.json) | Expected LLM analysis output (JSON) |
+| [generated-report.md](../web/test-fixtures/fit-report/generated-report.md) | Final markdown report output |
+
 **Test Categories (36 tests):**
 
 | Category | Tests | Description |
@@ -523,38 +536,60 @@ Test Files  31 passed (31)
    - Converts resume chunks to citation format: `{chunkId, title, sourceRef}`
    - Preserves all chunk metadata
 
-**Example Generated Report Structure:**
-```markdown
-# Fit Analysis Report
+**Example Output:** See [generated-report.md](../web/test-fixtures/fit-report/generated-report.md) for the complete output.
 
-## Job: Senior Software Engineer at Test Corp
+**Data Flow:**
 
-## Overall Fit: ✅ Well
-
-### Recommendation
-Strong overall fit...
-
-## Category Breakdown
-
-### Technical Skills: ✅ Well
-Strong TypeScript experience...
-
-### Location/Remote: ⚠️ Average
-Remote is acceptable...
-
-## Unknowns & Assumptions
-- Team structure
-- Reporting line
-
-## Extracted Job Details
-- **Job Title**: Senior Software Engineer
-- **Company**: Test Corp
-...
+```
+job-description.txt ──┐
+                      ├──► buildFitAnalysisPrompt() ──► LLM (Gemini)
+resume-chunks.json ───┘                                     │
+                                                            ▼
+                                                    llm-response.json
+                                                            │
+                                                            ▼
+extracted-fields.json ──► generateMarkdownReport() ──► generated-report.md
 ```
 
 **Related Smoke Test:** [Section 10: Vertex AI Gemini Test](#section-10-vertex-ai-gemini-test)
 
 **Back to:** [TODO.md Step 6.3](TODO.md#63-llm-prompt--structured-report-generation--citations)
+
+---
+
+## E2E Tests (Playwright)
+
+End-to-end tests using Playwright with a real browser (Chromium).
+
+### Fit Tool Happy Path (Step 6.4)
+
+**Run command:**
+```bash
+cd web && npx playwright test --headed
+```
+
+**Results:** 5/5 tests passed
+
+| Test | Status | Duration |
+|------|--------|----------|
+| should complete full flow: input → follow-ups → results | **PASS** | ~8s |
+| should allow starting over after completion | **PASS** | ~2s |
+| should show URL input mode when selected | **PASS** | ~2s |
+| should validate empty input | **PASS** | ~2s |
+| should handle error states gracefully | **PASS** | ~3s |
+
+**E2E Test Mode Features:**
+- **Captcha bypass:** `E2E_TESTING=true` and `NEXT_PUBLIC_E2E_TESTING=true` enable automatic captcha verification with a test token
+- **Mock fit report:** When no resume chunks are available in E2E mode, returns a mock report so tests can complete the full flow
+
+**Test coverage:**
+1. **Full flow test:** Paste job text → Analyze → (optional follow-ups) → Generate report → View results with download button
+2. **Starting over:** Verifies form reloads correctly after completion
+3. **URL mode:** Tests switching between paste/URL/file input modes
+4. **Validation:** Tests disabled button when input is empty
+5. **Error handling:** Tests graceful error state display
+
+**Back to:** [TODO.md Step 6.4](TODO.md#64-ui-wiring-for-fit-tool-multi-turn-ux--downloads)
 
 ---
 
@@ -599,6 +634,8 @@ These should return empty results if cleanup succeeded.
 
 | Date | Changes |
 |------|---------|
+| 2026-02-03 | Added test fixtures folder `web/test-fixtures/fit-report/` with input/output examples (Step 6.3) |
+| 2026-02-03 | Added E2E tests section: 5 Playwright tests for Fit Tool happy path (Step 6.4) |
 | 2026-02-03 | Verified all 707 tests pass with network access (including route.test.ts integration tests) |
 | 2026-02-03 | Added Section 10: Vertex AI Gemini Test (Step 6.3) |
 | 2026-02-03 | Added Fit Report Generator tests (36 tests, Step 6.3) |

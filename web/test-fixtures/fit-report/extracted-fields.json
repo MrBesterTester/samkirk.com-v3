@@ -1,0 +1,24 @@
+{
+  "title": "Senior Software Engineer",
+  "company": "Test Corp",
+  "seniority": "senior",
+  "seniorityConfirmed": true,
+  "locationType": "fully_remote",
+  "officeLocation": null,
+  "onsiteDaysPerWeek": null,
+  "estimatedCommuteMinutes": null,
+  "locationFitStatus": "acceptable",
+  "locationConfirmed": true,
+  "mustHaveSkills": [
+    "TypeScript",
+    "React",
+    "Node.js"
+  ],
+  "mustHaveSkillsConfirmed": true,
+  "niceToHaveSkills": [
+    "Python",
+    "AWS"
+  ],
+  "yearsExperienceRequired": 5,
+  "compensationRange": "$150k-$200k"
+}

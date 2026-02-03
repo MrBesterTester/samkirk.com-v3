@@ -4,6 +4,16 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import Script from "next/script";
 
 // ============================================================================
+// E2E Testing Constants
+// ============================================================================
+
+/**
+ * Special test token that bypasses reCAPTCHA verification in E2E test mode.
+ * Must match the server-side constant in lib/captcha.ts.
+ */
+const E2E_TEST_CAPTCHA_TOKEN = "__E2E_TEST_CAPTCHA_TOKEN__";
+
+// ============================================================================
 // Types
 // ============================================================================
 
@@ -189,8 +199,18 @@ export interface CaptchaGateProps {
 }
 
 /**
+ * Check if E2E testing mode is enabled (client-side).
+ */
+function isE2ETestingEnabled(): boolean {
+  return process.env.NEXT_PUBLIC_E2E_TESTING === "true";
+}
+
+/**
  * A gate component that requires captcha verification before showing content.
  * Handles the full flow of: showing captcha → verifying → showing content.
+ * 
+ * In E2E test mode (NEXT_PUBLIC_E2E_TESTING=true), automatically bypasses
+ * the captcha by sending a special test token to the server.
  */
 export function CaptchaGate({
   children,
@@ -202,6 +222,38 @@ export function CaptchaGate({
     "pending" | "verifying" | "passed" | "error"
   >("pending");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  // E2E test mode: automatically verify with test token on mount
+  useEffect(() => {
+    if (!isE2ETestingEnabled()) return;
+    if (status !== "pending") return;
+
+    async function autoVerify() {
+      setStatus("verifying");
+      try {
+        const response = await fetch("/api/captcha/verify", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ token: E2E_TEST_CAPTCHA_TOKEN }),
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.success) {
+          setStatus("passed");
+          onPass?.(E2E_TEST_CAPTCHA_TOKEN);
+        } else {
+          setStatus("error");
+          setErrorMessage(data.error || "E2E captcha verification failed");
+        }
+      } catch {
+        setStatus("error");
+        setErrorMessage("Failed to verify E2E captcha");
+      }
+    }
+
+    autoVerify();
+  }, [status, onPass]);
 
   const handleVerify = useCallback(
     async (token: string) => {

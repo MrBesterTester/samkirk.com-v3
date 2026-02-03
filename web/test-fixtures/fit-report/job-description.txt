@@ -1,0 +1,40 @@
+Senior Software Engineer - AI/ML Platform
+=========================================
+
+Company: Test Corp
+Location: Fully Remote (US-based)
+Department: Engineering
+
+About the Role
+--------------
+We're looking for a Senior Software Engineer to join our AI/ML Platform team. You'll be building the infrastructure that powers our machine learning systems, working with cutting-edge technologies to scale our AI capabilities.
+
+This is a fully remote position for candidates based in the United States.
+
+Requirements
+------------
+- 5+ years of software engineering experience
+- Strong proficiency in TypeScript and modern JavaScript
+- Experience with React and Node.js ecosystems
+- Familiarity with cloud platforms (GCP, AWS, or Azure)
+- Experience with containerization and orchestration (Docker, Kubernetes)
+- Strong communication skills and ability to work in a distributed team
+
+Nice to Have
+------------
+- Experience with Python and ML frameworks (TensorFlow, PyTorch)
+- Experience with data pipelines and ETL processes
+- Familiarity with GenAI/LLM technologies
+- AWS certification
+
+Compensation
+------------
+$150,000 - $200,000 base salary
+Equity package
+Comprehensive health, dental, and vision benefits
+401(k) with company match
+Unlimited PTO
+
+About Test Corp
+---------------
+Test Corp is a Series B startup building the next generation of AI-powered productivity tools. We're backed by top-tier VCs and are growing rapidly. Our engineering team values collaboration, continuous learning, and shipping high-quality software.

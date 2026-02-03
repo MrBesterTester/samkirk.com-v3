@@ -351,7 +351,11 @@
   - Error states have "Try Again" button
   - Complete state has "Analyze Another Job" button
   - Loading states show spinners with descriptive text
-- [ ] **[Gemini 3 Pro]** TEST: Playwright E2E test for happy path (use dev toggles if needed for reCAPTCHA)
+- [x] **[Gemini 3 Pro]** TEST: Playwright E2E test for happy path (use dev toggles if needed for reCAPTCHA)
+  - 5 E2E tests pass: full flow, starting over, URL mode, validation, error handling
+  - Uses E2E test mode for captcha bypass (`E2E_TESTING=true`)
+  - Uses mock fit report when no resume chunks available in E2E mode
+  - Run with: `cd web && npx playwright test --headed`
 
 ---
 

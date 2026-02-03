@@ -1,0 +1,36 @@
+{
+  "overallScore": "Well",
+  "categories": [
+    {
+      "name": "Technical Skills",
+      "score": "Well",
+      "rationale": "Strong match with required TypeScript, React, and Node.js skills. Resume shows 10+ years of experience with these exact technologies at Tech Corp and StartupXYZ. Additional skills in Python, GCP, and containerization (Docker, Kubernetes) align with nice-to-have requirements."
+    },
+    {
+      "name": "Experience Level",
+      "score": "Well",
+      "rationale": "10+ years of professional experience significantly exceeds the 5 years required. Senior-level role at Tech Corp demonstrates ability to lead projects, mentor engineers, and architect systems at scale. Experience handling 10M+ events/day shows familiarity with high-scale systems."
+    },
+    {
+      "name": "Location/Remote",
+      "score": "Well",
+      "rationale": "Role is fully remote (US-based), which is an acceptable location arrangement per the evaluation criteria. No commute or onsite requirements to consider."
+    },
+    {
+      "name": "Domain Knowledge",
+      "score": "Average",
+      "rationale": "Resume shows recent focus on AI/ML platform development and GenAI applications, which aligns with the AI/ML Platform team. However, specific experience with TensorFlow/PyTorch ML frameworks is not explicitly mentioned in the resume, only the AI/ML tools like Vertex AI and LangChain."
+    },
+    {
+      "name": "Culture Fit",
+      "score": "Well",
+      "rationale": "Strong evidence of collaboration through mentoring 4 junior engineers and conducting code reviews. Experience in distributed teams at previous roles. Passion for clean code and developer experience aligns with startup engineering values."
+    }
+  ],
+  "unknowns": [
+    "Specific ML framework experience (TensorFlow/PyTorch) - resume mentions AI/ML tools but not deep ML engineering",
+    "Team size and reporting structure at Test Corp",
+    "Exact tech stack version requirements (e.g., Node.js version, React version)"
+  ],
+  "recommendation": "Strong overall fit for the Senior Software Engineer position. The candidate's extensive TypeScript/React/Node.js experience, cloud platform knowledge (GCP), and demonstrated ability to lead and mentor align well with the role requirements. The fully remote arrangement is ideal. The main gap is around deep ML framework experience, though the AI/ML platform work and GenAI focus partially compensates. Recommend proceeding with interview to assess ML infrastructure experience depth."
+}

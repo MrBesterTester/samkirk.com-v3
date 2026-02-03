@@ -3,6 +3,16 @@ import "server-only";
 import { getEnv } from "./env";
 
 // ============================================================================
+// E2E Testing Constants
+// ============================================================================
+
+/**
+ * Special test token that bypasses reCAPTCHA verification in E2E test mode.
+ * Only works when E2E_TESTING environment variable is set to "true".
+ */
+export const E2E_TEST_CAPTCHA_TOKEN = "__E2E_TEST_CAPTCHA_TOKEN__";
+
+// ============================================================================
 // Types
 // ============================================================================
 
@@ -59,6 +69,14 @@ export function buildVerifyRequestBody(
 }
 
 /**
+ * Check if E2E testing mode is enabled.
+ * This allows bypassing reCAPTCHA verification in E2E tests.
+ */
+export function isE2ETestingEnabled(): boolean {
+  return process.env.E2E_TESTING === "true";
+}
+
+/**
  * Verify a reCAPTCHA token with Google's API.
  *
  * @param token - The reCAPTCHA response token from the client
@@ -75,6 +93,12 @@ export async function verifyCaptchaToken(
       success: false,
       error: "Missing or invalid captcha token",
     };
+  }
+
+  // E2E test bypass: accept special test token in E2E mode
+  if (isE2ETestingEnabled() && token === E2E_TEST_CAPTCHA_TOKEN) {
+    console.log("[E2E] Bypassing reCAPTCHA verification with test token");
+    return { success: true };
   }
 
   const env = getEnv();

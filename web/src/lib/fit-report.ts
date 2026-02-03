@@ -88,6 +88,103 @@ export class FitReportError extends Error {
 }
 
 // ============================================================================
+// E2E Testing Support
+// ============================================================================
+
+/**
+ * Check if E2E testing mode is enabled.
+ */
+function isE2ETestingEnabled(): boolean {
+  return process.env.E2E_TESTING === "true";
+}
+
+/**
+ * Generate a mock fit report for E2E testing.
+ * Used when E2E_TESTING=true and no resume chunks are available.
+ */
+function generateMockFitReport(state: FitFlowState): FitReport {
+  console.log("[E2E] Generating mock fit report for testing");
+  
+  const mockAnalysis: FitAnalysis = {
+    overallScore: "Well",
+    categories: [
+      {
+        name: "Technical Skills",
+        score: "Well",
+        rationale: "[E2E Mock] Strong alignment with required technical skills.",
+      },
+      {
+        name: "Experience Level",
+        score: "Average",
+        rationale: "[E2E Mock] Experience level generally matches expectations.",
+      },
+      {
+        name: "Location/Remote",
+        score: "Well",
+        rationale: "[E2E Mock] Location requirements are compatible.",
+      },
+    ],
+    unknowns: [
+      "[E2E Mock] This is a mock report generated for E2E testing.",
+    ],
+    recommendation:
+      "[E2E Mock] This mock report indicates a good fit for testing purposes.",
+    usedChunks: [],
+  };
+
+  const mockMarkdown = `# Fit Analysis Report
+
+## Overall Score: ${mockAnalysis.overallScore}
+
+**Note: This is a mock report generated for E2E testing.**
+
+## Job Information
+
+- **Title:** ${state.extracted.title || "Unknown"}
+- **Company:** ${state.extracted.company || "Unknown"}
+- **Seniority:** ${state.extracted.seniority}
+- **Location Type:** ${state.extracted.locationType}
+
+## Category Breakdown
+
+${mockAnalysis.categories.map((cat) => `### ${cat.name}: ${cat.score}\n\n${cat.rationale}`).join("\n\n")}
+
+## Unknowns and Assumptions
+
+${mockAnalysis.unknowns.map((u) => `- ${u}`).join("\n")}
+
+## Recommendation
+
+${mockAnalysis.recommendation}
+
+---
+
+## Citations
+
+*No citations - E2E mock report*
+`;
+
+  const mockHtml = `<!DOCTYPE html>
+<html>
+<head><title>Fit Analysis (E2E Mock)</title></head>
+<body>
+<h1>Fit Analysis Report (E2E Mock)</h1>
+<p>Overall Score: <strong>${mockAnalysis.overallScore}</strong></p>
+<p>This is a mock report generated for E2E testing.</p>
+</body>
+</html>`;
+
+  return {
+    analysis: mockAnalysis,
+    markdown: mockMarkdown,
+    html: mockHtml,
+    citations: [],
+    usage: { inputTokens: 0, outputTokens: 0 },
+    estimatedCostUsd: 0,
+  };
+}
+
+// ============================================================================
 // System Prompt
 // ============================================================================
 
@@ -424,6 +521,10 @@ export async function generateFitReport(state: FitFlowState): Promise<FitReport>
   const resumeChunks = await getCurrentChunks();
 
   if (resumeChunks.length === 0) {
+    // In E2E test mode, return a mock report instead of throwing
+    if (isE2ETestingEnabled()) {
+      return generateMockFitReport(state);
+    }
     throw new FitReportError(
       "No resume chunks available. Please upload a resume first."
     );

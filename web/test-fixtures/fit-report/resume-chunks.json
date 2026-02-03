@@ -1,0 +1,32 @@
+[
+  {
+    "chunkId": "chunk_001",
+    "title": "Summary",
+    "sourceRef": "h2:Summary",
+    "content": "Experienced software engineer with 10+ years of professional experience building scalable web applications and distributed systems. Passionate about developer experience, clean code, and mentoring junior engineers. Currently focused on AI/ML platform development and GenAI applications."
+  },
+  {
+    "chunkId": "chunk_002",
+    "title": "Experience > Tech Corp",
+    "sourceRef": "h2:Experience > h3:Tech Corp",
+    "content": "Senior Engineer at Tech Corp (2019-2024)\n\n- Led development of real-time data processing pipeline handling 10M+ events/day\n- Architected and implemented microservices migration from monolithic Node.js application\n- Mentored team of 4 junior engineers, conducting code reviews and pair programming sessions\n- Reduced API latency by 60% through query optimization and caching strategies\n- Technologies: TypeScript, React, Node.js, PostgreSQL, Redis, GCP"
+  },
+  {
+    "chunkId": "chunk_003",
+    "title": "Experience > StartupXYZ",
+    "sourceRef": "h2:Experience > h3:StartupXYZ",
+    "content": "Full Stack Developer at StartupXYZ (2016-2019)\n\n- Built customer-facing dashboard serving 50K+ monthly active users\n- Implemented CI/CD pipelines reducing deployment time from hours to minutes\n- Developed RESTful APIs and GraphQL endpoints for mobile and web clients\n- Technologies: JavaScript, React, Express, MongoDB, AWS"
+  },
+  {
+    "chunkId": "chunk_004",
+    "title": "Skills",
+    "sourceRef": "h2:Skills",
+    "content": "Languages: TypeScript, JavaScript, Python, Go, SQL\nFrontend: React, Next.js, Vue.js, Tailwind CSS\nBackend: Node.js, Express, FastAPI, GraphQL\nDatabases: PostgreSQL, MongoDB, Redis, Firestore\nCloud: GCP (Cloud Run, BigQuery, Pub/Sub), AWS (EC2, S3, Lambda)\nTools: Docker, Kubernetes, Terraform, GitHub Actions\nAI/ML: OpenAI API, Vertex AI, LangChain, RAG patterns"
+  },
+  {
+    "chunkId": "chunk_005",
+    "title": "Education",
+    "sourceRef": "h2:Education",
+    "content": "B.S. Computer Science, University of California, Berkeley (2012-2016)\n- Graduated with Honors\n- Teaching Assistant for Data Structures (CS 61B)\n- Senior project: Distributed key-value store implementation"
+  }
+]

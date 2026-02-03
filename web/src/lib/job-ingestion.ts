@@ -1,8 +1,9 @@
 import "server-only";
 
 import { z } from "zod";
-import pdf from "pdf-parse";
-import mammoth from "mammoth";
+
+// Note: pdf-parse and mammoth are imported dynamically to avoid ESM/CJS interop issues
+// with Next.js turbopack. See extractTextFromPdf and extractTextFromDocx.
 
 // ============================================================================
 // Constants
@@ -585,7 +586,11 @@ export async function extractTextFromPdf(
   }
 
   try {
-    const data = await pdf(buffer);
+    // Dynamic import to avoid ESM/CJS interop issues with Next.js turbopack
+    const pdfParse = await import("pdf-parse").then(
+      (m) => m.default || m
+    );
+    const data = await pdfParse(buffer);
     const text = data.text;
 
     if (!text || text.trim().length === 0) {
@@ -624,6 +629,8 @@ export async function extractTextFromDocx(
   }
 
   try {
+    // Dynamic import to avoid ESM/CJS interop issues with Next.js turbopack
+    const mammoth = await import("mammoth").then((m) => m.default || m);
     const result = await mammoth.extractRawText({ buffer });
     const text = result.value;
 
