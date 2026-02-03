@@ -703,6 +703,175 @@ Generated for smoke test at: ${new Date().toISOString()}
     process.exit(1);
   }
 
+  // Step 7: Test Dance Menu Upload Flow (Public GCS bucket)
+  console.log("\n--- Dance Menu Upload Test ---\n");
+
+  const publicBucket = storage.bucket(env.GCS_PUBLIC_BUCKET);
+  const DANCE_MENU_PREFIX = "dance-menu/current/";
+  const DANCE_MENU_TEST_PREFIX = "_smoke_test_dance_menu/";
+
+  // Test dance menu content
+  const testMenuMd = `# Dance Menu - Week of Smoke Test
+
+## Monday
+- Salsa (7pm)
+- Bachata (8pm)
+
+## Wednesday
+- Swing (7pm)
+- Hustle (8pm)
+
+## Friday
+- Latin Mix (7pm)
+- Social Dance (8pm)
+
+---
+Generated at: ${new Date().toISOString()}
+`;
+
+  const testMenuTxt = `Dance Menu - Week of Smoke Test
+
+Monday:
+  Salsa (7pm)
+  Bachata (8pm)
+
+Wednesday:
+  Swing (7pm)
+  Hustle (8pm)
+
+Friday:
+  Latin Mix (7pm)
+  Social Dance (8pm)
+
+Generated at: ${new Date().toISOString()}
+`;
+
+  const testMenuHtml = `<!DOCTYPE html>
+<html>
+<head><title>Dance Menu</title></head>
+<body>
+<h1>Dance Menu - Week of Smoke Test</h1>
+<h2>Monday</h2>
+<ul>
+  <li>Salsa (7pm)</li>
+  <li>Bachata (8pm)</li>
+</ul>
+<h2>Wednesday</h2>
+<ul>
+  <li>Swing (7pm)</li>
+  <li>Hustle (8pm)</li>
+</ul>
+<h2>Friday</h2>
+<ul>
+  <li>Latin Mix (7pm)</li>
+  <li>Social Dance (8pm)</li>
+</ul>
+<p>Generated at: ${new Date().toISOString()}</p>
+</body>
+</html>
+`;
+
+  // Store original dance menu data if it exists (for potential future restore logic)
+  const originalMenuFiles: Array<{ path: string; content: Buffer; contentType: string }> = [];
+
+  try {
+    // Check if real dance menu already exists (we'll restore it after test)
+    log("Checking for existing dance menu...");
+    const [existingFiles] = await publicBucket.getFiles({ prefix: DANCE_MENU_PREFIX });
+
+    if (existingFiles.length > 0) {
+      log(`Found ${existingFiles.length} existing dance menu files (will restore after test)`, true);
+
+      // Save existing files
+      for (const file of existingFiles) {
+        const [content] = await file.download();
+        const [metadata] = await file.getMetadata();
+        originalMenuFiles.push({
+          path: file.name,
+          content,
+          contentType: (metadata.contentType as string) || "application/octet-stream",
+        });
+      }
+    } else {
+      log("No existing dance menu found", true);
+    }
+
+    // Test 1: Write test dance menu files to public bucket (using test prefix)
+    log(`Writing test dance menu files to ${DANCE_MENU_TEST_PREFIX}...`);
+
+    await publicBucket.file(`${DANCE_MENU_TEST_PREFIX}menu.md`).save(testMenuMd, {
+      contentType: "text/markdown; charset=utf-8",
+      resumable: false,
+    });
+    await publicBucket.file(`${DANCE_MENU_TEST_PREFIX}menu.txt`).save(testMenuTxt, {
+      contentType: "text/plain; charset=utf-8",
+      resumable: false,
+    });
+    await publicBucket.file(`${DANCE_MENU_TEST_PREFIX}menu.html`).save(testMenuHtml, {
+      contentType: "text/html; charset=utf-8",
+      resumable: false,
+    });
+    log("Dance menu files written successfully", true);
+
+    // Test 2: Verify files can be read back
+    log("Verifying dance menu files...");
+    const [mdContent] = await publicBucket.file(`${DANCE_MENU_TEST_PREFIX}menu.md`).download();
+    const [txtContent] = await publicBucket.file(`${DANCE_MENU_TEST_PREFIX}menu.txt`).download();
+    const [htmlContent] = await publicBucket.file(`${DANCE_MENU_TEST_PREFIX}menu.html`).download();
+
+    if (mdContent.toString("utf-8") !== testMenuMd) {
+      throw new Error("Markdown content mismatch!");
+    }
+    if (txtContent.toString("utf-8") !== testMenuTxt) {
+      throw new Error("Text content mismatch!");
+    }
+    if (htmlContent.toString("utf-8") !== testMenuHtml) {
+      throw new Error("HTML content mismatch!");
+    }
+    log("All dance menu files verified", true);
+
+    // Test 3: Verify files are listed correctly
+    log("Verifying file listing...");
+    const [testFiles] = await publicBucket.getFiles({ prefix: DANCE_MENU_TEST_PREFIX });
+
+    if (testFiles.length !== 3) {
+      throw new Error(`Expected 3 files, found ${testFiles.length}`);
+    }
+
+    const expectedFiles = ["menu.md", "menu.txt", "menu.html"];
+    for (const expected of expectedFiles) {
+      const found = testFiles.some((f) => f.name.endsWith(expected));
+      if (!found) {
+        throw new Error(`Expected file ${expected} not found in listing`);
+      }
+    }
+    log("File listing verified", true);
+
+    // Cleanup: Delete test dance menu files
+    log("Cleaning up test dance menu files...");
+    for (const file of testFiles) {
+      await file.delete();
+    }
+    log("Test dance menu files deleted", true);
+
+  } catch (error) {
+    // Try to cleanup on failure
+    try {
+      const [testFiles] = await publicBucket.getFiles({ prefix: DANCE_MENU_TEST_PREFIX });
+      for (const file of testFiles) {
+        await file.delete();
+      }
+    } catch {
+      log("Warning: Failed to cleanup test dance menu files", false);
+    }
+
+    log(
+      `Dance menu upload test failed: ${error instanceof Error ? error.message : error}`,
+      false
+    );
+    process.exit(1);
+  }
+
   // Success!
   console.log("\n=== All smoke tests passed! ===\n");
 }

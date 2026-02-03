@@ -143,13 +143,13 @@
 
 ### 3.4 Admin: upload/publish Dance Menu bundle
 
-- [ ] **[Opus 4.5]** Create `/admin/dance-menu` page with multi-file upload UI
-- [ ] **[Codex/Opus]** Create `POST /api/admin/dance-menu` route
-- [ ] **[Codex/Opus]** Validate bundle contains required extensions: `.md`, `.txt`, `.html`
-- [ ] **[Codex/Opus]** Store files to public GCS bucket under `dance-menu/current/`
-- [ ] **[Opus 4.5]** Update `/dance-menu` page to render HTML version + download links
-- [ ] **[Codex/Opus]** Add unit tests for bundle validation rules
-- [ ] **[Gemini 3 Pro]** TEST: Manual smoke test for public bucket permissions
+- [x] **[Opus 4.5]** Create `/admin/dance-menu` page with multi-file upload UI
+- [x] **[Codex/Opus]** Create `POST /api/admin/dance-menu` route
+- [x] **[Codex/Opus]** Validate bundle contains required extensions: `.md`, `.txt`, `.html`
+- [x] **[Codex/Opus]** Store files to public GCS bucket under `dance-menu/current/`
+- [x] **[Opus 4.5]** Update `/dance-menu` page to render HTML version + download links
+- [x] **[Codex/Opus]** Add unit tests for bundle validation rules
+- [x] **[Gemini 3 Pro]** TEST: Manual smoke test for public bucket permissions
 
 ---
 
