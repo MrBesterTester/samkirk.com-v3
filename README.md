@@ -74,6 +74,23 @@ npm run start
 
 See [`docs/TEST-RESULTS.md`](docs/TEST-RESULTS.md) for detailed test results and verification evidence.
 
+### Development Methodology
+
+This project follows the **Dylan Davis 50+ method** (three-document system):
+
+**Key Documents:**
+- [`docs/Dylan-Davis-50plus-method.md`](docs/Dylan-Davis-50plus-method.md) — Complete methodology guide
+- [`docs/SPECIFICATION.md`](docs/SPECIFICATION.md) — What we're building
+- [`docs/BLUEPRINT.md`](docs/BLUEPRINT.md) — How to build it (step-by-step)
+- [`docs/TODO.md`](docs/TODO.md) — Roadmap and progress tracking
+
+**Tool Support:**
+- **Cursor IDE**: Project commands in `.cursor/commands/`, rules in `.cursor/rules/`
+- **Claude Code**: Project skills in `.claude/skills/`, rules in `.claude/RULES.md`
+- See [`.claude/CURSOR-COMPATIBILITY.md`](.claude/CURSOR-COMPATIBILITY.md) for command mapping between tools
+
+Both tools can be used interchangeably. Workflow commands (create-spec, create-blueprint, create-todo, start-step, continue-step) work in both environments.
+
 ### Notes
 
 - Secrets must never be committed (use env vars / GCP Secret Manager).
