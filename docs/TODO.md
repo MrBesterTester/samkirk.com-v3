@@ -620,11 +620,8 @@
 
 ### 10.2 Cloud Run configuration (non-code checklist)
 
-- [ ] **[You]** Configure service account permissions for Firestore + Storage
-- [ ] **[You]** Set env vars in Cloud Run / Secret Manager (no secrets in repo)
-- [ ] **[You]** Set `www` redirect at DNS/load balancer layer
-- [ ] **[You]** Configure GCP Billing Budget email alerts to `sam@samkirk.com`
-- [ ] **[You]** Configure Cloud Scheduler to call retention endpoint daily
+> **→ Deployment Guide:** See [GCP-DEPLOY.md](GCP-DEPLOY.md) for the full deployment checklist with step-by-step instructions.
+
 - [x] **[Gemini 3 Pro]** TEST: Full E2E test of deployed application
   - Created `web/e2e/full-app.spec.ts` with 28 Playwright tests covering:
   - Public pages: `/`, `/tools`, `/dance-menu`, `/song-dedication`, `/explorations/*` (6 tests)
