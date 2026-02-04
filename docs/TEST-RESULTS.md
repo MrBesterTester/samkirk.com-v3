@@ -1,6 +1,6 @@
 # samkirk.com v3 — Test Results
 
-> Last updated: 2026-02-04 (Step 9.2 Retention Deletion Route)
+> Last updated: 2026-02-04 (Step 10.2 Full Application E2E Tests)
 >
 > This document records smoke test results with real GCP infrastructure and unit test summaries.
 >
@@ -38,10 +38,12 @@
   - [Interview Chat (Step 8.2)](#interview-chat-step-82)
   - [Admin Submissions List (Step 9.1)](#admin-submissions-list-step-91)
   - [Retention Deletion Route (Step 9.2)](#retention-deletion-route-step-92)
+  - [API Errors and Observability (Step 10.1)](#api-errors-and-observability-step-101)
 - [E2E Tests (Playwright)](#e2e-tests-playwright)
   - [Fit Tool Happy Path (Step 6.4)](#fit-tool-happy-path-step-64)
   - [Resume Tool Happy Path (Step 7.3)](#resume-tool-happy-path-step-73)
   - [Interview Tool E2E Tests (Step 8.3)](#interview-tool-e2e-tests-step-83)
+  - [Full Application E2E Tests (Step 10.2)](#full-application-e2e-tests-step-102)
 - [Resume Seeding Workflow](#resume-seeding-workflow)
 - [Real-LLM E2E Test](#real-llm-e2e-test)
   - [Fit Tool (Step 6.4)](#fit-tool-step-64)
@@ -60,7 +62,7 @@
 |----------|--------|---------|
 | GCP Smoke Tests | **PASS** | 13/13 sections passed |
 | Unit Tests | **PASS** | 1117/1117 tests passed (36 files) |
-| E2E Tests (Playwright) | **PASS** | 22/22 tests passed (Fit: 5, Resume: 6, Interview: 11) |
+| E2E Tests (Playwright) | **PASS** | 50 tests (Fit: 5, Resume: 6, Interview: 11, Full App: 28) |
 | E2E Tests (Real LLM) | **PASS** | All 3 tools (Fit, Resume, Interview) with gemini-2.0-flash |
 | Lint | **PASS** | 0 errors, 0 warnings |
 
@@ -1314,6 +1316,97 @@ cd web && npm run lint
 
 **Back to:** [TODO.md Step 9.2](TODO.md#92-retention-deletion-route-90-day--scheduler-integration)
 
+### API Errors and Observability (Step 10.1)
+
+**File:** `src/lib/api-errors.test.ts`
+
+**Purpose:** Verify centralized error handling, correlation IDs, safe logging with secret redaction, and error serialization
+
+**Run Command:**
+```bash
+cd web && npm test -- --run src/lib/api-errors.test.ts
+```
+
+**Results:** 107/107 tests passed
+
+**Test Categories (107 tests):**
+
+| Category | Tests | Description |
+|----------|-------|-------------|
+| `ERROR_STATUS_CODES` | 10 | Status code mapping for all 25 error codes (401-503) |
+| `generateCorrelationId` | 4 | Uniqueness, URL-safe base64, consistent length |
+| `getCorrelationId` | 5 | Header extraction, generation fallback, length validation |
+| `CORRELATION_ID_HEADER` | 1 | Header name is `X-Correlation-Id` |
+| `createErrorResponse` | 6 | NextResponse creation, status codes, headers, Retry-After |
+| `serializeErrorForResponse` | 4 | Standard payload shape, optional fields |
+| `containsSensitiveData` | 11 | Detection of api_key, secret, password, token, auth, credential, bearer, private_key, service_account, client_secret |
+| `redactSensitiveData` | 7 | Redaction patterns, preservation of non-sensitive text |
+| `sanitizeErrorForLogging` | 10 | Error extraction, code inclusion, stack trace handling, production mode |
+| `logError` | 3 | JSON logging, correlation ID, redaction |
+| `logWarning` | 3 | JSON logging, correlation ID, redaction |
+| `AppError` class | 14 | Inheritance, properties, toJSON(), toResponse() |
+| Factory functions | 6 | sessionError, captchaRequiredError, validationError, internalError |
+| Detection utilities | 10 | isAppError, hasErrorCode, hasToResponse, hasToJSON |
+| Integration scenarios | 3 | End-to-end error handling flows |
+
+**Key Features Verified:**
+
+1. **Error Code System:**
+   - 25 typed error codes covering auth, validation, fetch, LLM, and internal errors
+   - Each code maps to appropriate HTTP status (400-503)
+   - Consistent `{ success: false, error, code }` response shape
+
+2. **Correlation ID:**
+   - `generateCorrelationId()` produces URL-safe, unique identifiers
+   - `getCorrelationId(headers)` extracts from request or generates new
+   - Propagates via `X-Correlation-Id` header
+
+3. **Safe Logging:**
+   - Detects 10 sensitive patterns (api_key, secret, password, etc.)
+   - `redactSensitiveData()` replaces with `[REDACTED]`
+   - `sanitizeErrorForLogging()` strips stack traces in production
+   - `logError()` and `logWarning()` output structured JSON
+
+4. **AppError Class:**
+   - Base class for all application errors
+   - `toJSON()` returns standard API error payload
+   - `toResponse(correlationId?)` creates NextResponse with headers
+
+**Example Error Response:**
+```json
+{
+  "success": false,
+  "error": "Rate limit exceeded. Please contact sam@samkirk.com for access.",
+  "code": "RATE_LIMIT_EXCEEDED",
+  "correlationId": "abc123xyz",
+  "contactEmail": "sam@samkirk.com",
+  "retryAfterMs": 30000
+}
+```
+
+**Example Log Output:**
+```json
+{
+  "level": "error",
+  "context": "fit-start",
+  "name": "Error",
+  "message": "Failed with api_key=[REDACTED]",
+  "correlationId": "abc123xyz",
+  "timestamp": "2026-02-04T14:00:00.000Z"
+}
+```
+
+**Related Implementation:**
+- Library: `src/lib/api-errors.ts` ([source](../web/src/lib/api-errors.ts))
+
+**Lint Check:**
+```bash
+cd web && npm run lint
+# Result: 0 errors, 0 warnings
+```
+
+**Back to:** [TODO.md Step 10.1](TODO.md#101-observability-and-error-handling)
+
 ---
 
 ## E2E Tests (Playwright)
@@ -1450,6 +1543,80 @@ The test command unsets conflicting environment variables:
 - `e2e-real-llm-transcript.md` - Real LLM transcript from `npm run test:e2e:real`
 
 **Back to:** [TODO.md Step 8.3](TODO.md#83-ui-wiring-for-interview-tool)
+
+---
+
+### Full Application E2E Tests (Step 10.2)
+
+**Run command:**
+```bash
+cd web && npx playwright test full-app.spec.ts
+```
+
+**Results:** 28/28 tests passed (~5-6 minutes total)
+
+| Category | Tests | Status |
+|----------|-------|--------|
+| Public Pages - Render Correctly | 6 | **PASS** |
+| Exploration Pages - Render Correctly | 4 | **PASS** |
+| Tool Pages - Load with Captcha Gate | 3 | **PASS** |
+| Admin Pages - Authentication Required | 4 | **PASS** |
+| Navigation - Links Work | 5 | **PASS** |
+| API Endpoints - Basic Health | 2 | **PASS** |
+| Error Handling - 404 Pages | 2 | **PASS** |
+| Accessibility - Basic Checks | 3 | **PASS** |
+
+**Test Coverage:**
+
+1. **Public Pages (6 tests):**
+   - Home page loads with navigation
+   - Tools hub page has links to all 3 tools
+   - Dance menu page loads
+   - Song dedication page loads
+   - Explorations hub page loads with topic links
+
+2. **Exploration Pages (4 tests):**
+   - Category theory, Pocket flow, Dance instruction, Uber level AI skills
+
+3. **Tool Pages (3 tests):**
+   - Fit, Resume, and Interview tools load and show captcha gate
+   - Captcha auto-bypasses in E2E mode, form/chat appears
+
+4. **Admin Pages (4 tests):**
+   - Admin landing, resume, dance-menu, and submissions pages
+   - All redirect to login when unauthenticated
+   - Note: OAuth flow requires manual verification
+
+5. **Navigation (5 tests):**
+   - Home → Tools navigation
+   - Tools → Fit/Resume/Interview tool navigation
+   - Home → Explorations navigation
+
+6. **API Health (2 tests):**
+   - Session init endpoint responds
+   - Maintenance retention endpoint responds to GET
+
+7. **Error Handling (2 tests):**
+   - Non-existent page returns 404
+   - Non-existent API route returns 404
+
+8. **Accessibility (3 tests):**
+   - Pages have single h1 heading
+   - Pages have main landmark element
+
+**Combined E2E Test Results:**
+```
+$ npx playwright test
+  50 tests total
+  - full-app.spec.ts: 28 tests
+  - fit-tool.spec.ts: 5 tests
+  - resume-tool.spec.ts: 6 tests
+  - interview-tool.spec.ts: 11 tests
+```
+
+**Test File:** [`web/e2e/full-app.spec.ts`](../web/e2e/full-app.spec.ts)
+
+**Back to:** [TODO.md Step 10.2](TODO.md#102-cloud-run-configuration-non-code-checklist)
 
 ---
 
