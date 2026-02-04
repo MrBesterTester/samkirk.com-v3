@@ -255,7 +255,7 @@ export async function POST(
         conversation = await getOrCreateConversation(
           sessionId,
           conversationId,
-          body.submissionId
+          body.submissionId ?? undefined
         );
       } catch (error) {
         console.error("Failed to get/create conversation:", error);

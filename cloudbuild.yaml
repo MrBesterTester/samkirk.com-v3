@@ -1,0 +1,70 @@
+# Cloud Build configuration for samkirk-v3
+#
+# Usage:
+#   gcloud builds submit --config=cloudbuild.yaml
+#
+# Or trigger automatically via Cloud Build triggers connected to your repo.
+
+steps:
+  # Step 1: Build the Docker image
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      - "build"
+      - "-t"
+      - "us-central1-docker.pkg.dev/$PROJECT_ID/samkirk-v3/web:$COMMIT_SHA"
+      - "-t"
+      - "us-central1-docker.pkg.dev/$PROJECT_ID/samkirk-v3/web:latest"
+      - "-f"
+      - "web/Dockerfile"
+      - "web"
+
+  # Step 2: Push the image to Artifact Registry
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      - "push"
+      - "us-central1-docker.pkg.dev/$PROJECT_ID/samkirk-v3/web:$COMMIT_SHA"
+
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      - "push"
+      - "us-central1-docker.pkg.dev/$PROJECT_ID/samkirk-v3/web:latest"
+
+  # Step 3: Deploy to Cloud Run
+  - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
+    entrypoint: gcloud
+    args:
+      - "run"
+      - "deploy"
+      - "samkirk-v3"
+      - "--image"
+      - "us-central1-docker.pkg.dev/$PROJECT_ID/samkirk-v3/web:$COMMIT_SHA"
+      - "--region"
+      - "us-central1"
+      - "--platform"
+      - "managed"
+      - "--allow-unauthenticated"
+      - "--service-account"
+      - "samkirk-v3-cloudrun@$PROJECT_ID.iam.gserviceaccount.com"
+      - "--set-env-vars"
+      - "GCP_PROJECT_ID=$PROJECT_ID,GCS_PRIVATE_BUCKET=samkirk-v3-private,GCS_PUBLIC_BUCKET=samkirk-v3-public,VERTEX_AI_LOCATION=us-central1,VERTEX_AI_MODEL=gemini-2.0-flash"
+      - "--set-secrets"
+      - "GOOGLE_OAUTH_CLIENT_ID=google-oauth-client-id:latest,GOOGLE_OAUTH_CLIENT_SECRET=google-oauth-client-secret:latest,RECAPTCHA_SITE_KEY=recaptcha-site-key:latest,RECAPTCHA_SECRET_KEY=recaptcha-secret-key:latest,AUTH_SECRET=auth-secret:latest,ADMIN_ALLOWED_EMAIL=admin-allowed-email:latest"
+      - "--memory"
+      - "1Gi"
+      - "--cpu"
+      - "1"
+      - "--timeout"
+      - "300"
+      - "--min-instances"
+      - "0"
+      - "--max-instances"
+      - "10"
+
+# Store images in Artifact Registry
+images:
+  - "us-central1-docker.pkg.dev/$PROJECT_ID/samkirk-v3/web:$COMMIT_SHA"
+  - "us-central1-docker.pkg.dev/$PROJECT_ID/samkirk-v3/web:latest"
+
+# Build options
+options:
+  logging: CLOUD_LOGGING_ONLY

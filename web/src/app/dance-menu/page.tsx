@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 
 interface DanceMenuFormat {
   extension: string;
@@ -19,7 +19,7 @@ type LoadState =
   | { status: "loaded"; data: DanceMenuData }
   | { status: "error"; message: string };
 
-function getFormatIcon(extension: string): JSX.Element {
+function getFormatIcon(extension: string): React.ReactElement {
   switch (extension) {
     case "html":
       return (

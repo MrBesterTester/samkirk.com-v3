@@ -370,7 +370,7 @@ export function chunkMarkdown(markdown: string, version: number): ResumeChunk[] 
 
       if (pendingSmallContent) {
         // Try to merge with pending content
-        const merged = `${pendingSmallContent.content}\n\n${section.content}`;
+        const merged: string = `${pendingSmallContent.content}\n\n${section.content}`;
         if (merged.length <= MAX_CHUNK_SIZE) {
           pendingSmallContent = {
             content: merged,

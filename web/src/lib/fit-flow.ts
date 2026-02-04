@@ -305,9 +305,9 @@ const SENIORITY_PATTERNS: Array<{ pattern: RegExp; level: SeniorityLevel }> = [
  * Patterns for detecting location/remote type.
  */
 const LOCATION_PATTERNS: Array<{ pattern: RegExp; type: LocationType }> = [
-  { pattern: /\b(100%?\s*remote|fully\s*remote|remote[\s-]?only|work\s*from\s*anywhere)\b/i, level: "fully_remote" as LocationType },
-  { pattern: /\b(hybrid|part[\s-]?remote|flexible\s*location|mix\s*of\s*remote)\b/i, level: "hybrid" as LocationType },
-  { pattern: /\b(on[\s-]?site|in[\s-]?office|office[\s-]?based|in[\s-]?person\s*only)\b/i, level: "onsite" as LocationType },
+  { pattern: /\b(100%?\s*remote|fully\s*remote|remote[\s-]?only|work\s*from\s*anywhere)\b/i, type: "fully_remote" },
+  { pattern: /\b(hybrid|part[\s-]?remote|flexible\s*location|mix\s*of\s*remote)\b/i, type: "hybrid" },
+  { pattern: /\b(on[\s-]?site|in[\s-]?office|office[\s-]?based|in[\s-]?person\s*only)\b/i, type: "onsite" },
 ];
 
 /**
@@ -331,9 +331,9 @@ export function extractSeniority(jobText: string): SeniorityLevel {
 export function extractLocationType(jobText: string): LocationType {
   const normalizedText = jobText.toLowerCase();
 
-  for (const { pattern, level } of LOCATION_PATTERNS) {
+  for (const { pattern, type } of LOCATION_PATTERNS) {
     if (pattern.test(normalizedText)) {
-      return level;
+      return type;
     }
   }
 

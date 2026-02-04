@@ -1,0 +1,51 @@
+# Dependencies
+node_modules
+
+# Build output (rebuilt in container)
+.next
+
+# Git
+.git
+.gitignore
+
+# Environment files (secrets should come from Secret Manager)
+.env
+.env.*
+!.env.example
+
+# Test files
+*.test.ts
+*.test.tsx
+*.spec.ts
+*.spec.tsx
+__tests__
+e2e
+test-results
+playwright-report
+coverage
+
+# IDE and editor files
+.vscode
+.idea
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Documentation (not needed in container)
+*.md
+!README.md
+
+# Scripts (not needed in runtime)
+scripts
+
+# TypeScript build info
+*.tsbuildinfo
+
+# Playwright
+playwright.config.ts
+
+# Vitest
+vitest.config.ts

@@ -80,7 +80,8 @@ export async function GET(
       if (exists) {
         const [content] = await bucket.file(bundlePath).download();
 
-        return new NextResponse(content, {
+        // Convert Buffer to Uint8Array for compatibility with Response body
+        return new NextResponse(new Uint8Array(content), {
           status: 200,
           headers: {
             "Content-Type": "application/zip",
@@ -104,7 +105,8 @@ export async function GET(
     const bundle = await buildSubmissionBundle(submissionId, bundleOptions);
 
     // Return the zip file
-    return new NextResponse(bundle.buffer, {
+    // Convert Buffer to Uint8Array for compatibility with Response body
+    return new NextResponse(new Uint8Array(bundle.buffer), {
       status: 200,
       headers: {
         "Content-Type": "application/zip",

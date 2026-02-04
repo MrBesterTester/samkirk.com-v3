@@ -53,6 +53,7 @@ vi.mock("./storage", () => ({
 // Mock markdown-renderer
 vi.mock("./markdown-renderer", () => ({
   renderMarkdownToHtml: vi.fn((md: string) => `<html>${md}</html>`),
+  renderMarkdownSync: vi.fn((md: string) => `<html>${md}</html>`),
 }));
 
 // Import after mocks

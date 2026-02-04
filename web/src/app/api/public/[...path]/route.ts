@@ -47,7 +47,8 @@ export async function GET(
     // Set caching headers (public, 1 hour)
     headers.set("Cache-Control", "public, max-age=3600");
 
-    return new NextResponse(content, {
+    // Convert Buffer to Uint8Array for compatibility with Response body
+    return new NextResponse(new Uint8Array(content), {
       status: 200,
       headers,
     });

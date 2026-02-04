@@ -179,7 +179,7 @@ ${mockAnalysis.recommendation}
     markdown: mockMarkdown,
     html: mockHtml,
     citations: [],
-    usage: { inputTokens: 0, outputTokens: 0 },
+    usage: { inputTokens: 0, outputTokens: 0, totalTokens: 0 },
     estimatedCostUsd: 0,
   };
 }

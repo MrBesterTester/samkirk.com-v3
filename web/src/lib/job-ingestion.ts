@@ -587,10 +587,10 @@ export async function extractTextFromPdf(
 
   try {
     // Dynamic import to avoid ESM/CJS interop issues with Next.js turbopack
-    const pdfParse = await import("pdf-parse").then(
-      (m) => m.default || m
-    );
-    const data = await pdfParse(buffer);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const pdfModule = (await import("pdf-parse")) as any;
+    const pdfParse = pdfModule.default || pdfModule;
+    const data = await pdfParse(buffer) as { text: string };
     const text = data.text;
 
     if (!text || text.trim().length === 0) {
