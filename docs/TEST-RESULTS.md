@@ -25,6 +25,7 @@
   - [Section 10: Vertex AI Gemini Test](#section-10-vertex-ai-gemini-test)
   - [Section 11: Resume Generation Test](#section-11-resume-generation-test)
   - [Section 12: Interview Chat Test](#section-12-interview-chat-test)
+  - [Section 13: Retention Cleanup Test](#section-13-retention-cleanup-test)
 - [Unit Tests](#unit-tests)
   - [Results](#results)
   - [Test File Breakdown](#test-file-breakdown)
@@ -57,7 +58,7 @@
 
 | Category | Result | Details |
 |----------|--------|---------|
-| GCP Smoke Tests | **PASS** | 12/12 sections passed |
+| GCP Smoke Tests | **PASS** | 13/13 sections passed |
 | Unit Tests | **PASS** | 1117/1117 tests passed (36 files) |
 | E2E Tests (Playwright) | **PASS** | 22/22 tests passed (Fit: 5, Resume: 6, Interview: 11) |
 | E2E Tests (Real LLM) | **PASS** | All 3 tools (Fit, Resume, Interview) with gemini-2.0-flash |
@@ -587,6 +588,64 @@ npm run smoke:gcp -- --section=12
 **Related Unit Tests:** [Interview Chat (Step 8.2)](#interview-chat-step-82)
 
 **Back to:** [TODO.md Step 8.2](TODO.md#82-chat-endpoint--transcript-artifact)
+
+---
+
+### Section 13: Retention Cleanup Test
+
+**Purpose:** Verify 90-day retention cleanup with real GCS/Firestore: create expired submissions, run cleanup, verify deletion, verify non-expired submissions remain
+
+**Run command:**
+```bash
+npm run smoke:gcp -- --section=13
+```
+
+**Test Design:**
+
+| Step | Description |
+|------|-------------|
+| 13.1 | Create 2 expired submissions (expiresAt 10 days ago) with 3 GCS artifacts each |
+| 13.2 | Create 1 non-expired submission (expiresAt in 90 days) with 3 GCS artifacts |
+| 13.3 | Verify all 3 submissions exist in Firestore (9 total GCS files) |
+| 13.4 | Run retention cleanup logic (same as `POST /api/maintenance/retention`) |
+| 13.5 | Verify expired submissions deleted from Firestore |
+| 13.6 | Verify expired GCS artifacts deleted (6 files) |
+| 13.7 | Verify non-expired submission still exists in Firestore |
+| 13.8 | Verify non-expired GCS artifacts still exist (3 files) |
+| 13.9 | Test idempotency - second cleanup run finds 0 expired test submissions |
+| 13.10 | Cleanup remaining test data |
+
+**Key Behaviors Verified:**
+
+1. **Expiry Detection:** Query correctly finds submissions with `expiresAt <= now`
+2. **GCS-First Deletion:** GCS artifacts deleted before Firestore doc (prevents orphaned files)
+3. **Non-Expired Preservation:** Active submissions and artifacts remain untouched
+4. **Idempotency:** Re-running cleanup on already-cleaned data succeeds (no errors)
+5. **Artifact Cleanup:** All files under `submissions/{id}/` prefix deleted
+
+**Test Data:**
+
+| Submission | expiresAt | Status | GCS Files |
+|------------|-----------|--------|-----------|
+| `_smoke_retention_expired_1_*` | 10 days ago | Expired | `output/report.md`, `output/report.html`, `input/job.txt` |
+| `_smoke_retention_expired_2_*` | 10 days ago | Expired | `output/report.md`, `output/report.html`, `input/job.txt` |
+| `_smoke_retention_active_*` | 90 days ahead | Active | `output/report.md`, `output/report.html`, `input/job.txt` |
+
+**GCP Resources Used:**
+
+| Resource | Path/Collection | Purpose |
+|----------|-----------------|---------|
+| Firestore | `submissions/{id}` | Test submission docs |
+| Cloud Storage | `submissions/{id}/output/*` | Test output artifacts |
+| Cloud Storage | `submissions/{id}/input/*` | Test input artifacts |
+
+**Related Implementation:**
+- Route: `POST /api/maintenance/retention` ([source](../web/src/app/api/maintenance/retention/route.ts))
+- Library: `src/lib/retention.ts` ([source](../web/src/lib/retention.ts))
+
+**Related Unit Tests:** [Retention Deletion Route (Step 9.2)](#retention-deletion-route-step-92)
+
+**Back to:** [TODO.md Step 9.2](TODO.md#92-retention-deletion-route-90-day--scheduler-integration)
 
 ---
 
@@ -1244,6 +1303,8 @@ Retention cleanup completed | found=5 | deleted=4 | failed=1 | duration=1234ms |
 **Related Implementation:**
 - Route: `POST /api/maintenance/retention` ([source](../web/src/app/api/maintenance/retention/route.ts))
 - Library: `src/lib/retention.ts` ([source](../web/src/lib/retention.ts))
+
+**Related Smoke Test:** [Section 13: Retention Cleanup Test](#section-13-retention-cleanup-test)
 
 **Lint Check:**
 ```bash

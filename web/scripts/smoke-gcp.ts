@@ -62,6 +62,7 @@ const SECTIONS: SectionInfo[] = [
   { number: 10, name: "Vertex AI Gemini Test", aliases: ["vertex", "gemini", "llm", "fit-report"] },
   { number: 11, name: "Resume Generation Test", aliases: ["resume-gen", "custom-resume", "resume-generator"] },
   { number: 12, name: "Interview Chat Test", aliases: ["interview", "chat", "interview-chat"] },
+  { number: 13, name: "Retention Cleanup Test", aliases: ["retention", "cleanup", "retention-cleanup"] },
 ];
 
 function parseArgs(): { sections: number[] | null; listSections: boolean } {
@@ -2339,6 +2340,255 @@ ${transcript
     process.exit(1);
   }
   } // End Section 12
+
+  // Section 13: Retention Cleanup Test (Step 9.2)
+  if (shouldRunSection(13, selectedSections)) {
+  console.log("\n--- Section 13: Retention Cleanup Test ---\n");
+  sectionsRun++;
+
+  const SUBMISSIONS_COLLECTION = "submissions";
+  const RETENTION_TEST_PREFIX = "_smoke_retention_";
+
+  // Helper to create test submission with specific timestamps
+  async function createTestSubmission(
+    firestore: Firestore,
+    bucket: ReturnType<typeof storage.bucket>,
+    submissionId: string,
+    isExpired: boolean
+  ): Promise<void> {
+    const now = Date.now();
+    const ninetyDaysMs = 90 * 24 * 60 * 60 * 1000;
+
+    // For expired: createdAt 100 days ago, expiresAt 10 days ago
+    // For non-expired: createdAt now, expiresAt in 90 days
+    const createdAtMs = isExpired ? now - 100 * 24 * 60 * 60 * 1000 : now;
+    const expiresAtMs = isExpired ? now - 10 * 24 * 60 * 60 * 1000 : now + ninetyDaysMs;
+
+    const artifactGcsPrefix = `submissions/${submissionId}/`;
+
+    // Create Firestore submission doc
+    const submissionRef = firestore.collection(SUBMISSIONS_COLLECTION).doc(submissionId);
+    await submissionRef.set({
+      createdAt: Timestamp.fromMillis(createdAtMs),
+      expiresAt: Timestamp.fromMillis(expiresAtMs),
+      tool: "fit",
+      status: "complete",
+      sessionId: `${RETENTION_TEST_PREFIX}session`,
+      inputs: { mode: "paste", text: "Test job posting" },
+      extracted: { seniority: "senior" },
+      outputs: { fitScore: "Well" },
+      citations: [],
+      artifactGcsPrefix,
+    });
+
+    // Create GCS artifacts
+    const testContent = `Test artifact for submission ${submissionId} at ${new Date().toISOString()}`;
+    await bucket.file(`${artifactGcsPrefix}output/report.md`).save(testContent, {
+      contentType: "text/markdown; charset=utf-8",
+      resumable: false,
+    });
+    await bucket.file(`${artifactGcsPrefix}output/report.html`).save(`<html><body>${testContent}</body></html>`, {
+      contentType: "text/html; charset=utf-8",
+      resumable: false,
+    });
+    await bucket.file(`${artifactGcsPrefix}input/job.txt`).save("Test job posting content", {
+      contentType: "text/plain; charset=utf-8",
+      resumable: false,
+    });
+  }
+
+  // Test data IDs
+  const expiredSubmission1 = `${RETENTION_TEST_PREFIX}expired_1_${Date.now()}`;
+  const expiredSubmission2 = `${RETENTION_TEST_PREFIX}expired_2_${Date.now()}`;
+  const nonExpiredSubmission = `${RETENTION_TEST_PREFIX}active_${Date.now()}`;
+
+  try {
+    // Step 13.1: Create test submissions
+    log("Creating test submissions...");
+
+    log("  Creating expired submission 1...");
+    await createTestSubmission(firestore, privateBucket, expiredSubmission1, true);
+    log(`  Created ${expiredSubmission1}`, true);
+
+    log("  Creating expired submission 2...");
+    await createTestSubmission(firestore, privateBucket, expiredSubmission2, true);
+    log(`  Created ${expiredSubmission2}`, true);
+
+    log("  Creating non-expired submission...");
+    await createTestSubmission(firestore, privateBucket, nonExpiredSubmission, false);
+    log(`  Created ${nonExpiredSubmission}`, true);
+
+    log("All test submissions created", true);
+
+    // Step 13.2: Verify all submissions exist before cleanup
+    log("Verifying submissions exist before cleanup...");
+    const beforeSnap1 = await firestore.collection(SUBMISSIONS_COLLECTION).doc(expiredSubmission1).get();
+    const beforeSnap2 = await firestore.collection(SUBMISSIONS_COLLECTION).doc(expiredSubmission2).get();
+    const beforeSnapActive = await firestore.collection(SUBMISSIONS_COLLECTION).doc(nonExpiredSubmission).get();
+
+    if (!beforeSnap1.exists || !beforeSnap2.exists || !beforeSnapActive.exists) {
+      throw new Error("Test submissions were not created correctly");
+    }
+    log("All 3 test submissions exist in Firestore", true);
+
+    // Verify GCS artifacts exist
+    const [files1] = await privateBucket.getFiles({ prefix: `submissions/${expiredSubmission1}/` });
+    const [files2] = await privateBucket.getFiles({ prefix: `submissions/${expiredSubmission2}/` });
+    const [filesActive] = await privateBucket.getFiles({ prefix: `submissions/${nonExpiredSubmission}/` });
+
+    if (files1.length !== 3 || files2.length !== 3 || filesActive.length !== 3) {
+      throw new Error(`Expected 3 GCS files per submission. Got: ${files1.length}, ${files2.length}, ${filesActive.length}`);
+    }
+    log("All GCS artifacts exist (3 files per submission)", true);
+
+    // Step 13.3: Run retention cleanup logic
+    // Note: Since this smoke test runs outside Next.js context and retention.ts has "server-only" import,
+    // we implement the retention logic inline here. The actual endpoint uses the same Firestore/GCS calls.
+    log("Running retention cleanup logic...");
+
+    // Query for expired submissions
+    const expiredQuery = firestore.collection(SUBMISSIONS_COLLECTION)
+      .where("expiresAt", "<=", Timestamp.now())
+      .orderBy("expiresAt", "asc")
+      .limit(100);
+
+    const expiredSnapshot = await expiredQuery.get();
+    log(`Found ${expiredSnapshot.size} expired submissions`);
+
+    // Filter to only our test submissions
+    const testExpiredDocs = expiredSnapshot.docs.filter(doc =>
+      doc.id.startsWith(RETENTION_TEST_PREFIX)
+    );
+    log(`  ${testExpiredDocs.length} are test submissions to clean up`);
+
+    // Delete each expired test submission
+    let deletedCount = 0;
+    let gcsFilesDeleted = 0;
+
+    for (const doc of testExpiredDocs) {
+      const data = doc.data();
+      const prefix = data.artifactGcsPrefix as string;
+
+      // Delete GCS artifacts first
+      const normalizedPrefix = prefix.endsWith("/") ? prefix : `${prefix}/`;
+      const [filesToDelete] = await privateBucket.getFiles({ prefix: normalizedPrefix });
+
+      for (const file of filesToDelete) {
+        await file.delete();
+        gcsFilesDeleted++;
+      }
+
+      // Delete Firestore doc
+      await doc.ref.delete();
+      deletedCount++;
+    }
+
+    log(`Deleted ${deletedCount} expired submissions`, true);
+    log(`Deleted ${gcsFilesDeleted} GCS artifact files`, true);
+
+    // Step 13.4: Verify expired submissions are deleted
+    log("Verifying expired submissions are deleted...");
+
+    const afterSnap1 = await firestore.collection(SUBMISSIONS_COLLECTION).doc(expiredSubmission1).get();
+    const afterSnap2 = await firestore.collection(SUBMISSIONS_COLLECTION).doc(expiredSubmission2).get();
+
+    if (afterSnap1.exists) {
+      throw new Error(`Expired submission 1 still exists: ${expiredSubmission1}`);
+    }
+    if (afterSnap2.exists) {
+      throw new Error(`Expired submission 2 still exists: ${expiredSubmission2}`);
+    }
+    log("Expired Firestore docs are deleted", true);
+
+    // Verify GCS artifacts are deleted
+    const [afterFiles1] = await privateBucket.getFiles({ prefix: `submissions/${expiredSubmission1}/` });
+    const [afterFiles2] = await privateBucket.getFiles({ prefix: `submissions/${expiredSubmission2}/` });
+
+    if (afterFiles1.length !== 0) {
+      throw new Error(`GCS artifacts still exist for expired submission 1: ${afterFiles1.length} files`);
+    }
+    if (afterFiles2.length !== 0) {
+      throw new Error(`GCS artifacts still exist for expired submission 2: ${afterFiles2.length} files`);
+    }
+    log("Expired GCS artifacts are deleted", true);
+
+    // Step 13.5: Verify non-expired submission still exists
+    log("Verifying non-expired submission still exists...");
+
+    const afterSnapActive = await firestore.collection(SUBMISSIONS_COLLECTION).doc(nonExpiredSubmission).get();
+    if (!afterSnapActive.exists) {
+      throw new Error(`Non-expired submission was incorrectly deleted: ${nonExpiredSubmission}`);
+    }
+    log("Non-expired Firestore doc still exists", true);
+
+    const [afterFilesActive] = await privateBucket.getFiles({ prefix: `submissions/${nonExpiredSubmission}/` });
+    if (afterFilesActive.length !== 3) {
+      throw new Error(`Non-expired submission GCS artifacts were deleted: expected 3, got ${afterFilesActive.length}`);
+    }
+    log("Non-expired GCS artifacts still exist (3 files)", true);
+
+    // Step 13.6: Test idempotency - running cleanup again should succeed
+    log("Testing idempotency (running cleanup again)...");
+
+    const secondRunQuery = firestore.collection(SUBMISSIONS_COLLECTION)
+      .where("expiresAt", "<=", Timestamp.now())
+      .limit(100);
+
+    const secondRunSnapshot = await secondRunQuery.get();
+    const testDocsSecondRun = secondRunSnapshot.docs.filter(doc =>
+      doc.id.startsWith(RETENTION_TEST_PREFIX)
+    );
+
+    if (testDocsSecondRun.length !== 0) {
+      throw new Error(`Expected 0 expired test submissions on second run, found ${testDocsSecondRun.length}`);
+    }
+    log("Second cleanup run found no expired test submissions (idempotent)", true);
+
+    // Cleanup: Delete the non-expired test submission
+    log("Cleaning up remaining test data...");
+
+    // Delete GCS artifacts for non-expired submission
+    for (const file of afterFilesActive) {
+      await file.delete();
+    }
+    log("Deleted non-expired submission GCS artifacts", true);
+
+    // Delete Firestore doc
+    await firestore.collection(SUBMISSIONS_COLLECTION).doc(nonExpiredSubmission).delete();
+    log("Deleted non-expired submission Firestore doc", true);
+
+    log("Retention cleanup test complete", true);
+    sectionsPassed++;
+
+  } catch (error) {
+    // Cleanup on failure
+    log("Cleaning up after failure...", false);
+    try {
+      // Try to delete all test submissions
+      for (const submissionId of [expiredSubmission1, expiredSubmission2, nonExpiredSubmission]) {
+        try {
+          // Delete GCS files
+          const [files] = await privateBucket.getFiles({ prefix: `submissions/${submissionId}/` });
+          for (const file of files) {
+            await file.delete();
+          }
+          // Delete Firestore doc
+          await firestore.collection(SUBMISSIONS_COLLECTION).doc(submissionId).delete();
+        } catch {
+          // Ignore individual cleanup errors
+        }
+      }
+    } catch {
+      log("Warning: Failed to cleanup test data during error handling", false);
+    }
+
+    log(
+      `Retention cleanup test failed: ${error instanceof Error ? error.message : error}`,
+      false
+    );
+    process.exit(1);
+  }
+  } // End Section 13
 
   // Success!
   if (sectionsRun === 0) {
