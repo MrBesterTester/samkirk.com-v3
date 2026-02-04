@@ -1,0 +1,20 @@
+Senior Software Engineer - AI/ML Platform
+
+We are looking for a Senior Software Engineer to join our AI Platform team.
+
+Requirements:
+- 5+ years of software development experience
+- Strong experience with TypeScript and Node.js
+- Experience with cloud platforms (GCP preferred)
+- Familiarity with machine learning concepts
+- Excellent communication skills
+
+Responsibilities:
+- Design and implement scalable AI/ML platform services
+- Build APIs and microservices for model serving
+- Collaborate with data scientists and ML engineers
+- Optimize system performance and reliability
+- Mentor junior engineers
+
+Location: Remote-friendly
+Compensation: $150,000 - $200,000

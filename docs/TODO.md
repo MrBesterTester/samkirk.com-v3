@@ -385,13 +385,28 @@
 
 ### 7.2 Resume generation (2-page, factual-only) + artifacts
 
-- [ ] **[Codex/Opus]** Create prompt for Gemini: job text + resume context chunks
-- [ ] **[Codex/Opus]** Enforce "do not invent" constraint in prompt
-- [ ] **[Codex/Opus]** Enforce 2-page constraint (word count / section length guidance)
-- [ ] **[Codex/Opus]** Save `resume.md` + `resume.html` artifacts to GCS
-- [ ] **[Codex/Opus]** Save submission metadata to Firestore
-- [ ] **[Codex/Opus]** Create bundle with job input, extracted fields, resume, citations
-- [ ] **[Gemini 3 Pro]** TEST: Smoke test with real Vertex call (env present)
+- [x] **[Codex/Opus]** Create prompt for Gemini: job text + resume context chunks
+  - Created `resume-generator.ts` with `RESUME_GENERATION_SYSTEM_PROMPT`
+  - Uses `buildResumeGenerationPrompt()` to assemble job + context chunks
+- [x] **[Codex/Opus]** Enforce "do not invent" constraint in prompt
+  - System prompt includes "NEVER INVENT" and "ONLY use information from resume context"
+  - Explicit instructions to omit rather than fabricate missing info
+- [x] **[Codex/Opus]** Enforce 2-page constraint (word count / section length guidance)
+  - Target: 600-900 words total (`TARGET_WORD_COUNT_MIN/MAX`)
+  - Max 250 words per section, max 5 bullets per job
+  - `countResumeWords()` helper for validation
+- [x] **[Codex/Opus]** Save `resume.md` + `resume.html` artifacts to GCS
+  - `storeResumeArtifacts()` writes to `submissions/{id}/output/resume.md` and `.html`
+- [x] **[Codex/Opus]** Save submission metadata to Firestore
+  - Uses `completeSubmission()` with extracted fields, outputs, citations
+- [x] **[Codex/Opus]** Create bundle with job input, extracted fields, resume, citations
+  - `generateAndStoreResume()` orchestrates the full flow
+  - Stores job input, extracted data, resume outputs, and citations
+- [x] **[Gemini 3 Pro]** TEST: Smoke test with real Vertex call (env present)
+  - Added Section 11 ("Resume Generation Test") to `web/scripts/smoke-gcp.ts`
+  - Run with: `cd web && npm run smoke:gcp -- --section=11`
+  - Tests: chunk loading, Vertex AI generation, JSON parsing, artifact storage
+  - Unit tests: 62 tests in `src/lib/resume-generator.test.ts` (all passing)
 
 ### 7.3 UI wiring for Custom Resume
 

@@ -23,6 +23,7 @@
   - [Section 8: Spend Cap Test](#section-8-spend-cap-test)
   - [Section 9: Job Ingestion URL Fetch Test](#section-9-job-ingestion-url-fetch-test)
   - [Section 10: Vertex AI Gemini Test](#section-10-vertex-ai-gemini-test)
+  - [Section 11: Resume Generation Test](#section-11-resume-generation-test)
 - [Unit Tests](#unit-tests)
   - [Results](#results)
   - [Test File Breakdown](#test-file-breakdown)
@@ -30,6 +31,7 @@
   - [Vertex AI LLM Wrapper (Step 6.3)](#vertex-ai-llm-wrapper-step-63)
   - [Fit Report Generator (Step 6.3)](#fit-report-generator-step-63)
   - [Resume Context Retrieval (Step 7.1)](#resume-context-retrieval-step-71)
+  - [Resume Generator (Step 7.2)](#resume-generator-step-72)
 - [E2E Tests (Playwright)](#e2e-tests-playwright)
   - [Fit Tool Happy Path (Step 6.4)](#fit-tool-happy-path-step-64)
 - [Resume Seeding Workflow](#resume-seeding-workflow)
@@ -46,11 +48,11 @@
 
 | Category | Result | Details |
 |----------|--------|---------|
-| GCP Smoke Tests | **PASS** | 10/10 sections passed |
-| Unit Tests | **PASS** | 757/757 tests passed |
+| GCP Smoke Tests | **PASS** | 11/11 sections passed |
+| Unit Tests | **PASS** | 816/816 tests passed |
 | E2E Tests (Playwright) | **PASS** | 5/5 Playwright tests passed |
 | E2E Tests (Real LLM) | **PASS** | Full flow with gemini-2.0-flash |
-| Lint | **PASS** | 0 errors, 0 warnings |
+| Lint | **PASS** | 0 errors, 1 pre-existing warning |
 
 ---
 
@@ -363,6 +365,80 @@ This is **not** independent verification via `gcloud` CLI—the script verifies 
 
 ---
 
+### Section 11: Resume Generation Test
+
+**Purpose:** Verify end-to-end resume generation with Vertex AI including artifact storage ([Step 7.2](TODO.md#72-resume-generation-2-page-factual-only--artifacts))
+
+**Command:** `npm run smoke:gcp -- --section=11` (or `--section=resume-gen`)
+
+```
+→ Writing test resume chunks to Firestore...
+✓ Wrote 4 test chunks
+✓ Resume index updated
+→ Initializing Vertex AI for resume generation...
+→ Generating tailored resume with Vertex AI...
+✓ Resume JSON parsed successfully
+✓ Generated resume for: Sam Kirk
+→ Title: Senior Software Engineer - AI/ML Platform
+→ Experience entries: 1
+→ Skill categories: 3
+→ Generating markdown from resume content...
+✓ Generated markdown: 156 words, 987 characters
+→ Writing resume artifacts to GCS...
+✓ Artifacts written to GCS
+→ Creating submission record...
+✓ Submission record created
+→ Verifying artifacts...
+✓ Artifacts verified
+→ Cleaning up test data...
+✓ Test chunks deleted
+✓ Test submission deleted
+✓ Deleted 2 artifact files
+✓ Test resume index deleted
+✓ Resume generation test complete
+```
+
+**Verification:**
+
+1. **Resume Chunk Loading:**
+   - Creates test chunks in `resumeChunks` collection
+   - Updates `resumeIndex/current` with version and count
+   - Chunks include Summary, Experience, Skills, Education sections
+
+2. **Vertex AI Resume Generation:**
+   - Builds prompt with job text + resume context
+   - System prompt enforces "do not invent" constraint
+   - Requests structured JSON output
+   - Parses and validates response structure
+
+3. **Artifact Storage:**
+   - Generates markdown resume from structured content
+   - Writes `resume.md` and `resume.html` to GCS
+   - Creates submission record with tool="resume"
+   - Stores citations referencing source chunks
+
+4. **Constraint Enforcement:**
+   - Word count tracking (target: 600-900 words for 2-page resume)
+   - Maximum 5 bullets per job entry
+   - Only uses facts from provided resume context
+
+**Test Data:**
+
+| Item | Value |
+|------|-------|
+| Test chunks | 4 (Summary, Experience, Skills, Education) |
+| Test job | Senior Software Engineer - AI/ML Platform |
+| Output format | JSON → Markdown → HTML |
+| Artifacts | `resume.md`, `resume.html` |
+
+**Related Unit Tests:** [Resume Generator](#resume-generator-step-72)
+
+**Test Fixtures:** [`web/test-fixtures/resume-generator/`](../web/test-fixtures/resume-generator/) — Contains sample inputs and outputs
+
+**Back to:** [TODO.md Step 7.2](TODO.md#72-resume-generation-2-page-factual-only--artifacts)
+
+---
+
 ## Unit Tests
 
 **Command:** `cd web && npm test -- --run`
@@ -372,9 +448,9 @@ This is **not** independent verification via `gcloud` CLI—the script verifies 
 ### Results
 
 ```
-Test Files  32 passed (32)
-     Tests  757 passed (757)
-  Duration  9.13s
+Test Files  33 passed (33)
+     Tests  816 passed (816)
+  Duration  9.26s
 ```
 
 **Note:** Tests require network access to pass completely. The `route.test.ts` integration tests (3 tests) connect to real GCP services and will skip if run in a sandboxed environment without network access.
@@ -385,10 +461,12 @@ Test Files  32 passed (32)
 |------|-------|---------------|
 | `fit-flow.test.ts` | 96 | Fit flow state machine ([Step 6.2](#fit-flow-state-machine-step-62)) |
 | `job-ingestion.test.ts` | 74 | Job text ingestion from paste/URL/file (Step 6.1) |
+| `resume-generator.test.ts` | 62 | Resume generation ([Step 7.2](#resume-generator-step-72)) |
 | `spend-cap.test.ts` | 60 | Spend cap enforcement (Step 5.3) |
 | `markdown-renderer.test.ts` | 56 | Markdown to HTML rendering (Step 4.2) |
 | `rate-limit.test.ts` | 50 | Rate limiting utility (Step 5.2) |
 | `submission.test.ts` | 50 | Submission CRUD helpers (Step 4.1) |
+| `resume-context.test.ts` | 50 | Resume context retrieval ([Step 7.1](#resume-context-retrieval-step-71)) |
 | `resume-chunker.test.ts` | 49 | Resume chunking for RAG (Step 3.3) |
 | `fit-report.test.ts` | 36 | Fit report generation ([Step 6.3](#fit-report-generator-step-63)) |
 | `session.test.ts` | 34 | Session management (Step 2.2) |
@@ -614,6 +692,94 @@ const citations = generateCitationsFromChunks(context.usedChunks);
 ```
 
 **Back to:** [TODO.md Step 7.1](TODO.md#71-job-ingestion-reuse--resume-context-retrieval-rag-v0)
+
+---
+
+### Resume Generator (Step 7.2)
+
+**File:** `src/lib/resume-generator.test.ts`
+
+**Purpose:** Verify the resume generation module including prompt building, response parsing, markdown generation, and word count validation
+
+**Test Categories (62 tests):**
+
+| Category | Tests | Description |
+|----------|-------|-------------|
+| Constants validation | 3 | `TARGET_WORD_COUNT_MIN=600`, `TARGET_WORD_COUNT_MAX=900`, `MAX_WORDS_PER_SECTION=250`, `MAX_BULLETS_PER_JOB=5` |
+| System prompt validation | 6 | "NEVER INVENT" constraint, word count limits, JSON format, tailoring guidance, ATS optimization |
+| `buildResumeGenerationPrompt()` | 6 | Job posting section, target position, resume context chunks, instructions |
+| `parseResumeResponse()` | 19 | Valid JSON, code fences, structure validation, missing fields, bullet limits, type filtering |
+| `generateMarkdownResume()` | 13 | Header, contact info, LinkedIn links, summary, skills, experience, education, additional sections |
+| `countResumeWords()` | 8 | Header, summary, skills, experience, education, additional sections, edge cases |
+| `ResumeGeneratorError` | 3 | Error properties, JSON serialization, inheritance |
+| Type definitions | 2 | `ResumeExperience`, `ResumeEducation` required fields |
+
+**Key Behaviors Verified:**
+
+1. **System Prompt Constraints:**
+   - Explicit "NEVER INVENT" and "ONLY use information from resume context"
+   - Target word count: 600-900 words (2-page resume)
+   - Maximum 5 bullets per job, 250 words per section
+   - ATS optimization guidance included
+
+2. **Prompt Building:**
+   - Includes job posting with optional target position/company
+   - Labels resume chunks as `[CHUNK N: Title]` for citation tracking
+   - "SOURCE OF TRUTH" section header emphasizes factual constraint
+   - Instructions remind about word limits and JSON format
+
+3. **Response Parsing:**
+   - Handles raw JSON and markdown-wrapped JSON (`\`\`\`json ... \`\`\``)
+   - Validates required fields: `header.name`, `header.title`, `summary`, `skills`, `experience`, `education`
+   - Enforces `MAX_BULLETS_PER_JOB` (5) limit by slicing
+   - Filters non-string items from arrays
+   - Handles optional `additionalSections`
+
+4. **Markdown Generation:**
+   - Header with name, title, contact info line
+   - LinkedIn/website formatted as links (handles https prefix)
+   - Skills grouped by category
+   - Experience with location (optional) and bullet points
+   - Education with optional details
+   - Sections omitted when empty
+
+5. **Word Count Validation:**
+   - Counts words in header, summary, skills, experience, education
+   - Does not count date ranges (typically formatted as dates)
+   - Additional sections included in count
+
+**Example Structured Output:**
+
+```json
+{
+  "header": { "name": "Sam Kirk", "title": "Senior Software Engineer" },
+  "summary": "Experienced engineer with expertise in...",
+  "skills": [
+    { "category": "Languages", "items": ["TypeScript", "Python"] }
+  ],
+  "experience": [
+    {
+      "title": "Senior Engineer",
+      "company": "TechCorp",
+      "dateRange": "2019 - 2024",
+      "bullets": ["Led React development", "Built microservices"]
+    }
+  ],
+  "education": [
+    { "degree": "B.S. Computer Science", "institution": "UC Berkeley", "year": "2015" }
+  ]
+}
+```
+
+**Related Smoke Test:** [Section 11: Resume Generation Test](#section-11-resume-generation-test)
+
+**Test Fixtures:** [`web/test-fixtures/resume-generator/`](../web/test-fixtures/resume-generator/)
+- [job-description.txt](../web/test-fixtures/resume-generator/job-description.txt) — Input job posting
+- [resume-chunks.json](../web/test-fixtures/resume-generator/resume-chunks.json) — Resume chunks (source of truth)
+- [generated-resume.md](../web/test-fixtures/resume-generator/generated-resume.md) — Output markdown
+- [generated-resume.html](../web/test-fixtures/resume-generator/generated-resume.html) — Output HTML
+
+**Back to:** [TODO.md Step 7.2](TODO.md#72-resume-generation-2-page-factual-only--artifacts)
 
 ---
 
@@ -911,6 +1077,10 @@ These should return empty results if cleanup succeeded.
 
 | Date | Changes |
 |------|---------|
+| 2026-02-03 | Added test fixtures `web/test-fixtures/resume-generator/` with input (job-description.txt, resume-chunks.json) and output (generated-resume.md, generated-resume.html) examples |
+| 2026-02-03 | Added Resume Generator tests (62 tests, Step 7.2) — prompt building, response parsing, markdown generation |
+| 2026-02-03 | Added Section 11: Resume Generation Test to smoke-gcp.ts (Step 7.2) — end-to-end Vertex AI resume generation |
+| 2026-02-03 | Updated test counts: 816 total tests (was 757), 11 smoke test sections (was 10) |
 | 2026-02-03 | Added Resume Context Retrieval tests (50 tests, Step 7.1) — context assembly and citation generation |
 | 2026-02-03 | Verified Real-LLM E2E test with gemini-2.0-flash model (1579 input, 469 output tokens, $0.0037) |
 | 2026-02-03 | Added Resume Seeding Workflow and Real-LLM E2E Test sections |

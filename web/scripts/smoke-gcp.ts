@@ -24,6 +24,7 @@
  *   8. Spend Cap Test
  *   9. Job Ingestion URL Fetch Test
  *   10. Vertex AI Gemini Test
+ *   11. Resume Generation Test (Step 7.2)
  */
 
 import { config } from "dotenv";
@@ -58,6 +59,7 @@ const SECTIONS: SectionInfo[] = [
   { number: 8, name: "Spend Cap Test", aliases: ["spend", "spend-cap"] },
   { number: 9, name: "Job Ingestion URL Fetch Test", aliases: ["url-fetch", "job-ingestion", "ingestion"] },
   { number: 10, name: "Vertex AI Gemini Test", aliases: ["vertex", "gemini", "llm", "fit-report"] },
+  { number: 11, name: "Resume Generation Test", aliases: ["resume-gen", "custom-resume", "resume-generator"] },
 ];
 
 function parseArgs(): { sections: number[] | null; listSections: boolean } {
@@ -1614,6 +1616,341 @@ Generated at: ${new Date().toISOString()}
     process.exit(1);
   }
   } // End Section 10
+
+  // Section 11: Resume Generation Test
+  if (shouldRunSection(11, selectedSections)) {
+  console.log("\n--- Section 11: Resume Generation Test ---\n");
+  sectionsRun++;
+
+  const RESUME_CHUNKS_COLLECTION = "resumeChunks";
+  const SUBMISSIONS_COLLECTION = "submissions";
+  const RESUME_GEN_TEST_PREFIX = "_smoke_resume_gen_";
+
+  // Test job description
+  const testJobText = `Senior Software Engineer - AI/ML Platform
+
+We are looking for a Senior Software Engineer to join our AI Platform team.
+
+Requirements:
+- 5+ years of software development experience
+- Strong experience with TypeScript and Node.js
+- Experience with cloud platforms (GCP preferred)
+- Familiarity with machine learning concepts
+- Excellent communication skills
+
+Location: Remote-friendly
+Compensation: $150,000 - $200,000`;
+
+  // Test resume chunks (simplified version of real resume content)
+  const testChunks = [
+    {
+      chunkId: `${RESUME_GEN_TEST_PREFIX}chunk_001`,
+      title: "Summary",
+      sourceRef: "h2:Summary",
+      content: "Experienced software engineer with 10+ years building scalable web applications and AI systems. Expert in TypeScript, React, Node.js, and GCP.",
+      version: 9997,
+    },
+    {
+      chunkId: `${RESUME_GEN_TEST_PREFIX}chunk_002`,
+      title: "Experience > TechCorp",
+      sourceRef: "h2:Experience > h3:TechCorp",
+      content: `Senior Engineer at TechCorp (2019-2024)
+- Led development of AI-powered analytics dashboard serving 50K+ users
+- Built microservices architecture using Node.js and GCP Cloud Run
+- Mentored team of 5 engineers and conducted 200+ code reviews
+- Reduced API latency by 40% through optimization`,
+      version: 9997,
+    },
+    {
+      chunkId: `${RESUME_GEN_TEST_PREFIX}chunk_003`,
+      title: "Skills",
+      sourceRef: "h2:Skills",
+      content: `Programming: TypeScript, JavaScript, Python, Go
+Frontend: React, Next.js, Tailwind CSS
+Backend: Node.js, Express, PostgreSQL, Redis
+Cloud: GCP (Cloud Run, Firestore, BigQuery), AWS
+AI/ML: TensorFlow, LangChain, RAG systems`,
+      version: 9997,
+    },
+    {
+      chunkId: `${RESUME_GEN_TEST_PREFIX}chunk_004`,
+      title: "Education",
+      sourceRef: "h2:Education",
+      content: "B.S. Computer Science, UC Berkeley, 2014 - Graduated with honors",
+      version: 9997,
+    },
+  ];
+
+  try {
+    // Step 11.1: Write test chunks to Firestore
+    log("Writing test resume chunks to Firestore...");
+    const chunkBatch = firestore.batch();
+    for (const chunk of testChunks) {
+      const docRef = firestore.collection(RESUME_CHUNKS_COLLECTION).doc(chunk.chunkId);
+      chunkBatch.set(docRef, chunk);
+    }
+    await chunkBatch.commit();
+    log(`Wrote ${testChunks.length} test chunks`, true);
+
+    // Update resume index
+    const resumeIndexRef = firestore.doc("resumeIndex/current");
+    const testIndexData = {
+      resumeGcsPath: "resume/master.md",
+      indexedAt: Timestamp.now(),
+      chunkCount: testChunks.length,
+      version: 9997,
+    };
+    await resumeIndexRef.set(testIndexData);
+    log("Resume index updated", true);
+
+    // Step 11.2: Test resume generation with Vertex AI
+    log("Initializing Vertex AI for resume generation...");
+    const vertexAI = new VertexAI({
+      project: env.GCP_PROJECT_ID,
+      location: env.VERTEX_AI_LOCATION,
+    });
+
+    const model = vertexAI.getGenerativeModel({
+      model: env.VERTEX_AI_MODEL,
+      generationConfig: {
+        temperature: 0.4,
+        maxOutputTokens: 4096,
+      },
+    });
+
+    // Build the resume context
+    const resumeContext = testChunks
+      .map((chunk, i) => `[CHUNK ${i + 1}: ${chunk.title}]\n${chunk.content}`)
+      .join("\n\n---\n\n");
+
+    const systemPrompt = `You are a resume writer. Generate a tailored resume as JSON.
+CRITICAL: Only use information from the resume context provided. Never invent information.
+
+Output valid JSON with this structure:
+{
+  "header": { "name": "Sam Kirk", "title": "Professional Title" },
+  "summary": "2-3 sentence summary",
+  "skills": [{ "category": "Category", "items": ["skill1", "skill2"] }],
+  "experience": [{ "title": "Title", "company": "Company", "dateRange": "YYYY-YYYY", "bullets": ["bullet1"] }],
+  "education": [{ "degree": "Degree", "institution": "School", "year": "YYYY" }]
+}`;
+
+    const userPrompt = `## Job Posting
+${testJobText}
+
+## Resume Context (SOURCE OF TRUTH)
+${resumeContext}
+
+Generate a tailored resume JSON. Only include facts from the resume context.`;
+
+    log("Generating tailored resume with Vertex AI...");
+    const result = await model.generateContent({
+      contents: [
+        { role: "user", parts: [{ text: systemPrompt + "\n\n" + userPrompt }] },
+      ],
+    });
+
+    const response = result.response;
+    if (!response.candidates || response.candidates.length === 0) {
+      throw new Error("No candidates in resume generation response");
+    }
+
+    const responseText = response.candidates[0].content.parts
+      .filter((p): p is { text: string } => "text" in p)
+      .map((p) => p.text)
+      .join("")
+      .trim();
+
+    // Parse JSON response
+    let jsonText = responseText;
+    if (jsonText.startsWith("```json")) jsonText = jsonText.slice(7);
+    if (jsonText.startsWith("```")) jsonText = jsonText.slice(3);
+    if (jsonText.endsWith("```")) jsonText = jsonText.slice(0, -3);
+    jsonText = jsonText.trim();
+
+    const resumeContent = JSON.parse(jsonText);
+    log("Resume JSON parsed successfully", true);
+
+    // Validate structure
+    if (!resumeContent.header?.name || !resumeContent.summary) {
+      throw new Error("Resume content missing required fields");
+    }
+    log(`Generated resume for: ${resumeContent.header.name}`, true);
+    log(`Title: ${resumeContent.header.title}`);
+    log(`Experience entries: ${resumeContent.experience?.length ?? 0}`);
+    log(`Skill categories: ${resumeContent.skills?.length ?? 0}`);
+
+    // Step 11.3: Generate markdown from content
+    log("Generating markdown from resume content...");
+    const markdownSections: string[] = [];
+    markdownSections.push(`# ${resumeContent.header.name}`);
+    markdownSections.push(`**${resumeContent.header.title}**\n`);
+    markdownSections.push(`## Professional Summary\n${resumeContent.summary}\n`);
+
+    if (resumeContent.skills?.length > 0) {
+      markdownSections.push("## Skills");
+      for (const skill of resumeContent.skills) {
+        markdownSections.push(`**${skill.category}:** ${skill.items.join(", ")}`);
+      }
+      markdownSections.push("");
+    }
+
+    if (resumeContent.experience?.length > 0) {
+      markdownSections.push("## Professional Experience");
+      for (const exp of resumeContent.experience) {
+        markdownSections.push(`### ${exp.title} — ${exp.company}`);
+        markdownSections.push(`*${exp.dateRange}*\n`);
+        for (const bullet of exp.bullets) {
+          markdownSections.push(`- ${bullet}`);
+        }
+        markdownSections.push("");
+      }
+    }
+
+    const markdown = markdownSections.join("\n");
+    const wordCount = markdown.split(/\s+/).filter((w) => w.length > 0).length;
+    log(`Generated markdown: ${wordCount} words, ${markdown.length} characters`, true);
+
+    // Step 11.4: Write artifacts to GCS
+    log("Writing resume artifacts to GCS...");
+    const testSubmissionId = `${RESUME_GEN_TEST_PREFIX}${Date.now()}`;
+    const artifactPrefix = `submissions/${testSubmissionId}/`;
+
+    await privateBucket
+      .file(`${artifactPrefix}output/resume.md`)
+      .save(markdown, {
+        contentType: "text/markdown; charset=utf-8",
+        resumable: false,
+      });
+
+    // Simple HTML wrapper
+    const html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Resume - ${resumeContent.header.name}</title>
+  <style>body { font-family: sans-serif; max-width: 800px; margin: 2rem auto; padding: 0 1rem; }</style>
+</head>
+<body>
+${markdown.replace(/^# (.+)$/gm, '<h1>$1</h1>')
+  .replace(/^## (.+)$/gm, '<h2>$1</h2>')
+  .replace(/^### (.+)$/gm, '<h3>$1</h3>')
+  .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+  .replace(/\*(.+?)\*/g, '<em>$1</em>')
+  .replace(/^- (.+)$/gm, '<li>$1</li>')
+  .replace(/\n/g, '<br>')}
+</body>
+</html>`;
+
+    await privateBucket
+      .file(`${artifactPrefix}output/resume.html`)
+      .save(html, {
+        contentType: "text/html; charset=utf-8",
+        resumable: false,
+      });
+
+    log("Artifacts written to GCS", true);
+
+    // Step 11.5: Create submission record
+    log("Creating submission record...");
+    const submissionRef = firestore.collection(SUBMISSIONS_COLLECTION).doc(testSubmissionId);
+    await submissionRef.set({
+      createdAt: Timestamp.now(),
+      expiresAt: Timestamp.fromMillis(Date.now() + 90 * 24 * 60 * 60 * 1000),
+      tool: "resume",
+      status: "complete",
+      sessionId: `smoke_test_${Date.now()}`,
+      inputs: { jobText: testJobText.substring(0, 200) },
+      extracted: { targetTitle: resumeContent.header.title },
+      outputs: {
+        wordCount,
+        experienceEntries: resumeContent.experience?.length ?? 0,
+        resumeMdPath: `${artifactPrefix}output/resume.md`,
+        resumeHtmlPath: `${artifactPrefix}output/resume.html`,
+      },
+      citations: testChunks.map((c) => ({
+        chunkId: c.chunkId,
+        title: c.title,
+        sourceRef: c.sourceRef,
+      })),
+      artifactGcsPrefix: artifactPrefix,
+    });
+    log("Submission record created", true);
+
+    // Step 11.6: Verify artifacts can be read back
+    log("Verifying artifacts...");
+    const [mdContent] = await privateBucket
+      .file(`${artifactPrefix}output/resume.md`)
+      .download();
+    if (!mdContent.toString().includes(resumeContent.header.name)) {
+      throw new Error("Markdown artifact content verification failed");
+    }
+    log("Artifacts verified", true);
+
+    // Cleanup
+    log("Cleaning up test data...");
+
+    // Delete test chunks
+    const deleteChunkBatch = firestore.batch();
+    for (const chunk of testChunks) {
+      deleteChunkBatch.delete(firestore.collection(RESUME_CHUNKS_COLLECTION).doc(chunk.chunkId));
+    }
+    await deleteChunkBatch.commit();
+    log("Test chunks deleted", true);
+
+    // Delete test submission
+    await submissionRef.delete();
+    log("Test submission deleted", true);
+
+    // Delete GCS artifacts
+    const [artifactFiles] = await privateBucket.getFiles({ prefix: artifactPrefix });
+    for (const file of artifactFiles) {
+      await file.delete();
+    }
+    log(`Deleted ${artifactFiles.length} artifact files`, true);
+
+    // Restore original resume index if it was modified
+    await resumeIndexRef.delete();
+    log("Test resume index deleted", true);
+
+    log("Resume generation test complete", true);
+    sectionsPassed++;
+
+  } catch (error) {
+    // Cleanup on failure
+    try {
+      // Delete test chunks
+      for (const chunk of testChunks) {
+        try {
+          await firestore.collection(RESUME_CHUNKS_COLLECTION).doc(chunk.chunkId).delete();
+        } catch { /* ignore */ }
+      }
+      // Delete any test submissions
+      const testSubs = await firestore.collection(SUBMISSIONS_COLLECTION)
+        .where("sessionId", ">=", "smoke_test_")
+        .limit(10)
+        .get();
+      for (const doc of testSubs.docs) {
+        if (doc.id.startsWith(RESUME_GEN_TEST_PREFIX)) {
+          await doc.ref.delete();
+        }
+      }
+      // Delete test artifacts
+      const [files] = await privateBucket.getFiles({ prefix: `submissions/${RESUME_GEN_TEST_PREFIX}` });
+      for (const file of files) {
+        await file.delete();
+      }
+    } catch {
+      log("Warning: Failed to cleanup test data during error handling", false);
+    }
+
+    log(
+      `Resume generation test failed: ${error instanceof Error ? error.message : error}`,
+      false
+    );
+    process.exit(1);
+  }
+  } // End Section 11
 
   // Success!
   if (sectionsRun === 0) {
