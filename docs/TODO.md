@@ -577,6 +577,7 @@
   - 55 unit tests in `src/lib/retention.test.ts`
   - Covers: isExpired, prefix validation, cleanup summary, type definitions, edge cases
   - Run with: `npm test -- --run src/lib/retention.test.ts`
+  - See [TEST-RESULTS.md § Retention Deletion Route (Step 9.2)](TEST-RESULTS.md#retention-deletion-route-step-92)
 - [ ] **[Gemini 3 Pro]** TEST: Manual run in dev project with real data
 
 ---
