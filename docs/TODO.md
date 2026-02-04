@@ -443,11 +443,23 @@
 
 ### 8.1 Career-only policy + guardrails
 
-- [ ] **[Codex/Opus]** Define allowed/disallowed topics (career-only scope)
-- [ ] **[Codex/Opus]** Implement lightweight topic classifier (simple rules + optional LLM)
-- [ ] **[Codex/Opus]** Create standard refusal/redirect response for off-topic queries
-- [ ] **[Codex/Opus]** Add unit tests for several disallowed examples
-- [ ] **[Codex/Opus]** TEST: Run unit tests — all guardrail tests pass
+- [x] **[Codex/Opus]** Define allowed/disallowed topics (career-only scope)
+  - Created `src/lib/interview-guardrails.ts` with 9 allowed categories (work_history, projects, skills, education, availability, location_remote, compensation, career_goals, interview_meta)
+  - Created 8 disallowed categories (personal_life, politics, medical, religion, financial_private, general_assistant, prompt_injection, inappropriate)
+- [x] **[Codex/Opus]** Implement lightweight topic classifier (simple rules + optional LLM)
+  - Pattern-based classifier with confidence levels (high/medium/low)
+  - LLM classification helpers for uncertain cases (`LLM_CLASSIFICATION_SYSTEM_PROMPT`, `buildClassificationPrompt`, `parseLlmClassificationResponse`)
+- [x] **[Codex/Opus]** Create standard refusal/redirect response for off-topic queries
+  - Category-specific redirect responses that politely guide users back to career topics
+  - Generic redirect response for unknown categories
+  - Persistent off-topic detection for conversations
+- [x] **[Codex/Opus]** Add unit tests for several disallowed examples
+  - 196 unit tests in `src/lib/interview-guardrails.test.ts`
+  - Covers: all allowed topic categories, all disallowed topic categories, edge cases, confidence levels, redirect responses, LLM helpers, real-world interview questions, prompt injection resistance, general assistant rejection
+- [x] **[Codex/Opus]** TEST: Run unit tests — all guardrail tests pass
+  - `npm test -- --run src/lib/interview-guardrails.test.ts` → 196/196 passed
+  - `npm run lint` → clean (0 errors, 0 warnings)
+  - See [TEST-RESULTS.md § Interview Guardrails](TEST-RESULTS.md#interview-guardrails-step-81)
 
 ### 8.2 Chat endpoint + transcript artifact
 

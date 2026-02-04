@@ -1,6 +1,6 @@
 # samkirk.com v3 — Test Results
 
-> Last updated: 2026-02-04
+> Last updated: 2026-02-04 (Step 8.1 Interview Guardrails)
 >
 > This document records smoke test results with real GCP infrastructure and unit test summaries.
 >
@@ -32,6 +32,7 @@
   - [Fit Report Generator (Step 6.3)](#fit-report-generator-step-63)
   - [Resume Context Retrieval (Step 7.1)](#resume-context-retrieval-step-71)
   - [Resume Generator (Step 7.2)](#resume-generator-step-72)
+  - [Interview Guardrails (Step 8.1)](#interview-guardrails-step-81)
 - [E2E Tests (Playwright)](#e2e-tests-playwright)
   - [Fit Tool Happy Path (Step 6.4)](#fit-tool-happy-path-step-64)
   - [Resume Tool Happy Path (Step 7.3)](#resume-tool-happy-path-step-73)
@@ -52,7 +53,7 @@
 | Category | Result | Details |
 |----------|--------|---------|
 | GCP Smoke Tests | **PASS** | 11/11 sections passed |
-| Unit Tests | **PASS** | 819/819 tests passed |
+| Unit Tests | **PASS** | 1012/1012 tests passed |
 | E2E Tests (Playwright) | **PASS** | 11/11 tests passed (Fit: 5, Resume: 6) |
 | E2E Tests (Real LLM) | **PASS** | Both Fit + Resume tools with gemini-2.0-flash |
 | Lint | **PASS** | 0 errors, 0 warnings |
@@ -451,9 +452,9 @@ This is **not** independent verification via `gcloud` CLI—the script verifies 
 ### Results
 
 ```
-Test Files  33 passed (33)
-     Tests  816 passed (816)
-  Duration  9.26s
+Test Files  34 passed (34)
+     Tests  1012 passed (1012)
+  Duration  11.59s
 ```
 
 **Note:** Tests require network access to pass completely. The `route.test.ts` integration tests (3 tests) connect to real GCP services and will skip if run in a sandboxed environment without network access.
@@ -462,6 +463,7 @@ Test Files  33 passed (33)
 
 | File | Tests | Coverage Area |
 |------|-------|---------------|
+| `interview-guardrails.test.ts` | 196 | Interview guardrails ([Step 8.1](#interview-guardrails-step-81)) |
 | `fit-flow.test.ts` | 96 | Fit flow state machine ([Step 6.2](#fit-flow-state-machine-step-62)) |
 | `job-ingestion.test.ts` | 74 | Job text ingestion from paste/URL/file (Step 6.1) |
 | `resume-generator.test.ts` | 62 | Resume generation ([Step 7.2](#resume-generator-step-72)) |
@@ -783,6 +785,113 @@ const citations = generateCitationsFromChunks(context.usedChunks);
 - [generated-resume.html](../web/test-fixtures/resume-generator/generated-resume.html) — Output HTML
 
 **Back to:** [TODO.md Step 7.2](TODO.md#72-resume-generation-2-page-factual-only--artifacts)
+
+---
+
+### Interview Guardrails (Step 8.1)
+
+**File:** `src/lib/interview-guardrails.test.ts`
+
+**Purpose:** Verify career-only topic classification, guardrails enforcement, and redirect response generation for the "Interview Me Now" tool
+
+**Test Categories (196 tests):**
+
+| Category | Tests | Description |
+|----------|-------|-------------|
+| Constants validation | 3 | `INTERVIEW_SUBJECT_NAME`, `CONTACT_EMAIL`, `LLM_CLASSIFICATION_SYSTEM_PROMPT` |
+| Allowed topics - work_history | 8 | Job history, roles, companies, responsibilities, career path |
+| Allowed topics - projects | 8 | Projects, achievements, portfolio, impact, shipped products |
+| Allowed topics - skills | 8 | Technical skills, soft skills, certifications, tech stack |
+| Allowed topics - education | 7 | Degrees, universities, bootcamps, certifications |
+| Allowed topics - availability | 6 | Start date, notice period, full-time/part-time |
+| Allowed topics - location_remote | 7 | Remote work, relocation, timezone, hybrid |
+| Allowed topics - compensation | 5 | Salary expectations, benefits, equity |
+| Allowed topics - career_goals | 6 | Career goals, motivations, 5-year plan |
+| Allowed topics - interview_meta | 4 | Interview process, "tell me about yourself" |
+| Disallowed topics - personal_life | 8 | Family, relationships, age, hobbies, weekends |
+| Disallowed topics - politics | 7 | Political views, voting, parties, government |
+| Disallowed topics - medical | 7 | Health conditions, medications, disabilities |
+| Disallowed topics - religion | 6 | Religious beliefs, church, prayer, spirituality |
+| Disallowed topics - financial_private | 6 | Bank accounts, debt, investments, net worth |
+| Disallowed topics - general_assistant | 9 | Coding help, weather, jokes, recipes, translations |
+| Disallowed topics - prompt_injection | 6 | Ignore instructions, jailbreak, system prompt reveal |
+| Disallowed topics - inappropriate | 4 | Offensive content, violence, illegal activities |
+| Edge cases | 7 | Empty messages, whitespace, mixed-case, ambiguous |
+| `checkGuardrails()` | 6 | Pass/fail states, redirect responses, LLM verification suggestion |
+| Redirect responses | 7 | Category-specific responses, generic response, persistent off-topic |
+| `isPersistentlyOffTopic()` | 6 | Threshold detection, mixed messages, custom threshold |
+| LLM helpers | 6 | `buildClassificationPrompt()`, `parseLlmClassificationResponse()` |
+| Helper functions | 4 | `getAllowedTopicCategories()`, `getDisallowedTopicCategories()` |
+| Confidence levels | 3 | High/medium/low confidence for allowed and disallowed |
+| Real-world questions | 17 | 10 allowed interview questions, 7 disallowed inappropriate questions |
+| Prompt injection resistance | 8 | Various injection attempts blocked |
+| General assistant rejection | 10 | Coding, weather, jokes, recipes, etc. |
+| Result structure | 4 | `TopicClassificationResult`, `GuardrailResult` fields |
+
+**Key Behaviors Verified:**
+
+1. **Allowed Topics (9 categories):**
+   - Work history, projects, skills, education
+   - Availability, location/remote, compensation
+   - Career goals, interview meta
+
+2. **Disallowed Topics (8 categories):**
+   - Personal life, politics, medical, religion
+   - Financial private, general assistant
+   - Prompt injection, inappropriate content
+
+3. **Classification Confidence:**
+   - **High:** Strong pattern match (multiple patterns or definitive keywords)
+   - **Medium:** Single pattern match
+   - **Low:** No pattern match, defaults to allowed with LLM verification suggested
+
+4. **Redirect Responses:**
+   - Category-specific polite redirects mentioning Sam Kirk
+   - Guides user back to allowed career topics
+   - Contact email provided for persistent off-topic users
+
+5. **Prompt Injection Resistance:**
+   - Blocks "ignore instructions", "you are now DAN", "reveal system prompt"
+   - Blocks "jailbreak", "pretend no restrictions", "forget rules"
+   - Blocks "SYSTEM:" prefix attempts
+
+6. **General Assistant Rejection:**
+   - Blocks coding help, weather queries, jokes, recipes
+   - Blocks translation, calculation, recommendations
+   - Blocks news, poems, stories
+
+**Example Classification:**
+
+```typescript
+// Allowed (high confidence)
+classifyTopic("What programming languages do you know?")
+// → { isAllowed: true, category: "skills", confidence: "high" }
+
+// Disallowed (high confidence)
+classifyTopic("What are your political views?")
+// → { isAllowed: false, category: "politics", confidence: "high" }
+
+// Uncertain (low confidence, suggest LLM verification)
+classifyTopic("Hello there")
+// → { isAllowed: true, category: "unknown", confidence: "low" }
+```
+
+**LLM-Assisted Classification (for uncertain cases):**
+
+```typescript
+// System prompt for LLM classification
+LLM_CLASSIFICATION_SYSTEM_PROMPT  // Defines allowed/disallowed topics
+
+// Build prompt
+buildClassificationPrompt("What is your religion?")
+// → 'Classify this user message: "What is your religion?"'
+
+// Parse response
+parseLlmClassificationResponse("DISALLOWED")  // → false
+parseLlmClassificationResponse("ALLOWED")     // → true
+```
+
+**Back to:** [TODO.md Step 8.1](TODO.md#81-career-only-policy--guardrails)
 
 ---
 
@@ -1161,6 +1270,8 @@ These should return empty results if cleanup succeeded.
 
 | Date | Changes |
 |------|---------|
+| 2026-02-04 | **Step 8.1:** Added Interview Guardrails tests (196 tests) — topic classification, 9 allowed categories, 8 disallowed categories, redirect responses, prompt injection resistance |
+| 2026-02-04 | Updated test counts: 1012 total unit tests (was 819), 34 test files (was 33) |
 | 2026-02-03 | **Step 7.3:** Added Resume Tool UI E2E tests (6 Playwright tests) — full flow, URL mode, validation, feature cards, error handling |
 | 2026-02-03 | **Step 7.3:** Extended `npm run test:e2e:real` to test both Fit and Resume tools with real Vertex AI |
 | 2026-02-03 | **Step 7.3:** Added E2E test fixtures `e2e-generated-resume.json` and `e2e-generated-resume.md` |
