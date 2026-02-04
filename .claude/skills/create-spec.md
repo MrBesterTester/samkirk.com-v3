@@ -13,7 +13,7 @@ Ask me one question at a time so we can develop a thorough, step-by-step spec fo
 
 At any point during our conversation, I may provide prior work, examples, API documentation, or other reference materials. When I do, incorporate them into your understanding and adjust your questions accordingly.
 
-When done at the end of our dialog, please write out the specification as docs/SPECIFICATION.md.
+When done at the end of our dialog, please write out the specification as @docs/SPECIFICATION.md.
 
 Here's the idea:
 ```

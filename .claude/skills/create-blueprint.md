@@ -19,7 +19,7 @@ Prioritize best practices, incremental progress, and early testing, ensuring no 
 
 Make sure and separate each prompt section. Use markdown. Each prompt should be tagged as text using code tags. The goal is to output prompts, but context is important as well.
 
-When done, please write out the blueprint as docs/BLUEPRINT.md.
+When done, please write out the blueprint as @docs/BLUEPRINT.md.
 ```
 
 **Model:** Claude Opus 4.5 (per Dylan Davis methodology)
