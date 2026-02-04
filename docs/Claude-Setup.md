@@ -7,6 +7,38 @@ This project is now configured to work with both **Cursor IDE** and **Claude Cod
 
 ---
 
+## Table of Contents
+
+- [What Was Created](#-what-was-created)
+  - [Claude Code Configuration](#claude-code-configuration)
+  - [Skills Created](#skills-created)
+  - [Memory Updated](#memory-updated)
+  - [Documentation Updated](#documentation-updated)
+  - [Plugin Optimization (Context Window Fix)](#plugin-optimization-context-window-fix)
+- [Tool Compatibility](#-tool-compatibility)
+  - [File Organization](#file-organization)
+- [Usage Examples](#-usage-examples)
+  - [Cursor IDE (Slash Commands)](#cursor-ide-slash-commands)
+  - [Claude Code (Natural Language)](#claude-code-natural-language)
+- [Global Git Commands](#-global-git-commands)
+- [File Reference Syntax](#-file-reference-syntax)
+- [Key Differences Between Tools](#-key-differences-between-tools)
+- [Workflow Integration](#-workflow-integration)
+  - [Starting Fresh on a Step](#starting-fresh-on-a-step)
+  - [Switching Between Tools](#switching-between-tools)
+- [Model Selection](#-model-selection)
+- [Development Conventions](#-development-conventions)
+  - [Stack](#stack)
+  - [Key Conventions](#key-conventions)
+  - [Model Preferences](#model-preferences-from-todomd)
+  - [Lessons Learned](#lessons-learned)
+- [Quick Reference Files](#-quick-reference-files)
+- [Setup Verification](#-setup-verification)
+- [Next Steps](#-next-steps)
+- [Summary](#-summary)
+
+---
+
 ## ✅ What Was Created
 
 ### Claude Code Configuration
@@ -60,6 +92,39 @@ Each skill file contains the prompt template and usage instructions for the corr
 - Linked to Dylan Davis 50+ method docs
 - Explained tool support for both Cursor and Claude Code
 - Referenced compatibility guide
+
+### Plugin Optimization (Context Window Fix)
+
+**Problem:** Fresh conversations were starting at 90% context usage due to the `claude-plugins-official` marketplace loading ~30,000 lines of plugin documentation into the system prompt.
+
+**Solution:** Created a lean local marketplace (`sam-plugins`) with only the plugins actually needed.
+
+**Location:** `~/.claude/plugins/marketplaces/sam-plugins/`
+
+**Installed Plugins:**
+
+| Plugin | Lines | Purpose |
+|--------|-------|---------|
+| `commit-commands` | 315 | `/commit`, `/commit-push-pr`, `/clean_gone` |
+| `feature-dev` | 668 | Feature development workflow with code-reviewer, code-explorer, code-architect agents |
+| `hookify` | 1,574 | Hook creation and management |
+| `agent-sdk-dev` | 669 | Agent SDK development tools |
+| `claude-code-setup` | 1,492 | Setup automation and recommendations |
+| `claude-md-management` | 785 | CLAUDE.md file management |
+| `example-plugin` | 183 | Template for creating new plugins |
+
+**Results:**
+- **Before:** 29,713 lines (`claude-plugins-official`)
+- **After:** 5,686 lines (`sam-plugins`)
+- **Reduction:** 81% smaller context footprint
+
+**The Culprit:** `plugin-dev` alone was 20,752 lines (78% of the selected plugins). Unless you're actively developing Claude Code plugins, you don't need it. The irony: a plugin for making plugins was consuming more context than all other plugins combined.
+
+**Maintenance Notes:**
+- These plugins won't auto-update from Anthropic's repo
+- To add a plugin later: copy it from a fresh clone of `anthropics/claude-plugins-official`
+- Config lives in `~/.claude/plugins/known_marketplaces.json`
+- Run `/plugin` to verify plugins are recognized after changes
 
 ---
 
