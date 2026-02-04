@@ -27,7 +27,7 @@ import {
   readFile,
   fileExists,
 } from "./storage";
-import { renderMarkdownToHtml } from "./markdown-renderer";
+import { renderMarkdownSync } from "./markdown-renderer";
 
 // ============================================================================
 // Constants
@@ -53,6 +53,47 @@ export const INTERVIEW_TEMPERATURE = 0.7;
  * Maximum output tokens for interview responses.
  */
 export const INTERVIEW_MAX_TOKENS = 1024;
+
+// ============================================================================
+// E2E Test Mode
+// ============================================================================
+
+/**
+ * Check if E2E test mode is enabled.
+ */
+export function isE2ETestMode(): boolean {
+  return process.env.E2E_TESTING === "true";
+}
+
+/**
+ * Generate a mock response for E2E testing.
+ * Used when E2E_TESTING=true and no resume chunks are available.
+ */
+export function generateE2EMockResponse(userMessage: string): string {
+  console.log("[E2E] Generating mock interview response for testing");
+  
+  // Generate contextual mock responses based on common question patterns
+  const lowerMessage = userMessage.toLowerCase();
+  
+  if (lowerMessage.includes("background") || lowerMessage.includes("experience")) {
+    return "[E2E Mock] I have over 10 years of experience in software engineering, with a focus on full-stack development and cloud infrastructure. I've worked at both startups and larger tech companies, building scalable systems and leading technical teams.";
+  }
+  
+  if (lowerMessage.includes("skill") || lowerMessage.includes("programming") || lowerMessage.includes("language")) {
+    return "[E2E Mock] My core technical skills include TypeScript, Python, Go, and JavaScript. I'm experienced with cloud platforms (GCP, AWS), containerization (Docker, Kubernetes), and modern web frameworks like React and Next.js. I also have experience with machine learning tools including TensorFlow and PyTorch.";
+  }
+  
+  if (lowerMessage.includes("project")) {
+    return "[E2E Mock] One of my notable projects was building a real-time data pipeline that processed millions of events per day. I've also led the development of several internal tools that improved developer productivity across the organization.";
+  }
+  
+  if (lowerMessage.includes("education") || lowerMessage.includes("degree")) {
+    return "[E2E Mock] I have a Bachelor's degree in Computer Science. I also hold several cloud certifications and regularly participate in professional development through conferences and online courses.";
+  }
+  
+  // Default response
+  return "[E2E Mock] Thank you for your question about my professional background. I have extensive experience in software engineering and would be happy to discuss any specific aspects of my career, skills, or projects that interest you.";
+}
 
 // ============================================================================
 // Types
@@ -328,7 +369,7 @@ async function saveTranscript(
   );
 
   // Save HTML
-  const html = renderMarkdownToHtml(transcript);
+  const html = renderMarkdownSync(transcript);
   await writeFile(
     bucket,
     getTranscriptHtmlPath(conversation.submissionId),
@@ -515,6 +556,53 @@ export async function processMessage(
 
   // Check if we have any resume context
   if (resumeContext.chunkCount === 0) {
+    // In E2E test mode, generate a mock response instead of failing
+    if (isE2ETestMode()) {
+      console.log("[E2E] No resume chunks available, using mock response");
+      const mockContent = generateE2EMockResponse(userMessage);
+      
+      const userMsg: ChatMessage = {
+        role: "user",
+        content: userMessage,
+        timestamp: new Date().toISOString(),
+      };
+      
+      const assistantMsg: ChatMessage = {
+        role: "assistant",
+        content: mockContent,
+        timestamp: new Date().toISOString(),
+      };
+
+      conversation.messages.push(userMsg, assistantMsg);
+      conversation.updatedAt = new Date().toISOString();
+      await saveConversation(conversation);
+      await saveTranscript(conversation, conversation.citations);
+
+      // Update submission with latest state
+      await updateSubmission(conversation.submissionId, {
+        extracted: {
+          messageCount: conversation.messages.length,
+          turnCount: Math.ceil(conversation.messages.length / 2),
+          e2eMode: true,
+        },
+        outputs: {
+          transcriptPath: getTranscriptPath(conversation.submissionId),
+          lastMessageAt: assistantMsg.timestamp,
+        },
+        citations: [],
+      });
+
+      return {
+        success: true,
+        conversationId: conversation.conversationId,
+        submissionId: conversation.submissionId,
+        message: assistantMsg,
+        turnCount: Math.ceil(conversation.messages.length / 2),
+        isComplete: false,
+        downloadReady: true,
+      };
+    }
+
     return {
       success: false,
       error: "No resume data available. Please contact the administrator.",

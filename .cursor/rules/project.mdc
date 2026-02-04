@@ -31,4 +31,12 @@ alwaysApply: true
 ## Lessons learned
 <!-- Add brief, information-dense entries when problems are solved -->
 - **Avoid Gemini Pro 3 for file edits** (2026-02-03): Gemini Pro 3 overwrote `docs/GCP-SETUP.md` (900+ lines) with just 33 lines when asked to add Step 8 content. Only use Gemini Pro 3 when image processing is required; prefer other models for document editing.
+- **E2E tests must use real data** (2026-02-04): Mocking both resume data AND LLM responses defeats the purpose of E2E testing. Use `npm run test:e2e:real` which seeds real resume data and calls real Vertex AI.
+- **Never fabricate test fixtures** (2026-02-04): Always capture fixtures from actual test runs, not by reconstructing what the output "should" look like.
+- **Playwright `reuseExistingServer` and `CI` env var** (2026-02-04): If Playwright fails with "port already in use" despite `reuseExistingServer: !process.env.CI`, check if `CI=1` is set in the shell environment. This causes the config to evaluate to `false`.
+
+## Known environment issues
+<!-- User-specific issues that affect test runs -->
+- **`CI=1` in shell**: Causes Playwright to ignore `reuseExistingServer: true`. Workaround: unset before running, or use `npm run test:e2e:real` which doesn't have this issue.
+- **`FORCE_COLOR` + `NO_COLOR` conflict**: If both are set, Node.js emits endless warnings. These are set in the user's shell config and cause log spam during Playwright runs.
 

@@ -1,6 +1,9 @@
 # Interview Chat Test Fixtures
 
-These files represent the test data used in the smoke test (`scripts/smoke-gcp.ts` Section 12) and unit tests (`src/lib/interview-chat.test.ts`) for the "Interview Me Now" tool (Step 8.2).
+These files represent the test data used in:
+- **Smoke test** (`scripts/smoke-gcp.ts` Section 12) for the chat endpoint (Step 8.2)
+- **Unit tests** (`src/lib/interview-chat.test.ts`) for conversation logic (Step 8.2)
+- **E2E tests** (`e2e/interview-tool.spec.ts`) for the UI (Step 8.3)
 
 ## Files
 
@@ -11,8 +14,10 @@ These files represent the test data used in the smoke test (`scripts/smoke-gcp.t
 
 ### Outputs
 
-- **[conversation-transcript.md](conversation-transcript.md)** - Sample transcript from smoke test
-- **[smoke-test-output.txt](smoke-test-output.txt)** - Full smoke test console output
+- **[conversation-transcript.md](conversation-transcript.md)** - Sample transcript from smoke test (real LLM)
+- **[smoke-test-output.txt](smoke-test-output.txt)** - Full smoke test console output (Step 8.2)
+- **[e2e-real-llm-transcript.md](e2e-real-llm-transcript.md)** - Transcript from real LLM E2E test (Step 8.3)
+- **[e2e-test-output.txt](e2e-test-output.txt)** - Playwright E2E test console output (Step 8.3)
 
 ## Test Flow
 
@@ -53,9 +58,12 @@ conversation-transcript.md
 These fixtures are referenced in:
 - **Unit tests** (`src/lib/interview-chat.test.ts`) - Verify conversation logic with mocks
 - **Smoke tests** (`scripts/smoke-gcp.ts` Section 12) - Verify real Vertex AI integration
+- **E2E tests** (`e2e/interview-tool.spec.ts`) - Verify full UI flow with browser automation
 
 ## Related Documentation
 
-- [TODO.md Step 8.2](../../../docs/TODO.md#82-chat-endpoint--transcript-artifact)
-- [TEST-RESULTS.md Section 12](../../../docs/TEST-RESULTS.md#section-12-interview-chat-test)
-- [TEST-RESULTS.md Interview Chat Unit Tests](../../../docs/TEST-RESULTS.md#interview-chat-step-82)
+- [TODO.md Step 8.2](../../../docs/TODO.md#82-chat-endpoint--transcript-artifact) - Chat endpoint implementation
+- [TODO.md Step 8.3](../../../docs/TODO.md#83-ui-wiring-for-interview-tool) - UI implementation
+- [TEST-RESULTS.md Section 12](../../../docs/TEST-RESULTS.md#section-12-interview-chat-test) - Smoke test results
+- [TEST-RESULTS.md Interview Chat Unit Tests](../../../docs/TEST-RESULTS.md#interview-chat-step-82) - Unit test results
+- [TEST-RESULTS.md Interview Tool E2E Tests](../../../docs/TEST-RESULTS.md#interview-tool-e2e-tests-step-83) - E2E test results

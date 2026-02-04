@@ -25,9 +25,9 @@ import { randomBytes } from "crypto";
 
 const InterviewRequestSchema = z.object({
   action: z.enum(["message", "end"]),
-  message: z.string().max(MAX_MESSAGE_LENGTH).optional(),
-  conversationId: z.string().optional(),
-  submissionId: z.string().optional(),
+  message: z.string().max(MAX_MESSAGE_LENGTH).nullish(),
+  conversationId: z.string().nullish(),
+  submissionId: z.string().nullish(),
 }).refine(
   (data) => {
     if (data.action === "message") {

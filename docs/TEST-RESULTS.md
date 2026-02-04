@@ -1,6 +1,6 @@
 # samkirk.com v3 — Test Results
 
-> Last updated: 2026-02-04 (Step 8.2 Interview Chat Endpoint)
+> Last updated: 2026-02-04 (Step 8.3 Interview Tool E2E Tests)
 >
 > This document records smoke test results with real GCP infrastructure and unit test summaries.
 >
@@ -38,6 +38,7 @@
 - [E2E Tests (Playwright)](#e2e-tests-playwright)
   - [Fit Tool Happy Path (Step 6.4)](#fit-tool-happy-path-step-64)
   - [Resume Tool Happy Path (Step 7.3)](#resume-tool-happy-path-step-73)
+  - [Interview Tool E2E Tests (Step 8.3)](#interview-tool-e2e-tests-step-83)
 - [Resume Seeding Workflow](#resume-seeding-workflow)
 - [Real-LLM E2E Test](#real-llm-e2e-test)
   - [Fit Tool (Step 6.4)](#fit-tool-step-64)
@@ -56,8 +57,8 @@
 |----------|--------|---------|
 | GCP Smoke Tests | **PASS** | 12/12 sections passed |
 | Unit Tests | **PASS** | 1056/1056 tests passed |
-| E2E Tests (Playwright) | **PASS** | 11/11 tests passed (Fit: 5, Resume: 6) |
-| E2E Tests (Real LLM) | **PASS** | Both Fit + Resume tools with gemini-2.0-flash |
+| E2E Tests (Playwright) | **PASS** | 22/22 tests passed (Fit: 5, Resume: 6, Interview: 11) |
+| E2E Tests (Real LLM) | **PASS** | All 3 tools (Fit, Resume, Interview) with gemini-2.0-flash |
 | Lint | **PASS** | 0 errors, 0 warnings |
 
 ---
@@ -1178,6 +1179,70 @@ cd web && npx playwright test resume-tool.spec.ts --headed
 
 ---
 
+### Interview Tool E2E Tests (Step 8.3)
+
+**Run command:**
+```bash
+cd web && bash -c 'unset CI FORCE_COLOR NO_COLOR; npx playwright test interview-tool.spec.ts --headed'
+```
+
+**Results:** 11/11 tests passed (17.7s total)
+
+| Test | Status | Duration |
+|------|--------|----------|
+| loads the interview page with correct heading | **PASS** | 3.9s |
+| displays welcome message after captcha passes | **PASS** | 5.5s |
+| displays input field and send button | **PASS** | 5.4s |
+| displays feature cards | **PASS** | 4.8s |
+| displays new conversation button | **PASS** | 5.6s |
+| user message appears in chat immediately after send | **PASS** | 7.5s |
+| Enter key sends message | **PASS** | 5.3s |
+| input is disabled while waiting for response | **PASS** | 6.0s |
+| typing indicator appears while waiting | **PASS** | 6.8s |
+| new conversation resets the chat | **PASS** | 6.5s |
+| completes a single career-related exchange | **PASS** | 7.9s |
+
+**E2E Test Mode Features:**
+- **Captcha bypass:** `E2E_TESTING=true` and `NEXT_PUBLIC_E2E_TESTING=true` enable automatic captcha verification
+- **Mock interview response:** When no resume chunks are available in E2E mode, returns mock responses via `generateE2EMockResponse()` so tests can complete the full flow
+- **System Chrome:** Uses `channel: "chrome"` in playwright.config.ts to run tests with installed Chrome browser
+
+**Test Categories:**
+
+1. **UI Tests (5 tests):**
+   - Page loading with correct heading and description
+   - Welcome message display after captcha passes
+   - Input field, send button, and keyboard hint visibility
+   - Feature cards (Real-Time Chat, Career-Focused, Download Transcript)
+   - New Conversation button presence
+
+2. **Input Behavior Tests (5 tests):**
+   - User message appears immediately in chat after sending
+   - Enter key sends message (Shift+Enter for new line)
+   - Input disabled state while waiting for response
+   - Typing indicator appearance (tests via disabled input placeholder)
+   - New conversation button resets chat to initial state
+
+3. **Conversation Test (1 test):**
+   - Completes a single career-related exchange with mock response
+   - Verifies "2 messages" count after response
+   - Verifies download transcript availability
+
+**Environment Notes:**
+The test command unsets conflicting environment variables:
+- `CI` - If set, causes `reuseExistingServer: false` and retries
+- `FORCE_COLOR` / `NO_COLOR` - If both set, causes excessive warning spam
+
+**Test File:** [`web/e2e/interview-tool.spec.ts`](../web/e2e/interview-tool.spec.ts)
+
+**Test Fixtures:** [`web/test-fixtures/interview-chat/`](../web/test-fixtures/interview-chat/)
+- `e2e-test-output.txt` - Playwright E2E test console output (mock mode)
+- `e2e-real-llm-transcript.md` - Real LLM transcript from `npm run test:e2e:real`
+
+**Back to:** [TODO.md Step 8.3](TODO.md#83-ui-wiring-for-interview-tool)
+
+---
+
 ## Resume Seeding Workflow
 
 The resume seeding workflow allows you to upload and index a baseline resume for testing and development.
@@ -1294,9 +1359,9 @@ Resume seeded successfully!
 - GCP credentials configured
 - Seeded resume data (`npm run seed:resume`)
 
-**Cost:** ~$0.02-0.10 per run (real Vertex AI calls for both tools)
+**Cost:** ~$0.03-0.15 per run (real Vertex AI calls for all three tools)
 
-This script tests both the Fit tool and Resume tool flows with real Vertex AI calls.
+This script tests the Fit, Resume, and Interview tool flows with real Vertex AI calls.
 
 ---
 
@@ -1381,7 +1446,50 @@ Education Entries: 2
 
 ---
 
-### Combined Test Output (Verified 2026-02-03)
+### Interview Tool (Step 8.3)
+
+**Test Flow:**
+1. Creates test session and submission
+2. Builds interview system prompt with resume context
+3. Sends two career questions to Vertex AI Gemini
+4. Receives multi-turn conversation responses
+5. Generates transcript with citations
+6. Stores transcript artifacts in GCS
+7. Saves transcript to test fixtures
+
+**Results (Verified 2026-02-04):**
+
+| Metric | Value |
+|--------|-------|
+| Questions asked | 2 |
+| Response time (Q1) | ~650ms |
+| Response time (Q2) | ~1.5s |
+| Input tokens | ~1,400/turn |
+| Output tokens | 39 + 158 |
+| Estimated cost | ~$0.004 |
+
+**Sample Conversation Output:**
+```
+Q1: What programming languages do you know?
+A1: I have experience with a variety of programming languages. My core languages 
+include TypeScript, JavaScript, and Python. I also have experience with Go and SQL. 
+Currently, I'm learning Rust.
+
+Q2: Tell me about your most recent role.
+A2: In my most recent role as a Senior Software Engineer at Tech Company (2020-Present), 
+I led the development of AI-powered features for enterprise customers. This involved 
+working across the full stack, from building React frontends to developing Python ML 
+pipelines...
+```
+
+**Test Fixtures:** [`web/test-fixtures/interview-chat/`](../web/test-fixtures/interview-chat/)
+- [e2e-real-llm-transcript.md](../web/test-fixtures/interview-chat/e2e-real-llm-transcript.md) — Full transcript with real LLM responses
+
+**Back to:** [TODO.md Step 8.3](TODO.md#83-ui-wiring-for-interview-tool)
+
+---
+
+### Combined Test Output (Verified 2026-02-04)
 
 ```
 ============================================================
@@ -1480,6 +1588,10 @@ These should return empty results if cleanup succeeded.
 
 | Date | Changes |
 |------|---------|
+| 2026-02-04 | **Step 8.3:** Added Interview Tool to `npm run test:e2e:real` — real LLM multi-turn conversation test |
+| 2026-02-04 | Added `e2e-real-llm-transcript.md` fixture with actual Vertex AI responses |
+| 2026-02-04 | **Step 8.3:** Added Interview Tool E2E tests (11 Playwright tests) — UI loading, input behavior, chat flow |
+| 2026-02-04 | Updated E2E test counts: 22 Playwright tests, added `channel: "chrome"` for system browser |
 | 2026-02-04 | **Step 8.1:** Added Interview Guardrails tests (196 tests) — topic classification, 9 allowed categories, 8 disallowed categories, redirect responses, prompt injection resistance |
 | 2026-02-04 | Updated test counts: 1012 total unit tests (was 819), 34 test files (was 33) |
 | 2026-02-03 | **Step 7.3:** Added Resume Tool UI E2E tests (6 Playwright tests) — full flow, URL mode, validation, feature cards, error handling |

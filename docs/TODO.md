@@ -494,12 +494,31 @@
 
 ### 8.3 UI wiring for Interview tool
 
-- [ ] **[Opus 4.5]** Build `/tools/interview` page
-- [ ] **[Opus 4.5]** Create chat transcript view (message history)
-- [ ] **[Opus 4.5]** Create input box for user messages
-- [ ] **[Opus 4.5]** Wire up to interview endpoint
-- [ ] **[Opus 4.5]** Add download transcript bundle button
-- [ ] **[Gemini 3 Pro]** TEST: Playwright E2E test for short allowed conversation
+- [x] **[Opus 4.5]** Build `/tools/interview` page
+  - Full chat interface with message bubbles, typing indicator, and welcome message
+  - Modern UI with consistent styling matching Fit and Resume tools
+- [x] **[Opus 4.5]** Create chat transcript view (message history)
+  - User messages styled as blue bubbles on right, assistant on left
+  - Timestamps shown for each message
+  - Auto-scroll to latest message
+- [x] **[Opus 4.5]** Create input box for user messages
+  - Auto-resizing textarea with 2000 character limit
+  - Enter to send, Shift+Enter for new line
+  - Disabled state while waiting for response
+- [x] **[Opus 4.5]** Wire up to interview endpoint
+  - Sends to `POST /api/tools/interview` with action: "message"
+  - Handles conversation ID and submission ID tracking
+  - Error handling with retry capability
+- [x] **[Opus 4.5]** Add download transcript bundle button
+  - Downloads zip via `/api/submissions/[id]/download`
+  - Includes MD and HTML transcript with citations
+  - Available after first response
+- [x] **[Gemini 3 Pro]** TEST: Playwright E2E test for short allowed conversation
+  - 11 Playwright tests in `web/e2e/interview-tool.spec.ts` (UI + input + conversation flow)
+  - Real LLM test in `npm run test:e2e:real` (multi-turn conversation with seeded resume)
+  - Run with: `cd web && npm run seed:resume && npm run test:e2e:real`
+  - See [TEST-RESULTS.md § Interview Tool E2E Tests](TEST-RESULTS.md#interview-tool-e2e-tests-step-83)
+  - Test fixtures: [`web/test-fixtures/interview-chat/`](../web/test-fixtures/interview-chat/)
 
 ---
 

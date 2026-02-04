@@ -1,0 +1,19 @@
+# Interview Tool E2E Test Output
+# Generated: 2026-02-04
+# Run command: bash -c 'unset CI FORCE_COLOR NO_COLOR; ./node_modules/.bin/playwright test interview-tool.spec.ts --reporter=list --headed'
+
+Running 11 tests using 6 workers
+
+  ✓   2 [chromium] › e2e/interview-tool.spec.ts:21:7 › Interview Tool - UI › loads the interview page with correct heading (3.9s)
+  ✓   5 [chromium] › e2e/interview-tool.spec.ts:62:7 › Interview Tool - UI › displays feature cards (4.8s)
+  ✓   6 [chromium] › e2e/interview-tool.spec.ts:68:7 › Interview Tool - UI › displays new conversation button (5.6s)
+  ✓   3 [chromium] › e2e/interview-tool.spec.ts:43:7 › Interview Tool - UI › displays input field and send button (5.4s)
+  ✓   1 [chromium] › e2e/interview-tool.spec.ts:32:7 › Interview Tool - UI › displays welcome message after captcha passes (5.5s)
+  ✓   4 [chromium] › e2e/interview-tool.spec.ts:84:7 › Interview Tool - Input Behavior › user message appears in chat immediately after send (7.5s)
+  ✓   7 [chromium] › e2e/interview-tool.spec.ts:95:7 › Interview Tool - Input Behavior › Enter key sends message (5.3s)
+  ✓   8 [chromium] › e2e/interview-tool.spec.ts:106:7 › Interview Tool - Input Behavior › input is disabled while waiting for response (6.0s)
+  ✓  10 [chromium] › e2e/interview-tool.spec.ts:128:7 › Interview Tool - Input Behavior › new conversation resets the chat (6.5s)
+  ✓   9 [chromium] › e2e/interview-tool.spec.ts:117:7 › Interview Tool - Input Behavior › typing indicator appears while waiting (6.8s)
+  ✓  11 [chromium] › e2e/interview-tool.spec.ts:151:7 › Interview Tool - Conversation › completes a single career-related exchange (7.9s)
+
+  11 passed (17.7s)
