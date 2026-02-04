@@ -1,0 +1,47 @@
+=== GCP Smoke Test ===
+
+Running selected sections: 12. Interview Chat Test
+
+→ Checking environment variables...
+✓ Environment variables validated
+→   Project: samkirk-v3
+→   Private bucket: samkirk-v3-private
+
+--- Section 12: Interview Chat Test ---
+
+→ Writing test resume chunks to Firestore...
+✓ Wrote 3 test chunks
+✓ Resume index updated
+→ Initializing Vertex AI for interview chat...
+✓ Vertex AI initialized
+→ Testing multi-turn conversation...
+→   Q: "What is your background?"
+✓   A: "I'm a software engineer with over 10 years of experience in building scalable web applications and A..."
+→   Found topics: engineer, experience, years
+→   Q: "What are your technical skills?"
+✓   A: "My core technical skills include: Programming in TypeScript, JavaScript, Python, and Go. I'm profici..."
+→   Found topics: typescript, python, cloud, gcp
+✓ Multi-turn conversation test passed
+→ Testing off-topic redirection...
+✓ Off-topic redirection verified
+→ Creating test submission and transcript...
+✓ Transcript artifacts written to GCS
+✓ Submission record created
+→ Verifying artifacts...
+✓ Artifacts verified
+→ Cleaning up test data...
+✓ Test chunks deleted
+✓ Test submission deleted
+✓ Deleted 2 artifact files
+✓ Test resume index deleted
+✓ Interview chat test complete
+
+=== Smoke tests complete: 1/1 sections passed ===
+
+---
+Test Run Details:
+- Date: 2026-02-03
+- Duration: ~51 seconds
+- GCP Project: samkirk-v3
+- Vertex AI Model: gemini-2.0-flash
+- Location: us-central1

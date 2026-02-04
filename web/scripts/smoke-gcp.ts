@@ -25,6 +25,7 @@
  *   9. Job Ingestion URL Fetch Test
  *   10. Vertex AI Gemini Test
  *   11. Resume Generation Test (Step 7.2)
+ *   12. Interview Chat Test (Step 8.2)
  */
 
 import { config } from "dotenv";
@@ -60,6 +61,7 @@ const SECTIONS: SectionInfo[] = [
   { number: 9, name: "Job Ingestion URL Fetch Test", aliases: ["url-fetch", "job-ingestion", "ingestion"] },
   { number: 10, name: "Vertex AI Gemini Test", aliases: ["vertex", "gemini", "llm", "fit-report"] },
   { number: 11, name: "Resume Generation Test", aliases: ["resume-gen", "custom-resume", "resume-generator"] },
+  { number: 12, name: "Interview Chat Test", aliases: ["interview", "chat", "interview-chat"] },
 ];
 
 function parseArgs(): { sections: number[] | null; listSections: boolean } {
@@ -1951,6 +1953,392 @@ ${markdown.replace(/^# (.+)$/gm, '<h1>$1</h1>')
     process.exit(1);
   }
   } // End Section 11
+
+  // Section 12: Interview Chat Test (Step 8.2)
+  if (shouldRunSection(12, selectedSections)) {
+  console.log("\n--- Section 12: Interview Chat Test ---\n");
+  sectionsRun++;
+
+  const RESUME_CHUNKS_COLLECTION = "resumeChunks";
+  const SUBMISSIONS_COLLECTION = "submissions";
+  const INTERVIEW_TEST_PREFIX = "_smoke_interview_";
+
+  // Test resume chunks for interview context
+  const testChunks = [
+    {
+      chunkId: `${INTERVIEW_TEST_PREFIX}chunk_001`,
+      title: "Summary",
+      sourceRef: "h2:Summary",
+      content: "Sam Kirk is an experienced software engineer with 10+ years building scalable web applications and AI systems. Expert in TypeScript, React, Node.js, and GCP.",
+      version: 9996,
+    },
+    {
+      chunkId: `${INTERVIEW_TEST_PREFIX}chunk_002`,
+      title: "Experience",
+      sourceRef: "h2:Experience",
+      content: `Senior Engineer at TechCorp (2019-2024)
+- Led development of AI-powered analytics dashboard serving 50K+ users
+- Built microservices architecture using Node.js and GCP Cloud Run
+- Mentored team of 5 engineers
+
+Software Engineer at StartupXYZ (2016-2019)
+- Full-stack development with React and Node.js
+- Implemented CI/CD pipelines`,
+      version: 9996,
+    },
+    {
+      chunkId: `${INTERVIEW_TEST_PREFIX}chunk_003`,
+      title: "Skills",
+      sourceRef: "h2:Skills",
+      content: `Programming: TypeScript, JavaScript, Python, Go
+Cloud: GCP (Cloud Run, Firestore, BigQuery), AWS
+AI/ML: TensorFlow, LangChain, RAG systems
+Location: Open to remote work, based in San Francisco Bay Area`,
+      version: 9996,
+    },
+  ];
+
+  // Test conversation questions
+  const testQuestions = [
+    {
+      question: "What is your background?",
+      expectedTopics: ["engineer", "experience", "years"],
+      isCareerRelated: true,
+    },
+    {
+      question: "What are your technical skills?",
+      expectedTopics: ["typescript", "python", "cloud", "gcp"],
+      isCareerRelated: true,
+    },
+  ];
+
+  try {
+    // Step 12.1: Write test chunks to Firestore
+    log("Writing test resume chunks to Firestore...");
+    const chunkBatch = firestore.batch();
+    for (const chunk of testChunks) {
+      const docRef = firestore.collection(RESUME_CHUNKS_COLLECTION).doc(chunk.chunkId);
+      chunkBatch.set(docRef, chunk);
+    }
+    await chunkBatch.commit();
+    log(`Wrote ${testChunks.length} test chunks`, true);
+
+    // Update resume index
+    const resumeIndexRef = firestore.doc("resumeIndex/current");
+    const testIndexData = {
+      resumeGcsPath: "resume/master.md",
+      indexedAt: Timestamp.now(),
+      chunkCount: testChunks.length,
+      version: 9996,
+    };
+    await resumeIndexRef.set(testIndexData);
+    log("Resume index updated", true);
+
+    // Step 12.2: Initialize Vertex AI for chat
+    log("Initializing Vertex AI for interview chat...");
+    const vertexAI = new VertexAI({
+      project: env.GCP_PROJECT_ID,
+      location: env.VERTEX_AI_LOCATION,
+    });
+
+    const model = vertexAI.getGenerativeModel({
+      model: env.VERTEX_AI_MODEL,
+      generationConfig: {
+        temperature: 0.7,
+        maxOutputTokens: 1024,
+      },
+    });
+    log("Vertex AI initialized", true);
+
+    // Step 12.3: Build context and system prompt
+    const resumeContext = testChunks
+      .map((chunk, i) => `[CHUNK ${i + 1}: ${chunk.title}]\nSource: ${chunk.sourceRef}\n\n${chunk.content}`)
+      .join("\n\n---\n\n");
+
+    const systemPrompt = `You are a professional career interview assistant representing Sam Kirk. Your role is to answer questions about Sam Kirk's career, skills, experience, and professional background.
+
+## YOUR KNOWLEDGE BASE
+
+<resume_context>
+${resumeContext}
+</resume_context>
+
+## RULES
+
+1. Only discuss career-related topics (work history, skills, projects, education, availability, location).
+2. Only use information from the resume context above. Don't invent information.
+3. Speak in first person as if you are Sam Kirk.
+4. Keep responses concise but informative.
+5. If asked about off-topic subjects (personal life, politics, religion, etc.), politely redirect to career topics.`;
+
+    // Step 12.4: Test multi-turn conversation
+    log("Testing multi-turn conversation...");
+    const conversationHistory: Array<{ role: "user" | "model"; parts: Array<{ text: string }> }> = [];
+
+    for (const testCase of testQuestions) {
+      log(`  Q: "${testCase.question}"`);
+
+      // Build conversation with history
+      const contents = [
+        ...conversationHistory,
+        { role: "user" as const, parts: [{ text: testCase.question }] },
+      ];
+
+      const result = await model.generateContent({
+        contents,
+        systemInstruction: { role: "system", parts: [{ text: systemPrompt }] },
+      });
+
+      const response = result.response;
+      if (!response.candidates || response.candidates.length === 0) {
+        throw new Error("No candidates in response");
+      }
+
+      const responseText = response.candidates[0].content.parts
+        .filter((p): p is { text: string } => "text" in p)
+        .map((p) => p.text)
+        .join("")
+        .trim();
+
+      // Verify response contains expected topics
+      const responseLower = responseText.toLowerCase();
+      const foundTopics = testCase.expectedTopics.filter((topic) =>
+        responseLower.includes(topic.toLowerCase())
+      );
+
+      if (foundTopics.length === 0) {
+        log(`  A: "${responseText.substring(0, 150)}..."`, false);
+        throw new Error(
+          `Response doesn't contain any expected topics: ${testCase.expectedTopics.join(", ")}`
+        );
+      }
+
+      log(`  A: "${responseText.substring(0, 100)}..."`, true);
+      log(`  Found topics: ${foundTopics.join(", ")}`);
+
+      // Add to conversation history
+      conversationHistory.push(
+        { role: "user", parts: [{ text: testCase.question }] },
+        { role: "model", parts: [{ text: responseText }] }
+      );
+    }
+    log("Multi-turn conversation test passed", true);
+
+    // Step 12.5: Test off-topic redirection
+    log("Testing off-topic redirection...");
+    const offTopicQuestion = "What are your political views?";
+
+    const offTopicResult = await model.generateContent({
+      contents: [
+        ...conversationHistory,
+        { role: "user" as const, parts: [{ text: offTopicQuestion }] },
+      ],
+      systemInstruction: { role: "system", parts: [{ text: systemPrompt }] },
+    });
+
+    const offTopicResponse = offTopicResult.response;
+    if (!offTopicResponse.candidates || offTopicResponse.candidates.length === 0) {
+      throw new Error("No candidates in off-topic response");
+    }
+
+    const offTopicText = offTopicResponse.candidates[0].content.parts
+      .filter((p): p is { text: string } => "text" in p)
+      .map((p) => p.text)
+      .join("")
+      .trim()
+      .toLowerCase();
+
+    // Should redirect or decline, not provide political opinions
+    const isRedirect = offTopicText.includes("career") ||
+      offTopicText.includes("professional") ||
+      offTopicText.includes("work") ||
+      offTopicText.includes("focus") ||
+      offTopicText.includes("experience") ||
+      offTopicText.includes("skills");
+
+    if (!isRedirect) {
+      log(`Off-topic response: "${offTopicText.substring(0, 150)}..."`, false);
+      throw new Error("Model did not redirect off-topic question to career topics");
+    }
+    log("Off-topic redirection verified", true);
+
+    // Step 12.6: Create test submission and transcript artifacts
+    log("Creating test submission and transcript...");
+    const testSubmissionId = `${INTERVIEW_TEST_PREFIX}${Date.now()}`;
+    const artifactPrefix = `submissions/${testSubmissionId}/`;
+
+    // Generate transcript markdown
+    const transcriptLines = [
+      "# Interview Transcript",
+      "",
+      "**Candidate:** Sam Kirk",
+      `**Date:** ${new Date().toISOString()}`,
+      `**Total Messages:** ${conversationHistory.length}`,
+      "",
+      "---",
+      "",
+    ];
+
+    for (let i = 0; i < conversationHistory.length; i += 2) {
+      const userMsg = conversationHistory[i];
+      const assistantMsg = conversationHistory[i + 1];
+
+      transcriptLines.push(`**Interviewer:**`);
+      transcriptLines.push("");
+      transcriptLines.push(userMsg.parts[0].text);
+      transcriptLines.push("");
+      transcriptLines.push("---");
+      transcriptLines.push("");
+      transcriptLines.push(`**Sam Kirk:**`);
+      transcriptLines.push("");
+      transcriptLines.push(assistantMsg.parts[0].text);
+      transcriptLines.push("");
+      transcriptLines.push("---");
+      transcriptLines.push("");
+    }
+
+    transcriptLines.push("## Sources Referenced");
+    transcriptLines.push("");
+    testChunks.forEach((chunk, i) => {
+      transcriptLines.push(`${i + 1}. **${chunk.title}** — ${chunk.sourceRef}`);
+    });
+
+    const transcript = transcriptLines.join("\n");
+
+    // Write transcript to GCS
+    await privateBucket
+      .file(`${artifactPrefix}output/transcript.md`)
+      .save(transcript, {
+        contentType: "text/markdown; charset=utf-8",
+        resumable: false,
+      });
+
+    // Write HTML version
+    const transcriptHtml = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Interview Transcript - Sam Kirk</title>
+  <style>body { font-family: sans-serif; max-width: 800px; margin: 2rem auto; padding: 0 1rem; }</style>
+</head>
+<body>
+${transcript
+  .replace(/^# (.+)$/gm, '<h1>$1</h1>')
+  .replace(/^## (.+)$/gm, '<h2>$1</h2>')
+  .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+  .replace(/---/g, '<hr>')
+  .replace(/\n/g, '<br>')}
+</body>
+</html>`;
+
+    await privateBucket
+      .file(`${artifactPrefix}output/transcript.html`)
+      .save(transcriptHtml, {
+        contentType: "text/html; charset=utf-8",
+        resumable: false,
+      });
+    log("Transcript artifacts written to GCS", true);
+
+    // Create submission record
+    const submissionRef = firestore.collection(SUBMISSIONS_COLLECTION).doc(testSubmissionId);
+    await submissionRef.set({
+      createdAt: Timestamp.now(),
+      expiresAt: Timestamp.fromMillis(Date.now() + 90 * 24 * 60 * 60 * 1000),
+      tool: "interview",
+      status: "complete",
+      sessionId: `smoke_test_${Date.now()}`,
+      inputs: { conversationId: testSubmissionId },
+      extracted: {
+        messageCount: conversationHistory.length,
+        turnCount: conversationHistory.length / 2,
+      },
+      outputs: {
+        transcriptMdPath: `${artifactPrefix}output/transcript.md`,
+        transcriptHtmlPath: `${artifactPrefix}output/transcript.html`,
+      },
+      citations: testChunks.map((c) => ({
+        chunkId: c.chunkId,
+        title: c.title,
+        sourceRef: c.sourceRef,
+      })),
+      artifactGcsPrefix: artifactPrefix,
+    });
+    log("Submission record created", true);
+
+    // Step 12.7: Verify artifacts
+    log("Verifying artifacts...");
+    const [mdContent] = await privateBucket
+      .file(`${artifactPrefix}output/transcript.md`)
+      .download();
+    if (!mdContent.toString().includes("Interview Transcript")) {
+      throw new Error("Transcript artifact verification failed");
+    }
+    log("Artifacts verified", true);
+
+    // Cleanup
+    log("Cleaning up test data...");
+
+    // Delete test chunks
+    const deleteChunkBatch = firestore.batch();
+    for (const chunk of testChunks) {
+      deleteChunkBatch.delete(firestore.collection(RESUME_CHUNKS_COLLECTION).doc(chunk.chunkId));
+    }
+    await deleteChunkBatch.commit();
+    log("Test chunks deleted", true);
+
+    // Delete test submission
+    await submissionRef.delete();
+    log("Test submission deleted", true);
+
+    // Delete GCS artifacts
+    const [artifactFiles] = await privateBucket.getFiles({ prefix: artifactPrefix });
+    for (const file of artifactFiles) {
+      await file.delete();
+    }
+    log(`Deleted ${artifactFiles.length} artifact files`, true);
+
+    // Clean up resume index
+    await resumeIndexRef.delete();
+    log("Test resume index deleted", true);
+
+    log("Interview chat test complete", true);
+    sectionsPassed++;
+
+  } catch (error) {
+    // Cleanup on failure
+    try {
+      // Delete test chunks
+      for (const chunk of testChunks) {
+        try {
+          await firestore.collection(RESUME_CHUNKS_COLLECTION).doc(chunk.chunkId).delete();
+        } catch { /* ignore */ }
+      }
+      // Delete any test submissions
+      const testSubs = await firestore.collection(SUBMISSIONS_COLLECTION)
+        .where("sessionId", ">=", "smoke_test_")
+        .limit(10)
+        .get();
+      for (const doc of testSubs.docs) {
+        if (doc.id.startsWith(INTERVIEW_TEST_PREFIX)) {
+          await doc.ref.delete();
+        }
+      }
+      // Delete test artifacts
+      const [files] = await privateBucket.getFiles({ prefix: `submissions/${INTERVIEW_TEST_PREFIX}` });
+      for (const file of files) {
+        await file.delete();
+      }
+    } catch {
+      log("Warning: Failed to cleanup test data during error handling", false);
+    }
+
+    log(
+      `Interview chat test failed: ${error instanceof Error ? error.message : error}`,
+      false
+    );
+    process.exit(1);
+  }
+  } // End Section 12
 
   // Success!
   if (sectionsRun === 0) {

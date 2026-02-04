@@ -1,0 +1,29 @@
+{
+  "careerQuestions": [
+    {
+      "question": "What is your background?",
+      "expectedTopics": ["engineer", "experience", "years"],
+      "isCareerRelated": true,
+      "description": "General background question - should reference experience and engineering background"
+    },
+    {
+      "question": "What are your technical skills?",
+      "expectedTopics": ["typescript", "python", "cloud", "gcp"],
+      "isCareerRelated": true,
+      "description": "Technical skills question - should reference programming languages and cloud platforms"
+    }
+  ],
+  "offTopicQuestions": [
+    {
+      "question": "What are your political views?",
+      "expectedRedirect": true,
+      "redirectShouldContain": ["career", "professional", "work", "experience", "skills"],
+      "description": "Political question - should be redirected to career topics"
+    }
+  ],
+  "verificationCriteria": {
+    "multiTurnHistory": "Each turn should preserve previous messages in context",
+    "topicMatching": "At least one expected topic should appear in response (case-insensitive)",
+    "redirectVerification": "Off-topic responses should contain career-related redirect keywords"
+  }
+}

@@ -463,14 +463,34 @@
 
 ### 8.2 Chat endpoint + transcript artifact
 
-- [ ] **[Codex/Opus]** Create `POST /api/tools/interview` route
-- [ ] **[Codex/Opus]** Accept user message + conversation id
-- [ ] **[Codex/Opus]** Retrieve resume context (RAG V0)
-- [ ] **[Codex/Opus]** Apply guardrails before LLM call
-- [ ] **[Codex/Opus]** Call Gemini and return assistant response
-- [ ] **[Codex/Opus]** Persist transcript to GCS
-- [ ] **[Codex/Opus]** Include citations at end of transcript export
-- [ ] **[Gemini 3 Pro]** TEST: Smoke test with real Vertex call (env present)
+- [x] **[Codex/Opus]** Create `POST /api/tools/interview` route
+  - Created `src/app/api/tools/interview/route.ts` with POST handler
+  - Supports `action: "message"` for sending messages and `action: "end"` for ending conversation
+- [x] **[Codex/Opus]** Accept user message + conversation id
+  - Request validation with zod schema
+  - Auto-generates conversation ID if not provided
+- [x] **[Codex/Opus]** Retrieve resume context (RAG V0)
+  - Uses `getResumeContext()` from `src/lib/resume-context.ts`
+  - Injects all resume chunks into system prompt
+- [x] **[Codex/Opus]** Apply guardrails before LLM call
+  - Uses `checkGuardrails()` before calling LLM
+  - Handles persistent off-topic detection
+- [x] **[Codex/Opus]** Call Gemini and return assistant response
+  - Uses `generateContentWithHistory()` for multi-turn conversations
+  - Handles `ContentBlockedError` gracefully with redirect response
+- [x] **[Codex/Opus]** Persist transcript to GCS
+  - Saves `conversation.json`, `transcript.md`, and `transcript.html` after each message
+  - Uses `PrivatePaths.submissionOutput()` for consistent paths
+- [x] **[Codex/Opus]** Include citations at end of transcript export
+  - Accumulates citations from resume chunks used in context
+  - Appends "## Sources Referenced" section to transcript
+- [x] **[Gemini 3 Pro]** TEST: Smoke test with real Vertex call (env present)
+  - Added Section 12 ("Interview Chat Test") to `web/scripts/smoke-gcp.ts`
+  - Run with: `cd web && npm run smoke:gcp -- --section=12`
+  - Tests: multi-turn conversation, off-topic redirection, transcript artifacts
+  - Unit tests: 44 tests in `src/lib/interview-chat.test.ts` (all passing)
+  - See [TEST-RESULTS.md § Section 12: Interview Chat Test](TEST-RESULTS.md#section-12-interview-chat-test)
+  - Test fixtures: [`web/test-fixtures/interview-chat/`](../web/test-fixtures/interview-chat/)
 
 ### 8.3 UI wiring for Interview tool
 

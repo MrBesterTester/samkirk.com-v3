@@ -1,6 +1,6 @@
 # samkirk.com v3 — Test Results
 
-> Last updated: 2026-02-04 (Step 8.1 Interview Guardrails)
+> Last updated: 2026-02-04 (Step 8.2 Interview Chat Endpoint)
 >
 > This document records smoke test results with real GCP infrastructure and unit test summaries.
 >
@@ -24,6 +24,7 @@
   - [Section 9: Job Ingestion URL Fetch Test](#section-9-job-ingestion-url-fetch-test)
   - [Section 10: Vertex AI Gemini Test](#section-10-vertex-ai-gemini-test)
   - [Section 11: Resume Generation Test](#section-11-resume-generation-test)
+  - [Section 12: Interview Chat Test](#section-12-interview-chat-test)
 - [Unit Tests](#unit-tests)
   - [Results](#results)
   - [Test File Breakdown](#test-file-breakdown)
@@ -33,6 +34,7 @@
   - [Resume Context Retrieval (Step 7.1)](#resume-context-retrieval-step-71)
   - [Resume Generator (Step 7.2)](#resume-generator-step-72)
   - [Interview Guardrails (Step 8.1)](#interview-guardrails-step-81)
+  - [Interview Chat (Step 8.2)](#interview-chat-step-82)
 - [E2E Tests (Playwright)](#e2e-tests-playwright)
   - [Fit Tool Happy Path (Step 6.4)](#fit-tool-happy-path-step-64)
   - [Resume Tool Happy Path (Step 7.3)](#resume-tool-happy-path-step-73)
@@ -52,8 +54,8 @@
 
 | Category | Result | Details |
 |----------|--------|---------|
-| GCP Smoke Tests | **PASS** | 11/11 sections passed |
-| Unit Tests | **PASS** | 1012/1012 tests passed |
+| GCP Smoke Tests | **PASS** | 12/12 sections passed |
+| Unit Tests | **PASS** | 1056/1056 tests passed |
 | E2E Tests (Playwright) | **PASS** | 11/11 tests passed (Fit: 5, Resume: 6) |
 | E2E Tests (Real LLM) | **PASS** | Both Fit + Resume tools with gemini-2.0-flash |
 | Lint | **PASS** | 0 errors, 0 warnings |
@@ -443,6 +445,146 @@ This is **not** independent verification via `gcloud` CLI—the script verifies 
 
 ---
 
+### Section 12: Interview Chat Test
+
+**Purpose:** Verify multi-turn interview conversation with Vertex AI, off-topic redirection, and transcript artifact generation
+
+**Run command:**
+```bash
+npm run smoke:gcp -- --section=12
+```
+
+**Test Run:** 2026-02-03, Duration: ~51 seconds
+
+**Output:** ([full output](../web/test-fixtures/interview-chat/smoke-test-output.txt))
+```
+--- Section 12: Interview Chat Test ---
+
+→ Writing test resume chunks to Firestore...
+✓ Wrote 3 test chunks
+✓ Resume index updated
+→ Initializing Vertex AI for interview chat...
+✓ Vertex AI initialized
+→ Testing multi-turn conversation...
+→   Q: "What is your background?"
+✓   A: "I'm a software engineer with over 10 years of experience in building scalable web applications and A..."
+→   Found topics: engineer, experience, years
+→   Q: "What are your technical skills?"
+✓   A: "My core technical skills include: Programming in TypeScript, JavaScript, Python, and Go. I'm profici..."
+→   Found topics: typescript, python, cloud, gcp
+✓ Multi-turn conversation test passed
+→ Testing off-topic redirection...
+✓ Off-topic redirection verified
+→ Creating test submission and transcript...
+✓ Transcript artifacts written to GCS
+✓ Submission record created
+→ Verifying artifacts...
+✓ Artifacts verified
+→ Cleaning up test data...
+✓ Test chunks deleted
+✓ Test submission deleted
+✓ Deleted 2 artifact files
+✓ Test resume index deleted
+✓ Interview chat test complete
+
+=== Smoke tests complete: 1/1 sections passed ===
+```
+
+**Verification Steps:**
+
+| Step | Test | Result | Details |
+|------|------|--------|---------|
+| 12.1 | Resume chunk loading | **PASS** | 3 chunks written to `resumeChunks` collection |
+| 12.2 | Resume index update | **PASS** | `resumeIndex/current` updated with version 9996 |
+| 12.3 | Vertex AI init | **PASS** | Model: `gemini-2.0-flash`, Location: `us-central1` |
+| 12.4 | Career Q1: Background | **PASS** | Response contained: `engineer`, `experience`, `years` |
+| 12.5 | Career Q2: Skills | **PASS** | Response contained: `typescript`, `python`, `cloud`, `gcp` |
+| 12.6 | Off-topic redirect | **PASS** | "Political views?" → career-focused redirect |
+| 12.7 | Transcript MD | **PASS** | `transcript.md` written to GCS |
+| 12.8 | Transcript HTML | **PASS** | `transcript.html` written to GCS |
+| 12.9 | Submission record | **PASS** | Created with tool=`interview`, citations attached |
+| 12.10 | Artifact verification | **PASS** | Content readable from GCS |
+| 12.11 | Cleanup | **PASS** | All test data removed |
+
+**Detailed Test Results:**
+
+1. **Resume Context Loading:**
+   - Chunks: Summary, Experience, Skills ([resume-chunks.json](../web/test-fixtures/interview-chat/resume-chunks.json))
+   - Version: 9996 (smoke test version to avoid conflicts)
+   - Index updated at `resumeIndex/current`
+
+2. **Multi-Turn Conversation:** ([test-questions.json](../web/test-fixtures/interview-chat/test-questions.json))
+   
+   | Turn | Question | Expected Topics | Found Topics | Status |
+   |------|----------|-----------------|--------------|--------|
+   | 1 | "What is your background?" | engineer, experience, years | engineer, experience, years | **PASS** |
+   | 2 | "What are your technical skills?" | typescript, python, cloud, gcp | typescript, python, cloud, gcp | **PASS** |
+
+3. **Guardrails Enforcement:**
+   - Test question: "What are your political views?"
+   - Expected behavior: Redirect to career topics
+   - Verification: Response contained `career`, `professional`, `work`, `experience`, or `skills`
+   - Result: **PASS** - LLM returned career-focused redirect
+
+4. **Transcript Generation:** ([sample transcript](../web/test-fixtures/interview-chat/conversation-transcript.md))
+   - Format: Markdown with `**Interviewer:**` and `**Sam Kirk:**` labels
+   - Citations: "Sources Referenced" section with chunk titles and sourceRefs
+   - Footer: Generated timestamp and contact email
+   - Artifacts written:
+     - `submissions/{id}/output/transcript.md`
+     - `submissions/{id}/output/transcript.html`
+
+5. **Submission Record:**
+   ```json
+   {
+     "tool": "interview",
+     "status": "complete",
+     "extracted": {
+       "messageCount": 6,
+       "turnCount": 3
+     },
+     "citations": [
+       { "chunkId": "_smoke_interview_chunk_001", "title": "Summary", "sourceRef": "h2:Summary" },
+       { "chunkId": "_smoke_interview_chunk_002", "title": "Experience", "sourceRef": "h2:Experience" },
+       { "chunkId": "_smoke_interview_chunk_003", "title": "Skills", "sourceRef": "h2:Skills" }
+     ],
+     "expiresAt": "90 days from creation"
+   }
+   ```
+
+**Test Inputs:**
+
+| File | Description |
+|------|-------------|
+| [resume-chunks.json](../web/test-fixtures/interview-chat/resume-chunks.json) | 3 resume chunks (Summary, Experience, Skills) |
+| [test-questions.json](../web/test-fixtures/interview-chat/test-questions.json) | Test questions with expected topics |
+
+**Test Outputs:**
+
+| File | Description |
+|------|-------------|
+| [conversation-transcript.md](../web/test-fixtures/interview-chat/conversation-transcript.md) | Sample transcript output |
+| [smoke-test-output.txt](../web/test-fixtures/interview-chat/smoke-test-output.txt) | Full console output |
+
+**GCP Resources Used:**
+
+| Resource | Path/Collection | Purpose |
+|----------|-----------------|---------|
+| Firestore | `resumeChunks/{chunkId}` | Store test resume chunks |
+| Firestore | `resumeIndex/current` | Track chunk version |
+| Firestore | `submissions/{id}` | Store submission record |
+| Cloud Storage | `submissions/{id}/output/transcript.md` | Markdown transcript |
+| Cloud Storage | `submissions/{id}/output/transcript.html` | HTML transcript |
+| Vertex AI | `gemini-2.0-flash` | LLM for conversation |
+
+**Test Fixtures:** [`web/test-fixtures/interview-chat/`](../web/test-fixtures/interview-chat/) — Contains sample inputs and outputs
+
+**Related Unit Tests:** [Interview Chat (Step 8.2)](#interview-chat-step-82)
+
+**Back to:** [TODO.md Step 8.2](TODO.md#82-chat-endpoint--transcript-artifact)
+
+---
+
 ## Unit Tests
 
 **Command:** `cd web && npm test -- --run`
@@ -452,9 +594,9 @@ This is **not** independent verification via `gcloud` CLI—the script verifies 
 ### Results
 
 ```
-Test Files  34 passed (34)
-     Tests  1012 passed (1012)
-  Duration  11.59s
+Test Files  35 passed (35)
+     Tests  1056 passed (1056)
+  Duration  ~12s
 ```
 
 **Note:** Tests require network access to pass completely. The `route.test.ts` integration tests (3 tests) connect to real GCP services and will skip if run in a sandboxed environment without network access.
@@ -892,6 +1034,74 @@ parseLlmClassificationResponse("ALLOWED")     // → true
 ```
 
 **Back to:** [TODO.md Step 8.1](TODO.md#81-career-only-policy--guardrails)
+
+---
+
+### Interview Chat (Step 8.2)
+
+**File:** `src/lib/interview-chat.test.ts`
+
+**Purpose:** Verify interview chat endpoint functionality including conversation management, guardrail integration, transcript generation, and multi-turn conversation handling
+
+**Test Categories (44 tests):**
+
+| Category | Tests | Description |
+|----------|-------|-------------|
+| Constants | 3 | `MAX_CONVERSATION_TURNS`, `MAX_MESSAGE_LENGTH`, `INTERVIEW_SUBJECT_NAME` |
+| System Prompt | 8 | Subject name, resume context, behavioral guidelines, career focus |
+| Transcript Generation | 8 | Empty/populated transcripts, user/assistant formatting, citations, footer |
+| Message Validation | 4 | Empty messages, whitespace, max length, valid length |
+| Turn Limit | 2 | Max turns reached, messages before limit |
+| Guardrails Integration | 3 | Political redirect, personal life redirect, general assistant redirect |
+| Successful Processing | 6 | Career questions, turn count, history handling, transcript saving |
+| Error Handling | 3 | Missing resume context, content blocked, context loading failure |
+| Citations | 1 | Citation accumulation across messages |
+| Conversation Management | 3 | Create new, load existing, mismatched conversation ID |
+| InterviewChatError | 3 | Error properties, default statusCode, JSON serialization |
+
+**Key Behaviors Verified:**
+
+1. **System Prompt Construction:**
+   - Includes `INTERVIEW_SUBJECT_NAME` (Sam Kirk)
+   - Wraps resume context in `<resume_context>` tags
+   - Includes behavioral guidelines for career-only focus
+   - Provides first-person perspective instructions
+
+2. **Transcript Generation:**
+   - Formats user messages as "**Interviewer:**"
+   - Formats assistant messages as "**Sam Kirk:**"
+   - Includes numbered citations section
+   - Adds footer with contact email
+
+3. **Message Processing:**
+   - Validates message length (max 2000 characters)
+   - Enforces turn limit (max 20 turns)
+   - Applies guardrails before LLM call
+   - Returns redirect response for off-topic questions
+
+4. **Conversation State:**
+   - Saves to GCS as `conversation.json`
+   - Generates `transcript.md` and `transcript.html`
+   - Accumulates unique citations across turns
+   - Updates submission with message count
+
+**Example Usage:**
+
+```typescript
+// Process a career-related message
+const result = await processMessage(conversation, "What is your experience?");
+// → { success: true, message: { role: "assistant", content: "..." }, turnCount: 1 }
+
+// Off-topic message gets redirect
+const result = await processMessage(conversation, "What are your political views?");
+// → { success: true, message: { content: "...career-related topics..." } }
+```
+
+**Test Fixtures:** [`web/test-fixtures/interview-chat/`](../web/test-fixtures/interview-chat/) — Contains sample inputs and outputs
+
+**Related Smoke Test:** [Section 12: Interview Chat Test](#section-12-interview-chat-test)
+
+**Back to:** [TODO.md Step 8.2](TODO.md#82-chat-endpoint--transcript-artifact)
 
 ---
 
