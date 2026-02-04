@@ -1,6 +1,6 @@
 # Resume Generator Test Fixtures
 
-These files represent the test data used in `src/lib/resume-generator.test.ts` and the smoke test (Section 11) for the Custom Resume tool (Step 7.2).
+These files represent the test data used in `src/lib/resume-generator.test.ts`, the smoke test (Section 11), and E2E tests for the Custom Resume tool (Steps 7.2 and 7.3).
 
 ## Files
 
@@ -9,10 +9,15 @@ These files represent the test data used in `src/lib/resume-generator.test.ts` a
 - **[job-description.txt](job-description.txt)** - Sample job posting text used as input
 - **[resume-chunks.json](resume-chunks.json)** - Resume chunks used as context for the LLM (source of truth)
 
-### Outputs
+### Outputs (Unit Tests / Smoke Tests)
 
-- **[generated-resume.md](generated-resume.md)** - Final markdown resume output
+- **[generated-resume.md](generated-resume.md)** - Reference markdown resume output
 - **[generated-resume.html](generated-resume.html)** - Styled HTML resume for viewing/download
+
+### Outputs (Real-LLM E2E Test - Step 7.3)
+
+- **[e2e-generated-resume.json](e2e-generated-resume.json)** - Structured JSON from real Vertex AI call
+- **[e2e-generated-resume.md](e2e-generated-resume.md)** - Markdown resume from real Vertex AI call
 
 ## Test Flow
 
@@ -48,9 +53,13 @@ The resume generator enforces these rules (via prompt engineering):
 These fixtures are referenced in:
 - Unit tests (`resume-generator.test.ts`) to verify prompt building and parsing
 - Smoke tests (`scripts/smoke-gcp.ts` Section 11) for end-to-end GCP integration
-- Documentation (`docs/TEST-RESULTS.md`) as evidence of Step 7.2 completion
+- E2E tests (`scripts/e2e-real-llm.ts`) for real Vertex AI integration
+- Playwright tests (`e2e/resume-tool.spec.ts`) for UI flow testing
+- Documentation (`docs/TEST-RESULTS.md`) as evidence of Steps 7.2 and 7.3 completion
 
 ## Related Documentation
 
-- [TODO.md - Step 7.2](../../../docs/TODO.md#step-7-custom-resume-tool)
+- [TODO.md - Step 7.2](../../../docs/TODO.md#72-resume-generation-2-page-factual-only--artifacts)
+- [TODO.md - Step 7.3](../../../docs/TODO.md#73-ui-wiring-for-custom-resume)
 - [TEST-RESULTS.md - Resume Generator](../../../docs/TEST-RESULTS.md#resume-generator-step-72)
+- [TEST-RESULTS.md - Resume Tool UI](../../../docs/TEST-RESULTS.md#resume-tool-ui-step-73)

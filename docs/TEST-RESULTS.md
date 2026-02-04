@@ -1,6 +1,6 @@
 # samkirk.com v3 — Test Results
 
-> Last updated: 2026-02-03
+> Last updated: 2026-02-04
 >
 > This document records smoke test results with real GCP infrastructure and unit test summaries.
 >
@@ -34,8 +34,11 @@
   - [Resume Generator (Step 7.2)](#resume-generator-step-72)
 - [E2E Tests (Playwright)](#e2e-tests-playwright)
   - [Fit Tool Happy Path (Step 6.4)](#fit-tool-happy-path-step-64)
+  - [Resume Tool Happy Path (Step 7.3)](#resume-tool-happy-path-step-73)
 - [Resume Seeding Workflow](#resume-seeding-workflow)
-- [Real-LLM E2E Test (Step 6.4)](#real-llm-e2e-test-step-64)
+- [Real-LLM E2E Test](#real-llm-e2e-test)
+  - [Fit Tool (Step 6.4)](#fit-tool-step-64)
+  - [Resume Tool (Step 7.3)](#resume-tool-step-73)
 - [Lint Check](#lint-check)
 - [Notes](#notes)
   - [What These Tests Do NOT Cover](#what-these-tests-do-not-cover)
@@ -49,10 +52,10 @@
 | Category | Result | Details |
 |----------|--------|---------|
 | GCP Smoke Tests | **PASS** | 11/11 sections passed |
-| Unit Tests | **PASS** | 816/816 tests passed |
-| E2E Tests (Playwright) | **PASS** | 5/5 Playwright tests passed |
-| E2E Tests (Real LLM) | **PASS** | Full flow with gemini-2.0-flash |
-| Lint | **PASS** | 0 errors, 1 pre-existing warning |
+| Unit Tests | **PASS** | 819/819 tests passed |
+| E2E Tests (Playwright) | **PASS** | 11/11 tests passed (Fit: 5, Resume: 6) |
+| E2E Tests (Real LLM) | **PASS** | Both Fit + Resume tools with gemini-2.0-flash |
+| Lint | **PASS** | 0 errors, 0 warnings |
 
 ---
 
@@ -819,6 +822,43 @@ cd web && npx playwright test --headed
 
 ---
 
+### Resume Tool Happy Path (Step 7.3)
+
+**Run command:**
+```bash
+cd web && npx playwright test resume-tool.spec.ts --headed
+```
+
+**Results:** 6/6 tests passed
+
+| Test | Status | Duration |
+|------|--------|----------|
+| should complete full flow: input → generating → results | **PASS** | ~30s |
+| should allow generating another resume after completion | **PASS** | ~2s |
+| should show URL input mode when selected | **PASS** | ~2s |
+| should validate empty input | **PASS** | ~2s |
+| should display feature cards | **PASS** | ~2s |
+| should handle error states gracefully | **PASS** | ~3s |
+
+**E2E Test Mode Features:**
+- **Captcha bypass:** `E2E_TESTING=true` and `NEXT_PUBLIC_E2E_TESTING=true` enable automatic captcha verification
+- **Mock resume:** When no resume chunks are available in E2E mode, returns a mock resume so tests can complete the full flow
+- **Real LLM:** When resume chunks are seeded (`npm run seed:resume`), uses real Vertex AI for generation
+
+**Test coverage:**
+1. **Full flow test:** Paste job text → Generate → View results with download button
+2. **Generate another:** Verifies form reloads correctly after completion
+3. **URL mode:** Tests switching between paste/URL/file input modes
+4. **Validation:** Tests disabled button when input is empty
+5. **Feature cards:** Verifies "100% Factual", "2-Page Format", "Multiple Formats" cards display
+6. **Error handling:** Tests graceful error state display
+
+**Test File:** [`web/e2e/resume-tool.spec.ts`](../web/e2e/resume-tool.spec.ts)
+
+**Back to:** [TODO.md Step 7.3](TODO.md#73-ui-wiring-for-custom-resume)
+
+---
+
 ## Resume Seeding Workflow
 
 The resume seeding workflow allows you to upload and index a baseline resume for testing and development.
@@ -925,7 +965,7 @@ Resume seeded successfully!
 
 ---
 
-## Real-LLM E2E Test (Step 6.4)
+## Real-LLM E2E Test
 
 **Command:** `cd web && npm run test:e2e:real`
 
@@ -935,104 +975,149 @@ Resume seeded successfully!
 - GCP credentials configured
 - Seeded resume data (`npm run seed:resume`)
 
-**Cost:** ~$0.01-0.05 per run (real Vertex AI calls)
+**Cost:** ~$0.02-0.10 per run (real Vertex AI calls for both tools)
 
-### Test Flow
+This script tests both the Fit tool and Resume tool flows with real Vertex AI calls.
 
-1. Verifies resume is seeded in GCS/Firestore
-2. Creates test session and submission
-3. Extracts job fields from sample job posting
-4. Builds LLM prompt with resume chunks
-5. Calls Vertex AI Gemini for fit analysis
-6. Validates JSON response structure
-7. Stores report artifacts in GCS
-8. Cleans up test data
+---
 
-### Sample Output (Verified 2026-02-03)
+### Fit Tool (Step 6.4)
+
+**Test Flow:**
+1. Creates test session and submission
+2. Extracts job fields from sample job posting
+3. Builds LLM prompt with resume chunks
+4. Calls Vertex AI Gemini for fit analysis
+5. Validates JSON response structure
+6. Stores report artifacts in GCS
+
+**Results (Verified 2026-02-03):**
+
+| Metric | Value |
+|--------|-------|
+| Response time | ~13s |
+| Input tokens | 1,579 |
+| Output tokens | 328-456 |
+| Estimated cost | $0.0032-0.0037 |
+| Overall Score | Well |
+
+**Sample Analysis Output:**
+```
+Overall Score: Well
+Recommendation: Sam is an excellent fit for this role given his extensive 
+experience with the required technologies and relevant AI/ML projects.
+
+Categories:
+  Technical Skills: Well
+    Sam demonstrates strong proficiency in all required technical skills...
+  Experience Level: Well
+    With over 10 years of experience, Sam exceeds the requirement of 5+ years...
+  Location Fit: Well
+    The job is fully remote (US), which aligns with Sam's ability to work remotely.
+```
+
+---
+
+### Resume Tool (Step 7.3)
+
+**Test Flow:**
+1. Creates test session and submission
+2. Builds resume generation prompt with job posting and resume chunks
+3. Calls Vertex AI Gemini for resume generation
+4. Validates JSON response structure (header, summary, skills, experience, education)
+5. Stores resume artifacts (MD + JSON) in GCS
+
+**Results (Verified 2026-02-03):**
+
+| Metric | Value |
+|--------|-------|
+| Response time | ~8.6s |
+| Input tokens | 1,890 |
+| Output tokens | 1,372 |
+| Estimated cost | $0.0075 |
+| Word count | ~385 words |
+
+**Sample Generation Output:**
+```
+Name: Sam Kirk
+Title: Senior Software Engineer - AI Platform
+
+Skill Categories: 8
+  Languages: 5 items (TypeScript, JavaScript, Python, Go, SQL)
+  Cloud & Infrastructure: 5 items (GCP, AWS, Docker, Kubernetes, Terraform)
+  AI/ML: 5 items (TensorFlow, PyTorch, LangChain, RAG systems, LLM integration)
+  ...
+
+Experience Entries: 3
+  Senior Software Engineer at Tech Company (5 bullets)
+  Software Engineer at Startup Inc (5 bullets)
+  Junior Developer at Agency Co (3 bullets)
+
+Education Entries: 2
+```
+
+**Test Fixtures:** [`web/test-fixtures/resume-generator/`](../web/test-fixtures/resume-generator/)
+- [e2e-generated-resume.json](../web/test-fixtures/resume-generator/e2e-generated-resume.json) — Structured JSON output
+- [e2e-generated-resume.md](../web/test-fixtures/resume-generator/e2e-generated-resume.md) — Markdown output
+
+---
+
+### Combined Test Output (Verified 2026-02-03)
 
 ```
-=== E2E Test with Real Vertex AI ===
+============================================================
+=== E2E Tests with Real Vertex AI (Fit + Resume Tools) ===
+============================================================
 
 → Checking environment variables...
 ✓ Environment validated
 →   Project: samkirk-v3
 →   Model: gemini-2.0-flash
 → Checking for seeded resume data...
-✓ Found resume version 1 with 11 chunks
+✓ Found resume version 2 with 11 chunks
 → Loading resume chunks...
 ✓ Loaded 11 chunks
-→ Creating test session...
-✓ Test session created
-→ Creating test submission...
-✓ Test submission created
-→ Extracting job fields...
-✓   Title: Senior Software Engineer - AI Platform
-→   Company: TechCorp Inc
-→   Seniority: senior
-→   Location: fully_remote
-→   Skills: TypeScript, Python, GCP, AWS, TensorFlow, PyTorch, Docker, Kubernetes
-→ Creating flow state...
-✓ Flow state created
-→ Initializing Vertex AI...
-✓ Vertex AI initialized
-→ Building LLM prompt...
-✓ Prompt: 6913 characters
-→ Calling Vertex AI (this may take 10-30 seconds)...
-✓ Response received in 13178ms
-→ Response: 1801 characters
-→ Parsing response...
-✓ Response parsed successfully
-→ Validating response structure...
-✓ Response structure valid
-→ Token usage: 1579 input, 461 output
-→ Estimated cost: $0.0037
-→ Storing report artifacts...
-✓ Report artifacts stored
-✓ Submission updated to complete
 
---- Analysis Results ---
+==================================================
+=== Testing Fit Tool ===
+==================================================
+...
+✓ Fit tool test passed!
 
-Overall Score: Well
-Recommendation: Sam is an excellent fit for this role, possessing the required 
-technical skills and experience. His background in AI/ML, cloud infrastructure, 
-and full-stack development aligns well with the job description.
+==================================================
+=== Testing Resume Tool ===
+==================================================
+...
+✓ Resume tool test passed!
 
-Categories:
-  Technical Skills: Well
-    Sam demonstrates strong proficiency in all required technical skills, 
-    including TypeScript, Python, GCP, AWS, TensorFlow, PyTorch, Docker, and 
-    Kubernetes. He also possesses experience with LLMs and RAG systems, which 
-    is listed as a 'nice to have'.
-  Experience Level: Well
-    With over 10 years of experience, Sam exceeds the requirement of 5+ years 
-    of software engineering experience. His experience at both startups and 
-    larger tech companies makes him well-suited for a senior role.
-  Location Fit: Well
-    The job is fully remote within the US, and there is no indication that 
-    Sam is not located in the US.
+============================================================
+=== All E2E Tests Passed ===
+============================================================
 
-=== E2E Test Passed ===
-
-✓ Full fit analysis flow completed successfully!
+✓ Both Fit and Resume tool flows completed successfully!
 
 --- Cleanup ---
 
-✓ Test submission cleaned up
-✓ Test session cleaned up
+✓ Resume test submission cleaned up
+✓ Resume test session cleaned up
+✓ Fit test submission cleaned up
+✓ Fit test session cleaned up
 ```
 
 ### Validation Checks
 
-| Check | Validation |
-|-------|------------|
-| Resume seeded | `resumeIndex/current` exists with `chunkCount > 0` |
-| Vertex AI response | Candidates array not empty |
-| Overall score | One of: `Well`, `Partial`, `Poor` |
-| Categories | Each has `name`, `score`, `rationale` |
-| Category scores | Each is `Well`, `Partial`, or `Poor` |
-| Artifacts stored | Report MD and JSON written to GCS |
+| Tool | Check | Validation |
+|------|-------|------------|
+| Both | Resume seeded | `resumeIndex/current` exists with `chunkCount > 0` |
+| Both | Vertex AI response | Candidates array not empty |
+| Fit | Overall score | One of: `Well`, `Partial`, `Poor` |
+| Fit | Categories | Each has `name`, `score`, `rationale` |
+| Resume | Header | Has `name` and `title` |
+| Resume | Summary | Non-empty string |
+| Resume | Experience | Array with `title`, `company`, `dateRange`, `bullets` |
+| Both | Artifacts stored | Output files written to GCS |
 
-**Back to:** [TODO.md Step 6.4](TODO.md#64-ui-wiring-for-fit-tool-multi-turn-ux--downloads)
+**Back to:** [TODO.md Step 6.4](TODO.md#64-ui-wiring-for-fit-tool-multi-turn-ux--downloads) | [TODO.md Step 7.3](TODO.md#73-ui-wiring-for-custom-resume)
 
 ---
 
@@ -1051,7 +1136,6 @@ Categories:
 1. **Real reCAPTCHA widget** — Unit tests mock the verification; manual E2E test required (see GCP-SETUP.md § 8.3)
 2. **OAuth login flow** — Unit tests mock NextAuth; manual smoke test required
 3. **Public HTTP access** — Org policy blocks `allUsers` access; proxy route handles this
-4. **End-to-end UI flows** — Playwright E2E tests are planned for Step 6.4
 
 ### Independent Verification
 
@@ -1077,6 +1161,10 @@ These should return empty results if cleanup succeeded.
 
 | Date | Changes |
 |------|---------|
+| 2026-02-03 | **Step 7.3:** Added Resume Tool UI E2E tests (6 Playwright tests) — full flow, URL mode, validation, feature cards, error handling |
+| 2026-02-03 | **Step 7.3:** Extended `npm run test:e2e:real` to test both Fit and Resume tools with real Vertex AI |
+| 2026-02-03 | **Step 7.3:** Added E2E test fixtures `e2e-generated-resume.json` and `e2e-generated-resume.md` |
+| 2026-02-03 | Updated test counts: 819 total unit tests (was 816), 11 Playwright tests (was 5) |
 | 2026-02-03 | Added test fixtures `web/test-fixtures/resume-generator/` with input (job-description.txt, resume-chunks.json) and output (generated-resume.md, generated-resume.html) examples |
 | 2026-02-03 | Added Resume Generator tests (62 tests, Step 7.2) — prompt building, response parsing, markdown generation |
 | 2026-02-03 | Added Section 11: Resume Generation Test to smoke-gcp.ts (Step 7.2) — end-to-end Vertex AI resume generation |

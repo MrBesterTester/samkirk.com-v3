@@ -410,12 +410,32 @@
 
 ### 7.3 UI wiring for Custom Resume
 
-- [ ] **[Opus 4.5]** Build `/tools/resume` page
-- [ ] **[Opus 4.5]** Reuse job input component from Fit tool
-- [ ] **[Opus 4.5]** Show progress indicator during generation
-- [ ] **[Opus 4.5]** Show results preview
-- [ ] **[Opus 4.5]** Add download bundle link
-- [ ] **[Gemini 3 Pro]** TEST: Playwright E2E test for happy path
+- [x] **[Opus 4.5]** Build `/tools/resume` page
+  - Full-featured page with job input form, progress indicator, results preview
+  - Modern UI consistent with Fit tool design patterns
+- [x] **[Opus 4.5]** Reuse job input component from Fit tool
+  - Same paste/URL/file mode tabs with identical UI patterns
+- [x] **[Opus 4.5]** Show progress indicator during generation
+  - Animated spinner with "Generating your custom resume..." message
+  - Note about 30-second expected duration
+- [x] **[Opus 4.5]** Show results preview
+  - Resume header (name, title, contact info)
+  - Professional summary
+  - Stats cards (experience count, skill categories, 2-page format)
+  - Factual accuracy guarantee note
+- [x] **[Opus 4.5]** Add download bundle link
+  - Downloads zip via `/api/submissions/[id]/download`
+  - Includes job input, resume (MD + HTML), and citations
+- [x] **[Gemini 3 Pro]** TEST: Playwright E2E test for happy path
+  - 6 E2E tests pass: full flow with LLM, starting over, URL mode, validation, feature cards, error handling
+  - Uses E2E test mode for captcha bypass (`E2E_TESTING=true`)
+  - Uses mock resume when no resume chunks available in E2E mode
+  - Run with: `cd web && npx playwright test resume-tool.spec.ts --headed`
+- [x] **[Gemini 3 Pro]** TEST: Real LLM E2E test with seeded resume data
+  - Extended `npm run test:e2e:real` to test both Fit and Resume tools
+  - Full flow test with real Vertex AI (gemini-2.0-flash)
+  - Run with: `cd web && npm run test:e2e:real`
+  - See [TEST-RESULTS.md § Real-LLM E2E Test](TEST-RESULTS.md#real-llm-e2e-test)
 
 ---
 

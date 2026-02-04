@@ -1,16 +1,16 @@
 /**
- * E2E test with real Vertex AI for the Fit tool flow.
+ * E2E tests with real Vertex AI for Fit and Resume tools.
  *
  * Run with: cd web && npm run test:e2e:real
  *
  * This script:
  * 1. Requires seeded resume data in GCS/Firestore (run npm run seed:resume first)
- * 2. Creates a test submission and session
- * 3. Runs the full fit analysis flow with real Vertex AI
- * 4. Validates the response structure
+ * 2. Tests the Fit tool flow with real Vertex AI
+ * 3. Tests the Resume tool flow with real Vertex AI
+ * 4. Validates response structures
  * 5. Cleans up test data
  *
- * Note: Incurs real Vertex AI costs (~$0.01-0.05 per run)
+ * Note: Incurs real Vertex AI costs (~$0.02-0.10 per run)
  *
  * Prerequisites:
  * - GCP credentials set up (GOOGLE_APPLICATION_CREDENTIALS or gcloud auth)
@@ -97,7 +97,7 @@ function log(message: string, success?: boolean): void {
 }
 
 // ============================================================================
-// Types (inlined from fit-flow.ts and fit-report.ts to avoid server-only)
+// Types
 // ============================================================================
 
 interface ResumeChunk {
@@ -123,22 +123,6 @@ interface ExtractedJobFields {
   niceToHaveSkills: string[];
 }
 
-interface FitFlowState {
-  flowId: string;
-  status: string;
-  jobText: string;
-  sourceIdentifier: string;
-  characterCount: number;
-  wordCount: number;
-  extracted: ExtractedJobFields;
-  followUpAnswers: unknown[];
-  followUpsAsked: number;
-  pendingQuestion: unknown | null;
-  createdAt: Date;
-  updatedAt: Date;
-  errorMessage: string | null;
-}
-
 interface CategoryAnalysis {
   name: string;
   score: string;
@@ -151,6 +135,28 @@ interface FitAnalysis {
   recommendation: string;
   categories: CategoryAnalysis[];
   unknowns: string[];
+}
+
+interface ResumeContent {
+  header: {
+    name: string;
+    title: string;
+    email?: string;
+    location?: string;
+  };
+  summary: string;
+  skills: Array<{ category: string; items: string[] }>;
+  experience: Array<{
+    title: string;
+    company: string;
+    dateRange: string;
+    bullets: string[];
+  }>;
+  education: Array<{
+    degree: string;
+    institution: string;
+    year: string;
+  }>;
 }
 
 // ============================================================================
@@ -228,179 +234,86 @@ function extractJobFields(jobText: string): ExtractedJobFields {
 }
 
 // ============================================================================
-// Main Test
+// Fit Tool Test
 // ============================================================================
 
-async function main(): Promise<void> {
-  console.log("\n=== E2E Test with Real Vertex AI ===\n");
+async function testFitTool(
+  firestore: Firestore,
+  privateBucket: ReturnType<Storage["bucket"]>,
+  vertexAI: VertexAI,
+  modelName: string,
+  resumeChunks: ResumeChunk[],
+  cleanupTasks: Array<() => Promise<void>>
+): Promise<void> {
+  console.log("\n" + "=".repeat(50));
+  console.log("=== Testing Fit Tool ===");
+  console.log("=".repeat(50) + "\n");
 
-  // Step 1: Validate environment
-  log("Checking environment variables...");
-  const envResult = envSchema.safeParse(process.env);
+  const testSessionId = `${TEST_PREFIX}fit_session_${randomBytes(8).toString("hex")}`;
+  const testSubmissionId = `${TEST_PREFIX}fit_submission_${randomBytes(8).toString("hex")}`;
 
-  if (!envResult.success) {
-    const missing = envResult.error.issues.map((issue) => issue.path.join(".")).join(", ");
-    log(`Missing or invalid environment variables: ${missing}`, false);
-    console.log("\nMake sure the following are set in web/.env.local:");
-    console.log("  - GCP_PROJECT_ID");
-    console.log("  - GCS_PRIVATE_BUCKET");
-    console.log("  - VERTEX_AI_LOCATION");
-    console.log("  - VERTEX_AI_MODEL");
-    process.exit(1);
-  }
+  // Create test session
+  log("Creating test session...");
+  const now = Date.now();
+  const sessionTtlMs = 7 * 24 * 60 * 60 * 1000;
+  const sessionDocRef = firestore.collection(SESSIONS_COLLECTION).doc(testSessionId);
 
-  const env = envResult.data;
-  log("Environment validated", true);
-  log(`  Project: ${env.GCP_PROJECT_ID}`);
-  log(`  Model: ${env.VERTEX_AI_MODEL}`);
+  await sessionDocRef.set({
+    createdAt: Timestamp.fromMillis(now),
+    expiresAt: Timestamp.fromMillis(now + sessionTtlMs),
+    ipHash: "e2e_test_ip_hash",
+    captchaPassedAt: Timestamp.fromMillis(now),
+  });
+  cleanupTasks.push(async () => {
+    await sessionDocRef.delete();
+    log("Fit test session cleaned up", true);
+  });
+  log("Test session created", true);
 
-  // Initialize clients
-  const firestore = new Firestore({ projectId: env.GCP_PROJECT_ID });
-  const storage = new Storage({ projectId: env.GCP_PROJECT_ID });
-  const privateBucket = storage.bucket(env.GCS_PRIVATE_BUCKET);
+  // Create test submission
+  log("Creating test submission...");
+  const submissionTtlMs = 90 * 24 * 60 * 60 * 1000;
+  const submissionDocRef = firestore.collection(SUBMISSIONS_COLLECTION).doc(testSubmissionId);
 
-  // Track test data for cleanup
-  const testSessionId = `${TEST_PREFIX}session_${randomBytes(8).toString("hex")}`;
-  const testSubmissionId = `${TEST_PREFIX}submission_${randomBytes(8).toString("hex")}`;
-  const cleanupTasks: Array<() => Promise<void>> = [];
-
-  try {
-    // Step 2: Verify resume is seeded
-    log("Checking for seeded resume data...");
-    const resumeIndexRef = firestore.collection(RESUME_INDEX_COLLECTION).doc(RESUME_INDEX_DOC);
-    const resumeIndex = await resumeIndexRef.get();
-
-    if (!resumeIndex.exists) {
-      log("Resume not seeded. Run 'npm run seed:resume' first.", false);
-      process.exit(1);
-    }
-
-    const indexData = resumeIndex.data();
-    const resumeVersion = indexData?.version ?? 0;
-    const chunkCount = indexData?.chunkCount ?? 0;
-
-    if (chunkCount === 0) {
-      log("No resume chunks found. Run 'npm run seed:resume' first.", false);
-      process.exit(1);
-    }
-
-    log(`Found resume version ${resumeVersion} with ${chunkCount} chunks`, true);
-
-    // Fetch resume chunks
-    log("Loading resume chunks...");
-    const chunksSnapshot = await firestore
-      .collection(RESUME_CHUNKS_COLLECTION)
-      .where("version", "==", resumeVersion)
-      .get();
-
-    const resumeChunks: ResumeChunk[] = chunksSnapshot.docs.map((doc) => ({
-      chunkId: doc.id,
-      title: doc.data().title,
-      sourceRef: doc.data().sourceRef,
-      content: doc.data().content,
-    }));
-
-    log(`Loaded ${resumeChunks.length} chunks`, true);
-
-    // Step 3: Create test session
-    log("Creating test session...");
-    const now = Date.now();
-    const sessionTtlMs = 7 * 24 * 60 * 60 * 1000; // 7 days
-    const sessionDocRef = firestore.collection(SESSIONS_COLLECTION).doc(testSessionId);
-
-    await sessionDocRef.set({
-      createdAt: Timestamp.fromMillis(now),
-      expiresAt: Timestamp.fromMillis(now + sessionTtlMs),
-      ipHash: "e2e_test_ip_hash",
-      captchaPassedAt: Timestamp.fromMillis(now), // Pre-pass captcha for test
-    });
-    cleanupTasks.push(async () => {
-      await sessionDocRef.delete();
-      log("Test session cleaned up", true);
-    });
-    log("Test session created", true);
-
-    // Step 4: Create test submission
-    log("Creating test submission...");
-    const submissionTtlMs = 90 * 24 * 60 * 60 * 1000; // 90 days
-    const submissionDocRef = firestore.collection(SUBMISSIONS_COLLECTION).doc(testSubmissionId);
-
-    await submissionDocRef.set({
-      createdAt: Timestamp.fromMillis(now),
-      expiresAt: Timestamp.fromMillis(now + submissionTtlMs),
-      tool: "fit",
-      status: "processing",
-      sessionId: testSessionId,
-      inputs: {
-        mode: "paste",
-        sourceIdentifier: "e2e-test-job-posting",
-        characterCount: SAMPLE_JOB_POSTING.length,
-        wordCount: SAMPLE_JOB_POSTING.split(/\s+/).length,
-      },
-    });
-    cleanupTasks.push(async () => {
-      // Delete submission artifacts from GCS
-      const [files] = await privateBucket.getFiles({ prefix: `submissions/${testSubmissionId}/` });
-      for (const file of files) {
-        await file.delete();
-      }
-      await submissionDocRef.delete();
-      log("Test submission cleaned up", true);
-    });
-    log("Test submission created", true);
-
-    // Step 5: Extract job fields
-    log("Extracting job fields...");
-    const extracted = extractJobFields(SAMPLE_JOB_POSTING);
-    log(`  Title: ${extracted.title}`, true);
-    log(`  Company: ${extracted.company}`);
-    log(`  Seniority: ${extracted.seniority}`);
-    log(`  Location: ${extracted.locationType}`);
-    log(`  Skills: ${extracted.mustHaveSkills.join(", ") || "none detected"}`);
-
-    // Step 6: Create flow state
-    log("Creating flow state...");
-    const flowId = randomBytes(16).toString("base64url");
-    const flowState: FitFlowState = {
-      flowId,
-      status: "ready",
-      jobText: SAMPLE_JOB_POSTING,
+  await submissionDocRef.set({
+    createdAt: Timestamp.fromMillis(now),
+    expiresAt: Timestamp.fromMillis(now + submissionTtlMs),
+    tool: "fit",
+    status: "processing",
+    sessionId: testSessionId,
+    inputs: {
+      mode: "paste",
       sourceIdentifier: "e2e-test-job-posting",
       characterCount: SAMPLE_JOB_POSTING.length,
       wordCount: SAMPLE_JOB_POSTING.split(/\s+/).length,
-      extracted,
-      followUpAnswers: [],
-      followUpsAsked: 0,
-      pendingQuestion: null,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      errorMessage: null,
-    };
-    log("Flow state created", true);
+    },
+  });
+  cleanupTasks.push(async () => {
+    const [files] = await privateBucket.getFiles({ prefix: `submissions/${testSubmissionId}/` });
+    for (const file of files) {
+      await file.delete();
+    }
+    await submissionDocRef.delete();
+    log("Fit test submission cleaned up", true);
+  });
+  log("Test submission created", true);
 
-    // Step 7: Initialize Vertex AI and generate report
-    log("Initializing Vertex AI...");
-    const vertexAI = new VertexAI({
-      project: env.GCP_PROJECT_ID,
-      location: env.VERTEX_AI_LOCATION,
-    });
+  // Extract job fields
+  log("Extracting job fields...");
+  const extracted = extractJobFields(SAMPLE_JOB_POSTING);
+  log(`  Title: ${extracted.title}`, true);
+  log(`  Company: ${extracted.company}`);
+  log(`  Seniority: ${extracted.seniority}`);
+  log(`  Location: ${extracted.locationType}`);
+  log(`  Skills: ${extracted.mustHaveSkills.join(", ") || "none detected"}`);
 
-    const model = vertexAI.getGenerativeModel({
-      model: env.VERTEX_AI_MODEL,
-      generationConfig: {
-        temperature: 0.3,
-        maxOutputTokens: 4096,
-      },
-    });
-    log("Vertex AI initialized", true);
+  // Build the prompt
+  log("Building LLM prompt...");
+  const resumeContext = resumeChunks
+    .map((chunk) => `### ${chunk.title}\n${chunk.content}`)
+    .join("\n\n");
 
-    // Build the prompt
-    log("Building LLM prompt...");
-    const resumeContext = resumeChunks
-      .map((chunk) => `### ${chunk.title}\n${chunk.content}`)
-      .join("\n\n");
-
-    const prompt = `You are an expert career advisor helping Sam Kirk evaluate job fit.
+  const fitPrompt = `You are an expert career advisor helping Sam Kirk evaluate job fit.
 
 ## Sam's Resume
 ${resumeContext}
@@ -444,77 +357,84 @@ Analyze how well Sam fits this role. Respond with JSON only (no markdown):
   "unknowns": ["Any aspects that couldn't be determined"]
 }`;
 
-    log(`Prompt: ${prompt.length} characters`, true);
+  log(`Prompt: ${fitPrompt.length} characters`, true);
 
-    // Call Vertex AI
-    log("Calling Vertex AI (this may take 10-30 seconds)...");
-    const startTime = Date.now();
+  // Call Vertex AI
+  log("Calling Vertex AI (this may take 10-30 seconds)...");
+  const model = vertexAI.getGenerativeModel({
+    model: modelName,
+    generationConfig: {
+      temperature: 0.3,
+      maxOutputTokens: 4096,
+    },
+  });
 
-    const result = await model.generateContent({
-      contents: [{ role: "user", parts: [{ text: prompt }] }],
-    });
+  const startTime = Date.now();
+  const result = await model.generateContent({
+    contents: [{ role: "user", parts: [{ text: fitPrompt }] }],
+  });
 
-    const elapsed = Date.now() - startTime;
-    log(`Response received in ${elapsed}ms`, true);
+  const elapsed = Date.now() - startTime;
+  log(`Response received in ${elapsed}ms`, true);
 
-    // Parse response
-    const response = result.response;
-    if (!response.candidates || response.candidates.length === 0) {
-      throw new Error("No candidates in Vertex AI response");
+  // Parse response
+  const response = result.response;
+  if (!response.candidates || response.candidates.length === 0) {
+    throw new Error("No candidates in Vertex AI response");
+  }
+
+  const responseText = response.candidates[0].content.parts
+    .filter((p): p is { text: string } => "text" in p)
+    .map((p) => p.text)
+    .join("");
+
+  log(`Response: ${responseText.length} characters`);
+
+  // Parse JSON
+  log("Parsing response...");
+  let cleanJson = responseText.trim();
+  if (cleanJson.startsWith("```json")) cleanJson = cleanJson.slice(7);
+  if (cleanJson.startsWith("```")) cleanJson = cleanJson.slice(3);
+  if (cleanJson.endsWith("```")) cleanJson = cleanJson.slice(0, -3);
+  cleanJson = cleanJson.trim();
+
+  const analysis: FitAnalysis = JSON.parse(cleanJson);
+  log("Response parsed successfully", true);
+
+  // Validate response structure
+  log("Validating response structure...");
+  if (!["Well", "Partial", "Poor"].includes(analysis.overallScore)) {
+    throw new Error(`Invalid overallScore: ${analysis.overallScore}`);
+  }
+  if (typeof analysis.recommendation !== "string" || analysis.recommendation.length === 0) {
+    throw new Error("Missing or invalid recommendation");
+  }
+  if (!Array.isArray(analysis.categories) || analysis.categories.length === 0) {
+    throw new Error("Missing or invalid categories");
+  }
+  for (const cat of analysis.categories) {
+    if (!cat.name || !cat.score || !cat.rationale) {
+      throw new Error(`Invalid category: ${JSON.stringify(cat)}`);
     }
-
-    const responseText = response.candidates[0].content.parts
-      .filter((p): p is { text: string } => "text" in p)
-      .map((p) => p.text)
-      .join("");
-
-    log(`Response: ${responseText.length} characters`);
-
-    // Parse JSON
-    log("Parsing response...");
-    let cleanJson = responseText.trim();
-    if (cleanJson.startsWith("```json")) cleanJson = cleanJson.slice(7);
-    if (cleanJson.startsWith("```")) cleanJson = cleanJson.slice(3);
-    if (cleanJson.endsWith("```")) cleanJson = cleanJson.slice(0, -3);
-    cleanJson = cleanJson.trim();
-
-    const analysis: FitAnalysis = JSON.parse(cleanJson);
-    log("Response parsed successfully", true);
-
-    // Validate response structure
-    log("Validating response structure...");
-    if (!["Well", "Partial", "Poor"].includes(analysis.overallScore)) {
-      throw new Error(`Invalid overallScore: ${analysis.overallScore}`);
+    if (!["Well", "Partial", "Poor"].includes(cat.score)) {
+      throw new Error(`Invalid category score: ${cat.score}`);
     }
-    if (typeof analysis.recommendation !== "string" || analysis.recommendation.length === 0) {
-      throw new Error("Missing or invalid recommendation");
-    }
-    if (!Array.isArray(analysis.categories) || analysis.categories.length === 0) {
-      throw new Error("Missing or invalid categories");
-    }
-    for (const cat of analysis.categories) {
-      if (!cat.name || !cat.score || !cat.rationale) {
-        throw new Error(`Invalid category: ${JSON.stringify(cat)}`);
-      }
-      if (!["Well", "Partial", "Poor"].includes(cat.score)) {
-        throw new Error(`Invalid category score: ${cat.score}`);
-      }
-    }
-    log("Response structure valid", true);
+  }
+  log("Response structure valid", true);
 
-    // Log usage metadata
-    const usageMetadata = response.usageMetadata;
-    if (usageMetadata) {
-      const inputTokens = usageMetadata.promptTokenCount ?? 0;
-      const outputTokens = usageMetadata.candidatesTokenCount ?? 0;
-      const estimatedCost = (inputTokens / 1000) * 0.00125 + (outputTokens / 1000) * 0.00375;
-      log(`Token usage: ${inputTokens} input, ${outputTokens} output`);
-      log(`Estimated cost: $${estimatedCost.toFixed(4)}`);
-    }
+  // Log usage metadata
+  const usageMetadata = response.usageMetadata;
+  if (usageMetadata) {
+    const inputTokens = usageMetadata.promptTokenCount ?? 0;
+    const outputTokens = usageMetadata.candidatesTokenCount ?? 0;
+    const estimatedCost = (inputTokens / 1000) * 0.00125 + (outputTokens / 1000) * 0.00375;
+    log(`Token usage: ${inputTokens} input, ${outputTokens} output`);
+    log(`Estimated cost: $${estimatedCost.toFixed(4)}`);
+  }
 
-    // Step 8: Store report in GCS
-    log("Storing report artifacts...");
-    const reportMd = `# Fit Analysis Report
+  // Store report in GCS
+  log("Storing report artifacts...");
+  const reportMd = `# Fit Analysis Report
 
 ## Summary
 **Overall Score: ${analysis.overallScore}**
@@ -537,53 +457,439 @@ ${analysis.unknowns.length > 0 ? analysis.unknowns.map((u) => `- ${u}`).join("\n
 Generated by E2E test at ${new Date().toISOString()}
 `;
 
-    const artifactPrefix = `submissions/${testSubmissionId}/`;
-    await privateBucket.file(`${artifactPrefix}output/report.md`).save(reportMd, {
-      contentType: "text/markdown; charset=utf-8",
-      resumable: false,
-    });
-    await privateBucket.file(`${artifactPrefix}output/analysis.json`).save(JSON.stringify(analysis, null, 2), {
-      contentType: "application/json; charset=utf-8",
-      resumable: false,
-    });
-    log("Report artifacts stored", true);
+  const artifactPrefix = `submissions/${testSubmissionId}/`;
+  await privateBucket.file(`${artifactPrefix}output/report.md`).save(reportMd, {
+    contentType: "text/markdown; charset=utf-8",
+    resumable: false,
+  });
+  await privateBucket.file(`${artifactPrefix}output/analysis.json`).save(JSON.stringify(analysis, null, 2), {
+    contentType: "application/json; charset=utf-8",
+    resumable: false,
+  });
+  log("Report artifacts stored", true);
 
-    // Update submission status
-    await submissionDocRef.update({
-      status: "complete",
-      extracted: {
-        seniority: extracted.seniority,
-        location: extracted.locationType,
-        mustHaves: extracted.mustHaveSkills,
-      },
-      outputs: {
-        fitScore: analysis.overallScore,
-        rationale: analysis.recommendation,
-        reportPath: `${artifactPrefix}output/report.md`,
-      },
-      completedAt: Timestamp.now(),
-    });
-    log("Submission updated to complete", true);
+  // Update submission status
+  await submissionDocRef.update({
+    status: "complete",
+    extracted: {
+      seniority: extracted.seniority,
+      location: extracted.locationType,
+      mustHaves: extracted.mustHaveSkills,
+    },
+    outputs: {
+      fitScore: analysis.overallScore,
+      rationale: analysis.recommendation,
+      reportPath: `${artifactPrefix}output/report.md`,
+    },
+    completedAt: Timestamp.now(),
+  });
+  log("Submission updated to complete", true);
 
-    // Print results
-    console.log("\n--- Analysis Results ---\n");
-    console.log(`Overall Score: ${analysis.overallScore}`);
-    console.log(`Recommendation: ${analysis.recommendation}`);
-    console.log("\nCategories:");
-    for (const cat of analysis.categories) {
-      console.log(`  ${cat.name}: ${cat.score}`);
-      console.log(`    ${cat.rationale}`);
+  // Print results
+  console.log("\n--- Fit Analysis Results ---\n");
+  console.log(`Overall Score: ${analysis.overallScore}`);
+  console.log(`Recommendation: ${analysis.recommendation}`);
+  console.log("\nCategories:");
+  for (const cat of analysis.categories) {
+    console.log(`  ${cat.name}: ${cat.score}`);
+    console.log(`    ${cat.rationale}`);
+  }
+  if (analysis.unknowns.length > 0) {
+    console.log("\nUnknowns:");
+    for (const unknown of analysis.unknowns) {
+      console.log(`  - ${unknown}`);
     }
-    if (analysis.unknowns.length > 0) {
-      console.log("\nUnknowns:");
-      for (const unknown of analysis.unknowns) {
-        console.log(`  - ${unknown}`);
-      }
+  }
+
+  log("\nFit tool test passed!", true);
+}
+
+// ============================================================================
+// Resume Tool Test
+// ============================================================================
+
+async function testResumeTool(
+  firestore: Firestore,
+  privateBucket: ReturnType<Storage["bucket"]>,
+  vertexAI: VertexAI,
+  modelName: string,
+  resumeChunks: ResumeChunk[],
+  cleanupTasks: Array<() => Promise<void>>
+): Promise<void> {
+  console.log("\n" + "=".repeat(50));
+  console.log("=== Testing Resume Tool ===");
+  console.log("=".repeat(50) + "\n");
+
+  const testSessionId = `${TEST_PREFIX}resume_session_${randomBytes(8).toString("hex")}`;
+  const testSubmissionId = `${TEST_PREFIX}resume_submission_${randomBytes(8).toString("hex")}`;
+
+  // Create test session
+  log("Creating test session...");
+  const now = Date.now();
+  const sessionTtlMs = 7 * 24 * 60 * 60 * 1000;
+  const sessionDocRef = firestore.collection(SESSIONS_COLLECTION).doc(testSessionId);
+
+  await sessionDocRef.set({
+    createdAt: Timestamp.fromMillis(now),
+    expiresAt: Timestamp.fromMillis(now + sessionTtlMs),
+    ipHash: "e2e_test_ip_hash",
+    captchaPassedAt: Timestamp.fromMillis(now),
+  });
+  cleanupTasks.push(async () => {
+    await sessionDocRef.delete();
+    log("Resume test session cleaned up", true);
+  });
+  log("Test session created", true);
+
+  // Create test submission
+  log("Creating test submission...");
+  const submissionTtlMs = 90 * 24 * 60 * 60 * 1000;
+  const submissionDocRef = firestore.collection(SUBMISSIONS_COLLECTION).doc(testSubmissionId);
+
+  await submissionDocRef.set({
+    createdAt: Timestamp.fromMillis(now),
+    expiresAt: Timestamp.fromMillis(now + submissionTtlMs),
+    tool: "resume",
+    status: "processing",
+    sessionId: testSessionId,
+    inputs: {
+      mode: "paste",
+      sourceIdentifier: "e2e-test-job-posting",
+      characterCount: SAMPLE_JOB_POSTING.length,
+      wordCount: SAMPLE_JOB_POSTING.split(/\s+/).length,
+    },
+  });
+  cleanupTasks.push(async () => {
+    const [files] = await privateBucket.getFiles({ prefix: `submissions/${testSubmissionId}/` });
+    for (const file of files) {
+      await file.delete();
     }
+    await submissionDocRef.delete();
+    log("Resume test submission cleaned up", true);
+  });
+  log("Test submission created", true);
+
+  // Build the prompt (matching resume-generator.ts system prompt)
+  log("Building LLM prompt...");
+  const resumeContext = resumeChunks
+    .map((chunk, i) => `[CHUNK ${i + 1}: ${chunk.title}]\n${chunk.content}`)
+    .join("\n\n---\n\n");
+
+  const resumePrompt = `You are an expert resume writer creating a tailored 2-page professional resume for Sam Kirk.
+
+## CRITICAL CONSTRAINTS
+
+### 1. FACTUAL ACCURACY - NEVER INVENT
+- You MUST ONLY use information explicitly present in the resume context provided
+- If a skill, experience, or achievement is NOT in the context, DO NOT include it
+- If asked about something not in the context, OMIT that section rather than fabricate
+- Every claim must be traceable to the resume context chunks
+
+### 2. LENGTH CONSTRAINT - 2 PAGES MAXIMUM
+- Target 600-900 total words
+- Maximum 250 words per section
+- Maximum 5 bullet points per job
+- Be concise but impactful - quality over quantity
+
+### 3. TAILORING
+- Prioritize experience and skills that match the job requirements
+- Reorder sections to highlight most relevant qualifications
+- Adjust bullet points to emphasize relevant achievements
+- Use keywords from the job posting where they match actual experience
+
+## OUTPUT FORMAT
+
+You MUST respond with valid JSON only (no markdown code fences):
+{
+  "header": {
+    "name": "Sam Kirk",
+    "title": "Professional title tailored to job",
+    "email": "sam@samkirk.com",
+    "location": "Fremont, CA"
+  },
+  "summary": "2-3 sentence professional summary tailored to the job",
+  "skills": [
+    { "category": "Category Name", "items": ["skill1", "skill2"] }
+  ],
+  "experience": [
+    {
+      "title": "Job Title",
+      "company": "Company Name",
+      "dateRange": "YYYY - YYYY or YYYY - Present",
+      "bullets": ["Achievement 1", "Achievement 2"]
+    }
+  ],
+  "education": [
+    {
+      "degree": "Degree Name",
+      "institution": "School Name",
+      "year": "YYYY"
+    }
+  ]
+}
+
+## Job Posting
+${SAMPLE_JOB_POSTING}
+
+## Sam's Resume Context (SOURCE OF TRUTH)
+Use ONLY information from these sections. Do NOT invent or assume anything not explicitly stated here.
+
+${resumeContext}
+
+## Instructions
+Generate a tailored 2-page professional resume as specified. Remember:
+1. ONLY use facts from the resume context above
+2. Keep total content to 600-900 words
+3. Prioritize content most relevant to this specific job
+4. Return valid JSON matching the specified structure`;
+
+  log(`Prompt: ${resumePrompt.length} characters`, true);
+
+  // Call Vertex AI
+  log("Calling Vertex AI (this may take 10-30 seconds)...");
+  const model = vertexAI.getGenerativeModel({
+    model: modelName,
+    generationConfig: {
+      temperature: 0.4,
+      maxOutputTokens: 4096,
+    },
+  });
+
+  const startTime = Date.now();
+  const result = await model.generateContent({
+    contents: [{ role: "user", parts: [{ text: resumePrompt }] }],
+  });
+
+  const elapsed = Date.now() - startTime;
+  log(`Response received in ${elapsed}ms`, true);
+
+  // Parse response
+  const response = result.response;
+  if (!response.candidates || response.candidates.length === 0) {
+    throw new Error("No candidates in Vertex AI response");
+  }
+
+  const responseText = response.candidates[0].content.parts
+    .filter((p): p is { text: string } => "text" in p)
+    .map((p) => p.text)
+    .join("");
+
+  log(`Response: ${responseText.length} characters`);
+
+  // Parse JSON
+  log("Parsing response...");
+  let cleanJson = responseText.trim();
+  if (cleanJson.startsWith("```json")) cleanJson = cleanJson.slice(7);
+  if (cleanJson.startsWith("```")) cleanJson = cleanJson.slice(3);
+  if (cleanJson.endsWith("```")) cleanJson = cleanJson.slice(0, -3);
+  cleanJson = cleanJson.trim();
+
+  const resumeContent: ResumeContent = JSON.parse(cleanJson);
+  log("Response parsed successfully", true);
+
+  // Validate response structure
+  log("Validating response structure...");
+  if (!resumeContent.header || typeof resumeContent.header.name !== "string") {
+    throw new Error("Missing or invalid header");
+  }
+  if (typeof resumeContent.summary !== "string" || resumeContent.summary.length === 0) {
+    throw new Error("Missing or invalid summary");
+  }
+  if (!Array.isArray(resumeContent.skills)) {
+    throw new Error("Missing or invalid skills");
+  }
+  if (!Array.isArray(resumeContent.experience) || resumeContent.experience.length === 0) {
+    throw new Error("Missing or invalid experience");
+  }
+  for (const exp of resumeContent.experience) {
+    if (!exp.title || !exp.company || !exp.dateRange || !Array.isArray(exp.bullets)) {
+      throw new Error(`Invalid experience entry: ${JSON.stringify(exp)}`);
+    }
+  }
+  if (!Array.isArray(resumeContent.education)) {
+    throw new Error("Missing or invalid education");
+  }
+  log("Response structure valid", true);
+
+  // Log usage metadata
+  const usageMetadata = response.usageMetadata;
+  if (usageMetadata) {
+    const inputTokens = usageMetadata.promptTokenCount ?? 0;
+    const outputTokens = usageMetadata.candidatesTokenCount ?? 0;
+    const estimatedCost = (inputTokens / 1000) * 0.00125 + (outputTokens / 1000) * 0.00375;
+    log(`Token usage: ${inputTokens} input, ${outputTokens} output`);
+    log(`Estimated cost: $${estimatedCost.toFixed(4)}`);
+  }
+
+  // Generate markdown resume
+  const resumeMd = `# ${resumeContent.header.name}
+
+**${resumeContent.header.title}**
+
+${resumeContent.header.email || ""} | ${resumeContent.header.location || ""}
+
+## Professional Summary
+
+${resumeContent.summary}
+
+## Skills
+
+${resumeContent.skills.map((s) => `**${s.category}:** ${s.items.join(", ")}`).join("\n")}
+
+## Professional Experience
+
+${resumeContent.experience.map((exp) => `### ${exp.title} — ${exp.company}
+*${exp.dateRange}*
+
+${exp.bullets.map((b) => `- ${b}`).join("\n")}
+`).join("\n")}
+
+## Education
+
+${resumeContent.education.map((edu) => `**${edu.degree}** — ${edu.institution}, ${edu.year}`).join("\n")}
+
+---
+Generated by E2E test at ${new Date().toISOString()}
+`;
+
+  // Store resume in GCS
+  log("Storing resume artifacts...");
+  const artifactPrefix = `submissions/${testSubmissionId}/`;
+  await privateBucket.file(`${artifactPrefix}output/resume.md`).save(resumeMd, {
+    contentType: "text/markdown; charset=utf-8",
+    resumable: false,
+  });
+  await privateBucket.file(`${artifactPrefix}output/resume.json`).save(JSON.stringify(resumeContent, null, 2), {
+    contentType: "application/json; charset=utf-8",
+    resumable: false,
+  });
+  log("Resume artifacts stored", true);
+
+  // Update submission status
+  await submissionDocRef.update({
+    status: "complete",
+    extracted: {
+      targetTitle: resumeContent.header.title,
+    },
+    outputs: {
+      experienceCount: resumeContent.experience.length,
+      skillsCount: resumeContent.skills.length,
+      resumePath: `${artifactPrefix}output/resume.md`,
+    },
+    completedAt: Timestamp.now(),
+  });
+  log("Submission updated to complete", true);
+
+  // Count words
+  const wordCount = resumeMd.split(/\s+/).filter((w) => w.length > 0).length;
+
+  // Print results
+  console.log("\n--- Resume Generation Results ---\n");
+  console.log(`Name: ${resumeContent.header.name}`);
+  console.log(`Title: ${resumeContent.header.title}`);
+  console.log(`Summary: ${resumeContent.summary.slice(0, 100)}...`);
+  console.log(`\nSkill Categories: ${resumeContent.skills.length}`);
+  for (const skill of resumeContent.skills) {
+    console.log(`  ${skill.category}: ${skill.items.length} items`);
+  }
+  console.log(`\nExperience Entries: ${resumeContent.experience.length}`);
+  for (const exp of resumeContent.experience) {
+    console.log(`  ${exp.title} at ${exp.company} (${exp.bullets.length} bullets)`);
+  }
+  console.log(`\nEducation Entries: ${resumeContent.education.length}`);
+  console.log(`\nTotal Word Count: ~${wordCount} words`);
+
+  log("\nResume tool test passed!", true);
+}
+
+// ============================================================================
+// Main
+// ============================================================================
+
+async function main(): Promise<void> {
+  console.log("\n" + "=".repeat(60));
+  console.log("=== E2E Tests with Real Vertex AI (Fit + Resume Tools) ===");
+  console.log("=".repeat(60) + "\n");
+
+  // Step 1: Validate environment
+  log("Checking environment variables...");
+  const envResult = envSchema.safeParse(process.env);
+
+  if (!envResult.success) {
+    const missing = envResult.error.issues.map((issue) => issue.path.join(".")).join(", ");
+    log(`Missing or invalid environment variables: ${missing}`, false);
+    console.log("\nMake sure the following are set in web/.env.local:");
+    console.log("  - GCP_PROJECT_ID");
+    console.log("  - GCS_PRIVATE_BUCKET");
+    console.log("  - VERTEX_AI_LOCATION");
+    console.log("  - VERTEX_AI_MODEL");
+    process.exit(1);
+  }
+
+  const env = envResult.data;
+  log("Environment validated", true);
+  log(`  Project: ${env.GCP_PROJECT_ID}`);
+  log(`  Model: ${env.VERTEX_AI_MODEL}`);
+
+  // Initialize clients
+  const firestore = new Firestore({ projectId: env.GCP_PROJECT_ID });
+  const storage = new Storage({ projectId: env.GCP_PROJECT_ID });
+  const privateBucket = storage.bucket(env.GCS_PRIVATE_BUCKET);
+  const vertexAI = new VertexAI({
+    project: env.GCP_PROJECT_ID,
+    location: env.VERTEX_AI_LOCATION,
+  });
+
+  // Track test data for cleanup
+  const cleanupTasks: Array<() => Promise<void>> = [];
+
+  try {
+    // Step 2: Verify resume is seeded
+    log("Checking for seeded resume data...");
+    const resumeIndexRef = firestore.collection(RESUME_INDEX_COLLECTION).doc(RESUME_INDEX_DOC);
+    const resumeIndex = await resumeIndexRef.get();
+
+    if (!resumeIndex.exists) {
+      log("Resume not seeded. Run 'npm run seed:resume' first.", false);
+      process.exit(1);
+    }
+
+    const indexData = resumeIndex.data();
+    const resumeVersion = indexData?.version ?? 0;
+    const chunkCount = indexData?.chunkCount ?? 0;
+
+    if (chunkCount === 0) {
+      log("No resume chunks found. Run 'npm run seed:resume' first.", false);
+      process.exit(1);
+    }
+
+    log(`Found resume version ${resumeVersion} with ${chunkCount} chunks`, true);
+
+    // Fetch resume chunks
+    log("Loading resume chunks...");
+    const chunksSnapshot = await firestore
+      .collection(RESUME_CHUNKS_COLLECTION)
+      .where("version", "==", resumeVersion)
+      .get();
+
+    const resumeChunks: ResumeChunk[] = chunksSnapshot.docs.map((doc) => ({
+      chunkId: doc.id,
+      title: doc.data().title,
+      sourceRef: doc.data().sourceRef,
+      content: doc.data().content,
+    }));
+
+    log(`Loaded ${resumeChunks.length} chunks`, true);
+
+    // Run tests
+    await testFitTool(firestore, privateBucket, vertexAI, env.VERTEX_AI_MODEL, resumeChunks, cleanupTasks);
+    await testResumeTool(firestore, privateBucket, vertexAI, env.VERTEX_AI_MODEL, resumeChunks, cleanupTasks);
 
     // Success!
-    console.log("\n=== E2E Test Passed ===\n");
-    log("Full fit analysis flow completed successfully!", true);
+    console.log("\n" + "=".repeat(60));
+    console.log("=== All E2E Tests Passed ===");
+    console.log("=".repeat(60) + "\n");
+    log("Both Fit and Resume tool flows completed successfully!", true);
 
   } finally {
     // Cleanup

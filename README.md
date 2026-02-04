@@ -3,10 +3,11 @@
 Personal website + genAI demo tools for `samkirk.com`.
 
 Key docs:
-- `docs/Proposal.md`
-- `docs/SPECIFICATION.md`
-- `docs/BLUEPRINT.md` (to be generated)
-- `docs/TODO.md` (to be generated)
+- [`docs/Proposal.md`](docs/Proposal.md) — Original project proposal
+- [`docs/SPECIFICATION.md`](docs/SPECIFICATION.md) — Functional specification (V1)
+- [`docs/BLUEPRINT.md`](docs/BLUEPRINT.md) — Technical architecture and implementation plan
+- [`docs/TODO.md`](docs/TODO.md) — Implementation checklist with progress tracking
+- [`docs/TEST-RESULTS.md`](docs/TEST-RESULTS.md) — Test results and verification evidence
 
 ### Tech stack (V1 target)
 
@@ -65,11 +66,13 @@ npm run start
 
 | Command | Description |
 |---------|-------------|
-| `npm test` | Run unit tests (Vitest) |
-| `npm run test:e2e` | Run E2E tests with Playwright (mock LLM) |
-| `npm run test:e2e:real` | Run E2E test with real Vertex AI (~$0.01-0.05) |
-| `npm run smoke:gcp` | Run GCP integration smoke tests |
+| `npm test` | Run unit tests (Vitest) — 819 tests |
+| `npx playwright test` | Run E2E tests with Playwright — 11 tests (Fit + Resume tools) |
+| `npm run test:e2e:real` | Run E2E test with real Vertex AI (~$0.02-0.10) |
+| `npm run smoke:gcp` | Run GCP integration smoke tests — 11 sections |
 | `npm run validate:resume -- <file>` | Validate resume chunking locally |
+
+See [`docs/TEST-RESULTS.md`](docs/TEST-RESULTS.md) for detailed test results and verification evidence.
 
 ### Notes
 
