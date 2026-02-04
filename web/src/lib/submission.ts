@@ -4,6 +4,7 @@ import { randomBytes } from "crypto";
 import { Timestamp } from "@google-cloud/firestore";
 import {
   getSubmissionRef,
+  getSubmissionsCollection,
   type SubmissionDoc,
   type SubmissionTool,
   type SubmissionStatus,
@@ -342,4 +343,88 @@ export function isValidCitationsArray(
   }
 
   return citations.every(isValidCitation);
+}
+
+// ============================================================================
+// Submission Query Operations
+// ============================================================================
+
+/** Options for listing submissions */
+export interface ListSubmissionsOptions {
+  /** Maximum number of submissions to return (default: 50, max: 100) */
+  limit?: number;
+  /** Filter by tool type */
+  tool?: SubmissionTool;
+  /** Filter by status */
+  status?: SubmissionStatus;
+}
+
+/** A submission with its ID for list views */
+export interface SubmissionWithId {
+  id: string;
+  doc: SubmissionDoc;
+}
+
+/**
+ * List recent submissions from Firestore.
+ * Returns submissions ordered by createdAt descending (newest first).
+ *
+ * @param options - Query options for filtering and limiting
+ * @returns Array of submissions with their IDs
+ */
+export async function listSubmissions(
+  options: ListSubmissionsOptions = {}
+): Promise<SubmissionWithId[]> {
+  const { limit = 50, tool, status } = options;
+
+  // Cap the limit to prevent excessive reads
+  const cappedLimit = Math.min(limit, 100);
+
+  const collection = getSubmissionsCollection();
+  let query = collection.orderBy("createdAt", "desc");
+
+  // Apply optional filters
+  if (tool) {
+    query = query.where("tool", "==", tool);
+  }
+  if (status) {
+    query = query.where("status", "==", status);
+  }
+
+  query = query.limit(cappedLimit);
+
+  const snapshot = await query.get();
+
+  return snapshot.docs.map((doc) => ({
+    id: doc.id,
+    doc: doc.data() as SubmissionDoc,
+  }));
+}
+
+/**
+ * Get submission counts by tool type.
+ * Useful for dashboard statistics.
+ *
+ * Note: This performs a full collection scan, so use sparingly.
+ */
+export async function getSubmissionCountsByTool(): Promise<
+  Record<SubmissionTool, number>
+> {
+  const collection = getSubmissionsCollection();
+  const snapshot = await collection.get();
+
+  const counts: Record<SubmissionTool, number> = {
+    fit: 0,
+    resume: 0,
+    interview: 0,
+  };
+
+  for (const doc of snapshot.docs) {
+    const data = doc.data() as SubmissionDoc;
+    if (data.tool in counts) {
+      counts[data.tool]++;
+    }
+  }
+
+  return counts;
 }

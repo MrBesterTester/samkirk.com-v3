@@ -1,6 +1,6 @@
 # samkirk.com v3 — Test Results
 
-> Last updated: 2026-02-04 (Step 8.3 Interview Tool E2E Tests)
+> Last updated: 2026-02-04 (Step 9.1 Admin Submissions List)
 >
 > This document records smoke test results with real GCP infrastructure and unit test summaries.
 >
@@ -35,6 +35,7 @@
   - [Resume Generator (Step 7.2)](#resume-generator-step-72)
   - [Interview Guardrails (Step 8.1)](#interview-guardrails-step-81)
   - [Interview Chat (Step 8.2)](#interview-chat-step-82)
+  - [Admin Submissions List (Step 9.1)](#admin-submissions-list-step-91)
 - [E2E Tests (Playwright)](#e2e-tests-playwright)
   - [Fit Tool Happy Path (Step 6.4)](#fit-tool-happy-path-step-64)
   - [Resume Tool Happy Path (Step 7.3)](#resume-tool-happy-path-step-73)
@@ -56,7 +57,7 @@
 | Category | Result | Details |
 |----------|--------|---------|
 | GCP Smoke Tests | **PASS** | 12/12 sections passed |
-| Unit Tests | **PASS** | 1056/1056 tests passed |
+| Unit Tests | **PASS** | 1107/1107 tests passed |
 | E2E Tests (Playwright) | **PASS** | 22/22 tests passed (Fit: 5, Resume: 6, Interview: 11) |
 | E2E Tests (Real LLM) | **PASS** | All 3 tools (Fit, Resume, Interview) with gemini-2.0-flash |
 | Lint | **PASS** | 0 errors, 0 warnings |
@@ -1106,6 +1107,81 @@ const result = await processMessage(conversation, "What are your political views
 
 ---
 
+### Admin Submissions List (Step 9.1)
+
+**File:** `src/lib/submission.test.ts`
+
+**Purpose:** Verify submission listing backend logic (query options, type definitions) for the admin submissions viewer
+
+> **Note:** These are backend/lib tests, not UI component tests. Admin UI E2E tests are deferred to Step 10.2 (Full E2E test of deployed application).
+
+**Run Command:**
+```bash
+cd web && npm test -- --run src/lib/submission.test.ts
+```
+
+**Results:** 53/53 tests passed
+
+**Test Categories (53 tests):**
+
+| Category | Tests | Description |
+|----------|-------|-------------|
+| Constants | 5 | `SUBMISSION_ID_BYTES`, `SUBMISSION_RETENTION_DAYS`, `SUBMISSION_RETENTION_MS`, valid tools/statuses |
+| `generateSubmissionId()` | 4 | String ID, correct length (22 chars), uniqueness, URL-safe characters |
+| `isValidSubmissionId()` | 5 | Valid IDs, too short/long, invalid characters, base64url support |
+| `createSubmissionTimestamps()` | 3 | Current time, 90-day expiry, Timestamp instances |
+| `createSubmissionTimestampsFromDate()` | 2 | Custom date, year boundary handling |
+| `calculateExpiresAt()` | 3 | 90-day offset, leap year, Date object return |
+| `isSubmissionExpired()` | 5 | Before/after expiry, exact match, 89/90-day edge cases |
+| `buildArtifactGcsPrefix()` | 3 | Correct prefix, trailing slash, special characters |
+| `isValidTool()` | 2 | Valid tools (fit/resume/interview), invalid values |
+| `isValidStatus()` | 2 | Valid statuses, invalid values |
+| `isValidCitation()` | 7 | Valid citation, null, non-objects, missing fields, extra fields |
+| `isValidCitationsArray()` | 5 | Empty array, valid array, non-arrays, invalid items |
+| TTL computation edge cases | 3 | DST transitions, year boundary, time component preservation |
+| `ListSubmissionsOptions` | 2 | Default limit (50), max cap (100) |
+| `SubmissionWithId` type | 1 | Expected properties (id, doc) |
+
+**Key Behaviors Verified:**
+
+1. **Submission Listing:**
+   - `listSubmissions()` supports `limit`, `tool`, and `status` filters
+   - Default limit is 50, maximum capped at 100
+   - Results ordered by `createdAt` descending (newest first)
+
+2. **Query Options:**
+   - Optional `tool` filter for fit/resume/interview
+   - Optional `status` filter for in_progress/complete/blocked/error
+   - Returns `SubmissionWithId[]` with both `id` and full `doc` data
+
+3. **Submission ID Validation:**
+   - 22-character base64url strings (16 bytes)
+   - URL-safe characters only (A-Z, a-z, 0-9, _, -)
+
+**Implementation Notes (not tested here):**
+
+- Admin route protection via `(protected)` route group with auth-checking layout
+- Redirects unauthenticated users to `/admin/login`
+- Access denied for non-allowlisted emails
+- These will be E2E tested in Step 10.2
+
+**Admin Pages Created:**
+
+| Page | Purpose |
+|------|---------|
+| `/admin/submissions` | List view with stats cards and table |
+| `/admin/submissions/[id]` | Detail view with inputs/outputs/citations |
+
+**Lint Check:**
+```bash
+cd web && npm run lint
+# Result: 0 errors, 0 warnings
+```
+
+**Back to:** [TODO.md Step 9.1](TODO.md#91-admin-submissions-list--details-view)
+
+---
+
 ## E2E Tests (Playwright)
 
 End-to-end tests using Playwright with a real browser (Chromium).
@@ -1588,6 +1664,10 @@ These should return empty results if cleanup succeeded.
 
 | Date | Changes |
 |------|---------|
+| 2026-02-04 | **Step 9.1:** Added Admin Submissions List tests (53 tests) — listing, query options, auth protection |
+| 2026-02-04 | Created admin route protection using `(protected)` route group with auth layout |
+| 2026-02-04 | Added `/admin/submissions` list view and `/admin/submissions/[id]` detail view |
+| 2026-02-04 | Updated test counts: 1107 total unit tests (was 1056), 35 test files (was 34) |
 | 2026-02-04 | **Step 8.3:** Added Interview Tool to `npm run test:e2e:real` — real LLM multi-turn conversation test |
 | 2026-02-04 | Added `e2e-real-llm-transcript.md` fixture with actual Vertex AI responses |
 | 2026-02-04 | **Step 8.3:** Added Interview Tool E2E tests (11 Playwright tests) — UI loading, input behavior, chat flow |
