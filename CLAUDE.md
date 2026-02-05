@@ -43,6 +43,7 @@ Remind the user which model is recommended for the current step:
 3. **Artifacts**: Persist inputs/outputs with 90-day retention
 4. **Incremental delivery**: Small PR-sized changes
 5. **Avoid Gemini Pro 3 for file edits**: It may overwrite files with minimal content
+6. **Always validate results**: After completing any action, verify with some form of testing (run the relevant test suite, check a command's effect, etc.) (Boris Cherny)
 
 ## Git Workflow
 
