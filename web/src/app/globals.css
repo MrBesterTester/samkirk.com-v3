@@ -1,5 +1,77 @@
 @import "tailwindcss";
 
+/*
+ * ==========================================================================
+ * samkirk-v3 Color Palette
+ * ==========================================================================
+ *
+ * Design philosophy:
+ *   Light mode — clean, professional (v3's zinc grays) with v2's cyan accent
+ *   Dark mode  — warm, personal (v2's dark slate backgrounds) with cyan accent
+ *   Both modes unified by the same accent color family
+ *
+ * Token usage guide:
+ *
+ *   --color-primary        Page background. Use as `bg-primary`.
+ *   --color-secondary      Card / surface / raised-panel background. `bg-secondary`.
+ *   --color-accent         Links, CTAs, active indicators. `text-accent`, `bg-accent`.
+ *   --color-accent-hover   Hover state for accent elements. `hover:bg-accent-hover`.
+ *   --color-text-primary   Main body text. `text-text-primary`.
+ *   --color-text-secondary Supporting / label text. `text-text-secondary`.
+ *   --color-text-muted     Placeholder, caption, disabled text. `text-text-muted`.
+ *   --color-border         Dividers, card borders, input outlines. `border-border`.
+ *
+ * Light palette sources:
+ *   Backgrounds — zinc-50 / white (v3 clean feel)
+ *   Text        — zinc-900 / zinc-600 / zinc-400
+ *   Accent      — #38bdf8 (sky-400, carried from v2)
+ *
+ * Dark palette sources:
+ *   Backgrounds — #0f172a slate-900 / #1e293b slate-800 (v2 warmth)
+ *   Text        — zinc-100 / zinc-400 / zinc-500
+ *   Accent      — #38bdf8 (sky-400, same as light for consistency)
+ *
+ * ==========================================================================
+ */
+
+/* ---------- Light mode tokens ---------- */
+@theme {
+  --color-primary: #ffffff;
+  --color-secondary: #f4f4f5;          /* zinc-100 */
+  --color-accent: #38bdf8;             /* sky-400, v2 cyan */
+  --color-accent-hover: #0ea5e9;       /* sky-500, darker for hover */
+  --color-text-primary: #18181b;       /* zinc-900 */
+  --color-text-secondary: #52525b;     /* zinc-600 */
+  --color-text-muted: #a1a1aa;         /* zinc-400 */
+  --color-border: #e4e4e7;             /* zinc-200 */
+}
+
+/* ---------- Dark mode token overrides ---------- */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-primary: #0f172a;           /* slate-900, v2 dark background */
+    --color-secondary: #1e293b;         /* slate-800, v2 card surfaces */
+    --color-accent: #38bdf8;            /* sky-400, unchanged */
+    --color-accent-hover: #7dd3fc;      /* sky-300, lighter for dark hover */
+    --color-text-primary: #f4f4f5;      /* zinc-100 */
+    --color-text-secondary: #a1a1aa;    /* zinc-400 */
+    --color-text-muted: #71717a;        /* zinc-500 */
+    --color-border: #27272a;            /* zinc-800 */
+  }
+}
+
+/* Also support Tailwind's class-based dark mode (dark: prefix) */
+.dark {
+  --color-primary: #0f172a;
+  --color-secondary: #1e293b;
+  --color-accent: #38bdf8;
+  --color-accent-hover: #7dd3fc;
+  --color-text-primary: #f4f4f5;
+  --color-text-secondary: #a1a1aa;
+  --color-text-muted: #71717a;
+  --color-border: #27272a;
+}
+
 body {
   @apply bg-white text-zinc-900 dark:bg-zinc-950 dark:text-zinc-100;
   font-family: Arial, Helvetica, sans-serif;
