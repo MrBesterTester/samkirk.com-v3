@@ -79,6 +79,25 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Dance Menu Teaser */}
+      <section className="mt-16">
+        <h2 className="text-center text-2xl font-semibold text-zinc-900 dark:text-zinc-50">
+          This Week&apos;s Dance Menu
+        </h2>
+        <p className="mt-2 text-center text-zinc-600 dark:text-zinc-400">
+          Curated social dance playlists, updated weekly.
+        </p>
+
+        <div className="mt-8 flex justify-center">
+          <ToolPreview
+            title="Dance Menu"
+            description="Browse this week's curated playlist for social dancing — salsa, bachata, kizomba, and more."
+            ctaText="View Full Menu"
+            ctaLink="/dance-menu"
+          />
+        </div>
+      </section>
+
       {/* Explore Section */}
       <section className="mt-16">
         <h2 className="text-center text-2xl font-semibold text-zinc-900 dark:text-zinc-50">
