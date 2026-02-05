@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 
-const navLinks = [
+const baseNavLinks = [
   { href: "/", label: "Home" },
   {
     href: "/tools",
@@ -26,8 +26,13 @@ const navLinks = [
       { href: "/explorations/uber-level-ai-skills", label: "Uber Level AI Skills" },
     ],
   },
-  { href: "/admin", label: "Admin" },
 ];
+
+// Only show Admin link in development mode
+const navLinks =
+  process.env.NODE_ENV === "development"
+    ? [...baseNavLinks, { href: "/admin", label: "Admin" }]
+    : baseNavLinks;
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);

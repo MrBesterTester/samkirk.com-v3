@@ -4,6 +4,9 @@ const nextConfig: NextConfig = {
   // Enable standalone output for Docker deployment
   output: "standalone",
 
+  // Disable the dev indicator in the corner
+  devIndicators: false,
+
   // Redirect www to apex domain
   async redirects() {
     return [
