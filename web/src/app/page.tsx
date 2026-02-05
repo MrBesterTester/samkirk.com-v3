@@ -1,17 +1,38 @@
+import Image from "next/image";
 import Link from "next/link";
 
 export default function Home() {
   return (
     <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
       {/* Hero Section */}
-      <section className="text-center">
-        <h1 className="text-4xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50 sm:text-5xl">
-          Hi, I&apos;m Sam Kirk
-        </h1>
-        <p className="mt-6 text-xl leading-8 text-zinc-600 dark:text-zinc-400">
-          Software engineer with expertise in AI/ML, full-stack development, and
-          building products that solve real problems.
-        </p>
+      <section className="relative">
+        <div className="flex flex-col items-center md:flex-row md:items-start md:gap-8">
+          {/* Profile Photo */}
+          <div className="mb-6 flex-shrink-0 md:mb-0">
+            <Image
+              src="/profile-photo.jpg"
+              alt="Sam Kirk"
+              width={192}
+              height={256}
+              className="w-40 md:w-48 rounded-lg border-4 border-blue-400/30 shadow-lg"
+              priority
+            />
+          </div>
+
+          {/* Text Content */}
+          <div className="text-center md:text-left">
+            <h1 className="text-4xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50 sm:text-5xl">
+              Sam Kirk
+            </h1>
+            <p className="mt-2 text-lg text-zinc-500 dark:text-zinc-400">
+              Fremont, California
+            </p>
+            <p className="mt-4 text-xl leading-8 text-zinc-600 dark:text-zinc-400">
+              Software engineer with expertise in AI/ML, full-stack development,
+              and building products that solve real problems.
+            </p>
+          </div>
+        </div>
       </section>
 
       {/* Quick Actions for Hiring Managers */}
