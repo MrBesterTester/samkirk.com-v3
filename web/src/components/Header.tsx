@@ -45,6 +45,9 @@ export function Header() {
           className="text-xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50"
         >
           Sam Kirk
+          <span className="hidden sm:inline text-base font-normal text-zinc-500 dark:text-zinc-400">
+            {" "}&ndash; Fremont, California
+          </span>
         </Link>
 
         {/* Desktop Navigation */}
