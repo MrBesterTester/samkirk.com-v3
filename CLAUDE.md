@@ -7,18 +7,49 @@ This project follows the **Dylan Davis 50+ method** with three core documents:
 - `docs/BLUEPRINT.md` - How to build it (step-by-step)
 - `docs/TODO.md` - Roadmap with checkboxes
 
+## Document Sets
+
+The project supports multiple document sets using a prefix convention:
+- **Default**: `docs/SPECIFICATION.md`, `docs/BLUEPRINT.md`, `docs/TODO.md`
+- **Prefixed**: `docs/{prefix}-SPECIFICATION.md`, `docs/{prefix}-BLUEPRINT.md`, `docs/{prefix}-TODO.md`
+- **Current prefixed set**: `v2-upgrade`
+
 ## When User Says "Continue" or "Continue with Step X.Y"
 
 **REQUIRED**: Before implementing any step, read all three documents:
-1. Read `docs/SPECIFICATION.md` for requirements context
-2. Read `docs/BLUEPRINT.md` for implementation guidance
-3. Read `docs/TODO.md` to find the specific step and its checklist items
+1. Read `docs/SPECIFICATION.md` for requirements context (or `docs/{prefix}-SPECIFICATION.md`)
+2. Read `docs/BLUEPRINT.md` for implementation guidance (or `docs/{prefix}-BLUEPRINT.md`)
+3. Read `docs/TODO.md` to find the specific step and its checklist items (or `docs/{prefix}-TODO.md`)
 
 Then:
 1. Find the step in TODO.md
 2. Implement each checklist item
 3. Run tests as specified
 4. Check off completed items in TODO.md
+
+## Dual Workflow: do-work + Dylan Davis
+
+This project uses the **do-work** skill for autonomous execution, bridged from the Dylan Davis methodology.
+
+### Planned Work (spec → blueprint → todo → queue → autonomous)
+1. Create docs: `/create-spec` → `/create-blueprint` → `/create-todo`
+2. Ingest into queue: `/ingest-todo` (converts TODO steps into do-work REQ files)
+3. Process autonomously: `do work run` (processes the queue)
+4. After completion: check off completed TODO items using `source_step` frontmatter from archived REQs
+
+### Ad-hoc Work (direct to queue)
+For bugs, ideas, or features outside any TODO cycle:
+- `do work fix the header overflow`
+- `do work add dark mode toggle`
+
+### Manual Fallback (human-in-the-loop)
+For steps needing visual testing, debugging, or human judgment:
+- `start step X.Y` or `start step X.Y v2-upgrade`
+- `continue step X.Y` or `continue step X.Y v2-upgrade`
+
+### Git Integration
+- do-work commits locally per REQ (granular history on working branch)
+- Use existing squash-push workflow to clean up before pushing to remote
 
 ## Model Preferences (from TODO.md)
 

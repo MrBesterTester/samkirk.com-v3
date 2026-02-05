@@ -6,3 +6,5 @@ export { ReCaptcha, CaptchaGate } from "./ReCaptcha";
 export type { ReCaptchaProps, CaptchaGateProps } from "./ReCaptcha";
 export { ToolGate } from "./ToolGate";
 export type { ToolGateProps } from "./ToolGate";
+export { ToolPreview } from "./ToolPreview";
+export type { ToolPreviewProps } from "./ToolPreview";

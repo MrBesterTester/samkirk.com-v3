@@ -1,0 +1,59 @@
+---
+id: REQ-010
+title: "Add Song Dedication full embed"
+status: pending
+created_at: 2026-02-05T15:30:00-08:00
+user_request: UR-001
+source_step: "2.6"
+source_doc: "docs/v2-upgrade-TODO.md"
+blueprint_ref: "docs/v2-upgrade-BLUEPRINT.md"
+model_hint: "Opus 4.5"
+batch: "v2-upgrade-phase-2"
+related: [REQ-005, REQ-006, REQ-007, REQ-008, REQ-009]
+---
+
+# Add Song Dedication full embed (Step 2.6)
+
+## What
+Embed the complete song dedication content on the home page, including lyrics display and audio player/link, styled to fit the single-scroll aesthetic.
+
+## Checklist
+- [ ] **[Opus 4.5]** Embed complete song dedication content
+- [ ] **[Opus 4.5]** Include lyrics display
+- [ ] **[Opus 4.5]** Include audio player/link
+- [ ] **[Opus 4.5]** Style to fit single-scroll aesthetic
+- [ ] **[Gemini 3 Pro]** TEST: Visual inspection, audio playback
+
+## Blueprint Guidance
+### 2.6 Add Song Dedication full embed
+
+- **Goal**: Embed complete song dedication on home page
+- **Acceptance criteria**:
+  - Lyrics display fully
+  - Audio embed/link works
+  - Styled consistently with page
+- **Test plan**: Visual inspection, audio playback
+- **Prompt**:
+
+```text
+Add Song Dedication section to home page:
+
+- Embed the full content from /song-dedication page
+- Include lyrics and audio player/link
+- Style to fit the single-scroll home page aesthetic
+
+Consider: Extract shared content to a component if duplicating between
+home page and /song-dedication route.
+```
+
+## Context
+- **Document set**: v2-upgrade
+- **Phase**: 2 — Home Page Redesign
+- **Specification**: See docs/v2-upgrade-SPECIFICATION.md for full requirements
+- **Model recommendation**: Opus 4.5 (advisory — use if your tool supports model selection)
+
+## Dependencies
+No direct dependency on other Phase 2 steps beyond page ordering. May share content with existing /song-dedication page.
+
+---
+*Source: docs/v2-upgrade-TODO.md, Step 2.6*

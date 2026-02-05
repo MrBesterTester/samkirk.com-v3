@@ -13,3 +13,6 @@ coverage/
 # Playwright
 test-results/
 .playwright-mcp/
+
+# do-work (transient working directory)
+do-work/working/
