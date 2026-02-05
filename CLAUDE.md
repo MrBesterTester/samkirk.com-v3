@@ -45,6 +45,11 @@ Remind the user which model is recommended for the current step:
 5. **Avoid Gemini Pro 3 for file edits**: It may overwrite files with minimal content
 6. **Always validate results**: After completing any action, verify with some form of testing (run the relevant test suite, check a command's effect, etc.) (Boris Cherny)
 
+## Browser Automation
+
+- **Playwright MCP server** (`--browser chrome`): Use for test automation, generally in headless mode
+- **Claude in Chrome extension**: Use for UI debugging, visual inspection, and making code changes
+
 ## Git Workflow
 
 - Never push working branch directly
