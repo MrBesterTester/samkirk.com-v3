@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { ToolPreview } from "@/components";
 
 export default function Home() {
   return (
@@ -45,41 +46,36 @@ export default function Home() {
         </p>
 
         <div className="mt-8 grid gap-6 sm:grid-cols-3">
-          <Link
-            href="/tools/fit"
-            className="group rounded-xl border border-zinc-200 bg-white p-6 shadow-sm transition-all hover:border-blue-300 hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-blue-700"
-          >
-            <h3 className="text-lg font-semibold text-zinc-900 group-hover:text-blue-600 dark:text-zinc-50 dark:group-hover:text-blue-400">
-              How Do I Fit?
-            </h3>
-            <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
-              Get a detailed fit analysis with scoring and rationale.
-            </p>
-          </Link>
-
-          <Link
-            href="/tools/resume"
-            className="group rounded-xl border border-zinc-200 bg-white p-6 shadow-sm transition-all hover:border-blue-300 hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-blue-700"
-          >
-            <h3 className="text-lg font-semibold text-zinc-900 group-hover:text-blue-600 dark:text-zinc-50 dark:group-hover:text-blue-400">
-              Custom Resume
-            </h3>
-            <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
-              Generate a tailored resume for your specific role.
-            </p>
-          </Link>
-
-          <Link
-            href="/tools/interview"
-            className="group rounded-xl border border-zinc-200 bg-white p-6 shadow-sm transition-all hover:border-blue-300 hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-blue-700"
-          >
-            <h3 className="text-lg font-semibold text-zinc-900 group-hover:text-blue-600 dark:text-zinc-50 dark:group-hover:text-blue-400">
-              Interview Me
-            </h3>
-            <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
-              Ask questions about my experience and background.
-            </p>
-          </Link>
+          <ToolPreview
+            title="How Do I Fit?"
+            description="Get a detailed fit analysis with scoring and rationale."
+            ctaText="Analyze Fit"
+            ctaLink="/tools/fit"
+          />
+          <ToolPreview
+            title="Custom Resume"
+            description="Generate a tailored resume for your specific role."
+            ctaText="Generate Resume"
+            ctaLink="/tools/resume"
+          />
+          <ToolPreview
+            title="Interview Me"
+            description="Ask questions about my experience and background."
+            ctaText="Start Interview"
+            ctaLink="/tools/interview"
+            previewContent={
+              <div className="space-y-2 text-sm">
+                <p className="font-medium text-zinc-700 dark:text-zinc-300">
+                  Q: What&apos;s your experience with AI?
+                </p>
+                <p className="text-zinc-600 dark:text-zinc-400">
+                  A: I&apos;ve built LLM-powered tools including this site&apos;s
+                  interview and fit-analysis features using Vertex AI and
+                  prompt engineering.
+                </p>
+              </div>
+            }
+          />
         </div>
       </section>
 
