@@ -98,6 +98,37 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Photo Fun */}
+      <section className="mt-16">
+        <h2 className="text-center text-2xl font-semibold text-zinc-900 dark:text-zinc-50">
+          Photo Fun
+        </h2>
+        <p className="mt-2 text-center text-zinc-600 dark:text-zinc-400">
+          AI-powered photo editing using Google Gemini.
+        </p>
+
+        <div className="mt-8 flex justify-center">
+          <div className="group rounded-xl border border-zinc-200 bg-white p-6 shadow-sm transition-all hover:border-blue-300 hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-blue-700">
+            <h3 className="text-lg font-semibold text-zinc-900 group-hover:text-blue-600 dark:text-zinc-50 dark:group-hover:text-blue-400">
+              Photo Fun
+            </h3>
+            <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
+              AI-powered photo editing using Google Gemini. Transform your photos
+              with artistic styles like Professional, Claymation, Cyberpunk, and
+              Pencil Sketch.
+            </p>
+            <a
+              href="https://photo-fun.samkirk.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-4 inline-block text-sm font-medium text-accent hover:text-accent-hover transition-colors"
+            >
+              Try Photo Fun &rarr;
+            </a>
+          </div>
+        </div>
+      </section>
+
       {/* Explore Section */}
       <section className="mt-16">
         <h2 className="text-center text-2xl font-semibold text-zinc-900 dark:text-zinc-50">

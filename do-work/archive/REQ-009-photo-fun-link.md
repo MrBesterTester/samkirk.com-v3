@@ -1,7 +1,10 @@
 ---
 id: REQ-009
 title: "Add Photo Fun link section"
-status: pending
+status: completed
+completed_at: 2026-02-05T16:28:00-08:00
+claimed_at: 2026-02-05T16:24:00-08:00
+route: A
 created_at: 2026-02-05T15:30:00-08:00
 user_request: UR-001
 source_step: "2.5"
@@ -56,3 +59,37 @@ No direct dependency on other Phase 2 steps beyond page ordering.
 
 ---
 *Source: docs/v2-upgrade-TODO.md, Step 2.5*
+
+---
+
+## Triage
+
+**Route: A** - Simple
+
+**Reasoning:** Clear content, specific text and link, page pattern established from previous REQs. Direct implementation.
+
+**Planning:** Not required
+
+## Plan
+
+**Planning not required** - Route A: Direct implementation
+
+Rationale: Simple section addition with explicit heading, description, and external link. Pattern well established from REQ-008.
+
+*Skipped by work action*
+
+## Implementation Summary
+
+- Added "Photo Fun" section to page.tsx between Dance Menu and Explore More
+- Manual card (matching ToolPreview styling) with external `<a>` tag for target="_blank" support
+- Description: AI-powered photo editing with artistic styles
+- CTA: "Try Photo Fun" → https://photo-fun.samkirk.com (new tab, noopener noreferrer)
+
+*Completed by work action (Route A)*
+
+## Testing
+
+**Tests run:** `npx vitest run src/app/page.test.tsx`
+**Result:** ✓ 4/4 relevant tests passing (1 pre-existing failure unrelated)
+
+*Verified by work action*
