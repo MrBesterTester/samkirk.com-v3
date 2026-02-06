@@ -61,6 +61,8 @@ If routing is genuinely unclear AND multi-word content was provided:
 These signal "process the queue":
 run, go, start, begin, work, process, execute, build, continue, resume
 
+**Flags:** Action verbs may include `--limit N` to cap how many requests are processed (e.g., `do work run --limit 5`). Pass the limit value through to the work action's Step 9 loop logic.
+
 ### Verify Verbs (→ Verify)
 
 These signal "check request quality":
@@ -96,6 +98,8 @@ These signal "add a new task":
 - `do work` → "Ready to process the queue?" (confirmation)
 - `do work run` → Starts work action immediately
 - `do work go` → Starts work action immediately
+- `do work run --limit 5` → Starts work action, stops after 5 requests
+- `do work run --limit 3` → Starts work action, stops after 3 requests
 
 ### Routes to Verify
 

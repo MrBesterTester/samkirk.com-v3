@@ -902,9 +902,15 @@ If your platform standardizes co-author lines, use its preferred identity. For C
 
 After archiving and committing:
 
-1. **Re-check** root `do-work/` folder for `REQ-*.md` files (fresh check, not cached list)
-2. If found: Report what was completed, then start Step 1 again
-3. If empty: **Run the cleanup action** (see [cleanup action](./cleanup.md)), then report final summary and exit
+1. **Check the limit** — if `--limit N` was specified and you've completed N requests, treat this as "queue empty" and go to step 3
+2. **Re-check** root `do-work/` folder for `REQ-*.md` files (fresh check, not cached list)
+3. If found (and under limit): Report what was completed, then start Step 1 again
+4. If empty (or limit reached): **Run the cleanup action** (see [cleanup action](./cleanup.md)), then report final summary and exit
+
+When exiting due to `--limit`, include the limit in the summary:
+```
+Limit reached (3/3). 10 requests remain in queue.
+```
 
 The cleanup action consolidates the archive — closing any UR folders where all REQs are now complete, moving loose REQ files into their UR folders, and organizing legacy files. This catches any consolidation that was missed during individual request archival.
 
@@ -933,6 +939,7 @@ Use this checklist to ensure you don't skip critical steps:
 □ Step 7: If context_ref exists (legacy) → check if all related REQs archived → move CONTEXT to archive/
 □ Step 7: If neither → mv do-work/working/REQ-XXX.md do-work/archive/
 □ Step 8: git add -A && git commit (if git repo)
+□ Step 9: Check --limit (if set and reached, treat as done)
 □ Step 9: Check for more requests, loop or exit
 □ Step 9: If exiting: Run cleanup action (close completed URs, consolidate loose REQs)
 ```
@@ -1034,6 +1041,9 @@ Completed.
 
 ### `do work`
 Process all pending requests in order.
+
+### `do work run --limit 5`
+Process at most 5 requests, then stop. Useful for managing context window usage across sessions. The limit is checked after each request completes — partially-processed requests always finish.
 
 ### `do work REQ-005` (future enhancement)
 Process a specific request by number, regardless of status.
