@@ -4,6 +4,12 @@ What's new, what's better, what's different. Most recent stuff on top.
 
 ---
 
+## 0.10.2 — The Off-by-One (2026-02-06)
+
+Step 9's limit-reached branch said "go to step 3" — which was the "keep looping" branch, not the exit. Fixed the reference to point to step 4 (cleanup and exit). Without this, an agent hitting the limit could loop instead of stopping.
+
+- Fixed step reference in Step 9 item 1: "go to step 3" → "go to step 4"
+
 ## 0.10.1 — The Orderly (2026-02-06)
 
 Frontmatter fields kept ending up scrambled — `completed_at` before `created_at`, claim fields above do-action fields. The schema defined the right order but the step snippets only showed changed fields, so agents inserted them wherever. Now every frontmatter snippet in work.md shows the full field context with explicit "preserve field order" notes, plus a dedicated Field Ordering Rule section.

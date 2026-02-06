@@ -928,7 +928,7 @@ If your platform standardizes co-author lines, use its preferred identity. For C
 
 After archiving and committing:
 
-1. **Check the limit** — if `--limit N` was specified and you've completed N requests, treat this as "queue empty" and go to step 3
+1. **Check the limit** — if `--limit N` was specified and you've completed N requests, treat this as "queue empty" and go to step 4
 2. **Re-check** root `do-work/` folder for `REQ-*.md` files (fresh check, not cached list)
 3. If found (and under limit): Report what was completed, then start Step 1 again
 4. If empty (or limit reached): **Run the cleanup action** (see [cleanup action](./cleanup.md)), then report final summary and exit
