@@ -13,7 +13,8 @@
     "lint": "eslint",
     "smoke:gcp": "npx tsx scripts/smoke-gcp.ts",
     "seed:resume": "npx tsx scripts/seed-resume.ts",
-    "validate:resume": "npx tsx scripts/validate-resume.ts"
+    "validate:resume": "npx tsx scripts/validate-resume.ts",
+    "test:all": "npx tsx scripts/test-all.ts"
   },
   "dependencies": {
     "@google-cloud/firestore": "^8.2.0",
