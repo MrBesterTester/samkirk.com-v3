@@ -1,7 +1,10 @@
 ---
 id: REQ-031
 title: "Validate do-work integration"
-status: pending
+status: completed
+claimed_at: 2026-02-06T14:25:00-08:00
+route: A
+completed_at: 2026-02-06T14:30:00-08:00
 created_at: 2026-02-06T12:00:00-08:00
 user_request: UR-002
 source_step: "7.1"
@@ -37,3 +40,41 @@ This step is self-referential (it validates the ingest process that created thes
 
 ---
 *Source: docs/master-test-TODO.md, Step 7.1*
+
+---
+
+## Triage
+
+**Route: A** - Simple
+
+**Reasoning:** This is a verification task — checking that the existing REQ files have correct frontmatter and the ingest process worked. No code changes needed, just validation of existing state.
+
+**Planning:** Not required
+
+## Plan
+
+**Planning not required** - Route A: Direct implementation
+
+Rationale: Simple verification of existing REQ file frontmatter and workflow integration. No code to write, just inspect and validate.
+
+*Skipped by work action*
+
+## Implementation Summary
+
+Verification-only task — no code changes made. All 4 checks passed:
+
+1. **REQ files created by ingest**: 16 REQ files found with `source_doc: "docs/master-test-TODO.md"` (13 archived, 2 pending, 1 in-progress)
+2. **Frontmatter quality**: All 6 required fields present in all sampled files (`source_step`, `source_doc`, `blueprint_ref`, `model_hint`, `batch`, `user_request`)
+3. **Companion doc resolution**: All 3 master-test companion docs exist (`master-test-SPECIFICATION.md`, `master-test-BLUEPRINT.md`, `master-test-TODO.md`)
+4. **CLAUDE.md step workflow**: Instructions explicitly require reading all 3 docs with `{prefix}` pattern support
+
+*Completed by work action (Route A)*
+
+## Testing
+
+**Tests run:** 4 verification checks (file existence, frontmatter inspection, companion doc resolution, CLAUDE.md review)
+**Result:** All 4 checks PASS
+
+No automated tests needed — this is a validation task verifying the do-work ingest integration.
+
+*Verified by work action*
