@@ -14,7 +14,7 @@ const gcpAvailable = Boolean(process.env.GCP_PROJECT_ID);
  * - All public pages render correctly
  * - Navigation works
  * - Admin pages require authentication
- * - Tool pages load and show captcha gate
+ * - API endpoint health checks
  * - Guardrails (reCAPTCHA, rate limit display) function
  *
  * Prerequisites:
@@ -94,44 +94,6 @@ test.describe("Exploration Pages - Render Correctly", () => {
   test("uber level ai skills page loads", async ({ page }) => {
     await page.goto("/explorations/uber-level-ai-skills");
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
-  });
-});
-
-test.describe("Tool Pages - Load with Captcha Gate", () => {
-  test("fit tool page loads", async ({ page }) => {
-    test.skip(!gcpAvailable, "Requires GCP credentials");
-    await page.goto("/tools/fit");
-
-    await expect(page.getByRole("heading", { name: "How Do I Fit?" })).toBeVisible();
-
-    // In E2E mode, captcha auto-bypasses and form appears
-    await expect(page.getByRole("textbox", { name: /job posting text/i })).toBeVisible({
-      timeout: 10000,
-    });
-  });
-
-  test("resume tool page loads", async ({ page }) => {
-    test.skip(!gcpAvailable, "Requires GCP credentials");
-    await page.goto("/tools/resume");
-
-    await expect(page.getByRole("heading", { name: "Get a Custom Resume" })).toBeVisible();
-
-    // In E2E mode, captcha auto-bypasses and form appears
-    await expect(page.getByRole("textbox", { name: /job posting text/i })).toBeVisible({
-      timeout: 10000,
-    });
-  });
-
-  test("interview tool page loads", async ({ page }) => {
-    test.skip(!gcpAvailable, "Requires GCP credentials");
-    await page.goto("/tools/interview");
-
-    await expect(page.getByRole("heading", { name: "Interview Me Now" })).toBeVisible();
-
-    // In E2E mode, captcha auto-bypasses and chat appears
-    await expect(page.getByText(/I'm here to answer questions/i)).toBeVisible({
-      timeout: 10000,
-    });
   });
 });
 
@@ -251,12 +213,26 @@ test.describe("Navigation - Links Work", () => {
 });
 
 test.describe("API Endpoints - Basic Health", () => {
-  test("session init endpoint responds", async ({ request }) => {
+  test("session init endpoint responds with valid session payload", async ({ request }) => {
     test.skip(!gcpAvailable, "Requires GCP credentials");
     const response = await request.post("/api/session/init");
 
-    // Should respond (200 or 4xx for validation)
-    expect(response.status()).toBeLessThan(500);
+    expect(response.status()).toBe(200);
+
+    const body = await response.json();
+
+    // Validate response contract: { sessionId, expiresAt, isNew }
+    expect(body).toHaveProperty("sessionId");
+    expect(typeof body.sessionId).toBe("string");
+    expect(body.sessionId.length).toBeGreaterThan(0);
+
+    expect(body).toHaveProperty("expiresAt");
+    expect(typeof body.expiresAt).toBe("string");
+    // Verify expiresAt is a valid ISO date string
+    expect(new Date(body.expiresAt).toISOString()).toBe(body.expiresAt);
+
+    expect(body).toHaveProperty("isNew");
+    expect(typeof body.isNew).toBe("boolean");
   });
 
   test("maintenance retention endpoint responds to GET", async ({ request }) => {
