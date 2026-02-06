@@ -129,6 +129,128 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Song Dedication */}
+      <section className="mt-16">
+        <h2 className="text-center text-2xl font-semibold text-zinc-900 dark:text-zinc-50">
+          Song Dedication
+        </h2>
+        <p className="mt-2 text-center text-zinc-600 dark:text-zinc-400">
+          A special dedication through music.
+        </p>
+
+        <div className="mt-8 rounded-xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+          {/* About */}
+          <p className="text-zinc-600 dark:text-zinc-400">
+            This song holds a special meaning. The story behind this dedication
+            will be shared here.
+          </p>
+
+          {/* Audio Player */}
+          <div className="mt-6">
+            <div className="flex items-center justify-center rounded-lg bg-zinc-100 py-8 dark:bg-zinc-800">
+              <div className="text-center">
+                <svg
+                  className="mx-auto h-10 w-10 text-zinc-400 dark:text-zinc-500"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  aria-hidden="true"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M9 9l10.5-3m0 6.553v3.75a2.25 2.25 0 01-1.632 2.163l-1.32.377a1.803 1.803 0 11-.99-3.467l2.31-.66a2.25 2.25 0 001.632-2.163zm0 0V2.25L9 5.25v10.303m0 0v3.75a2.25 2.25 0 01-1.632 2.163l-1.32.377a1.803 1.803 0 01-.99-3.467l2.31-.66A2.25 2.25 0 009 15.553z"
+                  />
+                </svg>
+                <p className="mt-2 text-sm text-zinc-500 dark:text-zinc-400">
+                  Audio player will be embedded here
+                </p>
+              </div>
+            </div>
+            <p className="mt-3 text-center text-sm text-zinc-500 dark:text-zinc-400">
+              Or listen on{" "}
+              <a
+                href="#"
+                className="font-medium text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300"
+              >
+                Spotify
+              </a>{" "}
+              /{" "}
+              <a
+                href="#"
+                className="font-medium text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300"
+              >
+                YouTube
+              </a>
+            </p>
+          </div>
+
+          {/* Lyrics */}
+          <div className="mt-6 space-y-4">
+            <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
+              Lyrics
+            </h3>
+
+            {/* Verse 1 */}
+            <div>
+              <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
+                Verse 1
+              </p>
+              <p className="whitespace-pre-line text-sm text-zinc-700 dark:text-zinc-300">
+                Song lyrics will appear here.
+                {"\n"}Each line of the verse
+                {"\n"}will be displayed
+                {"\n"}with proper formatting.
+              </p>
+            </div>
+
+            {/* Chorus */}
+            <div className="rounded-lg bg-zinc-50 p-3 dark:bg-zinc-800/50">
+              <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
+                Chorus
+              </p>
+              <p className="whitespace-pre-line text-sm font-medium text-zinc-800 dark:text-zinc-200">
+                The chorus will stand out
+                {"\n"}with a subtle background
+                {"\n"}to differentiate it from verses.
+              </p>
+            </div>
+
+            {/* Verse 2 */}
+            <div>
+              <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
+                Verse 2
+              </p>
+              <p className="whitespace-pre-line text-sm text-zinc-700 dark:text-zinc-300">
+                Additional verses
+                {"\n"}follow the same pattern
+                {"\n"}maintaining consistency.
+              </p>
+            </div>
+          </div>
+
+          {/* Song Info */}
+          <div className="mt-6 border-t border-zinc-100 pt-4 text-center text-sm text-zinc-500 dark:border-zinc-800 dark:text-zinc-400">
+            <p>
+              <span className="font-medium">Song Title</span> by{" "}
+              <span className="font-medium">Artist Name</span>
+            </p>
+            <p className="mt-1">Album Name &bull; Year</p>
+          </div>
+
+          {/* Link to full page */}
+          <div className="mt-4 text-center">
+            <Link
+              href="/song-dedication"
+              className="text-sm font-medium text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300"
+            >
+              View full dedication page &rarr;
+            </Link>
+          </div>
+        </div>
+      </section>
+
       {/* Explore Section */}
       <section className="mt-16">
         <h2 className="text-center text-2xl font-semibold text-zinc-900 dark:text-zinc-50">
