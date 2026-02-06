@@ -1,5 +1,26 @@
 # Plan: Master Test Suite for samkirk-v3
 
+## Table of Contents
+
+- [Goal](#goal)
+- [Methodology Alignment](#methodology-alignment)
+- [Task A: Master Test Runner](#task-a-master-test-runner)
+  - [Files to Create](#files-to-create)
+  - [Files to Modify](#files-to-modify)
+  - [Implementation Sequence](#implementation-sequence)
+  - [Expected Output](#expected-output)
+- [Test Results Archive](#test-results-archive-traceability-layer)
+  - [The Problem Today](#the-problem-today)
+  - [The Design: Two-Layer Archive](#the-design-two-layer-archive)
+  - [Cross-linking Mechanism](#cross-linking-mechanism)
+  - [What Happens to TEST-RESULTS.md](#what-happens-to-docstest-resultsmd)
+  - [Integration with test-all.ts](#integration-with-test-allts)
+- [Task B: Pre-existing Failure Triage](#task-b-pre-existing-failure-triage-separate-follow-up)
+  - [Inventory of Pre-existing Failures](#inventory-of-pre-existing-failures)
+  - [Triage Questions](#triage-questions-for-task-b)
+  - [Potential Outcomes per Test](#potential-outcomes-per-test)
+- [What This Plan Does NOT Do](#what-this-plan-does-not-do)
+
 ## Goal
 
 Create a single-entry-point test runner that orchestrates all test suites with structured pass/fail/skip output. Pre-existing failures get temporary skip guards so the runner exits cleanly; a separate follow-up task will investigate whether each should be fixed, rewritten, or deleted.
