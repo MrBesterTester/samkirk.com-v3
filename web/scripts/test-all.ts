@@ -25,7 +25,7 @@
 
 import { spawn, type ChildProcess } from "child_process";
 import { resolve } from "path";
-import { readdirSync, readFileSync, existsSync } from "fs";
+import { readdirSync, readFileSync, existsSync, mkdirSync, writeFileSync } from "fs";
 import { config } from "dotenv";
 
 // Load .env.local from the web directory (before any GCP checks)
@@ -721,20 +721,185 @@ function printTestIndex(entries: TestFileEntry[]): void {
 }
 
 // ============================================================================
-// Archive Stub
+// Archive
 // ============================================================================
 
-/** Stub for archive writing (deferred to REQ-023) */
-function writeArchive(
-  _results: SuiteResult[],
-  _ref: string | null,
-  noArchive: boolean,
-): void {
-  if (noArchive) {
+/** Map suite name to a filesystem-safe slug for log filenames */
+function suiteSlug(name: string): string {
+  return name.toLowerCase().replace(/\s+/g, "-");
+}
+
+/** Map suite name to the flag slug used in suites_run frontmatter */
+function suiteFlagSlug(name: string): string {
+  const map: Record<string, string> = {
+    "Unit Tests": "unit",
+    "E2E Tests": "e2e",
+    "E2E Real LLM": "e2e-real",
+    "GCP Smoke": "smoke",
+  };
+  return map[name] ?? suiteSlug(name);
+}
+
+/** Format a Date as an ISO-8601 string with PST offset (-08:00) */
+function toPstIso(date: Date): string {
+  // Convert to PST (UTC-8)
+  const pstOffsetMs = -8 * 60 * 60 * 1000;
+  const pst = new Date(date.getTime() + pstOffsetMs + date.getTimezoneOffset() * 60 * 1000);
+
+  const pad2 = (n: number): string => String(n).padStart(2, "0");
+  const y = pst.getFullYear();
+  const mo = pad2(pst.getMonth() + 1);
+  const d = pad2(pst.getDate());
+  const h = pad2(pst.getHours());
+  const mi = pad2(pst.getMinutes());
+  const s = pad2(pst.getSeconds());
+
+  return `${y}-${mo}-${d}T${h}:${mi}:${s}-08:00`;
+}
+
+/** Format a Date as a human-readable PST string */
+function toPstHuman(date: Date): string {
+  const pstOffsetMs = -8 * 60 * 60 * 1000;
+  const pst = new Date(date.getTime() + pstOffsetMs + date.getTimezoneOffset() * 60 * 1000);
+
+  const pad2 = (n: number): string => String(n).padStart(2, "0");
+  const y = pst.getFullYear();
+  const mo = pad2(pst.getMonth() + 1);
+  const d = pad2(pst.getDate());
+  const h = pad2(pst.getHours());
+  const mi = pad2(pst.getMinutes());
+  const s = pad2(pst.getSeconds());
+
+  return `${y}-${mo}-${d} ${h}:${mi}:${s} PST`;
+}
+
+/** Build a filesystem-safe directory name from a Date in PST */
+function toPstDirName(date: Date): string {
+  const iso = toPstIso(date);
+  // Extract "YYYY-MM-DDTHH:MM:SS" and replace colons and T
+  return iso.slice(0, 19).replace("T", "_").replace(/:/g, "-");
+}
+
+/** Options bag for writeArchive */
+interface ArchiveOptions {
+  results: SuiteResult[];
+  ref: string | null;
+  release: boolean;
+  noArchive: boolean;
+  gcpAvailable: boolean;
+  testIndex: TestFileEntry[];
+}
+
+/** Write test-run archive: summary.md + per-suite .log files */
+function writeArchive(opts: ArchiveOptions): void {
+  if (opts.noArchive) {
     log("Archive writing skipped (--no-archive)");
     return;
   }
-  log("Archive writing not yet implemented");
+
+  const now = new Date();
+  const webDir = resolve(__dirname, "..");
+  const timestampDir = toPstDirName(now);
+  const archiveDir = resolve(webDir, "..", "do-work", "archive", "test-runs", timestampDir);
+
+  // Create archive directory
+  mkdirSync(archiveDir, { recursive: true });
+
+  // Determine overall status
+  const overallStatus = opts.results.some((r) => r.status === "failed") ? "fail" : "pass";
+
+  // Determine which suites were actually run (not skipped)
+  const suitesRun = opts.results
+    .filter((r) => r.status !== "skipped")
+    .map((r) => suiteFlagSlug(r.name));
+
+  // ---- Build summary.md ----
+  const frontmatterLines: string[] = [
+    "---",
+    `timestamp: ${toPstIso(now)}`,
+  ];
+  if (opts.ref) {
+    frontmatterLines.push(`triggered_by: ${opts.ref}`);
+  }
+  if (opts.release) {
+    frontmatterLines.push("release_candidate: true");
+  }
+  frontmatterLines.push(`gcp_available: ${opts.gcpAvailable}`);
+  frontmatterLines.push(`suites_run: [${suitesRun.join(", ")}]`);
+  frontmatterLines.push(`overall: ${overallStatus}`);
+  frontmatterLines.push("---");
+
+  const summaryLines: string[] = [
+    ...frontmatterLines,
+    "",
+    `# Test Run: ${toPstHuman(now)}`,
+    "",
+    "## Summary",
+    "",
+    "| Suite | Status | Passed | Failed | Skipped | Duration |",
+    "|-------|--------|--------|--------|---------|----------|",
+  ];
+
+  for (const r of opts.results) {
+    const status = r.status.toUpperCase();
+    const duration = formatDuration(r.durationMs);
+    summaryLines.push(
+      `| ${r.name} | ${status} | ${r.passed} | ${r.failed} | ${r.skipped} | ${duration} |`,
+    );
+  }
+
+  // Test index section
+  summaryLines.push("");
+  summaryLines.push("## Test Index");
+  summaryLines.push("");
+
+  if (opts.testIndex.length > 0) {
+    summaryLines.push("| File | Describe Blocks |");
+    summaryLines.push("|------|-----------------|");
+    for (const entry of opts.testIndex) {
+      const describes = entry.describes.length > 0 ? entry.describes.join(", ") : "(none)";
+      summaryLines.push(`| ${entry.path} | ${describes} |`);
+    }
+  } else {
+    summaryLines.push("No test files found.");
+  }
+
+  // Manual verifications section
+  summaryLines.push("");
+  summaryLines.push("## Manual Verifications (informational -- not gated)");
+  summaryLines.push("");
+  summaryLines.push("- [ ] VER-001: Visual inspect resume PDF layout");
+  summaryLines.push("- [ ] VER-002: OAuth flow in fresh browser session");
+  summaryLines.push("- [ ] VER-003: Cloud Run deployment serves traffic");
+
+  // Cross-references section
+  summaryLines.push("");
+  summaryLines.push("## Cross-references");
+  summaryLines.push("");
+  if (opts.ref) {
+    summaryLines.push(`- Triggered by: ${opts.ref}`);
+  }
+
+  // List raw log filenames
+  const logFiles = opts.results
+    .filter((r) => r.status !== "skipped" && r.output.length > 0)
+    .map((r) => `${suiteSlug(r.name)}.log`);
+  if (logFiles.length > 0) {
+    summaryLines.push(`- Raw logs: ${logFiles.join(", ")} (gitignored, local only)`);
+  }
+
+  // Write summary.md
+  const summaryPath = resolve(archiveDir, "summary.md");
+  writeFileSync(summaryPath, summaryLines.join("\n") + "\n", "utf-8");
+
+  // ---- Write per-suite log files ----
+  for (const r of opts.results) {
+    if (r.status === "skipped" || r.output.length === 0) continue;
+    const logPath = resolve(archiveDir, `${suiteSlug(r.name)}.log`);
+    writeFileSync(logPath, stripAnsi(r.output), "utf-8");
+  }
+
+  log(`Archive written to do-work/archive/test-runs/${timestampDir}/`, true);
 }
 
 // ============================================================================
@@ -825,8 +990,15 @@ async function main(): Promise<void> {
     printReleaseChecklist(results);
   }
 
-  // Archive stub
-  writeArchive(results, args.ref, args.noArchive);
+  // Write archive
+  writeArchive({
+    results,
+    ref: args.ref,
+    release: args.release,
+    noArchive: args.noArchive,
+    gcpAvailable,
+    testIndex,
+  });
 
   // Exit code
   const hasFailures = results.some((r) => r.status === "failed");
