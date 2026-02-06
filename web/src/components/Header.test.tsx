@@ -32,13 +32,15 @@ describe("Header", () => {
     });
     expect(songLinks.length).toBeGreaterThanOrEqual(1);
 
+    const photoFunLinks = screen.getAllByRole("link", {
+      name: /^photo fun$/i,
+    });
+    expect(photoFunLinks.length).toBeGreaterThanOrEqual(1);
+
     const explorationsLinks = screen.getAllByRole("link", {
       name: /^explorations$/i,
     });
     expect(explorationsLinks.length).toBeGreaterThanOrEqual(1);
-
-    const adminLinks = screen.getAllByRole("link", { name: /^admin$/i });
-    expect(adminLinks.length).toBeGreaterThanOrEqual(1);
   });
 
   it("renders the mobile menu button", () => {
@@ -96,13 +98,15 @@ describe("Header", () => {
     });
     expect(songLinks[0]).toHaveAttribute("href", "/song-dedication");
 
+    const photoFunLinks = screen.getAllByRole("link", {
+      name: /^photo fun$/i,
+    });
+    expect(photoFunLinks[0]).toHaveAttribute("href", "/photo-fun");
+
     const explorationsLinks = screen.getAllByRole("link", {
       name: /^explorations$/i,
     });
     expect(explorationsLinks[0]).toHaveAttribute("href", "/explorations");
-
-    const adminLinks = screen.getAllByRole("link", { name: /^admin$/i });
-    expect(adminLinks[0]).toHaveAttribute("href", "/admin");
   });
 
   it("renders the desktop navigation", () => {
