@@ -1,7 +1,10 @@
 ---
 id: REQ-022
 title: "Add gitignore for raw logs"
-status: pending
+status: completed
+completed_at: 2026-02-06T14:04:00-08:00
+claimed_at: 2026-02-06T14:03:00-08:00
+route: A
 created_at: 2026-02-06T12:00:00-08:00
 user_request: UR-002
 source_step: "2.3"
@@ -38,3 +41,34 @@ Independent of other Phase 2 steps but logically part of the runner setup.
 
 ---
 *Source: docs/master-test-TODO.md, Step 2.3*
+
+---
+
+## Triage
+
+**Route: A** - Simple
+
+**Reasoning:** Single line addition to .gitignore. File and exact pattern are explicitly specified.
+
+**Planning:** Not required
+
+## Plan
+
+**Planning not required** - Route A: Direct implementation
+
+Rationale: Adding one gitignore pattern. No architectural decisions needed.
+
+*Skipped by work action*
+
+## Implementation Summary
+
+- Added `do-work/archive/test-runs/*/*.log` to `.gitignore` alongside existing do-work entries
+
+*Completed by work action (Route A)*
+
+## Testing
+
+**Tests run:** N/A
+**Result:** Gitignore pattern change, no automated tests needed. Will be verified during Phase 4 verification run.
+
+*Verified by work action*
