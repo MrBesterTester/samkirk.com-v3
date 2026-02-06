@@ -25,6 +25,7 @@ const baseNavLinks = [
       { href: "/explorations/pocket-flow", label: "Pocket Flow" },
       { href: "/explorations/dance-instruction", label: "Dance Instruction" },
       { href: "/explorations/uber-level-ai-skills", label: "Uber Level AI Skills" },
+      { href: "/explorations/tensor-logic", label: "Tensor Logic" },
     ],
   },
 ];

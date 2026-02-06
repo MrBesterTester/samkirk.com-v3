@@ -22,6 +22,12 @@ const explorations = [
     title: "Uber Level AI Skills",
     description: "Advanced techniques for getting the most out of AI tools.",
   },
+  {
+    href: "/explorations/tensor-logic",
+    title: "Tensor Logic",
+    description:
+      "Educational interactive demo illustrating a unified programming paradigm bridging neural and symbolic AI.",
+  },
 ];
 
 export default function ExplorationsPage() {
