@@ -14,16 +14,16 @@
 
 ### 0.1 Define new color palette
 
-- [ ] **[Opus 4.5]** Design balanced color palette (v2 warmth + v3 clean)
-- [ ] **[Opus 4.5]** Define color tokens in `tailwind.config.ts`
-- [ ] **[Opus 4.5]** Document color usage guidelines
-- [ ] **[Opus 4.5]** Ensure dark mode compatibility
-- [ ] **[Gemini 3 Pro]** TEST: Visual inspection of color swatches
+- [x] **[Opus 4.5]** Design balanced color palette (v2 warmth + v3 clean)
+- [x] **[Opus 4.5]** Define color tokens in `tailwind.config.ts`
+- [x] **[Opus 4.5]** Document color usage guidelines
+- [x] **[Opus 4.5]** Ensure dark mode compatibility
+- [x] **[Gemini 3 Pro]** TEST: Visual inspection of color swatches
 
 ### 0.2 Copy profile photo asset
 
-- [ ] **[Codex/Opus]** Copy photo from v2 to `web/public/profile-photo.jpg`
-- [ ] **[Codex/Opus]** TEST: Verify image loads at `/profile-photo.jpg`
+- [x] **[Codex/Opus]** Copy photo from v2 to `web/public/profile-photo.jpg`
+- [x] **[Codex/Opus]** TEST: Verify image loads at `/profile-photo.jpg`
 
 ---
 
@@ -31,16 +31,16 @@
 
 ### 1.1 Update Header with location
 
-- [ ] **[Opus 4.5]** Add "Fremont, California" after "Sam Kirk" in header
-- [ ] **[Opus 4.5]** Hide/abbreviate location on mobile for space
-- [ ] **[Gemini 3 Pro]** TEST: Visual check on desktop and mobile viewports
+- [x] **[Opus 4.5]** Add "Fremont, California" after "Sam Kirk" in header
+- [x] **[Opus 4.5]** Hide/abbreviate location on mobile for space
+- [x] **[Gemini 3 Pro]** TEST: Visual check on desktop and mobile viewports
 
 ### 1.2 Update Footer with build date
 
-- [ ] **[Opus 4.5]** Add `"use client"` directive to Footer component
-- [ ] **[Opus 4.5]** Implement build date generation (v2 format, PST timezone)
-- [ ] **[Opus 4.5]** Style build date: `text-xs font-mono`
-- [ ] **[Gemini 3 Pro]** TEST: Verify footer shows correct PST time
+- [x] **[Opus 4.5]** Add `"use client"` directive to Footer component
+- [x] **[Opus 4.5]** Implement build date generation (v2 format, PST timezone)
+- [x] **[Opus 4.5]** Style build date: `text-xs font-mono`
+- [x] **[Gemini 3 Pro]** TEST: Verify footer shows correct PST time
 
 ---
 
@@ -48,50 +48,50 @@
 
 ### 2.1 Create Hero section with photo
 
-- [ ] **[Opus 4.5]** Redesign hero with profile photo positioning
-- [ ] **[Opus 4.5]** Photo: upper-left on desktop (absolute positioned)
-- [ ] **[Opus 4.5]** Photo: centered above text on mobile
-- [ ] **[Opus 4.5]** Add name, location, and tagline text
-- [ ] **[Gemini 3 Pro]** TEST: Compare with v2, test responsive behavior
+- [x] **[Opus 4.5]** Redesign hero with profile photo positioning
+- [x] **[Opus 4.5]** Photo: upper-left on desktop (absolute positioned)
+- [x] **[Opus 4.5]** Photo: centered above text on mobile
+- [x] **[Opus 4.5]** Add name, location, and tagline text
+- [x] **[Gemini 3 Pro]** TEST: Compare with v2, test responsive behavior
 
 ### 2.2 Create Tool Preview component
 
-- [ ] **[Opus 4.5]** Create `web/src/components/ToolPreview.tsx`
-- [ ] **[Opus 4.5]** Props: title, description, previewContent, ctaText, ctaLink
-- [ ] **[Opus 4.5]** Style with card, hover effects, consistent colors
-- [ ] **[Codex/Opus]** Export from `web/src/components/index.ts`
-- [ ] **[Codex/Opus]** TEST: Component renders correctly
+- [x] **[Opus 4.5]** Create `web/src/components/ToolPreview.tsx`
+- [x] **[Opus 4.5]** Props: title, description, previewContent, ctaText, ctaLink
+- [x] **[Opus 4.5]** Style with card, hover effects, consistent colors
+- [x] **[Codex/Opus]** Export from `web/src/components/index.ts`
+- [x] **[Codex/Opus]** TEST: Component renders correctly
 
 ### 2.3 Add Hiring Manager tools section
 
-- [ ] **[Opus 4.5]** Add "Hiring Manager?" section heading
-- [ ] **[Opus 4.5]** Create "How Do I Fit?" preview card with CTA
-- [ ] **[Opus 4.5]** Create "Custom Resume" preview card with CTA
-- [ ] **[Opus 4.5]** Create "Interview Me Now" preview with sample Q&A
-- [ ] **[Opus 4.5]** Layout: grid on desktop, stack on mobile
-- [ ] **[Gemini 3 Pro]** TEST: Click CTAs, verify navigation works
+- [x] **[Opus 4.5]** Add "Hiring Manager?" section heading
+- [x] **[Opus 4.5]** Create "How Do I Fit?" preview card with CTA
+- [x] **[Opus 4.5]** Create "Custom Resume" preview card with CTA
+- [x] **[Opus 4.5]** Create "Interview Me Now" preview with sample Q&A
+- [x] **[Opus 4.5]** Layout: grid on desktop, stack on mobile
+- [x] **[Gemini 3 Pro]** TEST: Click CTAs, verify navigation works
 
 ### 2.4 Add Dance Menu preview
 
-- [ ] **[Opus 4.5]** Add Dance Menu section heading
-- [ ] **[Opus 4.5]** Create preview/teaser content
-- [ ] **[Opus 4.5]** Add CTA linking to `/dance-menu`
-- [ ] **[Gemini 3 Pro]** TEST: Visual inspection, CTA navigation
+- [x] **[Opus 4.5]** Add Dance Menu section heading
+- [x] **[Opus 4.5]** Create preview/teaser content
+- [x] **[Opus 4.5]** Add CTA linking to `/dance-menu`
+- [x] **[Gemini 3 Pro]** TEST: Visual inspection, CTA navigation
 
 ### 2.5 Add Photo Fun link section
 
-- [ ] **[Opus 4.5]** Add Photo Fun section with heading
-- [ ] **[Opus 4.5]** Write description of AI photo editing features
-- [ ] **[Opus 4.5]** Add external link to photo-fun.samkirk.com (new tab)
-- [ ] **[Gemini 3 Pro]** TEST: Click link, verify external site opens
+- [x] **[Opus 4.5]** Add Photo Fun section with heading
+- [x] **[Opus 4.5]** Write description of AI photo editing features
+- [x] **[Opus 4.5]** Add external link to photo-fun.samkirk.com (new tab)
+- [x] **[Gemini 3 Pro]** TEST: Click link, verify external site opens
 
 ### 2.6 Add Song Dedication full embed
 
-- [ ] **[Opus 4.5]** Embed complete song dedication content
-- [ ] **[Opus 4.5]** Include lyrics display
-- [ ] **[Opus 4.5]** Include audio player/link
-- [ ] **[Opus 4.5]** Style to fit single-scroll aesthetic
-- [ ] **[Gemini 3 Pro]** TEST: Visual inspection, audio playback
+- [x] **[Opus 4.5]** Embed complete song dedication content
+- [x] **[Opus 4.5]** Include lyrics display
+- [x] **[Opus 4.5]** Include audio player/link
+- [x] **[Opus 4.5]** Style to fit single-scroll aesthetic
+- [x] **[Gemini 3 Pro]** TEST: Visual inspection, audio playback
 
 ---
 
@@ -99,30 +99,30 @@
 
 ### 3.1 Create Photo Fun link page
 
-- [ ] **[Opus 4.5]** Create `web/src/app/photo-fun/page.tsx`
-- [ ] **[Opus 4.5]** Add title, description, features list
-- [ ] **[Opus 4.5]** Add prominent CTA button to external site
-- [ ] **[Codex/Opus]** Add to Header navigation
-- [ ] **[Gemini 3 Pro]** TEST: Navigation, link functionality
+- [x] **[Opus 4.5]** Create `web/src/app/photo-fun/page.tsx`
+- [x] **[Opus 4.5]** Add title, description, features list
+- [x] **[Opus 4.5]** Add prominent CTA button to external site
+- [x] **[Codex/Opus]** Add to Header navigation
+- [x] **[Gemini 3 Pro]** TEST: Navigation, link functionality
 
 ### 3.2 Create Tensor Logic link page
 
-- [ ] **[Opus 4.5]** Create `web/src/app/explorations/tensor-logic/page.tsx`
-- [ ] **[Opus 4.5]** Add title, description of educational demo
-- [ ] **[Opus 4.5]** List features (8 examples, 5 AI paradigms)
-- [ ] **[Opus 4.5]** Add link to tensor-logic.samkirk.com
-- [ ] **[Opus 4.5]** Add reference to arXiv paper
-- [ ] **[Codex/Opus]** Update Explorations hub to include Tensor Logic
-- [ ] **[Codex/Opus]** Update Header navigation dropdown
-- [ ] **[Gemini 3 Pro]** TEST: Navigation from Explorations hub
+- [x] **[Opus 4.5]** Create `web/src/app/explorations/tensor-logic/page.tsx`
+- [x] **[Opus 4.5]** Add title, description of educational demo
+- [x] **[Opus 4.5]** List features (8 examples, 5 AI paradigms)
+- [x] **[Opus 4.5]** Add link to tensor-logic.samkirk.com
+- [x] **[Opus 4.5]** Add reference to arXiv paper
+- [x] **[Codex/Opus]** Update Explorations hub to include Tensor Logic
+- [x] **[Codex/Opus]** Update Header navigation dropdown
+- [x] **[Gemini 3 Pro]** TEST: Navigation from Explorations hub
 
 ### 3.3 Add descriptions to Exploration pages
 
-- [ ] **[Opus 4.5]** Add description to Category Theory page
-- [ ] **[Opus 4.5]** Add description to Pocket Flow page
-- [ ] **[Opus 4.5]** Add description to Dance Instruction page
-- [ ] **[Opus 4.5]** Add description to Uber Level AI Skills page
-- [ ] **[Gemini 3 Pro]** TEST: Visual inspection of each exploration page
+- [x] **[Opus 4.5]** Add description to Category Theory page
+- [x] **[Opus 4.5]** Add description to Pocket Flow page
+- [x] **[Opus 4.5]** Add description to Dance Instruction page
+- [x] **[Opus 4.5]** Add description to Uber Level AI Skills page
+- [x] **[Gemini 3 Pro]** TEST: Visual inspection of each exploration page
 
 ---
 
@@ -130,22 +130,22 @@
 
 ### 4.1 Apply new color palette globally
 
-- [ ] **[Opus 4.5]** Update Header colors
-- [ ] **[Opus 4.5]** Update Footer colors
-- [ ] **[Opus 4.5]** Update card/surface colors
-- [ ] **[Opus 4.5]** Update CTA/button colors
-- [ ] **[Opus 4.5]** Update text colors (primary, secondary, muted)
-- [ ] **[Gemini 3 Pro]** TEST: Visual inspection of all pages
-- [ ] **[Gemini 3 Pro]** TEST: Dark mode verification
+- [x] **[Opus 4.5]** Update Header colors
+- [x] **[Opus 4.5]** Update Footer colors
+- [x] **[Opus 4.5]** Update card/surface colors
+- [x] **[Opus 4.5]** Update CTA/button colors
+- [x] **[Opus 4.5]** Update text colors (primary, secondary, muted)
+- [x] **[Gemini 3 Pro]** TEST: Visual inspection of all pages
+- [x] **[Gemini 3 Pro]** TEST: Dark mode verification
 
 ### 4.2 Mobile responsiveness audit
 
-- [ ] **[Gemini 3 Pro]** Test all pages at 375px width (iPhone SE)
-- [ ] **[Gemini 3 Pro]** Test all pages at 390px width (iPhone 14)
-- [ ] **[Gemini 3 Pro]** Verify no horizontal scrolling
-- [ ] **[Gemini 3 Pro]** Verify all content readable
-- [ ] **[Gemini 3 Pro]** Verify touch targets at least 44px
-- [ ] **[Opus 4.5]** Fix any responsiveness issues found
+- [x] **[Gemini 3 Pro]** Test all pages at 375px width (iPhone SE)
+- [x] **[Gemini 3 Pro]** Test all pages at 390px width (iPhone 14)
+- [x] **[Gemini 3 Pro]** Verify no horizontal scrolling
+- [x] **[Gemini 3 Pro]** Verify all content readable
+- [x] **[Gemini 3 Pro]** Verify touch targets at least 44px
+- [x] **[Opus 4.5]** Fix any responsiveness issues found
 
 ---
 
@@ -157,21 +157,21 @@
 
 ### 5.2 Final visual comparison
 
-- [ ] **[Gemini 3 Pro]** Start v2 on localhost:4321
-- [ ] **[Gemini 3 Pro]** Start v3 on localhost:3000
-- [ ] **[Gemini 3 Pro]** Compare home page personal feel
-- [ ] **[Gemini 3 Pro]** Compare color warmth
-- [ ] **[Gemini 3 Pro]** Verify photo placement matches
-- [ ] **[Gemini 3 Pro]** Verify location visibility
-- [ ] **[Gemini 3 Pro]** Verify build date format
-- [ ] **[Gemini 3 Pro]** Test all navigation links
-- [ ] **[Gemini 3 Pro]** Test on mobile viewport
+- [x] **[Gemini 3 Pro]** Start v2 on localhost:4321
+- [x] **[Gemini 3 Pro]** Start v3 on localhost:3000
+- [x] **[Gemini 3 Pro]** Compare home page personal feel
+- [x] **[Gemini 3 Pro]** Compare color warmth
+- [x] **[Gemini 3 Pro]** Verify photo placement matches
+- [x] **[Gemini 3 Pro]** Verify location visibility
+- [x] **[Gemini 3 Pro]** Verify build date format
+- [x] **[Gemini 3 Pro]** Test all navigation links
+- [x] **[Gemini 3 Pro]** Test on mobile viewport
 
 ### 5.3 Run existing tests
 
-- [ ] **[Codex/Opus]** Run `npm test` — all unit tests pass
-- [ ] **[Gemini 3 Pro]** Run `npm run test:e2e:real` — all E2E tests pass
-- [ ] **[Codex/Opus]** Fix any failing tests
+- [x] **[Codex/Opus]** Run `npm test` — all unit tests pass
+- [x] **[Gemini 3 Pro]** Run `npm run test:e2e:real` — all E2E tests pass
+- [x] **[Codex/Opus]** Fix any failing tests
 
 ---
 
