@@ -1,4 +1,11 @@
 import { test, expect } from "@playwright/test";
+import { config } from "dotenv";
+import { resolve } from "path";
+
+// Load env vars from .env.local (Playwright doesn't auto-load these)
+config({ path: resolve(process.cwd(), ".env.local") });
+
+const gcpAvailable = Boolean(process.env.GCP_PROJECT_ID);
 
 /**
  * Full E2E tests for the deployed samkirk.com application.
@@ -92,6 +99,7 @@ test.describe("Exploration Pages - Render Correctly", () => {
 
 test.describe("Tool Pages - Load with Captcha Gate", () => {
   test("fit tool page loads", async ({ page }) => {
+    test.skip(!gcpAvailable, "Requires GCP credentials");
     await page.goto("/tools/fit");
 
     await expect(page.getByRole("heading", { name: "How Do I Fit?" })).toBeVisible();
@@ -103,6 +111,7 @@ test.describe("Tool Pages - Load with Captcha Gate", () => {
   });
 
   test("resume tool page loads", async ({ page }) => {
+    test.skip(!gcpAvailable, "Requires GCP credentials");
     await page.goto("/tools/resume");
 
     await expect(page.getByRole("heading", { name: "Get a Custom Resume" })).toBeVisible();
@@ -114,6 +123,7 @@ test.describe("Tool Pages - Load with Captcha Gate", () => {
   });
 
   test("interview tool page loads", async ({ page }) => {
+    test.skip(!gcpAvailable, "Requires GCP credentials");
     await page.goto("/tools/interview");
 
     await expect(page.getByRole("heading", { name: "Interview Me Now" })).toBeVisible();
@@ -242,6 +252,7 @@ test.describe("Navigation - Links Work", () => {
 
 test.describe("API Endpoints - Basic Health", () => {
   test("session init endpoint responds", async ({ request }) => {
+    test.skip(!gcpAvailable, "Requires GCP credentials");
     const response = await request.post("/api/session/init");
 
     // Should respond (200 or 4xx for validation)
