@@ -2,11 +2,11 @@
 id: REQ-016
 title: "Final visual comparison"
 status: completed
+created_at: 2026-02-05T15:30:00-08:00
+user_request: UR-001
 claimed_at: 2026-02-05T17:12:00-08:00
 route: B
 completed_at: 2026-02-05T17:20:00-08:00
-created_at: 2026-02-05T15:30:00-08:00
-user_request: UR-001
 source_step: "5.2"
 source_doc: "docs/v2-upgrade-TODO.md"
 blueprint_ref: "docs/v2-upgrade-BLUEPRINT.md"

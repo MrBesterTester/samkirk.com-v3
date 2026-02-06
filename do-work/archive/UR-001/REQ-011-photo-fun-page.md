@@ -2,11 +2,11 @@
 id: REQ-011
 title: "Create Photo Fun link page"
 status: completed
-completed_at: 2026-02-05T16:42:00-08:00
-claimed_at: 2026-02-05T16:37:00-08:00
-route: B
 created_at: 2026-02-05T15:30:00-08:00
 user_request: UR-001
+claimed_at: 2026-02-05T16:37:00-08:00
+route: B
+completed_at: 2026-02-05T16:42:00-08:00
 source_step: "3.1"
 source_doc: "docs/v2-upgrade-TODO.md"
 blueprint_ref: "docs/v2-upgrade-BLUEPRINT.md"

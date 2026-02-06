@@ -2,11 +2,11 @@
 id: REQ-005
 title: "Create Hero section with photo"
 status: completed
+created_at: 2026-02-05T15:30:00-08:00
+user_request: UR-001
 claimed_at: 2026-02-05T15:59:00-08:00
 route: B
 completed_at: 2026-02-05T16:02:00-08:00
-created_at: 2026-02-05T15:30:00-08:00
-user_request: UR-001
 source_step: "2.1"
 source_doc: "docs/v2-upgrade-TODO.md"
 blueprint_ref: "docs/v2-upgrade-BLUEPRINT.md"

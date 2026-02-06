@@ -2,11 +2,11 @@
 id: REQ-013
 title: "Add descriptions to Exploration pages"
 status: completed
+created_at: 2026-02-05T15:30:00-08:00
+user_request: UR-001
 claimed_at: 2026-02-05T16:13:00-08:00
 route: B
 completed_at: 2026-02-05T16:15:00-08:00
-created_at: 2026-02-05T15:30:00-08:00
-user_request: UR-001
 source_step: "3.3"
 source_doc: "docs/v2-upgrade-TODO.md"
 blueprint_ref: "docs/v2-upgrade-BLUEPRINT.md"

@@ -2,11 +2,11 @@
 id: REQ-010
 title: "Add Song Dedication full embed"
 status: completed
-completed_at: 2026-02-05T16:35:00-08:00
-claimed_at: 2026-02-05T16:30:00-08:00
-route: B
 created_at: 2026-02-05T15:30:00-08:00
 user_request: UR-001
+claimed_at: 2026-02-05T16:30:00-08:00
+route: B
+completed_at: 2026-02-05T16:35:00-08:00
 source_step: "2.6"
 source_doc: "docs/v2-upgrade-TODO.md"
 blueprint_ref: "docs/v2-upgrade-BLUEPRINT.md"

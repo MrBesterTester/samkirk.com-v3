@@ -2,11 +2,11 @@
 id: REQ-007
 title: "Add Hiring Manager tools section"
 status: completed
-completed_at: 2026-02-05T16:15:00-08:00
-claimed_at: 2026-02-05T16:08:00-08:00
-route: B
 created_at: 2026-02-05T15:30:00-08:00
 user_request: UR-001
+claimed_at: 2026-02-05T16:08:00-08:00
+route: B
+completed_at: 2026-02-05T16:15:00-08:00
 source_step: "2.3"
 source_doc: "docs/v2-upgrade-TODO.md"
 blueprint_ref: "docs/v2-upgrade-BLUEPRINT.md"

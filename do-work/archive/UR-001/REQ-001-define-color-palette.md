@@ -2,11 +2,11 @@
 id: REQ-001
 title: "Define new color palette"
 status: completed
+created_at: 2026-02-05T15:30:00-08:00
+user_request: UR-001
 claimed_at: 2026-02-05T15:40:00-08:00
 route: B
 completed_at: 2026-02-05T15:50:00-08:00
-created_at: 2026-02-05T15:30:00-08:00
-user_request: UR-001
 source_step: "0.1"
 source_doc: "docs/v2-upgrade-TODO.md"
 blueprint_ref: "docs/v2-upgrade-BLUEPRINT.md"
