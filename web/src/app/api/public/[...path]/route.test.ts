@@ -6,7 +6,7 @@ import { NextRequest } from "next/server";
 import { getPublicBucket } from "@/lib/storage";
 import { config } from "dotenv";
 import { resolve } from "path";
-import { describe, it, expect, beforeAll, afterAll } from "vitest";
+import { describe, it, expect, beforeAll, afterAll, vi } from "vitest";
 import type { Bucket } from "@google-cloud/storage";
 
 // Load env vars from .env.local
@@ -68,13 +68,33 @@ describe("Public Proxy API Integration", () => {
 
     expect(res.status).toBe(404);
   });
+});
 
-  it.skipIf(!gcpAvailable)("should block directory traversal attempts", async () => {
+describe("Public Proxy API – Security (unit)", () => {
+  it("should block directory traversal attempts", async () => {
+    // Clear the module registry so the route handler picks up our mock
+    vi.resetModules();
+
+    // Mock storage so this test runs without GCP credentials.
+    // The traversal check fires after getPublicBucket() but before any
+    // bucket methods, so we only need a minimal stub.
+    vi.doMock("@/lib/storage", () => ({
+      getPublicBucket: () => ({} as Bucket),
+      fileExists: vi.fn(),
+    }));
+
+    // Import route handler AFTER the mock is installed
+    const { GET: MockedGET } = await import("./route");
+
     const req = new NextRequest("http://localhost:3000/api/public/../secret.txt");
     const params = Promise.resolve({ path: ["..", "secret.txt"] });
 
-    const res = await GET(req, { params });
+    const res = await MockedGET(req, { params });
 
     expect(res.status).toBe(400);
+
+    // Clean up mock and restore module registry
+    vi.doUnmock("@/lib/storage");
+    vi.resetModules();
   });
 });
