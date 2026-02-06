@@ -1,7 +1,10 @@
 ---
 id: REQ-033
 title: "Update root README.md with dev guide link"
-status: pending
+status: completed
+claimed_at: 2026-02-06T13:00:00-08:00
+route: A
+completed_at: 2026-02-06T13:02:00-08:00
 created_at: 2026-02-06T12:00:00-08:00
 user_request: UR-002
 source_step: "7.3"
@@ -39,3 +42,39 @@ Depends on REQ-032 (Step 7.2) — the dev guide must exist first.
 
 ---
 *Source: docs/master-test-TODO.md, Step 7.3*
+
+---
+
+## Triage
+
+**Route: A** - Simple
+
+**Reasoning:** Specific file named (README.md), clear changes (add link, update commands). No exploration needed.
+
+**Planning:** Not required
+
+## Plan
+
+**Planning not required** - Route A: Direct implementation
+
+Rationale: Simple README update with explicit file and changes specified. No architectural decisions needed.
+
+*Skipped by work action*
+
+## Implementation Summary
+
+- Added `[Developer Guide](README_dev_guide.md)` link to the Key docs list in README.md
+- Added `npm run test:all` row to the Testing commands table in README.md
+
+*Completed by work action (Route A)*
+
+## Testing
+
+**Tests run:** Manual verification
+**Result:** ✓ All checks passing
+
+**Verified:**
+- README_dev_guide.md file exists at project root (link resolves)
+- `test:all` script exists in web/package.json
+
+*Verified by work action*

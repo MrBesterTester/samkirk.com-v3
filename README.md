@@ -8,6 +8,7 @@ Key docs:
 - [`docs/BLUEPRINT.md`](docs/BLUEPRINT.md) — Technical architecture and implementation plan
 - [`docs/TODO.md`](docs/TODO.md) — Implementation checklist with progress tracking
 - [`docs/TEST-RESULTS.md`](docs/TEST-RESULTS.md) — Test results and verification evidence
+- [`README_dev_guide.md`](README_dev_guide.md) — Developer guide for testing workflows and conventions
 
 ### Tech stack (V1 target)
 
@@ -70,6 +71,7 @@ npm run start
 | `npx playwright test` | Run E2E tests with Playwright — 11 tests (Fit + Resume tools) |
 | `npm run test:e2e:real` | Run E2E test with real Vertex AI (~$0.02-0.10) |
 | `npm run smoke:gcp` | Run GCP integration smoke tests — 11 sections |
+| `npm run test:all` | Run all tests (unit + E2E + smoke) with single command |
 | `npm run validate:resume -- <file>` | Validate resume chunking locally |
 
 See [`docs/TEST-RESULTS.md`](docs/TEST-RESULTS.md) for detailed test results and verification evidence.
