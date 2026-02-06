@@ -4,6 +4,15 @@ What's new, what's better, what's different. Most recent stuff on top.
 
 ---
 
+## 0.10.1 — The Orderly (2026-02-06)
+
+Frontmatter fields kept ending up scrambled — `completed_at` before `created_at`, claim fields above do-action fields. The schema defined the right order but the step snippets only showed changed fields, so agents inserted them wherever. Now every frontmatter snippet in work.md shows the full field context with explicit "preserve field order" notes, plus a dedicated Field Ordering Rule section.
+
+- Added "Field Ordering Rule" section after the schema
+- Updated Step 2, 3, 7 frontmatter snippets to show full field context
+- Updated failure frontmatter snippet with full field context
+- Fixed 16 existing REQ files in UR-002 archive
+
 ## 0.10.0 — The Speed Limit (2026-02-06)
 
 You can now cap how many requests the work loop processes before stopping. `do work run --limit 5` processes at most 5 REQs, then exits cleanly with a summary. Great for managing context window usage across sessions — run a few, start fresh, repeat.

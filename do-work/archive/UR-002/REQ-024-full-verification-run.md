@@ -2,11 +2,11 @@
 id: REQ-024
 title: "Full verification run"
 status: completed
-completed_at: 2026-02-06T14:10:00-08:00
-claimed_at: 2026-02-06T14:07:00-08:00
-route: B
 created_at: 2026-02-06T12:00:00-08:00
 user_request: UR-002
+claimed_at: 2026-02-06T14:07:00-08:00
+route: B
+completed_at: 2026-02-06T14:10:00-08:00
 source_step: "4.1"
 source_doc: "docs/master-test-TODO.md"
 blueprint_ref: "docs/master-test-BLUEPRINT.md"

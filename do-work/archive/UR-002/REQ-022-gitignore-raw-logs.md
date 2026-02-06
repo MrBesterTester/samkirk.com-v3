@@ -2,11 +2,11 @@
 id: REQ-022
 title: "Add gitignore for raw logs"
 status: completed
-completed_at: 2026-02-06T14:04:00-08:00
-claimed_at: 2026-02-06T14:03:00-08:00
-route: A
 created_at: 2026-02-06T12:00:00-08:00
 user_request: UR-002
+claimed_at: 2026-02-06T14:03:00-08:00
+route: A
+completed_at: 2026-02-06T14:04:00-08:00
 source_step: "2.3"
 source_doc: "docs/master-test-TODO.md"
 blueprint_ref: "docs/master-test-BLUEPRINT.md"

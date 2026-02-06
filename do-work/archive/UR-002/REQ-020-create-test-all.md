@@ -2,11 +2,11 @@
 id: REQ-020
 title: "Create test-all.ts"
 status: completed
-claimed_at: 2026-02-06T20:11:00-08:00
-completed_at: 2026-02-06T20:55:00-08:00
-route: C
 created_at: 2026-02-06T12:00:00-08:00
 user_request: UR-002
+claimed_at: 2026-02-06T20:11:00-08:00
+route: C
+completed_at: 2026-02-06T20:55:00-08:00
 source_step: "2.1"
 source_doc: "docs/master-test-TODO.md"
 blueprint_ref: "docs/master-test-BLUEPRINT.md"

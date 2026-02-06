@@ -2,11 +2,11 @@
 id: REQ-021
 title: "Add test:all script to package.json"
 status: completed
-completed_at: 2026-02-06T14:02:00-08:00
-claimed_at: 2026-02-06T14:00:00-08:00
-route: A
 created_at: 2026-02-06T12:00:00-08:00
 user_request: UR-002
+claimed_at: 2026-02-06T14:00:00-08:00
+route: A
+completed_at: 2026-02-06T14:02:00-08:00
 source_step: "2.2"
 source_doc: "docs/master-test-TODO.md"
 blueprint_ref: "docs/master-test-BLUEPRINT.md"

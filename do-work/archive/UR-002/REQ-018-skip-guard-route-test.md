@@ -2,11 +2,11 @@
 id: REQ-018
 title: "Add skip guard to route.test.ts"
 status: completed
-completed_at: 2026-02-06T20:05:00-08:00
-claimed_at: 2026-02-06T20:00:00-08:00
-route: A
 created_at: 2026-02-06T12:00:00-08:00
 user_request: UR-002
+claimed_at: 2026-02-06T20:00:00-08:00
+route: A
+completed_at: 2026-02-06T20:05:00-08:00
 source_step: "1.1"
 source_doc: "docs/master-test-TODO.md"
 blueprint_ref: "docs/master-test-BLUEPRINT.md"

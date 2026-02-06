@@ -2,11 +2,11 @@
 id: REQ-027
 title: "Triage full-app.spec.ts tests (4 tests)"
 status: completed
+created_at: 2026-02-06T12:00:00-08:00
+user_request: UR-002
 claimed_at: 2026-02-06T20:52:00-08:00
 route: B
 completed_at: 2026-02-06T21:00:00-08:00
-created_at: 2026-02-06T12:00:00-08:00
-user_request: UR-002
 source_step: "5.2"
 source_doc: "docs/master-test-TODO.md"
 blueprint_ref: "docs/master-test-BLUEPRINT.md"

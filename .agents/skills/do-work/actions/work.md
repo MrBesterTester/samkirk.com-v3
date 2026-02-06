@@ -228,6 +228,12 @@ error: "Description of failure"  # Only if failed
 | `commit` | work | Commit | Git commit hash (omitted if not a git repo) |
 | `error` | work | Failure | Error description if status is `failed` |
 
+### Field Ordering Rule
+
+**When updating frontmatter, preserve the field order shown in the schema above.** Do-action fields (`id`, `title`, `status`, `created_at`, `user_request`) stay at the top. Work-action fields (`claimed_at`, `route`, `completed_at`, `commit`, `error`) are appended below them. Any custom fields from ingestion (`source_step`, `source_doc`, `blueprint_ref`, etc.) stay at the bottom.
+
+When adding `claimed_at` and `route` (Step 2/3), insert them **after** the do-action fields — do not place them before `created_at` or `user_request`. When adding `completed_at` (Step 7), insert it **after** `route`.
+
 ### Status Flow
 
 ```
@@ -279,12 +285,17 @@ If no request files found, report completion and exit.
 
 1. Create `do-work/working/` folder if it doesn't exist
 2. Move the request file from `do-work/` to `do-work/working/`
-3. Update the frontmatter:
+3. Update the frontmatter — add `claimed_at` **after** the do-action fields (preserve field order):
 
 ```yaml
 ---
+id: REQ-001
+title: Short descriptive title
 status: claimed
+created_at: 2025-01-26T10:00:00Z
+user_request: UR-001
 claimed_at: 2025-01-26T10:30:00Z
+# ... any custom fields (source_step, etc.) stay at the bottom
 ---
 ```
 
@@ -292,13 +303,18 @@ claimed_at: 2025-01-26T10:30:00Z
 
 **[Orchestrator action - do this yourself]**
 
-Read the request content and apply the triage decision flow. Update frontmatter with the chosen route:
+Read the request content and apply the triage decision flow. Add `route` after `claimed_at` (preserve field order):
 
 ```yaml
 ---
+id: REQ-001
+title: Short descriptive title
 status: claimed
+created_at: 2025-01-26T10:00:00Z
+user_request: UR-001
 claimed_at: 2025-01-26T10:30:00Z
 route: B
+# ... any custom fields stay at the bottom
 ---
 ```
 
@@ -693,13 +709,18 @@ Or for failures that were resolved:
 
 **On success - do ALL of these steps:**
 
-1. **Update the request file frontmatter** (in `do-work/working/`):
+1. **Update the request file frontmatter** (in `do-work/working/`) — add `completed_at` after `route` (preserve field order):
 ```yaml
 ---
+id: REQ-001
+title: Short descriptive title
 status: completed
+created_at: 2025-01-26T10:00:00Z
+user_request: UR-001
 claimed_at: 2025-01-26T10:30:00Z
-completed_at: 2025-01-26T10:45:00Z
 route: B
+completed_at: 2025-01-26T10:45:00Z
+# ... any custom fields stay at the bottom
 ---
 ```
 
@@ -816,13 +837,18 @@ Rationale: Clear feature request with well-defined outcome. Just need to discove
 
 **On failure - do ALL of these steps:**
 
-1. **Update frontmatter with error** (in `do-work/working/`):
+1. **Update frontmatter with error** (in `do-work/working/`) — preserve field order:
 ```yaml
 ---
+id: REQ-001
+title: Short descriptive title
 status: failed
+created_at: 2025-01-26T10:00:00Z
+user_request: UR-001
 claimed_at: 2025-01-26T10:30:00Z
 route: B
 error: "Brief description of what went wrong"
+# ... any custom fields stay at the bottom
 ---
 ```
 
