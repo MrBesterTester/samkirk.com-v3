@@ -38,7 +38,7 @@ export function ToolPreview({
   icon,
 }: ToolPreviewProps) {
   return (
-    <div className="group rounded-xl border border-zinc-200 bg-white p-6 shadow-sm transition-all hover:border-blue-300 hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-blue-700">
+    <div className="group rounded-xl border border-border bg-primary p-6 shadow-sm transition-all hover:border-accent hover:shadow-md">
       {/* Header row: optional icon + title */}
       <div className="flex items-center gap-3">
         {icon && (
@@ -46,13 +46,13 @@ export function ToolPreview({
             {icon}
           </span>
         )}
-        <h3 className="text-lg font-semibold text-zinc-900 group-hover:text-blue-600 dark:text-zinc-50 dark:group-hover:text-blue-400">
+        <h3 className="text-lg font-semibold text-text-primary group-hover:text-accent">
           {title}
         </h3>
       </div>
 
       {/* Description */}
-      <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
+      <p className="mt-2 text-sm text-text-secondary">
         {description}
       </p>
 

@@ -3,10 +3,10 @@ import { StaticHtmlViewer } from "@/components";
 export default function PocketFlowPage() {
   return (
     <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
-      <h1 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
+      <h1 className="text-3xl font-bold tracking-tight text-text-primary">
         Pocket Flow
       </h1>
-      <p className="mt-4 text-lg text-zinc-600 dark:text-zinc-400">
+      <p className="mt-4 text-lg text-text-secondary">
         A lightweight framework for building AI workflows. Pocket Flow
         emphasizes simplicity and composability, providing a minimal set of
         primitives for chaining LLM calls, managing context, and orchestrating

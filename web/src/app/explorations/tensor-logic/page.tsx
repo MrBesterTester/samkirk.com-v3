@@ -1,10 +1,10 @@
 export default function TensorLogicPage() {
   return (
     <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
-      <h1 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
+      <h1 className="text-3xl font-bold tracking-tight text-text-primary">
         Tensor Logic
       </h1>
-      <p className="mt-4 text-lg text-zinc-600 dark:text-zinc-400">
+      <p className="mt-4 text-lg text-text-secondary">
         An educational interactive demo illustrating Pedro Domingos&apos; Tensor
         Logic&mdash;a unified programming paradigm bridging neural and symbolic
         AI.
@@ -12,14 +12,14 @@ export default function TensorLogicPage() {
 
       {/* Features Section */}
       <section className="mt-12">
-        <div className="rounded-xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
-          <h2 className="text-xl font-semibold text-zinc-900 dark:text-zinc-50">
+        <div className="rounded-xl border border-border bg-primary p-6 shadow-sm">
+          <h2 className="text-xl font-semibold text-text-primary">
             Features
           </h2>
           <ul className="mt-4 space-y-3">
             <li className="flex items-start gap-3">
               <svg
-                className="mt-0.5 h-5 w-5 flex-shrink-0 text-purple-600 dark:text-purple-400"
+                className="mt-0.5 h-5 w-5 flex-shrink-0 text-accent"
                 fill="none"
                 viewBox="0 0 24 24"
                 strokeWidth={2}
@@ -32,8 +32,8 @@ export default function TensorLogicPage() {
                   d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                 />
               </svg>
-              <span className="text-zinc-700 dark:text-zinc-300">
-                <strong className="font-medium text-zinc-900 dark:text-zinc-100">
+              <span className="text-text-secondary">
+                <strong className="font-medium text-text-primary">
                   8 interactive examples:
                 </strong>{" "}
                 Spanning 5 AI paradigms&mdash;Bayesian, Logical, Instance,
@@ -42,7 +42,7 @@ export default function TensorLogicPage() {
             </li>
             <li className="flex items-start gap-3">
               <svg
-                className="mt-0.5 h-5 w-5 flex-shrink-0 text-purple-600 dark:text-purple-400"
+                className="mt-0.5 h-5 w-5 flex-shrink-0 text-accent"
                 fill="none"
                 viewBox="0 0 24 24"
                 strokeWidth={2}
@@ -55,8 +55,8 @@ export default function TensorLogicPage() {
                   d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                 />
               </svg>
-              <span className="text-zinc-700 dark:text-zinc-300">
-                <strong className="font-medium text-zinc-900 dark:text-zinc-100">
+              <span className="text-text-secondary">
+                <strong className="font-medium text-text-primary">
                   Mathematical unification:
                 </strong>{" "}
                 Demonstrates how Einstein summation connects diverse AI
@@ -65,7 +65,7 @@ export default function TensorLogicPage() {
             </li>
             <li className="flex items-start gap-3">
               <svg
-                className="mt-0.5 h-5 w-5 flex-shrink-0 text-purple-600 dark:text-purple-400"
+                className="mt-0.5 h-5 w-5 flex-shrink-0 text-accent"
                 fill="none"
                 viewBox="0 0 24 24"
                 strokeWidth={2}
@@ -78,8 +78,8 @@ export default function TensorLogicPage() {
                   d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                 />
               </svg>
-              <span className="text-zinc-700 dark:text-zinc-300">
-                <strong className="font-medium text-zinc-900 dark:text-zinc-100">
+              <span className="text-text-secondary">
+                <strong className="font-medium text-text-primary">
                   Peer-reviewed research:
                 </strong>{" "}
                 Based on published academic work exploring the foundations of
@@ -92,17 +92,17 @@ export default function TensorLogicPage() {
 
       {/* Reference Section */}
       <section className="mt-8">
-        <div className="rounded-xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
-          <h2 className="text-xl font-semibold text-zinc-900 dark:text-zinc-50">
+        <div className="rounded-xl border border-border bg-primary p-6 shadow-sm">
+          <h2 className="text-xl font-semibold text-text-primary">
             Reference
           </h2>
-          <p className="mt-3 text-zinc-700 dark:text-zinc-300">
+          <p className="mt-3 text-text-secondary">
             Based on the paper by Pedro Domingos:{" "}
             <a
               href="https://arxiv.org/abs/2510.12269"
               target="_blank"
               rel="noopener noreferrer"
-              className="font-medium text-purple-600 underline decoration-purple-600/30 transition-colors hover:text-purple-500 dark:text-purple-400 dark:decoration-purple-400/30 dark:hover:text-purple-300"
+              className="font-medium text-accent underline decoration-accent/30 transition-colors hover:text-accent-hover"
             >
               arXiv:2510.12269
             </a>
@@ -112,12 +112,12 @@ export default function TensorLogicPage() {
 
       {/* CTA Section */}
       <section className="mt-8">
-        <div className="rounded-xl border border-zinc-200 bg-white p-8 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+        <div className="rounded-xl border border-border bg-primary p-8 shadow-sm">
           <div className="text-center">
-            <h2 className="text-xl font-semibold text-zinc-900 dark:text-zinc-50">
+            <h2 className="text-xl font-semibold text-text-primary">
               Try It Out
             </h2>
-            <p className="mt-2 text-zinc-600 dark:text-zinc-400">
+            <p className="mt-2 text-text-secondary">
               Explore the interactive demo and see how tensor logic unifies AI
               paradigms.
             </p>
@@ -125,7 +125,7 @@ export default function TensorLogicPage() {
               href="https://tensor-logic.samkirk.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-6 inline-flex items-center gap-2 rounded-lg bg-purple-600 px-8 py-3 text-base font-semibold text-white shadow-sm transition-colors hover:bg-purple-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-600"
+              className="mt-6 inline-flex items-center gap-2 rounded-lg bg-accent px-8 py-3 text-base font-semibold text-white shadow-sm transition-colors hover:bg-accent-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
             >
               Launch Tensor Logic
               <svg

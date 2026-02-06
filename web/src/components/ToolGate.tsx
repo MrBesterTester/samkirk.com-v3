@@ -78,8 +78,8 @@ export function ToolGate({ children, toolName }: ToolGateProps) {
     return (
       <div className="flex items-center justify-center py-12">
         <div className="flex flex-col items-center gap-4">
-          <div className="h-8 w-8 animate-spin rounded-full border-4 border-zinc-300 border-t-blue-600 dark:border-zinc-700 dark:border-t-blue-400" />
-          <p className="text-sm text-zinc-500 dark:text-zinc-400">
+          <div className="h-8 w-8 animate-spin rounded-full border-4 border-border border-t-accent" />
+          <p className="text-sm text-text-muted">
             Initializing...
           </p>
         </div>
@@ -96,7 +96,7 @@ export function ToolGate({ children, toolName }: ToolGateProps) {
         </p>
         <button
           onClick={() => window.location.reload()}
-          className="mt-4 text-sm text-blue-600 underline hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
+          className="mt-4 text-sm text-accent underline hover:text-accent-hover"
         >
           Refresh page
         </button>

@@ -25,21 +25,21 @@ export function Footer() {
   const buildDate = getBuildDate();
 
   return (
-    <footer className="border-t border-zinc-200 bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-950">
+    <footer className="border-t border-border bg-secondary">
       <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
         <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
           <div className="flex flex-col items-center gap-1 sm:items-start">
-            <p className="text-sm text-zinc-600 dark:text-zinc-400">
+            <p className="text-sm text-text-secondary">
               &copy; {currentYear} Sam Kirk. All rights reserved.
             </p>
-            <p className="text-xs font-mono text-zinc-500 dark:text-zinc-500">
+            <p className="text-xs font-mono text-text-muted">
               {buildDate}
             </p>
           </div>
           <div className="flex gap-6">
             <Link
               href="mailto:sam@samkirk.com"
-              className="text-sm text-zinc-600 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-50"
+              className="text-sm text-text-secondary transition-colors hover:text-text-primary"
             >
               sam@samkirk.com
             </Link>

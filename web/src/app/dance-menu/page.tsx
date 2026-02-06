@@ -130,10 +130,10 @@ export default function DanceMenuPage() {
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
-      <h1 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
+      <h1 className="text-3xl font-bold tracking-tight text-text-primary">
         Dance Menu
       </h1>
-      <p className="mt-4 text-lg text-zinc-600 dark:text-zinc-400">
+      <p className="mt-4 text-lg text-text-secondary">
         View and download the current weekly dance menu.
       </p>
 
@@ -141,7 +141,7 @@ export default function DanceMenuPage() {
       {loadState.status === "loading" && (
         <div className="mt-12 flex items-center justify-center">
           <svg
-            className="h-8 w-8 animate-spin text-purple-600"
+            className="h-8 w-8 animate-spin text-accent"
             viewBox="0 0 24 24"
             fill="none"
           >
@@ -184,10 +184,10 @@ export default function DanceMenuPage() {
 
       {/* Loaded state - No menu available */}
       {loadState.status === "loaded" && !loadState.data.available && (
-        <div className="mt-12 rounded-xl border border-zinc-200 bg-zinc-50 p-8 dark:border-zinc-800 dark:bg-zinc-900">
+        <div className="mt-12 rounded-xl border border-border bg-secondary p-8">
           <div className="text-center">
             <svg
-              className="mx-auto h-12 w-12 text-zinc-400"
+              className="mx-auto h-12 w-12 text-text-muted"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -199,7 +199,7 @@ export default function DanceMenuPage() {
                 d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
               />
             </svg>
-            <p className="mt-4 text-zinc-600 dark:text-zinc-400">
+            <p className="mt-4 text-text-secondary">
               No dance menu has been published yet. Check back soon!
             </p>
           </div>
@@ -211,7 +211,7 @@ export default function DanceMenuPage() {
         <>
           {/* Download buttons */}
           <div className="mt-8">
-            <h2 className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
+            <h2 className="text-sm font-medium text-text-primary">
               Download in your preferred format
             </h2>
             <div className="mt-3 flex flex-wrap gap-3">
@@ -222,7 +222,7 @@ export default function DanceMenuPage() {
                   download
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 rounded-lg border border-zinc-200 bg-white px-4 py-2 text-sm font-medium text-zinc-700 shadow-sm transition-colors hover:bg-zinc-50 hover:border-zinc-300 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
+                  className="inline-flex items-center gap-2 rounded-lg border border-border bg-primary px-4 py-2 text-sm font-medium text-text-secondary shadow-sm transition-colors hover:bg-secondary hover:border-accent"
                 >
                   {getFormatIcon(format.extension)}
                   {format.name}
@@ -234,15 +234,15 @@ export default function DanceMenuPage() {
           {/* HTML Content Display */}
           {loadState.data.htmlContent && (
             <div className="mt-8">
-              <div className="overflow-hidden rounded-xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900">
-                <div className="border-b border-zinc-200 bg-zinc-50 px-4 py-3 dark:border-zinc-800 dark:bg-zinc-950">
-                  <h2 className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
+              <div className="overflow-hidden rounded-xl border border-border bg-primary">
+                <div className="border-b border-border bg-secondary px-4 py-3">
+                  <h2 className="text-sm font-medium text-text-primary">
                     Current Menu
                   </h2>
                 </div>
                 <div className="p-6">
                   <div
-                    className="prose prose-zinc dark:prose-invert max-w-none prose-headings:font-semibold prose-a:text-purple-600 dark:prose-a:text-purple-400"
+                    className="prose prose-zinc dark:prose-invert max-w-none prose-headings:font-semibold prose-a:text-accent"
                     dangerouslySetInnerHTML={{
                       __html: loadState.data.htmlContent,
                     }}
@@ -254,10 +254,10 @@ export default function DanceMenuPage() {
 
           {/* Fallback if no HTML content but menu is available */}
           {!loadState.data.htmlContent && (
-            <div className="mt-8 rounded-xl border border-zinc-200 bg-zinc-50 p-8 dark:border-zinc-800 dark:bg-zinc-900">
+            <div className="mt-8 rounded-xl border border-border bg-secondary p-8">
               <div className="text-center">
                 <svg
-                  className="mx-auto h-12 w-12 text-purple-500"
+                  className="mx-auto h-12 w-12 text-accent"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -269,7 +269,7 @@ export default function DanceMenuPage() {
                     d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
                   />
                 </svg>
-                <p className="mt-4 text-zinc-600 dark:text-zinc-400">
+                <p className="mt-4 text-text-secondary">
                   The dance menu is available for download. Click one of the
                   download buttons above to get your copy.
                 </p>

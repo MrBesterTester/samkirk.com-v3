@@ -24,10 +24,10 @@ const tools = [
 export default function ToolsPage() {
   return (
     <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
-      <h1 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
+      <h1 className="text-3xl font-bold tracking-tight text-text-primary">
         AI Tools
       </h1>
-      <p className="mt-4 text-lg text-zinc-600 dark:text-zinc-400">
+      <p className="mt-4 text-lg text-text-secondary">
         These tools help hiring managers quickly evaluate whether Sam Kirk is a
         good fit for their role.
       </p>
@@ -37,12 +37,12 @@ export default function ToolsPage() {
           <Link
             key={tool.href}
             href={tool.href}
-            className="group rounded-xl border border-zinc-200 bg-white p-6 shadow-sm transition-all hover:border-zinc-300 hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-zinc-700"
+            className="group rounded-xl border border-border bg-primary p-6 shadow-sm transition-all hover:border-accent hover:shadow-md"
           >
-            <h2 className="text-xl font-semibold text-zinc-900 group-hover:text-blue-600 dark:text-zinc-50 dark:group-hover:text-blue-400">
+            <h2 className="text-xl font-semibold text-text-primary group-hover:text-accent">
               {tool.title}
             </h2>
-            <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
+            <p className="mt-2 text-sm text-text-secondary">
               {tool.description}
             </p>
           </Link>

@@ -15,20 +15,20 @@ export default function Home() {
               alt="Sam Kirk"
               width={192}
               height={256}
-              className="w-40 md:w-48 rounded-lg border-4 border-blue-400/30 shadow-lg"
+              className="w-40 md:w-48 rounded-lg border-4 border-accent/30 shadow-lg"
               priority
             />
           </div>
 
           {/* Text Content */}
           <div className="text-center md:text-left">
-            <h1 className="text-4xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50 sm:text-5xl">
+            <h1 className="text-4xl font-bold tracking-tight text-text-primary sm:text-5xl">
               Sam Kirk
             </h1>
-            <p className="mt-2 text-lg text-zinc-500 dark:text-zinc-400">
+            <p className="mt-2 text-lg text-text-muted">
               Fremont, California
             </p>
-            <p className="mt-4 text-xl leading-8 text-zinc-600 dark:text-zinc-400">
+            <p className="mt-4 text-xl leading-8 text-text-secondary">
               Software engineer with expertise in AI/ML, full-stack development,
               and building products that solve real problems.
             </p>
@@ -38,10 +38,10 @@ export default function Home() {
 
       {/* Quick Actions for Hiring Managers */}
       <section className="mt-16">
-        <h2 className="text-center text-2xl font-semibold text-zinc-900 dark:text-zinc-50">
+        <h2 className="text-center text-2xl font-semibold text-text-primary">
           Hiring Manager?
         </h2>
-        <p className="mt-2 text-center text-zinc-600 dark:text-zinc-400">
+        <p className="mt-2 text-center text-text-secondary">
           Use these AI-powered tools to quickly evaluate my fit for your role.
         </p>
 
@@ -65,10 +65,10 @@ export default function Home() {
             ctaLink="/tools/interview"
             previewContent={
               <div className="space-y-2 text-sm">
-                <p className="font-medium text-zinc-700 dark:text-zinc-300">
+                <p className="font-medium text-text-secondary">
                   Q: What&apos;s your experience with AI?
                 </p>
-                <p className="text-zinc-600 dark:text-zinc-400">
+                <p className="text-text-secondary">
                   A: I&apos;ve built LLM-powered tools including this site&apos;s
                   interview and fit-analysis features using Vertex AI and
                   prompt engineering.
@@ -81,10 +81,10 @@ export default function Home() {
 
       {/* Dance Menu Teaser */}
       <section className="mt-16">
-        <h2 className="text-center text-2xl font-semibold text-zinc-900 dark:text-zinc-50">
+        <h2 className="text-center text-2xl font-semibold text-text-primary">
           This Week&apos;s Dance Menu
         </h2>
-        <p className="mt-2 text-center text-zinc-600 dark:text-zinc-400">
+        <p className="mt-2 text-center text-text-secondary">
           Curated social dance playlists, updated weekly.
         </p>
 
@@ -100,19 +100,19 @@ export default function Home() {
 
       {/* Photo Fun */}
       <section className="mt-16">
-        <h2 className="text-center text-2xl font-semibold text-zinc-900 dark:text-zinc-50">
+        <h2 className="text-center text-2xl font-semibold text-text-primary">
           Photo Fun
         </h2>
-        <p className="mt-2 text-center text-zinc-600 dark:text-zinc-400">
+        <p className="mt-2 text-center text-text-secondary">
           AI-powered photo editing using Google Gemini.
         </p>
 
         <div className="mt-8 flex justify-center">
-          <div className="group rounded-xl border border-zinc-200 bg-white p-6 shadow-sm transition-all hover:border-blue-300 hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-blue-700">
-            <h3 className="text-lg font-semibold text-zinc-900 group-hover:text-blue-600 dark:text-zinc-50 dark:group-hover:text-blue-400">
+          <div className="group rounded-xl border border-border bg-primary p-6 shadow-sm transition-all hover:border-accent hover:shadow-md">
+            <h3 className="text-lg font-semibold text-text-primary group-hover:text-accent">
               Photo Fun
             </h3>
-            <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
+            <p className="mt-2 text-sm text-text-secondary">
               AI-powered photo editing using Google Gemini. Transform your photos
               with artistic styles like Professional, Claymation, Cyberpunk, and
               Pencil Sketch.
@@ -131,26 +131,26 @@ export default function Home() {
 
       {/* Song Dedication */}
       <section className="mt-16">
-        <h2 className="text-center text-2xl font-semibold text-zinc-900 dark:text-zinc-50">
+        <h2 className="text-center text-2xl font-semibold text-text-primary">
           Song Dedication
         </h2>
-        <p className="mt-2 text-center text-zinc-600 dark:text-zinc-400">
+        <p className="mt-2 text-center text-text-secondary">
           A special dedication through music.
         </p>
 
-        <div className="mt-8 rounded-xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+        <div className="mt-8 rounded-xl border border-border bg-primary p-6 shadow-sm">
           {/* About */}
-          <p className="text-zinc-600 dark:text-zinc-400">
+          <p className="text-text-secondary">
             This song holds a special meaning. The story behind this dedication
             will be shared here.
           </p>
 
           {/* Audio Player */}
           <div className="mt-6">
-            <div className="flex items-center justify-center rounded-lg bg-zinc-100 py-8 dark:bg-zinc-800">
+            <div className="flex items-center justify-center rounded-lg bg-secondary py-8">
               <div className="text-center">
                 <svg
-                  className="mx-auto h-10 w-10 text-zinc-400 dark:text-zinc-500"
+                  className="mx-auto h-10 w-10 text-text-muted"
                   fill="none"
                   viewBox="0 0 24 24"
                   strokeWidth={1.5}
@@ -163,23 +163,23 @@ export default function Home() {
                     d="M9 9l10.5-3m0 6.553v3.75a2.25 2.25 0 01-1.632 2.163l-1.32.377a1.803 1.803 0 11-.99-3.467l2.31-.66a2.25 2.25 0 001.632-2.163zm0 0V2.25L9 5.25v10.303m0 0v3.75a2.25 2.25 0 01-1.632 2.163l-1.32.377a1.803 1.803 0 01-.99-3.467l2.31-.66A2.25 2.25 0 009 15.553z"
                   />
                 </svg>
-                <p className="mt-2 text-sm text-zinc-500 dark:text-zinc-400">
+                <p className="mt-2 text-sm text-text-muted">
                   Audio player will be embedded here
                 </p>
               </div>
             </div>
-            <p className="mt-3 text-center text-sm text-zinc-500 dark:text-zinc-400">
+            <p className="mt-3 text-center text-sm text-text-muted">
               Or listen on{" "}
               <a
                 href="#"
-                className="font-medium text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300"
+                className="font-medium text-accent hover:text-accent-hover"
               >
                 Spotify
               </a>{" "}
               /{" "}
               <a
                 href="#"
-                className="font-medium text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300"
+                className="font-medium text-accent hover:text-accent-hover"
               >
                 YouTube
               </a>
@@ -188,16 +188,16 @@ export default function Home() {
 
           {/* Lyrics */}
           <div className="mt-6 space-y-4">
-            <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
+            <h3 className="text-lg font-semibold text-text-primary">
               Lyrics
             </h3>
 
             {/* Verse 1 */}
             <div>
-              <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
+              <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-text-muted">
                 Verse 1
               </p>
-              <p className="whitespace-pre-line text-sm text-zinc-700 dark:text-zinc-300">
+              <p className="whitespace-pre-line text-sm text-text-secondary">
                 Song lyrics will appear here.
                 {"\n"}Each line of the verse
                 {"\n"}will be displayed
@@ -206,11 +206,11 @@ export default function Home() {
             </div>
 
             {/* Chorus */}
-            <div className="rounded-lg bg-zinc-50 p-3 dark:bg-zinc-800/50">
-              <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
+            <div className="rounded-lg bg-secondary p-3">
+              <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-text-muted">
                 Chorus
               </p>
-              <p className="whitespace-pre-line text-sm font-medium text-zinc-800 dark:text-zinc-200">
+              <p className="whitespace-pre-line text-sm font-medium text-text-primary">
                 The chorus will stand out
                 {"\n"}with a subtle background
                 {"\n"}to differentiate it from verses.
@@ -219,10 +219,10 @@ export default function Home() {
 
             {/* Verse 2 */}
             <div>
-              <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
+              <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-text-muted">
                 Verse 2
               </p>
-              <p className="whitespace-pre-line text-sm text-zinc-700 dark:text-zinc-300">
+              <p className="whitespace-pre-line text-sm text-text-secondary">
                 Additional verses
                 {"\n"}follow the same pattern
                 {"\n"}maintaining consistency.
@@ -231,7 +231,7 @@ export default function Home() {
           </div>
 
           {/* Song Info */}
-          <div className="mt-6 border-t border-zinc-100 pt-4 text-center text-sm text-zinc-500 dark:border-zinc-800 dark:text-zinc-400">
+          <div className="mt-6 border-t border-border pt-4 text-center text-sm text-text-muted">
             <p>
               <span className="font-medium">Song Title</span> by{" "}
               <span className="font-medium">Artist Name</span>
@@ -243,7 +243,7 @@ export default function Home() {
           <div className="mt-4 text-center">
             <Link
               href="/song-dedication"
-              className="text-sm font-medium text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300"
+              className="text-sm font-medium text-accent hover:text-accent-hover"
             >
               View full dedication page &rarr;
             </Link>
@@ -253,25 +253,25 @@ export default function Home() {
 
       {/* Explore Section */}
       <section className="mt-16">
-        <h2 className="text-center text-2xl font-semibold text-zinc-900 dark:text-zinc-50">
+        <h2 className="text-center text-2xl font-semibold text-text-primary">
           Explore More
         </h2>
         <div className="mt-8 flex flex-wrap justify-center gap-4">
           <Link
             href="/explorations"
-            className="rounded-full border border-zinc-200 px-6 py-2 text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-100 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
+            className="rounded-full border border-border px-6 py-2 text-sm font-medium text-text-secondary transition-colors hover:bg-secondary"
           >
             Explorations
           </Link>
           <Link
             href="/dance-menu"
-            className="rounded-full border border-zinc-200 px-6 py-2 text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-100 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
+            className="rounded-full border border-border px-6 py-2 text-sm font-medium text-text-secondary transition-colors hover:bg-secondary"
           >
             Dance Menu
           </Link>
           <Link
             href="/song-dedication"
-            className="rounded-full border border-zinc-200 px-6 py-2 text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-100 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
+            className="rounded-full border border-border px-6 py-2 text-sm font-medium text-text-secondary transition-colors hover:bg-secondary"
           >
             Song Dedication
           </Link>
@@ -280,11 +280,11 @@ export default function Home() {
 
       {/* Contact CTA */}
       <section className="mt-16 text-center">
-        <p className="text-zinc-600 dark:text-zinc-400">
+        <p className="text-text-secondary">
           Want to get in touch directly?{" "}
           <a
             href="mailto:sam@samkirk.com"
-            className="font-medium text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300"
+            className="font-medium text-accent hover:text-accent-hover"
           >
             sam@samkirk.com
           </a>

@@ -40,14 +40,14 @@ export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-zinc-200 bg-white/80 backdrop-blur-sm dark:border-zinc-800 dark:bg-zinc-950/80">
+    <header className="sticky top-0 z-50 border-b border-border bg-primary/80 backdrop-blur-sm">
       <nav className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
         <Link
           href="/"
-          className="text-xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50"
+          className="text-xl font-bold tracking-tight text-text-primary"
         >
           Sam Kirk
-          <span className="hidden sm:inline text-base font-normal text-zinc-500 dark:text-zinc-400">
+          <span className="hidden sm:inline text-base font-normal text-text-muted">
             {" "}&ndash; Fremont, California
           </span>
         </Link>
@@ -58,17 +58,17 @@ export function Header() {
             <li key={link.href} className="relative group">
               <Link
                 href={link.href}
-                className="rounded-md px-3 py-2 text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-zinc-50"
+                className="rounded-md px-3 py-2 text-sm font-medium text-text-secondary transition-colors hover:bg-secondary hover:text-text-primary"
               >
                 {link.label}
               </Link>
               {link.children && (
-                <ul className="invisible absolute left-0 top-full z-50 min-w-[180px] rounded-lg border border-zinc-200 bg-white p-1 opacity-0 shadow-lg transition-all group-hover:visible group-hover:opacity-100 dark:border-zinc-700 dark:bg-zinc-900">
+                <ul className="invisible absolute left-0 top-full z-50 min-w-[180px] rounded-lg border border-border bg-primary p-1 opacity-0 shadow-lg transition-all group-hover:visible group-hover:opacity-100">
                   {link.children.map((child) => (
                     <li key={child.href}>
                       <Link
                         href={child.href}
-                        className="block rounded-md px-3 py-2 text-sm text-zinc-700 transition-colors hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-zinc-50"
+                        className="block rounded-md px-3 py-2 text-sm text-text-secondary transition-colors hover:bg-secondary hover:text-text-primary"
                       >
                         {child.label}
                       </Link>
@@ -83,7 +83,7 @@ export function Header() {
         {/* Mobile Menu Button */}
         <button
           type="button"
-          className="rounded-md p-2 text-zinc-700 transition-colors hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800 md:hidden"
+          className="rounded-md p-2 text-text-secondary transition-colors hover:bg-secondary md:hidden"
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
           aria-expanded={mobileMenuOpen}
@@ -114,13 +114,13 @@ export function Header() {
 
       {/* Mobile Navigation */}
       {mobileMenuOpen && (
-        <div className="border-t border-zinc-200 bg-white px-4 py-4 dark:border-zinc-800 dark:bg-zinc-950 md:hidden">
+        <div className="border-t border-border bg-primary px-4 py-4 md:hidden">
           <ul className="space-y-1">
             {navLinks.map((link) => (
               <li key={link.href}>
                 <Link
                   href={link.href}
-                  className="block rounded-md px-3 py-2 text-base font-medium text-zinc-700 transition-colors hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-zinc-50"
+                  className="block rounded-md px-3 py-2 text-base font-medium text-text-secondary transition-colors hover:bg-secondary hover:text-text-primary"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   {link.label}
@@ -131,7 +131,7 @@ export function Header() {
                       <li key={child.href}>
                         <Link
                           href={child.href}
-                          className="block rounded-md px-3 py-2 text-sm text-zinc-600 transition-colors hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-50"
+                          className="block rounded-md px-3 py-2 text-sm text-text-secondary transition-colors hover:bg-secondary hover:text-text-primary"
                           onClick={() => setMobileMenuOpen(false)}
                         >
                           {child.label}
