@@ -83,7 +83,7 @@ function JobInputForm({ onSubmit, isLoading }: JobInputFormProps) {
             key={mode}
             type="button"
             onClick={() => setInputMode(mode)}
-            className={`flex-1 rounded-md px-4 py-2 text-sm font-medium transition-colors ${
+            className={`flex-1 rounded-md px-4 py-3 text-sm font-medium transition-colors ${
               inputMode === mode
                 ? "bg-white text-zinc-900 shadow dark:bg-zinc-700 dark:text-zinc-50"
                 : "text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200"

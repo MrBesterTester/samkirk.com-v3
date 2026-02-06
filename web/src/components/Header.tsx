@@ -83,7 +83,7 @@ export function Header() {
         {/* Mobile Menu Button */}
         <button
           type="button"
-          className="rounded-md p-2 text-text-secondary transition-colors hover:bg-secondary md:hidden"
+          className="rounded-md p-3 text-text-secondary transition-colors hover:bg-secondary md:hidden"
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
           aria-expanded={mobileMenuOpen}
@@ -120,7 +120,7 @@ export function Header() {
               <li key={link.href}>
                 <Link
                   href={link.href}
-                  className="block rounded-md px-3 py-2 text-base font-medium text-text-secondary transition-colors hover:bg-secondary hover:text-text-primary"
+                  className="block rounded-md px-3 py-3 text-base font-medium text-text-secondary transition-colors hover:bg-secondary hover:text-text-primary"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   {link.label}
@@ -131,7 +131,7 @@ export function Header() {
                       <li key={child.href}>
                         <Link
                           href={child.href}
-                          className="block rounded-md px-3 py-2 text-sm text-text-secondary transition-colors hover:bg-secondary hover:text-text-primary"
+                          className="block rounded-md px-3 py-3 text-sm text-text-secondary transition-colors hover:bg-secondary hover:text-text-primary"
                           onClick={() => setMobileMenuOpen(false)}
                         >
                           {child.label}

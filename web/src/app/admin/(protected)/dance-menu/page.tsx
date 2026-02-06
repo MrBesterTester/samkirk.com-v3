@@ -255,7 +255,7 @@ export default function AdminDanceMenuPage() {
         </div>
 
         {/* Required files indicator */}
-        <div className="mt-6 grid grid-cols-4 gap-4">
+        <div className="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-4">
           {ALLOWED_EXTENSIONS.map((ext) => {
             const isRequired = REQUIRED_EXTENSIONS.includes(ext);
             const hasFile = selectedFiles.some((f) => f.extension === ext);

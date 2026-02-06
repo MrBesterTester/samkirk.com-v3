@@ -259,19 +259,19 @@ export default function Home() {
         <div className="mt-8 flex flex-wrap justify-center gap-4">
           <Link
             href="/explorations"
-            className="rounded-full border border-border px-6 py-2 text-sm font-medium text-text-secondary transition-colors hover:bg-secondary"
+            className="rounded-full border border-border px-6 py-3 text-sm font-medium text-text-secondary transition-colors hover:bg-secondary"
           >
             Explorations
           </Link>
           <Link
             href="/dance-menu"
-            className="rounded-full border border-border px-6 py-2 text-sm font-medium text-text-secondary transition-colors hover:bg-secondary"
+            className="rounded-full border border-border px-6 py-3 text-sm font-medium text-text-secondary transition-colors hover:bg-secondary"
           >
             Dance Menu
           </Link>
           <Link
             href="/song-dedication"
-            className="rounded-full border border-border px-6 py-2 text-sm font-medium text-text-secondary transition-colors hover:bg-secondary"
+            className="rounded-full border border-border px-6 py-3 text-sm font-medium text-text-secondary transition-colors hover:bg-secondary"
           >
             Song Dedication
           </Link>
