@@ -7,7 +7,10 @@ export default function DanceInstructionPage() {
         Dance Instruction
       </h1>
       <p className="mt-4 text-lg text-zinc-600 dark:text-zinc-400">
-        Thoughts and resources on teaching and learning dance.
+        Thoughts and resources on teaching and learning dance. From
+        philosophy of instruction to practical learning principles, this
+        exploration covers the challenges and joys of communicating movement
+        through words, demonstration, and shared experience.
       </p>
 
       <div className="mt-12">

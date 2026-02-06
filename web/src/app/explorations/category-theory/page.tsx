@@ -8,6 +8,9 @@ export default function CategoryTheoryPage() {
       </h1>
       <p className="mt-4 text-lg text-zinc-600 dark:text-zinc-400">
         Exploring the mathematical foundations of abstraction and composition.
+        Category theory provides a unifying language for understanding structure
+        across mathematics, programming, and logic&mdash;from functors and
+        monads to the deep patterns underlying software architecture.
       </p>
 
       <div className="mt-12">

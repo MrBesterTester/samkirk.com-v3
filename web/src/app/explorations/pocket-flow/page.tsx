@@ -7,7 +7,10 @@ export default function PocketFlowPage() {
         Pocket Flow
       </h1>
       <p className="mt-4 text-lg text-zinc-600 dark:text-zinc-400">
-        A lightweight framework for building AI workflows.
+        A lightweight framework for building AI workflows. Pocket Flow
+        emphasizes simplicity and composability, providing a minimal set of
+        primitives for chaining LLM calls, managing context, and orchestrating
+        multi-step AI pipelines without heavy dependencies.
       </p>
 
       <div className="mt-12">

@@ -7,7 +7,10 @@ export default function UberLevelAiSkillsPage() {
         Uber Level AI Skills
       </h1>
       <p className="mt-4 text-lg text-zinc-600 dark:text-zinc-400">
-        Advanced techniques for getting the most out of AI tools.
+        Advanced techniques for getting the most out of AI tools. Learn
+        strategies for effective context management, iterative refinement,
+        verification, and workflow design that separate casual AI usage from
+        genuinely productive collaboration.
       </p>
 
       <div className="mt-12">
