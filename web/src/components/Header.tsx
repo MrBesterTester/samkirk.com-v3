@@ -16,6 +16,7 @@ const baseNavLinks = [
   },
   { href: "/dance-menu", label: "Dance Menu" },
   { href: "/song-dedication", label: "Song Dedication" },
+  { href: "/photo-fun", label: "Photo Fun" },
   {
     href: "/explorations",
     label: "Explorations",
