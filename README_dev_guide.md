@@ -34,6 +34,16 @@ npm run test:all -- --e2e-real    # Real LLM E2E (requires GCP + seeded resume)
 npm run test:all -- --smoke       # GCP smoke tests only
 ```
 
+**Setting up GCP credentials:**
+
+The E2E Real LLM and GCP Smoke suites require Application Default Credentials (ADC):
+
+```bash
+gcloud auth application-default login    # Set up credentials for Google Cloud client libraries
+```
+
+For full GCP project setup (Firestore, Cloud Storage, environment variables), see [`docs/GCP-SETUP.md`](docs/GCP-SETUP.md).
+
 **Controlling GCP behavior:**
 
 ```bash
