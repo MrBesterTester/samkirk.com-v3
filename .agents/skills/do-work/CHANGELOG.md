@@ -4,6 +4,12 @@ What's new, what's better, what's different. Most recent stuff on top.
 
 ---
 
+## 0.10.3 — The Disambiguator (2026-02-09)
+
+The 0.10.2 fix changed "step 3" to "step 4", but "step 4" is still ambiguous — it could mean Step 4 (Planning Phase) in the main workflow. Changed to "item 4 below" so agents route to the cleanup/exit list item, not the planning phase.
+
+- Clarified Step 9 item 1: "go to step 4" → "proceed to item 4 below"
+
 ## 0.10.2 — The Off-by-One (2026-02-06)
 
 Step 9's limit-reached branch said "go to step 3" — which was the "keep looping" branch, not the exit. Fixed the reference to point to step 4 (cleanup and exit). Without this, an agent hitting the limit could loop instead of stopping.
