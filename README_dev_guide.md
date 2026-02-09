@@ -4,6 +4,23 @@ This is the day-to-day reference for running, writing, and managing tests in sam
 
 ---
 
+## Table of Contents
+
+- [Test Suites at a Glance](#test-suites-at-a-glance)
+- [Running Tests](#running-tests)
+  - [First Run (Incremental)](#first-run-incremental)
+- [Release Qualification](#release-qualification)
+- [Writing a New Test](#writing-a-new-test)
+- [Fixing or Rewriting a Test](#fixing-or-rewriting-a-test)
+- [Triage Workflows](#triage-workflows)
+- [Manual Verifications](#manual-verifications)
+- [Planned Test Work](#planned-test-work)
+- [Manual Fallback](#manual-fallback)
+- [Conventions](#conventions)
+- [Reference Documents](#reference-documents)
+
+---
+
 ## Test Suites at a Glance
 
 | Suite | Framework | Command | Files | GCP? |
@@ -39,7 +56,12 @@ npm run test:all -- --smoke       # GCP smoke tests only
 The E2E Real LLM and GCP Smoke suites require Application Default Credentials (ADC):
 
 ```bash
-gcloud auth application-default login    # Set up credentials for Google Cloud client libraries
+# Check if already set up (prints a token if valid):
+gcloud auth application-default print-access-token
+
+# If the above fails, set up credentials and verify:
+gcloud auth application-default login
+gcloud auth application-default print-access-token
 ```
 
 For full GCP project setup (Firestore, Cloud Storage, environment variables), see [`docs/GCP-SETUP.md`](docs/GCP-SETUP.md).
@@ -63,6 +85,60 @@ npm run test:e2e:ui                       # Playwright UI mode (interactive)
 
 ```bash
 npm run test:all -- --no-archive
+```
+
+**E2E test prerequisites:**
+
+The Playwright E2E tests (`--e2e`) use system Chrome directly — they do **not** require the Claude in Chrome extension or the Playwright MCP server (those are development tools for AI-assisted debugging, not test dependencies). No manual dev server is needed — Playwright starts one automatically with captcha bypass enabled.
+
+| Prerequisite | Check if done | Setup (if needed) |
+|---|---|---|
+| Google Chrome | `open -Ra "Google Chrome" && echo OK` | [Install Chrome](https://www.google.com/chrome/) |
+| Node dependencies | `ls web/node_modules/.package-lock.json` | `cd web && npm install` |
+| `.env.local` exists | `test -f web/.env.local && echo OK` | `cp web/.env.local.example web/.env.local` and fill in values |
+| GCP credentials (ADC) | `gcloud auth application-default print-access-token > /dev/null && echo OK` | `gcloud auth application-default login` |
+
+For the **Real LLM E2E** suite (`--e2e-real`), you also need:
+
+| Prerequisite | Check if done | Setup (if needed) |
+|---|---|---|
+| Seeded resume | `gcloud storage cat gs://samkirk-v3-private/resume/master.md --range=0-50` | `cd web && npm run seed:resume` |
+| Vertex AI API enabled | `gcloud services list --enabled --filter=aiplatform` | `gcloud services enable aiplatform.googleapis.com` |
+
+Real LLM tests cost ~$0.03–0.15 per run in Vertex AI tokens.
+
+### First Run (Incremental)
+
+If this is your first time running the tests, work through the suites one at a time instead of running everything at once. This makes it easier to isolate setup issues.
+
+**Step 1 — Unit tests** (no external dependencies):
+
+```bash
+npm run test:all -- --unit
+```
+
+**Step 2 — E2E without GCP** (needs Chrome only):
+
+```bash
+npm run test:all -- --e2e --no-gcp
+```
+
+**Step 3 — GCP smoke tests** (needs ADC + `.env.local`):
+
+```bash
+npm run test:all -- --smoke
+```
+
+**Step 4 — Real LLM E2E** (needs seeded resume + Vertex AI):
+
+```bash
+npm run test:all -- --e2e-real
+```
+
+Fix any failures at each step before moving to the next. Once all four pass individually, confirm they work together:
+
+```bash
+npm run test:all
 ```
 
 ---
