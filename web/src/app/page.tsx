@@ -104,7 +104,7 @@ export default function Home() {
             Photo Fun
           </h2>
           <p className="mt-1 text-text-secondary">
-            Turn any photo into art with Google Gemini — try Professional, Claymation, Cyberpunk, Pencil Sketch, and other styles.
+            Turn any photo into art with Google Gemini — try Professional, Claymation, Cyberpunk, Pencil Sketch, and other styles. (An aistudio.google.com prototype made right with Cursor and hosted on Vercel.com with a switch over to Vertex AI for the best production image model.)
           </p>
           <a
             href="https://photo-fun.samkirk.com"
@@ -121,7 +121,7 @@ export default function Home() {
             Song Dedication to Mom
           </h2>
           <p className="mt-1 text-text-secondary">
-            A song that means something, with the story and lyrics behind it.
+            A song that means something, with the story and lyrics behind it. (Lyrics done in ChatGPT; sound track done on www.udio.com.)
           </p>
           <Link
             href="/song-dedication"
