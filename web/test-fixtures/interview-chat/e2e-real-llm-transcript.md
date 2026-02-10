@@ -6,30 +6,30 @@
 
 ---
 
-**Interviewer:** *(4:59:10 PM)*
+**Interviewer:** *(5:02:46 PM)*
 
 What programming languages do you know?
 
 ---
 
-**Sam Kirk:** *(4:59:10 PM)*
+**Sam Kirk:** *(5:02:46 PM)*
 
-I have experience with a variety of programming languages. My core languages are TypeScript, JavaScript, and Python. I also have experience with Go and SQL. I'm currently learning Rust.
+I have experience with a variety of programming languages. My core languages include TypeScript, JavaScript, and Python, which I've used extensively in both frontend and backend development. I'm also proficient in Go and SQL. Additionally, I'm currently learning Rust to expand my skillset.
 
 
 ---
 
-**Interviewer:** *(4:59:10 PM)*
+**Interviewer:** *(5:02:46 PM)*
 
 Tell me about your most recent role.
 
 ---
 
-**Sam Kirk:** *(4:59:10 PM)*
+**Sam Kirk:** *(5:02:46 PM)*
 
 In my most recent role as a Senior Software Engineer at Tech Company (2020-Present), I led the development of AI-powered features for enterprise customers. This involved working across the full stack, from building React frontends to developing Python ML pipelines.
 
-A key accomplishment was architecting and building a RAG-based document search system using LangChain and vector databases. This significantly reduced customer support response times, by about 40%. I also designed scalable data pipelines that process millions of records daily with 99.9% uptime. Beyond development, I mentored junior engineers, implemented CI/CD pipelines with GitHub Actions, and helped to reduce deployment time.
+One of my key accomplishments was architecting and building a RAG-based document search system using LangChain and vector databases. This significantly reduced customer support response times, by 40%. I also designed scalable data pipelines that processed millions of records daily with 99.9% uptime. In addition to development work, I mentored 5 junior engineers through code reviews, pair programming, and technical design sessions, and I implemented CI/CD pipelines with GitHub Actions, reducing deployment time from hours to minutes.
 
 
 ---
