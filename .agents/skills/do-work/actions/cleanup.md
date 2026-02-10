@@ -21,6 +21,7 @@ For each UR folder in `do-work/user-requests/`:
 
 1. Read `input.md` and parse the `requests` array from frontmatter (e.g., `[REQ-044, REQ-045, REQ-046]`)
 2. For each REQ ID in the array, check if it exists with `status: completed` in ANY of these locations:
+   - `do-work/user-requests/UR-NNN/` itself (moved here by a partial archival attempt)
    - `do-work/archive/UR-NNN/` (already consolidated)
    - `do-work/archive/` root (loose in archive)
    - `do-work/working/` (just completed, not yet moved)

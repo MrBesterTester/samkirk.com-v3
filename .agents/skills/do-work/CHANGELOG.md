@@ -4,6 +4,14 @@ What's new, what's better, what's different. Most recent stuff on top.
 
 ---
 
+## 0.10.7 — The Full Picture (2026-02-10)
+
+Both 0.10.5 and 0.10.6 were half-right. The `user-requests/UR-NNN/` check (0.10.5) covers partial-failure recovery — when work.md's "all complete" path moves REQs into the UR folder but crashes before archiving it. The `archive/UR-NNN/` check (0.10.6) covers cleanup consolidation. Both are needed, and cleanup.md was also missing the UR-folder-itself check.
+
+- Restored `user-requests/UR-NNN/` check in work.md (0.10.6 wrongly removed it)
+- Kept `archive/UR-NNN/` check in work.md (valid for consolidation edge cases)
+- Added `user-requests/UR-NNN/` check to cleanup.md Pass 1 (was also missing)
+
 ## 0.10.6 — The Right Folder (2026-02-10)
 
 The 0.10.5 fix added `user-requests/UR-NNN/` as a check location, but that's wrong — completed REQs from earlier iterations land in `archive/UR-NNN/` (via cleanup consolidation), not `user-requests/`. Fixed to match cleanup.md's correct logic.
