@@ -79,204 +79,70 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Dance Menu Teaser */}
-      <section className="mt-16">
-        <h2 className="text-center text-2xl font-semibold text-text-primary">
-          This Week&apos;s Dance Menu
-        </h2>
-        <p className="mt-2 text-center text-text-secondary">
-          Curated social dance playlists, updated weekly.
-        </p>
-
-        <div className="mt-8 flex justify-center">
-          <ToolPreview
-            title="My Dance Menu"
-            description="Browse the weekly update (curated with Claude Cowork) — East Coast Swing, Waltz, Nightclub Two Step, Country with lots of Zydeco bands."
-            ctaText="View Full Menu"
-            ctaLink="/dance-menu"
-          />
-        </div>
-      </section>
-
-      {/* Photo Fun */}
-      <section className="mt-16">
-        <h2 className="text-center text-2xl font-semibold text-text-primary">
-          Photo Fun
-        </h2>
-        <p className="mt-2 text-center text-text-secondary">
-          AI-powered photo editing using Google Gemini.
-        </p>
-
-        <div className="mt-8 flex justify-center">
-          <div className="group rounded-xl border border-border bg-primary p-6 shadow-sm transition-all hover:border-accent hover:shadow-md">
-            <h3 className="text-lg font-semibold text-text-primary group-hover:text-accent">
-              Photo Fun
-            </h3>
-            <p className="mt-2 text-sm text-text-secondary">
-              AI-powered photo editing using Google Gemini. Transform your photos
-              with artistic styles like Professional, Claymation, Cyberpunk, and
-              Pencil Sketch.
-            </p>
-            <a
-              href="https://photo-fun.samkirk.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-4 inline-block text-sm font-medium text-accent hover:text-accent-hover transition-colors"
-            >
-              Try Photo Fun &rarr;
-            </a>
-          </div>
-        </div>
-      </section>
-
-      {/* Song Dedication */}
-      <section className="mt-16">
-        <h2 className="text-center text-2xl font-semibold text-text-primary">
-          Song Dedication
-        </h2>
-        <p className="mt-2 text-center text-text-secondary">
-          A special dedication through music.
-        </p>
-
-        <div className="mt-8 rounded-xl border border-border bg-primary p-6 shadow-sm">
-          {/* About */}
-          <p className="text-text-secondary">
-            This song holds a special meaning. The story behind this dedication
-            will be shared here.
+      {/* Table of Contents */}
+      <div className="mt-16 space-y-10">
+        <section>
+          <h2 className="text-2xl font-semibold text-text-primary">
+            Dance Menu
+          </h2>
+          <p className="mt-1 text-text-secondary">
+            Weekly curated playlists for social dancers — Swing, Waltz, Two Step, and more, refreshed every week with Claude Cowork.
           </p>
-
-          {/* Audio Player */}
-          <div className="mt-6">
-            <div className="flex items-center justify-center rounded-lg bg-secondary py-8">
-              <div className="text-center">
-                <svg
-                  className="mx-auto h-10 w-10 text-text-muted"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  aria-hidden="true"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M9 9l10.5-3m0 6.553v3.75a2.25 2.25 0 01-1.632 2.163l-1.32.377a1.803 1.803 0 11-.99-3.467l2.31-.66a2.25 2.25 0 001.632-2.163zm0 0V2.25L9 5.25v10.303m0 0v3.75a2.25 2.25 0 01-1.632 2.163l-1.32.377a1.803 1.803 0 01-.99-3.467l2.31-.66A2.25 2.25 0 009 15.553z"
-                  />
-                </svg>
-                <p className="mt-2 text-sm text-text-muted">
-                  Audio player will be embedded here
-                </p>
-              </div>
-            </div>
-            <p className="mt-3 text-center text-sm text-text-muted">
-              Or listen on{" "}
-              <a
-                href="#"
-                className="font-medium text-accent hover:text-accent-hover"
-              >
-                Spotify
-              </a>{" "}
-              /{" "}
-              <a
-                href="#"
-                className="font-medium text-accent hover:text-accent-hover"
-              >
-                YouTube
-              </a>
-            </p>
-          </div>
-
-          {/* Lyrics */}
-          <div className="mt-6 space-y-4">
-            <h3 className="text-lg font-semibold text-text-primary">
-              Lyrics
-            </h3>
-
-            {/* Verse 1 */}
-            <div>
-              <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-text-muted">
-                Verse 1
-              </p>
-              <p className="whitespace-pre-line text-sm text-text-secondary">
-                Song lyrics will appear here.
-                {"\n"}Each line of the verse
-                {"\n"}will be displayed
-                {"\n"}with proper formatting.
-              </p>
-            </div>
-
-            {/* Chorus */}
-            <div className="rounded-lg bg-secondary p-3">
-              <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-text-muted">
-                Chorus
-              </p>
-              <p className="whitespace-pre-line text-sm font-medium text-text-primary">
-                The chorus will stand out
-                {"\n"}with a subtle background
-                {"\n"}to differentiate it from verses.
-              </p>
-            </div>
-
-            {/* Verse 2 */}
-            <div>
-              <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-text-muted">
-                Verse 2
-              </p>
-              <p className="whitespace-pre-line text-sm text-text-secondary">
-                Additional verses
-                {"\n"}follow the same pattern
-                {"\n"}maintaining consistency.
-              </p>
-            </div>
-          </div>
-
-          {/* Song Info */}
-          <div className="mt-6 border-t border-border pt-4 text-center text-sm text-text-muted">
-            <p>
-              <span className="font-medium">Song Title</span> by{" "}
-              <span className="font-medium">Artist Name</span>
-            </p>
-            <p className="mt-1">Album Name &bull; Year</p>
-          </div>
-
-          {/* Link to full page */}
-          <div className="mt-4 text-center">
-            <Link
-              href="/song-dedication"
-              className="text-sm font-medium text-accent hover:text-accent-hover"
-            >
-              View full dedication page &rarr;
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Explore Section */}
-      <section className="mt-16">
-        <h2 className="text-center text-2xl font-semibold text-text-primary">
-          Explore More
-        </h2>
-        <div className="mt-8 flex flex-wrap justify-center gap-4">
-          <Link
-            href="/explorations"
-            className="rounded-full border border-border px-6 py-3 text-sm font-medium text-text-secondary transition-colors hover:bg-secondary"
-          >
-            Explorations
-          </Link>
           <Link
             href="/dance-menu"
-            className="rounded-full border border-border px-6 py-3 text-sm font-medium text-text-secondary transition-colors hover:bg-secondary"
+            className="mt-2 inline-block font-medium text-accent hover:text-accent-hover"
           >
-            Dance Menu
+            View this week&apos;s menu &rarr;
           </Link>
+        </section>
+
+        <section>
+          <h2 className="text-2xl font-semibold text-text-primary">
+            Photo Fun
+          </h2>
+          <p className="mt-1 text-text-secondary">
+            Turn any photo into art with Google Gemini — try Professional, Claymation, Cyberpunk, Pencil Sketch, and other styles.
+          </p>
+          <a
+            href="https://photo-fun.samkirk.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-2 inline-block font-medium text-accent hover:text-accent-hover"
+          >
+            Try Photo Fun &rarr;
+          </a>
+        </section>
+
+        <section>
+          <h2 className="text-2xl font-semibold text-text-primary">
+            Song Dedication
+          </h2>
+          <p className="mt-1 text-text-secondary">
+            A song that means something, with the story and lyrics behind it.
+          </p>
           <Link
             href="/song-dedication"
-            className="rounded-full border border-border px-6 py-3 text-sm font-medium text-text-secondary transition-colors hover:bg-secondary"
+            className="mt-2 inline-block font-medium text-accent hover:text-accent-hover"
           >
-            Song Dedication
+            Listen and read the dedication &rarr;
           </Link>
-        </div>
-      </section>
+        </section>
+
+        <section>
+          <h2 className="text-2xl font-semibold text-text-primary">
+            Explorations
+          </h2>
+          <p className="mt-1 text-text-secondary">
+            Side projects, experiments, and things I&apos;m building for fun — the workshop behind the portfolio.
+          </p>
+          <Link
+            href="/explorations"
+            className="mt-2 inline-block font-medium text-accent hover:text-accent-hover"
+          >
+            Browse explorations &rarr;
+          </Link>
+        </section>
+      </div>
 
       {/* Contact CTA */}
       <section className="mt-16 text-center">

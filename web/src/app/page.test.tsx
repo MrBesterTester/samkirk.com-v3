@@ -47,17 +47,36 @@ describe("Home page", () => {
     expect(interviewLinks[0]).toHaveAttribute("href", "/tools/interview");
   });
 
-  it("renders the explore section with navigation links", () => {
+  it("renders TOC sections with links to each page", () => {
     render(<Home />);
 
-    const explorationsLinks = screen.getAllByRole("link", { name: /explorations/i });
-    expect(explorationsLinks.length).toBeGreaterThanOrEqual(1);
+    expect(
+      screen.getByRole("heading", { name: /dance menu/i })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: /view this week/i })
+    ).toHaveAttribute("href", "/dance-menu");
 
-    const danceMenuLinks = screen.getAllByRole("link", { name: /dance menu/i });
-    expect(danceMenuLinks.length).toBeGreaterThanOrEqual(1);
+    expect(
+      screen.getByRole("heading", { name: /photo fun/i })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: /try photo fun/i })
+    ).toHaveAttribute("href", "https://photo-fun.samkirk.com");
 
-    const songLinks = screen.getAllByRole("link", { name: /song dedication/i });
-    expect(songLinks.length).toBeGreaterThanOrEqual(1);
+    expect(
+      screen.getByRole("heading", { name: /song dedication/i })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: /listen and read/i })
+    ).toHaveAttribute("href", "/song-dedication");
+
+    expect(
+      screen.getByRole("heading", { name: /explorations/i })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: /browse explorations/i })
+    ).toHaveAttribute("href", "/explorations");
   });
 
   it("renders contact email link", () => {
