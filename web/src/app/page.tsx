@@ -89,8 +89,11 @@ export default function Home() {
             My Dance Menu
           </h2>
           <p className="mt-1 text-text-secondary">
-            Weekly curated playlists for social dancers (curated with Claude Cowork) — Swing, Waltz, Two Step, and more.
+            Weekly curated playlists for social dancers — Swing, Waltz, Two Step, and more.
           </p>
+          <ul className="mt-1 list-disc pl-5 text-sm text-text-muted">
+            <li>Curated with Claude Cowork</li>
+          </ul>
           <Link
             href="/dance-menu"
             className="mt-2 inline-block font-medium text-accent hover:text-accent-hover"
@@ -104,8 +107,11 @@ export default function Home() {
             Photo Fun
           </h2>
           <p className="mt-1 text-text-secondary">
-            Turn any photo into art with Google Gemini — try Professional, Claymation, Cyberpunk, Pencil Sketch, and other styles. (An aistudio.google.com prototype made right with Cursor and hosted on Vercel.com with a switch over to Vertex AI for the best production image model.)
+            Turn any photo into art with Google Gemini — try Professional, Claymation, Cyberpunk, Pencil Sketch, and other styles.
           </p>
+          <ul className="mt-1 list-disc pl-5 text-sm text-text-muted">
+            <li>An aistudio.google.com prototype made right with Cursor and hosted on Vercel.com with a switch over to Vertex AI for the best production image model.</li>
+          </ul>
           <a
             href="https://photo-fun.samkirk.com"
             target="_blank"
@@ -121,8 +127,11 @@ export default function Home() {
             Song Dedication to Mom
           </h2>
           <p className="mt-1 text-text-secondary">
-            A song that means something, with the story and lyrics behind it. (Lyrics done in ChatGPT; sound track done on www.udio.com.)
+            A song that means something, with the story and lyrics behind it.
           </p>
+          <ul className="mt-1 list-disc pl-5 text-sm text-text-muted">
+            <li>Lyrics done in ChatGPT; sound track done on www.udio.com.</li>
+          </ul>
           <Link
             href="/song-dedication"
             className="mt-2 inline-block font-medium text-accent hover:text-accent-hover"
@@ -146,19 +155,6 @@ export default function Home() {
           </Link>
         </section>
       </div>
-
-      {/* Contact CTA */}
-      <section className="mt-16 text-center">
-        <p className="text-text-secondary">
-          Want to get in touch directly?{" "}
-          <a
-            href="mailto:sam@samkirk.com"
-            className="font-medium text-accent hover:text-accent-hover"
-          >
-            sam@samkirk.com
-          </a>
-        </p>
-      </section>
     </div>
   );
 }

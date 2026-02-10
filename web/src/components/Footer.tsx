@@ -36,6 +36,14 @@ export function Footer() {
               {buildDate}
             </p>
           </div>
+          <a
+            href="https://www.linkedin.com/in/samuelkirk"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-sm text-text-secondary transition-colors hover:text-text-primary"
+          >
+            LinkedIn
+          </a>
           <div className="flex gap-6">
             <Link
               href="mailto:sam@samkirk.com"
