@@ -46,7 +46,7 @@ For each TODO file with completed steps:
    - Only change items within that step's section (stop at the next `###` heading or `---` separator)
 3. Write the updated TODO file
 
-**Important:** Only check off items for steps whose REQ has `status: completed` in the archive. If a REQ was archived with a different status (e.g., `skipped`, `blocked`), leave those items unchecked.
+**Important:** Only check off items for steps whose REQ has `status: completed` in the archive. If a REQ was archived with a different status (e.g., `failed`), leave those items unchecked.
 
 ## Step 4: Report
 
