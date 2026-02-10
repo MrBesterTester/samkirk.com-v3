@@ -2,7 +2,61 @@
 
 Personal website + genAI demo tools for `samkirk.com`.
 
-Key docs:
+### Table of Contents
+
+- [Principles of Operation (POO)](#principles-of-operation-poo)
+- [Standard Operating Procedures (SOP)](#standard-operating-procedures-sop)
+  - [Resume Management](#resume-management)
+  - [Testing](#testing)
+- [Key docs](#key-docs)
+- [Tech stack (V1 target)](#tech-stack-v1-target)
+- [Local development](#local-development)
+- [Scripts](#scripts)
+- [Development Methodology](#development-methodology)
+- [Notes](#notes)
+
+### Principles of Operation (POO)
+
+Most of the website content is fixed — static pages that rarely change. Two sections are the exceptions:
+
+- **Dance Menu** (small) — A weekly-updated listing of upcoming dance events. An admin uploads `.txt` and `.html` files (with optional `.md` and `.pdf`) via the admin panel, and they're served to visitors on the `/dance-menu` page.
+- **Hire Me** (large) — The interactive hiring toolkit. Visitors upload a job description, and the system uses the stored resume plus LLM processing to generate tailored cover letters, fit reports, and interview prep materials.
+
+### Standard Operating Procedures (SOP)
+
+> **Note:** The **Admin** nav link only appears in development mode (`NODE_ENV=development`). In production, `/admin` is still accessible by URL but hidden from the navigation for security.
+
+#### Resume Management
+
+**Initial setup (new environment):**
+1. Edit `web/data/baseline-resume.md` with your resume content
+2. Validate chunking: `npm run validate:resume -- data/baseline-resume.md`
+3. Seed to GCP: `npm run seed:resume`
+
+**Updating your resume:**
+- Use the admin page at `/admin/resume` (requires Google OAuth login)
+- Or edit `web/data/baseline-resume.md` and re-run `npm run seed:resume`
+
+**Resume format requirements:**
+- Markdown with headings (##, ###) for logical sections
+- Each section: 100-2000 characters
+- Content under headings, not just nested sub-headings
+
+#### Testing
+
+| Command | Description |
+|---------|-------------|
+| `npm test` | Run unit tests (Vitest) — 819 tests |
+| `npx playwright test` | Run E2E tests with Playwright — 11 tests (Fit + Resume tools) |
+| `npm run test:e2e:real` | Run E2E test with real Vertex AI (~$0.02-0.10) |
+| `npm run smoke:gcp` | Run GCP integration smoke tests — 11 sections |
+| `npm run test:all` | Run all tests (unit + E2E + smoke) with single command |
+| `npm run validate:resume -- <file>` | Validate resume chunking locally |
+
+See [`docs/TEST-RESULTS.md`](docs/TEST-RESULTS.md) for detailed test results and verification evidence.
+
+### Key docs
+
 - [`docs/Proposal.md`](docs/Proposal.md) — Original project proposal
 - [`docs/SPECIFICATION.md`](docs/SPECIFICATION.md) — Functional specification (V1)
 - [`docs/BLUEPRINT.md`](docs/BLUEPRINT.md) — Technical architecture and implementation plan
@@ -45,39 +99,6 @@ npm run build
 npm run start
 ```
 
-### Standard Operating Procedures
-
-> **Note:** The **Admin** nav link only appears in development mode (`NODE_ENV=development`). In production, `/admin` is still accessible by URL but hidden from the navigation for security.
-
-#### Resume Management
-
-**Initial setup (new environment):**
-1. Edit `web/data/baseline-resume.md` with your resume content
-2. Validate chunking: `npm run validate:resume -- data/baseline-resume.md`
-3. Seed to GCP: `npm run seed:resume`
-
-**Updating your resume:**
-- Use the admin page at `/admin/resume` (requires Google OAuth login)
-- Or edit `web/data/baseline-resume.md` and re-run `npm run seed:resume`
-
-**Resume format requirements:**
-- Markdown with headings (##, ###) for logical sections
-- Each section: 100-2000 characters
-- Content under headings, not just nested sub-headings
-
-#### Testing
-
-| Command | Description |
-|---------|-------------|
-| `npm test` | Run unit tests (Vitest) — 819 tests |
-| `npx playwright test` | Run E2E tests with Playwright — 11 tests (Fit + Resume tools) |
-| `npm run test:e2e:real` | Run E2E test with real Vertex AI (~$0.02-0.10) |
-| `npm run smoke:gcp` | Run GCP integration smoke tests — 11 sections |
-| `npm run test:all` | Run all tests (unit + E2E + smoke) with single command |
-| `npm run validate:resume -- <file>` | Validate resume chunking locally |
-
-See [`docs/TEST-RESULTS.md`](docs/TEST-RESULTS.md) for detailed test results and verification evidence.
-
 ### Development Methodology
 
 This project follows the **Dylan Davis 50+ method** (three-document system):
@@ -99,4 +120,3 @@ Both tools can be used interchangeably. Workflow commands (create-spec, create-b
 
 - Secrets must never be committed (use env vars / GCP Secret Manager).
 - Phone numbers for future SMS alerting must be treated as secrets and not logged/exposed.
-
