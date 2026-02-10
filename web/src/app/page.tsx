@@ -127,7 +127,7 @@ export default function Home() {
             Song Dedication to Mom
           </h2>
           <p className="mt-1 text-text-secondary">
-            A song that means something, with the story and lyrics behind it.
+            A song for Mom with the story and lyrics behind it.
           </p>
           <ul className="mt-1 list-disc pl-5 text-sm text-text-muted">
             <li>Lyrics done in ChatGPT; sound track done on www.udio.com.</li>
