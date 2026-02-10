@@ -17,13 +17,16 @@ describe("isEmailAllowed", () => {
   });
 
   it("returns false when allowedEmail is undefined", () => {
-    // Suppress console.warn for this test
+    // Temporarily clear the env var so the default parameter resolves to undefined
+    const original = process.env.ADMIN_ALLOWED_EMAIL;
+    delete process.env.ADMIN_ALLOWED_EMAIL;
     const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
-    expect(isEmailAllowed("user@example.com", undefined)).toBe(false);
+    expect(isEmailAllowed("user@example.com")).toBe(false);
     expect(warnSpy).toHaveBeenCalledWith(
       "ADMIN_ALLOWED_EMAIL env var is not set"
     );
     warnSpy.mockRestore();
+    process.env.ADMIN_ALLOWED_EMAIL = original;
   });
 
   it("returns true for exact email match", () => {

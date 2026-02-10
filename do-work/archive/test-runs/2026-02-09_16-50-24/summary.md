@@ -1,27 +1,26 @@
 ---
-timestamp: 2026-02-06T14:06:48-08:00
-triggered_by: UR-002/REQ-024
+timestamp: 2026-02-09T16:50:24-08:00
 gcp_available: true
-suites_run: [unit, e2e]
-overall: fail
+suites_run: [smoke]
+overall: pass
 ---
 
-# Test Run: 2026-02-06 14:06:48 PST
+# Test Run: 2026-02-09 16:50:24 PST
 
 ## Summary
 
 | Suite | Status | Passed | Failed | Skipped | Duration |
 |-------|--------|--------|--------|---------|----------|
-| Unit Tests | FAILED | 1227 | 1 | 3 | 10s |
-| E2E Tests | FAILED | 27 | 23 | 0 | 1m 23s |
+| Unit Tests | SKIPPED | 0 | 0 | 0 | 0ms |
+| E2E Tests | SKIPPED | 0 | 0 | 0 | 0ms |
 | E2E Real LLM | SKIPPED | 0 | 0 | 0 | 0ms |
-| GCP Smoke | SKIPPED | 0 | 0 | 0 | 0ms |
+| GCP Smoke | PASSED | 106 | 0 | 0 | 53s |
 
 ## Test Index
 
 | File | Describe Blocks |
 |------|-----------------|
-| src/app/api/public/[...path]/route.test.ts | Public Proxy API Integration |
+| src/app/api/public/[...path]/route.test.ts | Public Proxy API Integration, Public Proxy API – Security (unit) |
 | src/app/explorations/category-theory/page.test.tsx | Category Theory page |
 | src/app/explorations/dance-instruction/page.test.tsx | Dance Instruction page |
 | src/app/explorations/page.test.tsx | Explorations hub page |
@@ -60,7 +59,7 @@ overall: fail
 | src/lib/submission.test.ts | submission module, constants, generateSubmissionId, isValidSubmissionId, createSubmissionTimestamps, createSubmissionTimestampsFromDate, calculateExpiresAt, isSubmissionExpired, buildArtifactGcsPrefix, isValidTool, isValidStatus, isValidCitation, isValidCitationsArray, TTL computation edge cases, ListSubmissionsOptions, SubmissionWithId type |
 | src/lib/vertex-ai.test.ts | ContentBlockedError, GenerationError, isSpendCapError, isContentBlockedError, isGenerationError, Error inheritance |
 | e2e/fit-tool.spec.ts | Fit Tool Happy Path, Fit Tool Error Handling |
-| e2e/full-app.spec.ts | Public Pages - Render Correctly, Exploration Pages - Render Correctly, Tool Pages - Load with Captcha Gate, Admin Pages - Authentication Required, Navigation - Links Work, API Endpoints - Basic Health, Error Handling - 404 Pages, Accessibility - Basic Checks |
+| e2e/full-app.spec.ts | Public Pages - Render Correctly, Exploration Pages - Render Correctly, Admin Pages - Authentication Required, Navigation - Links Work, API Endpoints - Basic Health, Error Handling - 404 Pages, Accessibility - Basic Checks |
 | e2e/interview-tool.spec.ts | Interview Tool - UI, Interview Tool - Input Behavior, Interview Tool - Conversation |
 | e2e/resume-tool.spec.ts | Resume Tool Happy Path, Resume Tool Error Handling |
 
@@ -72,5 +71,4 @@ overall: fail
 
 ## Cross-references
 
-- Triggered by: UR-002/REQ-024
-- Raw logs: unit-tests.log, e2e-tests.log (gitignored, local only)
+- Raw logs: gcp-smoke.log (gitignored, local only)

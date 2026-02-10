@@ -91,6 +91,10 @@ npm run test:all -- --no-archive
 
 The Playwright E2E tests (`--e2e`) use system Chrome directly — they do **not** require the Claude in Chrome extension or the Playwright MCP server (those are development tools for AI-assisted debugging, not test dependencies). No manual dev server is needed — Playwright starts one automatically with captcha bypass enabled.
 
+**Important:** Chrome must be running before you start E2E tests. Playwright uses `channel: "chrome"` (system Chrome) and will hang silently if Chrome is not running. If a run appears stuck at `→ Running E2E Tests...` with no progress, launch Chrome and try again.
+
+**Performance tip:** E2E tests run noticeably faster right after a computer restart (fresh Chrome with no accumulated state, tabs, or extensions loaded).
+
 | Prerequisite | Check if done | Setup (if needed) |
 |---|---|---|
 | Google Chrome | `open -Ra "Google Chrome" && echo OK` | [Install Chrome](https://www.google.com/chrome/) |

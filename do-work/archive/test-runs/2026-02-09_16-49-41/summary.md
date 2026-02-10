@@ -1,27 +1,26 @@
 ---
-timestamp: 2026-02-06T14:18:50-08:00
-release_candidate: true
+timestamp: 2026-02-09T16:49:41-08:00
 gcp_available: true
-suites_run: [unit, e2e, e2e-real, smoke]
-overall: fail
+suites_run: [unit]
+overall: pass
 ---
 
-# Test Run: 2026-02-06 14:18:50 PST
+# Test Run: 2026-02-09 16:49:41 PST
 
 ## Summary
 
 | Suite | Status | Passed | Failed | Skipped | Duration |
 |-------|--------|--------|--------|---------|----------|
-| Unit Tests | FAILED | 1227 | 1 | 3 | 11s |
-| E2E Tests | FAILED | 27 | 23 | 0 | 1m 26s |
-| E2E Real LLM | FAILED | 1 | 0 | 0 | 9s |
-| GCP Smoke | FAILED | 1 | 1 | 0 | 2s |
+| Unit Tests | PASSED | 1231 | 0 | 0 | 12s |
+| E2E Tests | SKIPPED | 0 | 0 | 0 | 0ms |
+| E2E Real LLM | SKIPPED | 0 | 0 | 0 | 0ms |
+| GCP Smoke | SKIPPED | 0 | 0 | 0 | 0ms |
 
 ## Test Index
 
 | File | Describe Blocks |
 |------|-----------------|
-| src/app/api/public/[...path]/route.test.ts | Public Proxy API Integration |
+| src/app/api/public/[...path]/route.test.ts | Public Proxy API Integration, Public Proxy API – Security (unit) |
 | src/app/explorations/category-theory/page.test.tsx | Category Theory page |
 | src/app/explorations/dance-instruction/page.test.tsx | Dance Instruction page |
 | src/app/explorations/page.test.tsx | Explorations hub page |
@@ -60,7 +59,7 @@ overall: fail
 | src/lib/submission.test.ts | submission module, constants, generateSubmissionId, isValidSubmissionId, createSubmissionTimestamps, createSubmissionTimestampsFromDate, calculateExpiresAt, isSubmissionExpired, buildArtifactGcsPrefix, isValidTool, isValidStatus, isValidCitation, isValidCitationsArray, TTL computation edge cases, ListSubmissionsOptions, SubmissionWithId type |
 | src/lib/vertex-ai.test.ts | ContentBlockedError, GenerationError, isSpendCapError, isContentBlockedError, isGenerationError, Error inheritance |
 | e2e/fit-tool.spec.ts | Fit Tool Happy Path, Fit Tool Error Handling |
-| e2e/full-app.spec.ts | Public Pages - Render Correctly, Exploration Pages - Render Correctly, Tool Pages - Load with Captcha Gate, Admin Pages - Authentication Required, Navigation - Links Work, API Endpoints - Basic Health, Error Handling - 404 Pages, Accessibility - Basic Checks |
+| e2e/full-app.spec.ts | Public Pages - Render Correctly, Exploration Pages - Render Correctly, Admin Pages - Authentication Required, Navigation - Links Work, API Endpoints - Basic Health, Error Handling - 404 Pages, Accessibility - Basic Checks |
 | e2e/interview-tool.spec.ts | Interview Tool - UI, Interview Tool - Input Behavior, Interview Tool - Conversation |
 | e2e/resume-tool.spec.ts | Resume Tool Happy Path, Resume Tool Error Handling |
 
@@ -72,4 +71,4 @@ overall: fail
 
 ## Cross-references
 
-- Raw logs: unit-tests.log, e2e-tests.log, e2e-real-llm.log, gcp-smoke.log (gitignored, local only)
+- Raw logs: unit-tests.log (gitignored, local only)

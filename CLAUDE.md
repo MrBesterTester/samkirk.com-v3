@@ -66,6 +66,8 @@ Remind the user which model is recommended for the current step:
 - **Real LLM E2E**: `npm run test:e2e:real` (requires seeded resume)
 - **GCP smoke tests**: `npm run smoke:gcp` (from `web/` folder)
 - **Never mock both resume data AND LLM responses** - use real data
+- **Always run the master test runner in the background** (`run_in_background: true`) so the user can keep working. Check results with non-blocking `TaskOutput` (`block: false`) and only block when the user explicitly asks for results.
+- **E2E headed mode**: Close Chrome before running `--headed`; Playwright launches its own Chrome instance
 
 ## Key Project Rules
 

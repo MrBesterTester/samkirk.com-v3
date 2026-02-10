@@ -12,6 +12,7 @@
  *   npm run test:all -- --smoke               # GCP smoke tests only
  *   npm run test:all -- --no-gcp              # Skip GCP-dependent suites
  *   npm run test:all -- --gcp                 # Force-include GCP (fail if bad)
+ *   npm run test:all -- --headed              # Playwright headed mode (see browser)
  *   npm run test:all -- --interactive         # Playwright UI mode
  *   npm run test:all -- --verbose             # Stream child stdout in real time
  *   npm run test:all -- --release             # Release-qualifying run
@@ -23,7 +24,7 @@
  * - For E2E Real LLM: Seeded resume data (npm run seed:resume)
  */
 
-import { spawn, type ChildProcess } from "child_process";
+import { spawn, execSync, type ChildProcess } from "child_process";
 import { resolve } from "path";
 import { readdirSync, readFileSync, existsSync, mkdirSync, writeFileSync } from "fs";
 import { config } from "dotenv";
@@ -83,6 +84,8 @@ interface Args {
   noGcp: boolean;
   /** Force-include GCP suites (fail if creds bad) */
   gcp: boolean;
+  /** Run Playwright in headed mode (visible browser) */
+  headed: boolean;
   /** Run Playwright in UI mode */
   interactive: boolean;
   /** Stream child stdout in real time */
@@ -158,6 +161,7 @@ function parseArgs(): Args {
     smoke: hasFlag("--smoke"),
     noGcp: hasFlag("--no-gcp"),
     gcp: hasFlag("--gcp"),
+    headed: hasFlag("--headed"),
     interactive: hasFlag("--interactive"),
     verbose: hasFlag("--verbose"),
     release: hasFlag("--release"),
@@ -195,7 +199,7 @@ function buildSuites(args: Args): Suite[] {
       command: "npx",
       args: args.interactive
         ? ["playwright", "test", "--ui"]
-        : ["playwright", "test"],
+        : ["playwright", "test", ...(args.headed ? ["--headed"] : [])],
       gcpRequired: false,
       flag: "--e2e",
     },
@@ -376,6 +380,35 @@ function parseSuiteOutput(
     return parsePlaywrightOutput(cleanOutput);
   }
   return parseCustomScriptOutput(cleanOutput);
+}
+
+// ============================================================================
+// Prerequisite Checks
+// ============================================================================
+
+/** Check if Chrome is running (macOS). E2E suites hang silently without it. */
+function isChromeRunning(): boolean {
+  try {
+    execSync("pgrep -q 'Google Chrome'", { stdio: "ignore" });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/** Fail fast if any E2E suite is about to run but Chrome isn't up. */
+function checkChromePrerequisite(suitesToRun: Suite[]): void {
+  const needsChrome = suitesToRun.some(
+    (s) => s.name === "E2E Tests" || s.name === "E2E Real LLM",
+  );
+  if (!needsChrome) return;
+
+  if (!isChromeRunning()) {
+    log("Google Chrome is not running — E2E tests require it", false);
+    log("Launch Chrome and try again, or run: open -a 'Google Chrome'", false);
+    process.exit(1);
+  }
+  log("Chrome is running", true);
 }
 
 // ============================================================================
@@ -952,6 +985,9 @@ async function main(): Promise<void> {
     printSummaryTable(skipped);
     process.exit(0);
   }
+
+  // Pre-flight: ensure Chrome is running if E2E suites are selected
+  checkChromePrerequisite(toRun);
 
   log(`Running ${toRun.length} suite(s), ${skipped.length} skipped`);
   console.log("-------------------------------------------------------------------");

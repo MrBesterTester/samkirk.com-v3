@@ -31,9 +31,8 @@ export default defineConfig({
   projects: [
     {
       name: "chromium",
-      use: { 
+      use: {
         ...devices["Desktop Chrome"],
-        channel: "chrome", // Use system Chrome instead of bundled Chromium
       },
     },
   ],

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { requireAdminAuth } from "@/lib/admin-auth";
+import { getSessionIdFromCookies, isSessionValid } from "@/lib/session";
 import { isValidSubmissionId, getSubmission } from "@/lib/submission";
 import { buildSubmissionBundle, type BuildSubmissionBundleOptions } from "@/lib/artifact-bundler";
 import { getPrivateBucket, PrivatePaths, fileExists } from "@/lib/storage";
@@ -24,8 +24,7 @@ interface DownloadErrorResponse {
  * Response:
  * - 200: Success with application/zip content
  * - 400: Invalid submission ID
- * - 401: Unauthorized (not logged in)
- * - 403: Forbidden (not an admin)
+ * - 401: Unauthorized (no valid session)
  * - 404: Submission not found
  * - 500: Server error
  */
@@ -33,10 +32,20 @@ export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ): Promise<NextResponse<DownloadErrorResponse> | NextResponse> {
-  // Check admin authentication
-  const authResult = await requireAdminAuth();
-  if (!authResult.authenticated) {
-    return authResult.error as NextResponse<DownloadErrorResponse>;
+  // Check session authentication (captcha-verified user)
+  const sessionId = await getSessionIdFromCookies();
+  if (!sessionId) {
+    return NextResponse.json(
+      { error: "Unauthorized", message: "No session found. Please refresh the page." },
+      { status: 401 }
+    );
+  }
+  const sessionValid = await isSessionValid(sessionId);
+  if (!sessionValid) {
+    return NextResponse.json(
+      { error: "Unauthorized", message: "Session expired. Please refresh the page." },
+      { status: 401 }
+    );
   }
 
   // Get the submission ID from the route params
