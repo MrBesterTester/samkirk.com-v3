@@ -9,15 +9,16 @@ These rules prevent repeatedly missing (or duplicating) setup steps when startin
 
 ## Slash commands: global vs project
 
+- **Git commands are global-only** — they live in `~/.cursor/commands/` and are shared across all repos. Do not create project-local copies.
 - Before creating **global** slash commands, always **check whether they already exist** in `~/.cursor/commands/`.
 - If global commands already exist, **do not overwrite them** unless the user explicitly asks to replace/update them.
 - If global commands are missing, create them.
-- Prefer creating **project** commands in `/.cursor/commands/` every new repo (safe and expected).
+- Prefer creating **project-specific workflow** commands in `/.cursor/commands/` every new repo (safe and expected).
 
-## Required global git commands to verify (and create if missing)
+## Required global git commands (verify exist, create if missing)
 
-- `~/.cursor/commands/git-commit-local.md`
-- `~/.cursor/commands/git-remote-push-clean-with-squash.md`
+- `~/.cursor/commands/git-commit-local.md` — commit to local repo only
+- `~/.cursor/commands/git-remote-push-clean-with-squash.md` — squash-push to remote
 
 ## Setup checklist hygiene
 
