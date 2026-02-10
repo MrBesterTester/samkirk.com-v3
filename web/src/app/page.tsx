@@ -90,8 +90,8 @@ export default function Home() {
 
         <div className="mt-8 flex justify-center">
           <ToolPreview
-            title="Dance Menu"
-            description="Browse this week's curated playlist for social dancing — salsa, bachata, kizomba, and more."
+            title="My Dance Menu"
+            description="Browse the weekly update (curated with Claude Cowork) — East Coast Swing, Waltz, Nightclub Two Step, Country with lots of Zydeco bands."
             ctaText="View Full Menu"
             ctaLink="/dance-menu"
           />
