@@ -7,7 +7,7 @@ const baseNavLinks = [
   { href: "/", label: "Home" },
   {
     href: "/tools",
-    label: "Tools",
+    label: "Hire Me",
     children: [
       { href: "/tools/fit", label: "How Do I Fit?" },
       { href: "/tools/resume", label: "Custom Resume" },

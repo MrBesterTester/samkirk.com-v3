@@ -15,7 +15,7 @@ const tools = [
   },
   {
     href: "/tools/interview",
-    title: "Interview Me Now",
+    title: "Interview Me NOW",
     description:
       "Have an interactive Q&A conversation about Sam's career and experience.",
   },

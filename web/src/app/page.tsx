@@ -59,7 +59,7 @@ export default function Home() {
             ctaLink="/tools/resume"
           />
           <ToolPreview
-            title="Interview Me"
+            title="Interview Me NOW"
             description="Ask questions about my experience and background."
             ctaText="Start Interview"
             ctaLink="/tools/interview"
