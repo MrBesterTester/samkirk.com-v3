@@ -881,6 +881,15 @@ function writeArchive(opts: ArchiveOptions): void {
     );
   }
 
+  // Totals row
+  const totalPassed = opts.results.reduce((sum, r) => sum + r.passed, 0);
+  const totalFailed = opts.results.reduce((sum, r) => sum + r.failed, 0);
+  const totalSkipped = opts.results.reduce((sum, r) => sum + r.skipped, 0);
+  const totalDuration = opts.results.reduce((sum, r) => sum + r.durationMs, 0);
+  summaryLines.push(
+    `| **Total** | | **${totalPassed}** | **${totalFailed}** | **${totalSkipped}** | **${formatDuration(totalDuration)}** |`,
+  );
+
   // Test index section
   summaryLines.push("");
   summaryLines.push("## Test Index");
