@@ -1,144 +1,1743 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dance Instruction</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    body {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-      line-height: 1.6;
-      color: #3f3f46;
-      background: transparent;
-      padding: 1.5rem;
-    }
-    h2 {
-      font-size: 1.5rem;
-      font-weight: 600;
-      color: #18181b;
-      margin-bottom: 1rem;
-    }
-    h3 {
-      font-size: 1.125rem;
-      font-weight: 600;
-      color: #27272a;
-      margin-top: 1.5rem;
-      margin-bottom: 0.75rem;
-    }
-    p {
-      margin-bottom: 1rem;
-    }
-    ul {
-      margin-bottom: 1rem;
-      padding-left: 1.5rem;
-    }
-    li {
-      margin-bottom: 0.5rem;
-    }
-    .placeholder-notice {
-      background: #fef3c7;
-      border: 1px solid #f59e0b;
-      border-radius: 0.5rem;
-      padding: 1rem;
-      margin-bottom: 1.5rem;
-    }
-    .placeholder-notice p {
-      margin: 0;
-      color: #92400e;
-    }
-    blockquote {
-      border-left: 4px solid #3b82f6;
-      padding-left: 1rem;
-      margin: 1rem 0;
-      font-style: italic;
-      color: #52525b;
-    }
-    @media (prefers-color-scheme: dark) {
-      body {
-        color: #a1a1aa;
-      }
-      h2 {
-        color: #fafafa;
-      }
-      h3 {
-        color: #e4e4e7;
-      }
-      blockquote {
-        color: #a1a1aa;
-        border-left-color: #60a5fa;
-      }
-      .placeholder-notice {
-        background: #422006;
-        border-color: #b45309;
-      }
-      .placeholder-notice p {
-        color: #fcd34d;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teaching the Follower in Social Partner Dancing - Syllabus</title>
+    <style>
+        :root {
+            --color-primary: #208090;
+            --color-primary-light: #2fa3b5;
+            --color-accent: #d4a574;
+            --color-bg: #fdfbf8;
+            --color-text: #1a1a1a;
+            --color-text-light: #555;
+            --color-border: #e0d5c7;
+            --color-highlight: #fff8e8;
+            --color-success: #4a7c59;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--color-text);
+            background-color: var(--color-bg);
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-radius: 4px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 3px solid var(--color-primary);
+            padding-bottom: 20px;
+        }
+
+        h1 {
+            color: var(--color-primary);
+            font-size: 2.2em;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: var(--color-text-light);
+            font-size: 1.1em;
+            font-style: italic;
+            margin-bottom: 15px;
+        }
+
+        .metadata {
+            font-size: 0.85em;
+            color: var(--color-text-light);
+            margin-top: 15px;
+        }
+
+        .toc {
+            background: var(--color-highlight);
+            border-left: 4px solid var(--color-accent);
+            padding: 20px;
+            margin: 30px 0;
+            border-radius: 4px;
+        }
+
+        .toc h2 {
+            color: var(--color-primary);
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .toc ol {
+            margin-left: 20px;
+        }
+
+        .toc li {
+            margin-bottom: 8px;
+        }
+
+        .toc a {
+            color: var(--color-primary);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .toc a:hover {
+            color: var(--color-primary-light);
+            text-decoration: underline;
+        }
+
+        section {
+            margin: 40px 0;
+        }
+
+        h2 {
+            color: var(--color-primary);
+            font-size: 1.6em;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--color-accent);
+        }
+
+        h3 {
+            color: var(--color-primary-light);
+            font-size: 1.2em;
+            margin: 20px 0 10px 0;
+        }
+
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+
+        .lesson-card {
+            background: var(--color-highlight);
+            border: 1px solid var(--color-border);
+            border-left: 4px solid var(--color-primary);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        .lesson-number {
+            display: inline-block;
+            background: var(--color-primary);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+
+        .lesson-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: var(--color-primary);
+            margin-bottom: 10px;
+        }
+
+        .objective {
+            background: white;
+            padding: 12px;
+            margin: 10px 0;
+            border-left: 3px solid var(--color-success);
+            font-weight: 500;
+        }
+
+        .drill-box {
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+
+        .drill-box h4 {
+            color: var(--color-primary);
+            margin-bottom: 10px;
+        }
+
+        .emphasis {
+            background: var(--color-highlight);
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+            font-style: italic;
+            border-left: 4px solid var(--color-accent);
+        }
+
+        .video-link {
+            background: #e8f4f8;
+            border: 1px solid #b3d9e6;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 4px;
+            font-size: 0.95em;
+        }
+
+        .video-link a {
+            color: var(--color-primary);
+            font-weight: bold;
+            text-decoration: none;
+            word-break: break-all;
+        }
+
+        .video-link a:hover {
+            text-decoration: underline;
+        }
+
+        .copyable {
+            background: #f0f0f0;
+            padding: 8px 10px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            display: inline-block;
+            word-break: break-all;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .copyable:hover {
+            background: #e0e0e0;
+        }
+
+        .home-exercise {
+            background: #fef3e0;
+            border-left: 4px solid var(--color-accent);
+            padding: 12px;
+            margin: 10px 0;
+        }
+
+        .home-exercise strong {
+            color: var(--color-accent);
+        }
+
+        .footwork-chart {
+            width: 100%;
+            margin: 20px 0;
+            border-collapse: collapse;
+            background: white;
+            border: 2px solid var(--color-primary);
+        }
+
+        .footwork-chart th,
+        .footwork-chart td {
+            border: 1px solid var(--color-border);
+            padding: 12px;
+            text-align: left;
+        }
+
+        .footwork-chart th {
+            background: var(--color-primary);
+            color: white;
+            font-weight: bold;
+        }
+
+        .footwork-chart tr:nth-child(even) {
+            background: var(--color-highlight);
+        }
+
+        .footwork-chart .count {
+            font-weight: bold;
+            color: var(--color-primary);
+            width: 80px;
+        }
+
+        .analogy-box {
+            background: #f0f7f5;
+            border: 2px solid var(--color-success);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        .analogy-box h3 {
+            color: var(--color-success);
+        }
+
+        .warm-up-section {
+            background: #fff8f0;
+            border: 1px solid var(--color-accent);
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+
+        .schedule-table {
+            width: 100%;
+            margin: 20px 0;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        .schedule-table th,
+        .schedule-table td {
+            border: 1px solid var(--color-border);
+            padding: 12px;
+        }
+
+        .schedule-table th {
+            background: var(--color-accent);
+            color: white;
+            font-weight: bold;
+        }
+
+        .schedule-table tr:nth-child(even) {
+            background: var(--color-highlight);
+        }
+
+        .key-principle {
+            background: #e8f5e9;
+            border-left: 4px solid var(--color-success);
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 3px;
+        }
+
+        .image-section {
+            text-align: center;
+            margin: 20px 0;
+            padding: 15px;
+            background: var(--color-highlight);
+            border-radius: 4px;
+        }
+
+        .image-section img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+
+        .image-caption {
+            font-size: 0.9em;
+            color: var(--color-text-light);
+            font-style: italic;
+            margin-top: 8px;
+        }
+
+        footer {
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 2px solid var(--color-border);
+            text-align: center;
+            color: var(--color-text-light);
+            font-size: 0.9em;
+        }
+
+        .print-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--color-primary);
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.95em;
+            font-weight: bold;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+            z-index: 100;
+            transition: background 0.3s;
+        }
+
+        .print-button:hover {
+            background: var(--color-primary-light);
+        }
+
+        @media print {
+            .print-button {
+                display: none;
+            }
+            body {
+                padding: 0;
+            }
+            .container {
+                box-shadow: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            h1 {
+                font-size: 1.6em;
+            }
+            h2 {
+                font-size: 1.3em;
+            }
+            .print-button {
+                padding: 10px 15px;
+                font-size: 0.85em;
+            }
+        }
+    </style>
 </head>
 <body>
-  <div class="placeholder-notice">
-    <p><strong>Note:</strong> This is placeholder content. The full exploration will be added later.</p>
-  </div>
+    <div class="container">
+        <header>
+            <h1>Teaching the Follower in Social, Partner Dancing</h1>
+            <p class="subtitle">A Comprehensive Syllabus for the Beginner Ballroom Dancer</p>
+            <div class="metadata">
+                <strong>Document Generated:</strong> <span id="timestamp"></span><br>
+                <strong>Course Format:</strong> Weekly Lessons + Weekly Practice Sessions (3–4 days apart)<br>
+                <strong>Duration:</strong> 8–10 weeks (8–10 lessons total)<br>
+                <strong>Target Student:</strong> Adult beginner with minimal recent partner dancing experience<br>
+                <strong>Instructor Background:</strong> Student will have consistent access to an experienced partner/leader
+            </div>
+        </header>
 
-  <h2>Thoughts on Dance Instruction</h2>
-  <p>
-    Teaching dance is both an art and a science. Over years of instruction, I've developed
-    perspectives on what makes dance education effective and enjoyable.
-  </p>
+        <!-- TABLE OF CONTENTS -->
+        <div class="toc">
+            <h2>📋 Table of Contents</h2>
+            <ol>
+                <li><a href="#introduction">Introduction & Course Philosophy</a></li>
+                <li><a href="#martial-arts-analogy">The Martial Arts Analogy</a></li>
+                <li><a href="#foundation">Foundation Week: Posture, Frame & Connection</a></li>
+                <li><a href="#lessons">8-Week Lesson Plan</a></li>
+                <li><a href="#equipment">Shoes, Floors & Practice Environment</a></li>
+                <li><a href="#appendix">Appendix: Reference Materials & Resources</a></li>
+            </ol>
+        </div>
 
-  <h3>Philosophy of Teaching</h3>
-  <blockquote>
-    "The best teachers don't just teach steps—they teach how to learn."
-  </blockquote>
-  <p>
-    My approach to dance instruction emphasizes:
-  </p>
-  <ul>
-    <li><strong>Building foundations</strong> — Strong fundamentals enable creativity</li>
-    <li><strong>Musical awareness</strong> — Dance is a conversation with the music</li>
-    <li><strong>Connection and lead/follow</strong> — Partner dancing is about communication</li>
-    <li><strong>Individual expression</strong> — Everyone brings their own style</li>
-  </ul>
+        <!-- INTRODUCTION -->
+        <section id="introduction">
+            <h2>1. Introduction & Course Philosophy</h2>
+            
+            <p><strong>Course Title:</strong> <em>Teaching the Follower in Social, Partner Dancing</em></p>
+            
+            <p>This syllabus is designed for a beginner-level follower (female dancer) who has little or no recent experience in partner dancing but who brings strong learning skills and high expectations for quality instruction. The student is accustomed to rigorous, well-structured curricula and understands the importance of proper pedagogical scaffolding—breaking complex skills into manageable components.</p>
 
-  <h3>Learning Principles</h3>
-  <p>
-    Key principles that apply to learning any dance style:
-  </p>
-  <ul>
-    <li><strong>Practice deliberately</strong> — Quality over quantity in repetition</li>
-    <li><strong>Break down complex movements</strong> — Master the parts, then combine</li>
-    <li><strong>Video yourself</strong> — Objective feedback accelerates improvement</li>
-    <li><strong>Dance socially</strong> — Real-world practice is irreplaceable</li>
-    <li><strong>Learn from multiple instructors</strong> — Different perspectives enrich understanding</li>
-  </ul>
+            <h3>Key Principles of This Course</h3>
+            
+            <div class="key-principle">
+                <strong>1. Connection Before Steps:</strong> The follower learns that partner dancing is fundamentally about <em>connection</em> between leader and follower—not about memorizing footwork. The leader guides through posture, frame, and elastic pressure; the follower responds through sensitivity and proper body mechanics.
+            </div>
 
-  <h3>Common Challenges</h3>
-  <p>
-    Challenges I frequently help students work through:
-  </p>
-  <ul>
-    <li>Overthinking instead of feeling the music</li>
-    <li>Tension in the frame or body</li>
-    <li>Rushing through movements</li>
-    <li>Comparing progress to others</li>
-  </ul>
+            <div class="key-principle">
+                <strong>2. "Monkey See, Monkey Do" Over Theory:</strong> This course emphasizes <strong>practical, kinesthetic learning</strong> over theoretical or notation-based instruction. The follower learns by <em>feeling</em> the lead and practicing with her body—not by studying step charts or choreographic notation.
+            </div>
 
-  <h3>Resources for Dancers</h3>
-  <p>
-    A curated list of resources will be added here, including:
-  </p>
-  <ul>
-    <li>Recommended practice routines</li>
-    <li>Music playlists for different styles</li>
-    <li>Video tutorials and demonstrations</li>
-    <li>Local dance communities and events</li>
-  </ul>
+            <div class="key-principle">
+                <strong>3. Form Before Improvisation:</strong> Following the martial arts analogy (see next section), the follower first practices <em>structured patterns</em> (like kata) to build muscle memory, proprioception, and understanding of fundamental mechanics. Only after these foundations are solid does she move into true <em>social partner dancing</em> (like sparring), where leads are varied and responses must be fluid.
+            </div>
+
+            <div class="key-principle">
+                <strong>4. Elasticity, Not Tension:</strong> A common shortcut—having the follower "tense up" her arms and shoulders—provides only temporary improvement and fatigues the follower quickly. This course builds <strong>elastic connection</strong> through compression/decompression cycles: the follower learns to <em>feel and respond</em> to subtle pressure changes from the leader, not to maintain rigid tension.
+            </div>
+
+            <div class="key-principle">
+                <strong>5. Structured Yet Flexible Pacing:</strong> The course includes <strong>one lesson per week and one practice session per week</strong> (ideally 3–4 days after the lesson). This spacing allows time for muscle memory consolidation and provides feedback loops: the lesson introduces material; the practice session builds confidence; the next lesson adds new material while reinforcing the previous week's foundation.
+            </div>
+        </section>
+
+        <!-- MARTIAL ARTS ANALOGY -->
+        <section id="martial-arts-analogy">
+            <h2>2. The Martial Arts Analogy: Kata to Sparring</h2>
+
+            <div class="analogy-box">
+                <h3>🥋 Setting the Stage</h3>
+                <p><strong>Have you ever walked by a karate studio and seen a very orderly rank-and-file formation of karate students all doing the same thing while sounding out each movement?</strong></p>
+                <p>That's like <strong>line dancing!</strong> Everyone performs the same steps in unison. There's no partner, no reaction to another person—just repetition and precision of form.</p>
+                
+                <p style="margin-top: 20px;"><strong>Later, if you've observed an entire training session, you'll see the students pair up for sparring.</strong></p>
+                <p>That's like <strong>social partner dancing</strong> (but without even so much as any feigning of kicks and punches! 😆). Now one person must <em>lead</em>, and the other must <em>respond</em>—in real time, with sensitivity and adaptation.</p>
+
+                <h4 style="margin-top: 20px;">Why This Matters for Your Dancing</h4>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li><strong>Kata (Line Dancing) Phase:</strong> Learn structured patterns—the same sequences repeated until they become automatic. Build muscle memory. Understand the basic mechanics.</li>
+                    <li><strong>Sparring (Partner Dancing) Phase:</strong> Bring that muscle memory into dynamic, leader-follower interaction. Learn to feel subtle cues and respond fluidly. Adapt to different leaders and different music.</li>
+                </ul>
+
+                <p style="margin-top: 20px;"><strong>This course moves you from kata to sparring.</strong> Weeks 1–4 emphasize the kata phase (structured patterns, foundational mechanics). Weeks 5–8 build the sparring phase (responsive following, varied leads, social dancing).</p>
+            </div>
+        </section>
+
+        <!-- FOUNDATION WEEK -->
+        <section id="foundation">
+            <h2>3. Foundation Week: Posture, Frame & Connection</h2>
+
+            <p>Before stepping through the 8-week lesson plan, it's essential to understand the <strong>four pillars</strong> that support all good partner dancing:</p>
+
+            <h3>A. Posture</h3>
+
+            <p><strong>What:</strong> Proper alignment of your body—head, shoulders, ribcage, and hips—so that you are balanced, stable, and ready to respond to leads.</p>
+
+            <p><strong>Why:</strong> Poor posture puts your center of gravity in the wrong place, makes balance difficult, and prevents clear lead/follow communication. Good posture is your foundation.</p>
+
+            <p><strong>How:</strong></p>
+            <ul style="margin-left: 20px;">
+                <li><strong>Head:</strong> Look toward your leader (in closed position) or slightly forward. Keep your chin level—not jutting forward, not dropping down.</li>
+                <li><strong>Shoulders:</strong> Relax them downward. Draw your shoulder blades down and slightly together (as if you're gently pulling your wings down if you had angel wings).</li>
+                <li><strong>Ribcage:</strong> Lift from the back—imagine a string attached to the center of your upper back, gently pulling you upward. This creates an engaged core without stiffness.</li>
+                <li><strong>Hips:</strong> Keep your hips level and aligned under your shoulders. Avoid tilting or swaying excessively until you're led to do so.</li>
+                <li><strong>Knees:</strong> Slightly bent, never locked. This lowers your center of gravity and makes balance easier.</li>
+                <li><strong>Feet:</strong> Weighted on the balls of your feet (not your heels), maintaining contact with the floor.</li>
+            </ul>
+
+            <div class="image-section">
+                <img src="https://user-gen-media-assets.s3.amazonaws.com/seedream_images/a457f3e7-6d9a-45ce-aa80-d446e1c1dbf3.png" alt="Proper ballroom frame and posture guide">
+                <div class="image-caption">Figure 1: Proper Ballroom Frame, Posture, and Elastic Connection for Partner Dancing</div>
+            </div>
+
+            <div class="home-exercise">
+                <strong>🏠 Home Exercise - Posture Check:</strong> Stand in front of a mirror. Place your feet shoulder-width apart. Relax your shoulders down. Lift through the top of your head. Bend your knees slightly. Without a partner, practice shifting your weight from one foot to the other while maintaining this posture. Do this for 2–3 minutes daily until it feels natural.
+            </div>
+
+            <h3>B. Frame</h3>
+
+            <p><strong>What:</strong> The positioning of your arms and the connection between you and your leader—the "bridge" through which leads are transmitted.</p>
+
+            <p><strong>Why:</strong> Frame is how the leader communicates with you. Without a good frame, the lead gets lost; with it, even subtle cues are clear.</p>
+
+            <p><strong>How:</strong></p>
+            <ul style="margin-left: 20px;">
+                <li><strong>Right Arm (in closed position):</strong> Your right hand rests on the leader's left arm (or on his back, depending on the dance). Your right elbow is softly bent, not locked. Your arm extends to the side and slightly forward, as if offering your arm forward and upward to the leader.</li>
+                <li><strong>Left Arm (in closed position):</strong> Your left hand is held with the leader's right hand at approximately eye level (for most ballroom dances) or slightly lower. Your left arm is bent with a slight angle (not quite 90 degrees—a little more open). Your hand is softly cupped, palm facing slightly outward.</li>
+                <li><strong>Connection Point:</strong> The key connection points are:
+                    <ul style="margin-left: 20px; margin-top: 8px;">
+                        <li>Leader's left hand &amp; your right hand (at eye level or slightly lower)</li>
+                        <li>Leader's right hand on your back / your right arm on leader's left arm (at waist to shoulder level)</li>
+                    </ul>
+                </li>
+                <li><strong>Posture Within Frame:</strong> Your frame is an extension of your posture. Your shoulders stay relaxed and down. Your elbows stay at a consistent height. Your frame maintains its shape throughout the dance—it's not rigid, but it's structured.</li>
+            </ul>
+
+            <div class="video-link">
+                <strong>📹 Reference Video - Frame Fundamentals:</strong><br>
+                "Ballroom Frame in 5 SIMPLE STEPS!!!" (2021)<br>
+                <a href="https://www.youtube.com/watch?v=8JXRPxsdlpc" target="_blank" class="copyable">https://www.youtube.com/watch?v=8JXRPxsdlpc</a>
+            </div>
+
+            <div class="video-link">
+                <strong>📹 Reference Video - Frame and Posture Detail:</strong><br>
+                "Frame - Lindy Hop and Swing Dance" (2022)<br>
+                <a href="https://www.youtube.com/watch?v=i-rXHXlSov4" target="_blank" class="copyable">https://www.youtube.com/watch?v=i-rXHXlSov4</a>
+            </div>
+
+            <div class="home-exercise">
+                <strong>🏠 Home Exercise - Frame Practice (Solo):</strong> Stand with your feet shoulder-width apart. Raise your arms to the frame position (right arm bent and forward, left arm bent with hand at eye level, as if the leader were in front of you). Hold this position for 30 seconds. Relax. Repeat 5 times. This trains your muscles to hold the frame shape without a partner present.
+            </div>
+
+            <h3>C. Elasticity: Compression & Decompression</h3>
+
+            <p><strong>What:</strong> The subtle, continuous cycle of pressure and release between you and your leader. When the leader pushes forward, you sense it and gently push back (compression). When he eases off, you ease back as well (decompression). This creates a "elastic" connection—responsive, not rigid or limp.</p>
+
+            <p><strong>Why:</strong> Elasticity is the key to real connection. It allows the leader to guide you smoothly without "pulling" you. It keeps you responsive, so you can feel what he's about to do <em>before</em> he fully leads it.</p>
+
+            <p><strong>Why NOT Simple Tension?</strong> A common shortcut is to tell the follower to "tense up" her arms. This creates a temporary sense of connection, but it has serious drawbacks:</p>
+            <ul style="margin-left: 20px;">
+                <li>It exhausts you quickly. Constant tension in arms and shoulders leads to fatigue.</li>
+                <li>After an underarm turn or other twisting move, followers typically relax back into floppiness, losing the connection.</li>
+                <li>It feels unnatural and uncomfortable for both partners.</li>
+                <li>It prevents the subtlety that advanced dancing requires.</li>
+            </ul>
+
+            <p><strong>Elasticity is superior because:</strong></p>
+            <ul style="margin-left: 20px;">
+                <li>It's sustainable—compression/decompression is a natural, oscillating motion, not constant effort.</li>
+                <li>It works <em>with</em> the leader's momentum, not against it.</li>
+                <li>It allows constant, real-time feedback (the leader feels your response and can adjust).</li>
+                <li>It's the foundation for all advanced partner dancing.</li>
+            </ul>
+
+            <p><strong>How to Practice Elasticity:</strong></p>
+
+            <div class="drill-box">
+                <h4>Drill 1: Elasticity with a Doorknob (At Home)</h4>
+                <p><strong>Setup:</strong> Tie a stretch band or resistance band to a doorknob at about waist height, at arm's length away from you.</p>
+                <p><strong>Exercise:</strong></p>
+                <ol style="margin-left: 20px;">
+                    <li>Hold the band with both hands in frame position (right hand/arm soft, left hand as if holding the leader's hand).</li>
+                    <li>Very slowly lean forward, creating gentle tension in the band—this is your compression.</li>
+                    <li>Feel the band pulling you back; resist gently (don't just collapse).</li>
+                    <li>Very slowly ease back to neutral—this is your decompression.</li>
+                    <li>Repeat 10 times, moving slowly. Focus on the feeling of elastic give-and-take.</li>
+                </ol>
+                <p><strong>Why It Works:</strong> The resistance band mimics the leader's push/pull. You learn to sense and respond to pressure without overthinking it.</p>
+            </div>
+
+            <div class="drill-box">
+                <h4>Drill 2: Elasticity with a Partner</h4>
+                <p><strong>Setup:</strong> Stand in closed frame with your leader, but <strong>do not dance</strong>. Stay in one spot.</p>
+                <p><strong>Exercise:</strong></p>
+                <ol style="margin-left: 20px;">
+                    <li>Leader: Slowly push forward through your frame (into the follower's space).</li>
+                    <li>Follower: Sense the pressure. Gently resist by engaging your core and lats (back muscles), pushing back slightly without tension.</li>
+                    <li>Leader: Ease off the pressure.</li>
+                    <li>Follower: Ease back as well, maintaining light connection but no compression.</li>
+                    <li>Repeat 10 times, moving very slowly. The goal is to develop sensitivity, not to move yet.</li>
+                </ol>
+                <p><strong>Why It Works:</strong> You feel the leader's intention before the dance step happens. You learn to anticipate and respond, not react.</p>
+            </div>
+
+            <div class="video-link">
+                <strong>📹 Reference Video - Professional Partnership &amp; Connection:</strong><br>
+                "The Secret to Pro Level Partnering &amp; Connection" (2025)<br>
+                <a href="https://www.youtube.com/watch?v=O_HV4qvGSKs" target="_blank" class="copyable">https://www.youtube.com/watch?v=O_HV4qvGSKs</a>
+            </div>
+
+            <h3>D. Lead & Follow Drills: Palm-to-Palm at Eye Level</h3>
+
+            <p><strong>What:</strong> Simplified hand-to-hand connection drills that isolate the leader-follower dynamic without the complexity of footwork or full frame.</p>
+
+            <p><strong>Why:</strong> These drills build fundamental communication skills. You learn to feel leads in their purest form: direct pressure and direction changes through the hands.</p>
+
+            <p><strong>How:</strong></p>
+
+            <div class="drill-box">
+                <h4>Drill 3: Palm-to-Palm Pressure Changes</h4>
+                <p><strong>Setup:</strong> Stand facing your leader at arm's length. Both of you raise your right arms (for the leader, his right hand; for the follower, her right hand). Press palms together at eye level.</p>
+                <p><strong>Exercise:</strong></p>
+                <ol style="margin-left: 20px;">
+                    <li>Leader: Gently press forward (the palm pushes forward).</li>
+                    <li>Follower: Feel the pressure. Gently resist—push back with your palm, maintaining contact.</li>
+                    <li>Leader: Release the pressure (ease your palm back).</li>
+                    <li>Follower: Release as well—your palm comes back, but you maintain light contact.</li>
+                    <li>Leader: Now try a side motion. Turn your palm to the left (your left), pressing sideways.</li>
+                    <li>Follower: Feel the sideways pressure. Respond by moving your palm in the same direction, maintaining contact and light elasticity.</li>
+                    <li>Repeat with different directions: forward, back, side-to-side, and gentle circles.</li>
+                </ol>
+                <p><strong>Why It Works:</strong> You learn to follow <em>pressure</em>, not anticipate steps. The follower becomes a responsive extension of the leader's movement intention.</p>
+            </div>
+
+            <div class="drill-box">
+                <h4>Drill 4: Single-Hand Lead (Low Pressure)</h4>
+                <p><strong>Setup:</strong> Face your leader. Leader offers his right hand (palm up, open). You place your left hand (palm down) gently on his, as if shaking hands but with palms together.</p>
+                <p><strong>Exercise:</strong></p>
+                <ol style="margin-left: 20px;">
+                    <li>Leader: Very gently (almost imperceptibly) tilt your hand—forward, back, side-to-side.</li>
+                    <li>Follower: Without lifting your hand or anticipating, feel the tilt and allow your hand (and thus your body, eventually) to respond.</li>
+                    <li>Advance: Leader, begin to move slowly around the room, making subtle directional changes with your hand position.</li>
+                    <li>Follower, follow the hand without stepping yet—just walking slowly backward and responding to hand direction.</li>
+                </ol>
+                <p><strong>Why It Works:</strong> You learn that following is about <em>feeling and responding</em>, not memorizing steps. This foundation will serve all future dancing.</p>
+            </div>
+
+            <div class="emphasis">
+                <strong>Key Insight:</strong> These drills may feel slow and boring compared to "dancing," but they are <strong>invaluable</strong> for building the neural pathways and muscle memory that enable true partner dancing. A follower who has invested time in these drills will dance with grace and responsiveness. One who skips them will struggle with connection, even if she can execute the steps.
+            </div>
+        </section>
+
+        <!-- 8-WEEK LESSON PLAN -->
+        <section id="lessons">
+            <h2>4. Eight-Week Lesson Plan</h2>
+
+            <p><strong>Overview:</strong> This course is divided into two phases:</p>
+            <ul style="margin-left: 20px;">
+                <li><strong>Phase 1 (Weeks 1–4): Kata Phase—Foundation and Structured Patterns</strong><br>
+                    Focus: Posture, frame, elasticity, and basic repeatable patterns in one or two dances.
+                </li>
+                <li><strong>Phase 2 (Weeks 5–8): Sparring Phase—Responsiveness and Variation</strong><br>
+                    Focus: Responding to varied leads, dancing to different music, introducing the culminating pattern (Foxy), and building confidence in social settings.
+                </li>
+            </ul>
+
+            <p><strong>Weekly Structure:</strong></p>
+            <table class="schedule-table">
+                <tr>
+                    <th>Day</th>
+                    <th>Activity</th>
+                    <th>Duration</th>
+                    <th>Focus</th>
+                </tr>
+                <tr>
+                    <td><strong>Monday (example)</strong></td>
+                    <td>Lesson with Instructor</td>
+                    <td>45–60 min</td>
+                    <td>New material, demonstration, guided practice</td>
+                </tr>
+                <tr>
+                    <td><strong>Thursday (example)</strong></td>
+                    <td>Solo Practice / Drills at Home</td>
+                    <td>20–30 min</td>
+                    <td>Posture, frame, elasticity drills (often without a partner)</td>
+                </tr>
+                <tr>
+                    <td><strong>Friday (example)</strong></td>
+                    <td>Partner Practice with Leader</td>
+                    <td>30–45 min</td>
+                    <td>Application of lesson material with feedback from leader</td>
+                </tr>
+            </table>
+
+            <!-- WEEK 1 -->
+            <div class="lesson-card">
+                <span class="lesson-number">WEEK 1</span>
+                <div class="lesson-title">Posture, Posture, Posture</div>
+                
+                <div class="objective">
+                    <strong>Learning Objectives:</strong> Establish good foundational posture; understand why posture matters; begin muscle memory for correct alignment.
+                </div>
+
+                <h4>Lesson Content</h4>
+                <p><strong>Opening:</strong> Explain the importance of posture. Use the martial arts analogy: "In karate, bad posture means you can't execute moves well and you can't receive power. Same in dance—bad posture ruins everything downstream."</p>
+
+                <p><strong>What You're Going to Learn Today:</strong> "We're going to establish your posture—how to stand, how to hold your head, how to position your shoulders, and how to engage your core. This may not sound exciting, but it's the foundation of everything."</p>
+
+                <p><strong>Content:</strong></p>
+                <ol style="margin-left: 20px;">
+                    <li><strong>Mirror Work:</strong> Stand in front of a mirror. Instructor points out:
+                        <ul style="margin-left: 20px;">
+                            <li>Head position (chin level, not forward or dropping)</li>
+                            <li>Shoulder position (down and back)</li>
+                            <li>Ribcage lift (from the back, not jutting the front)</li>
+                            <li>Core engagement (slight, not excessive)</li>
+                            <li>Knee position (slightly bent, never locked)</li>
+                        </ul>
+                    </li>
+                    <li><strong>Postural Check-In:</strong> Instructor uses a plumb line or alignment cues. Walk with good posture. Stop and reset. Repeat.</li>
+                    <li><strong>Weight Placement:</strong> Practice shifting weight from one foot to the other while maintaining posture. Feel the ball of the foot as the pivot point.</li>
+                </ol>
+
+                <p><strong>Demo Video:</strong> Show a video of a professional ballroom dancer in frame. Pause and point out postural details.</p>
+
+                <div class="video-link">
+                    <strong>📹 Reference Video - Posture &amp; Frame Principle:</strong><br>
+                    "Principles of Dance: Posture, Poise and Frame" (Educational article with demo)<br>
+                    <a href="http://augustaballroomdance.com/principles-of-dance-posture-poise-and-frame/" target="_blank" class="copyable">http://augustaballroomdance.com/principles-of-dance-posture-poise-and-frame/</a>
+                </div>
+
+                <h4>Home Practice (Between Lesson and Practice Session)</h4>
+
+                <div class="home-exercise">
+                    <strong>🏠 Exercise 1 - Daily Posture Check:</strong> Spend 2–3 minutes each day standing in front of a mirror, checking your posture. Do not dance yet. Just stand, check alignment, and hold for 30 seconds. Repeat 5–10 times. Focus on the feeling of good posture becoming comfortable.
+                </div>
+
+                <div class="home-exercise">
+                    <strong>🏠 Exercise 2 - Walking with Posture:</strong> Walk around your living space with good posture for 2–3 minutes. Feel your weight on the balls of your feet. Notice how better posture feels more energetic and confident.
+                </div>
+
+                <h4>Practice Session (3–4 Days After Lesson)</h4>
+                <p><strong>With Your Leader (30–45 minutes):</strong></p>
+                <ol style="margin-left: 20px;">
+                    <li>Warm-Up (5 min): Gentle bouncing on the knees in time with moderate-tempo music, no footwork yet.</li>
+                    <li>Posture Drills (15 min): Stand facing your leader without frame. Both of you focus on posture. Walk slowly forward and backward, maintaining good alignment.</li>
+                    <li>Posture + Standing Frame (15 min): Assume closed frame (no dancing). Hold the frame and posture together for 30 seconds. Release. Rest. Repeat. This trains your body to hold frame shape.</li>
+                    <li>Feedback: Leader observes posture and gives feedback.</li>
+                </ol>
+
+                <div class="warm-up-section">
+                    <strong>🎵 Warm-Up Template:</strong> Moderate-tempo music (90–110 BPM). Stand with feet hip-width apart. Gently bounce on your knees, going down and up with the beat. Keep your posture upright and shoulders relaxed. Bounce for 1–2 minutes. This wakes up your body and gets you moving in rhythm.
+                </div>
+
+                <p><strong>What You've Learned This Week:</strong> "You now understand that posture is the foundation. You've practiced it solo and with your partner. Good posture will support everything else you learn."</p>
+            </div>
+
+            <!-- WEEK 2 -->
+            <div class="lesson-card">
+                <span class="lesson-number">WEEK 2</span>
+                <div class="lesson-title">Frame: The Connection Bridge</div>
+                
+                <div class="objective">
+                    <strong>Learning Objectives:</strong> Understand frame as the communication channel; establish proper arm positions; begin to feel connection through frame.
+                </div>
+
+                <h4>Lesson Content</h4>
+                <p><strong>Opening:</strong> "Frame is how your leader talks to you. Without a good frame, the lead is like trying to communicate through a wall. With frame, even tiny movements carry meaning."</p>
+
+                <p><strong>What You're Going to Learn Today:</strong> "We're going to establish your frame—where your arms go, how they feel, and how they stay connected to your leader. We'll do this standing in place first, then add gentle movement."</p>
+
+                <p><strong>Content:</strong></p>
+                <ol style="margin-left: 20px;">
+                    <li><strong>Right Arm (the Connection):</strong> Demonstrate and practice:
+                        <ul style="margin-left: 20px;">
+                            <li>Your right hand rests on the leader's left arm or back (depending on dance style).</li>
+                            <li>Your right elbow is softly bent, approximately in line with your shoulder.</li>
+                            <li>Your arm extends forward and slightly outward, as if you're "offering" it to the leader.</li>
+                        </ul>
+                    </li>
+                    <li><strong>Left Arm (the Hand Connection):</strong> Demonstrate and practice:
+                        <ul style="margin-left: 20px;">
+                            <li>Your left hand holds the leader's right hand at approximately eye level (or slightly lower, depending on the dance).</li>
+                            <li>Your left elbow is bent, with a slight angle (not quite 90 degrees).</li>
+                            <li>Your hand is softly cupped, palm facing slightly outward.</li>
+                            <li>There is gentle connection—not slack, not gripping, but responsive.</li>
+                        </ul>
+                    </li>
+                    <li><strong>Frame as a Unit:</strong> Instructor walks around the follower in frame, demonstrating how the frame maintains its shape. The frame is not rigid, but it is structured.</li>
+                </ol>
+
+                <div class="video-link">
+                    <strong>📹 Reference Video - Frame Fundamentals:</strong><br>
+                    "Ballroom Frame in 5 SIMPLE STEPS!!!" (2021)<br>
+                    <a href="https://www.youtube.com/watch?v=8JXRPxsdlpc" target="_blank" class="copyable">https://www.youtube.com/watch?v=8JXRPxsdlpc</a>
+                </div>
+
+                <p><strong>Demo Video:</strong> Show a professional couple dancing in frame. Pause frequently to point out:
+                    <ul style="margin-left: 20px;">
+                        <li>How the follower's right arm connects to the leader</li>
+                        <li>How the left hands maintain connection without tension</li>
+                        <li>How the frame shape stays consistent throughout the dance</li>
+                    </ul>
+                </p>
+
+                <h4>Home Practice (Between Lesson and Practice Session)</h4>
+
+                <div class="home-exercise">
+                    <strong>🏠 Exercise 1 - Frame Shape (Solo):</strong> Stand with your feet shoulder-width apart. Without a partner, raise your arms to frame position. Hold for 30 seconds. Relax. Repeat 5–10 times. This trains your muscles to remember the frame shape. Do this daily.
+                </div>
+
+                <div class="home-exercise">
+                    <strong>🏠 Exercise 2 - Frame Practice Sequence:</strong> Get into frame position (solo). Gently sway side-to-side, keeping your frame shape constant. Do this for 2–3 minutes. Notice how the frame stays "open" even as your body rocks slightly.
+                </div>
+
+                <h4>Practice Session (3–4 Days After Lesson)</h4>
+                <p><strong>With Your Leader (30–45 minutes):</strong></p>
+                <ol style="margin-left: 20px;">
+                    <li>Warm-Up (5 min): Bouncing on the knees in time with music.</li>
+                    <li>Frame Establishment (15 min): Assume frame and hold it in place (no dancing). Let your leader feel your frame shape. He can gently move his body to test whether your frame is responding.</li>
+                    <li>Frame + Simple Sway (15 min): In frame, sway gently side-to-side with the music, maintaining frame shape. No footwork yet—just the frame moving with your body.</li>
+                    <li>Feedback: Leader feels your frame and notes whether it's responsive, rigid, or slack.</li>
+                </ol>
+
+                <p><strong>What You've Learned This Week:</strong> "You now understand that frame is the communication channel. You can establish and maintain frame shape. Next week, we add elasticity—the responsive quality that makes connection alive."</p>
+            </div>
+
+            <!-- WEEK 3 -->
+            <div class="lesson-card">
+                <span class="lesson-number">WEEK 3</span>
+                <div class="lesson-title">Elasticity: Compression & Decompression</div>
+                
+                <div class="objective">
+                    <strong>Learning Objectives:</strong> Understand elasticity as responsive connection; feel pressure and respond without tension; practice compression/decompression cycles; introduce drills that simulate leader feedback.
+                </div>
+
+                <h4>Lesson Content</h4>
+                <p><strong>Opening:</strong> "Now that you have good posture and frame, we're going to add the heartbeat of connection: elasticity. This is what makes partner dancing feel like two people moving as one."</p>
+
+                <p><strong>What You're Going to Learn Today:</strong> "We're going to feel how the leader's weight and movement create subtle pressure changes, and how you respond by maintaining light elasticity—compression and decompression. This is NOT about tensing up. It's about sensitivity."</p>
+
+                <p><strong>Content:</strong></p>
+                <ol style="margin-left: 20px;">
+                    <li><strong>Why Not Tension?</strong> Explain the shortcomings of "just tense up":
+                        <ul style="margin-left: 20px;">
+                            <li>It exhausts you quickly.</li>
+                            <li>You lose connection after turns or twists.</li>
+                            <li>It prevents subtle, advanced dancing.</li>
+                        </ul>
+                    </li>
+                    <li><strong>Compression/Decompression Concept:</strong>
+                        <ul style="margin-left: 20px;">
+                            <li>When the leader moves toward you (or presses forward), you feel pressure in your frame. Your lats (back muscles) and core gently engage—this is compression.</li>
+                            <li>When the leader eases back or releases, you also ease back, maintaining light connection—this is decompression.</li>
+                            <li>It's like a gentle oscillation: push and release, push and release.</li>
+                        </ul>
+                    </li>
+                    <li><strong>Elasticity Drill 1 - Doorknob with Band (Demonstrated):</strong>
+                        <ul style="margin-left: 20px;">
+                            <li>Tie a stretch band to a doorknob at waist height, arm's length away.</li>
+                            <li>Hold the band in frame position. Slowly lean forward, creating tension—this is compression.</li>
+                            <li>Slowly ease back. Feel the band pull you; gently resist—this is decompression.</li>
+                            <li>Repeat slowly 10 times. Focus on the feeling of elastic give-and-take.</li>
+                        </ul>
+                    </li>
+                    <li><strong>Elasticity Drill 2 - Partner Pressure Changes (Instructor + Follower):</strong>
+                        <ul style="margin-left: 20px;">
+                            <li>Assume closed frame, but do not dance. Stand in one spot.</li>
+                            <li>Instructor (as leader): Slowly push forward through the frame.</li>
+                            <li>Follower: Sense the pressure. Gently engage core and lats, pushing back slightly—this is compression.</li>
+                            <li>Instructor: Ease off the pressure.</li>
+                            <li>Follower: Ease back as well, maintaining light connection—this is decompression.</li>
+                            <li>Repeat 10 times, very slowly.</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <div class="video-link">
+                    <strong>📹 Reference Video - Professional Partnership &amp; Connection:</strong><br>
+                    "The Secret to Pro Level Partnering &amp; Connection" (2025)<br>
+                    <a href="https://www.youtube.com/watch?v=O_HV4qvGSKs" target="_blank" class="copyable">https://www.youtube.com/watch?v=O_HV4qvGSKs</a>
+                </div>
+
+                <p><strong>Key Point:</strong> "Elasticity is not about being 'tight.' It's about being responsive. A responsive dancer is far more elegant and effective than a tense one."</p>
+
+                <h4>Home Practice (Between Lesson and Practice Session)</h4>
+
+                <div class="home-exercise">
+                    <strong>🏠 Exercise 1 - Resistance Band Elasticity (Solo):</strong> Set up the resistance band as described in the lesson. Practice the compression/decompression cycle 10 times daily. Go slowly. Focus on the oscillating feeling, not on "trying hard." This trains your nervous system to feel and respond to pressure.
+                </div>
+
+                <div class="home-exercise">
+                    <strong>🏠 Exercise 2 - Posture + Frame + Light Movement:</strong> Assume frame (solo). Gently sway forward and back, side-to-side, as if the resistance band is pulling you in different directions. Maintain frame shape and engage your core gently. Do this for 2–3 minutes.
+                </div>
+
+                <h4>Practice Session (3–4 Days After Lesson)</h4>
+                <p><strong>With Your Leader (30–45 minutes):</strong></p>
+                <ol style="margin-left: 20px;">
+                    <li>Warm-Up (5 min): Bouncing on the knees in time with music.</li>
+                    <li>Elasticity Drill - No Footwork (15 min):
+                        <ol style="margin-left: 20px;">
+                            <li>Assume closed frame in one spot.</li>
+                            <li>Leader: Slowly push forward and ease back 10 times.</li>
+                            <li>Follower: Feel and respond with gentle compression/decompression.</li>
+                            <li>Repeat with different directions (side-to-side, etc.).</li>
+                        </ol>
+                    </li>
+                    <li>Adding Gentle Walking (15 min):
+                        <ol style="margin-left: 20px;">
+                            <li>In frame, leader walks forward very slowly; follower walks backward, maintaining elasticity.</li>
+                            <li>No footwork patterns yet—just slow forward/back movement, with elasticity throughout.</li>
+                        </ol>
+                    </li>
+                    <li>Feedback: Leader describes how your frame feels. Is it responsive? Tense? Slack?</li>
+                </ol>
+
+                <p><strong>What You've Learned This Week:</strong> "You now understand elasticity and can feel it in your frame. You're ready to add footwork and actual dance steps. But the key—maintaining elasticity through compression and decompression—will stay with you forever."</p>
+            </div>
+
+            <!-- WEEK 4 -->
+            <div class="lesson-card">
+                <span class="lesson-number">WEEK 4</span>
+                <div class="lesson-title">Lead & Follow Drills: Palm-to-Palm at Eye Level</div>
+                
+                <div class="objective">
+                    <strong>Learning Objectives:</strong> Isolate the lead-follow dynamic in its simplest form; respond to direction changes through hand connection; build confidence in responding to leader cues.
+                </div>
+
+                <h4>Lesson Content</h4>
+                <p><strong>Opening:</strong> "Now we're going to practice the core skill of following: sensing what your leader wants and responding smoothly. We'll do this with hand-to-hand drills first, so there's no complexity of footwork. Just feel and respond."</p>
+
+                <p><strong>What You're Going to Learn Today:</strong> "We're going to do two simple drills: pressing palm-to-palm, and following single-hand leads. These will teach you how to follow pressure and direction without overthinking."</p>
+
+                <p><strong>Content:</strong></p>
+                <ol style="margin-left: 20px;">
+                    <li><strong>Drill 1 - Palm-to-Palm Pressure Changes:</strong>
+                        <ul style="margin-left: 20px;">
+                            <li>Face your instructor at arm's length.</li>
+                            <li>Raise your right hands and press palms together at eye level.</li>
+                            <li>Instructor (as leader): Gently push forward, then ease back. Push to the side, then ease back.</li>
+                            <li>Follower: Feel the pressure and move your palm in the same direction, maintaining contact. Don't anticipate—just respond to the pressure you feel.</li>
+                            <li>The instructor can add gentle circles, which the follower mirrors.</li>
+                            <li>This continues for 3–5 minutes, with varying directions and speeds.</li>
+                        </ul>
+                    </li>
+                    <li><strong>Drill 2 - Single-Hand Lead (Low Pressure):</strong>
+                        <ul style="margin-left: 20px;">
+                            <li>Face your instructor. He offers his right hand (palm up, open). You place your left hand (palm down) gently on his.</li>
+                            <li>Instructor: Very gently tilt your hand—forward, back, side-to-side—making only minimal movements.</li>
+                            <li>Follower: Without lifting your hand or anticipating, feel the tilt and allow your hand to respond. This is following at its most basic.</li>
+                            <li>Advance: Instructor begins to walk slowly, making subtle directional changes with his hand.</li>
+                            <li>Follower: Walk slowly backward, responding to the hand's direction.</li>
+                            <li>This continues for 5–7 minutes, with the instructor gradually increasing the complexity of direction changes.</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <div class="emphasis">
+                    <strong>Teaching Cue (for Instructor):</strong> Remind the follower that she should <strong>not try to guess</strong> what you're about to do. Following is reactive, not predictive. The moment she starts thinking "Oh, he's leading me left," she's thinking ahead of the lead. Instead, she should be thinking: "I feel leftward pressure in my hand. I respond to that pressure by moving left." This is the heart of responsive following.
+                </div>
+
+                <h4>Home Practice (Between Lesson and Practice Session)</h4>
+
+                <div class="home-exercise">
+                    <strong>🏠 Exercise 1 - Palm Pressure (With a Partner):</strong> If your leader is available, practice the palm-to-palm drill for 5–10 minutes. If not, practice with a friend or family member (they don't need to be a dancer). The key is responding to pressure without anticipating.
+                </div>
+
+                <div class="home-exercise">
+                    <strong>🏠 Exercise 2 - Solo Movement Awareness:</strong> Stand in your living space with good posture. Move around (walk, turn, sway) while maintaining awareness of your body's position and direction. This builds proprioception, which supports following.
+                </div>
+
+                <h4>Practice Session (3–4 Days After Lesson)</h4>
+                <p><strong>With Your Leader (30–45 minutes):</strong></p>
+                <ol style="margin-left: 20px;">
+                    <li>Warm-Up (5 min): Bouncing on the knees in time with music.</li>
+                    <li>Palm-to-Palm Drill (10 min): Practice pressure changes as learned in the lesson.</li>
+                    <li>Single-Hand Lead Drill (10 min): Practice responding to hand direction changes, first stationary, then with slow walking.</li>
+                    <li>Closed Frame + Elasticity (10 min): Return to closed frame. Refresh your elasticity—compression and decompression—as the leader walks forward and back.</li>
+                    <li>Feedback: Leader notes your responsiveness. Where are you anticipating? Where are you responding well?</li>
+                </ol>
+
+                <p><strong>What You've Learned This Week:</strong> "You've now practiced the core skill of following: feeling and responding to your leader's cues. This is the foundation. Everything else—all the steps, patterns, and dances—rests on this. You're ready to move into actual dance patterns."</p>
+            </div>
+
+            <!-- TRANSITION -->
+            <section style="background: var(--color-highlight); padding: 20px; margin: 30px 0; border-left: 4px solid var(--color-accent); border-radius: 4px;">
+                <h3 style="color: var(--color-primary); margin-top: 0;">End of Phase 1: Kata Phase</h3>
+                <p><strong>Summary of Weeks 1–4:</strong> You have built a solid foundation in posture, frame, elasticity, and basic lead-follow dynamics. You have not yet danced actual patterns, but you have mastered the underlying mechanics that make all good dancing possible. You are now ready to apply these skills to specific dance patterns and movements.</p>
+                <p><strong>Transition:</strong> Beginning in Week 5, we move into Phase 2—the Sparring Phase. You'll learn actual footwork, dance patterns, and ultimately the Foxy, which will be your culminating pattern. But every step, every turn, every movement will rest on the foundation you've built in Weeks 1–4.</p>
+            </section>
+
+            <!-- WEEK 5 -->
+            <div class="lesson-card">
+                <span class="lesson-number">WEEK 5</span>
+                <div class="lesson-title">Introduction to Basic Footwork: Foxy Cradle Step</div>
+                
+                <div class="objective">
+                    <strong>Learning Objectives:</strong> Learn the follower's footwork for the Foxy cradle step (stationary basic); apply posture, frame, and elasticity to footwork; practice to music; understand the basic timing structure (6 counts: slow, quick, quick, slow, quick, quick).
+                </div>
+
+                <h4>Lesson Content</h4>
+                <p><strong>Opening:</strong> "Up to now, we've been building the foundation. Now we're going to put that foundation to work. We're going to learn the Foxy cradle step, which is going to be your culminating pattern in this course. Let's start with the follower's footwork."</p>
+
+                <p><strong>What You're Going to Learn Today:</strong> "We're going to learn the footwork for the Foxy cradle step—the follower's part. We'll break it down into two halves: the back half (walking backward) and the forward half (walking forward). We'll practice without music first, then add music and rhythm."</p>
+
+                <p><strong>The Foxy Cradle Step - Follower's Footwork:</strong></p>
+
+                <table class="footwork-chart">
+                    <tr>
+                        <th>Count</th>
+                        <th>Timing</th>
+                        <th>Follower's Footwork</th>
+                        <th>Leader's Footwork (Reference)</th>
+                    </tr>
+                    <tr>
+                        <td class="count">1</td>
+                        <td><strong>Slow</strong></td>
+                        <td><strong>Right foot back</strong> – Take a long step back on your right foot, using a heel lead (heel touches the floor first). Keep your posture upright.</td>
+                        <td>Left foot forward</td>
+                    </tr>
+                    <tr>
+                        <td class="count">2</td>
+                        <td><strong>Quick</strong></td>
+                        <td><strong>Left foot side</strong> – Step to the side with your left foot, about hip-width distance. This is a rocking motion.</td>
+                        <td>Right foot side</td>
+                    </tr>
+                    <tr>
+                        <td class="count">3</td>
+                        <td><strong>Quick</strong></td>
+                        <td><strong>Right foot replace weight</strong> – Replace your weight back to your right foot. You've now completed a side rock (back, side, weight replacement).</td>
+                        <td>Left foot replace weight</td>
+                    </tr>
+                    <tr>
+                        <td class="count">4</td>
+                        <td><strong>Slow</strong></td>
+                        <td><strong>Left foot forward</strong> – Take a long step forward on your left foot (opposite of count 1). Use a heel lead. Maintain posture.</td>
+                        <td>Right foot back</td>
+                    </tr>
+                    <tr>
+                        <td class="count">5</td>
+                        <td><strong>Quick</strong></td>
+                        <td><strong>Right foot side</strong> – Step to the side with your right foot, mirroring the side step from count 2.</td>
+                        <td>Left foot side</td>
+                    </tr>
+                    <tr>
+                        <td class="count">6</td>
+                        <td><strong>Quick</strong></td>
+                        <td><strong>Left foot replace weight</strong> – Replace your weight back to your left foot. You've completed a full 6-count cycle and are back where you started.</td>
+                        <td>Right foot replace weight</td>
+                    </tr>
+                </table>
+
+                <div class="emphasis">
+                    <strong>The Countdown Sequence (as you would hear it in a lesson):</strong><br>
+                    "Alright, we're ready. Count: 5, 6, 7, 8, 1, 2, 3, 4, 5, 6." (Now you dance the pattern.)<br>
+                    The countdown ensures everyone is on beat. You start dancing on count 1.
+                </div>
+
+                <h4>Step-by-Step Breakdown</h4>
+                <p><strong>What This Step Looks Like (Demonstration):</strong> Show the follower and any observers the Foxy cradle step at normal speed with music, so everyone sees the finished product first. Then break it down.</p>
+
+                <p><strong>Breaking It Down:</strong></p>
+                <ol style="margin-left: 20px;">
+                    <li><strong>Footwork Without Music (Slow):</strong>
+                        <ol style="margin-left: 20px;">
+                            <li>Counts 1–3 (Back Half): Step back on right (count 1, slow). Step side on left (count 2, quick). Replace weight on right (count 3, quick).</li>
+                            <li>Repeat slowly 5 times, focusing on:
+                                <ul style="margin-left: 20px;">
+                                    <li>Heel leads (heel touches first, then weight)</li>
+                                    <li>Keeping your posture upright (no leaning)</li>
+                                    <li>Ball of the foot as your pivot point</li>
+                                    <li>Feeling the rhythm in your body</li>
+                                </ul>
+                            </li>
+                        </ol>
+                    </li>
+                    <li><strong>Counts 4–6 (Forward Half):</strong>
+                        <ol style="margin-left: 20px;">
+                            <li>Step forward on left (count 4, slow). Step side on right (count 5, quick). Replace weight on left (count 6, quick).</li>
+                            <li>Repeat slowly 5 times, focusing on the same points as above.</li>
+                        </ol>
+                    </li>
+                    <li><strong>Full Pattern (Slow, then with Light Music):</strong>
+                        <ol style="margin-left: 20px;">
+                            <li>Combine counts 1–6. Repeat the full pattern slowly 5 times.</li>
+                            <li>Now add music at a moderate tempo (slow ballroom or foxtrot tempo, around 90–100 BPM).</li>
+                            <li>Repeat the full pattern 5–10 times to music, focusing on staying on beat.</li>
+                        </ol>
+                    </li>
+                </ol>
+
+                <div class="video-link">
+                    <strong>📹 Reference Video - Foxy Dance Steps (Follower's Perspective):</strong><br>
+                    "Wedding Dance Lessons at Home - Foxy Dance Steps (1)" (2022)<br>
+                    <a href="https://www.youtube.com/watch?v=YxNS2WCBbps" target="_blank" class="copyable">https://www.youtube.com/watch?v=YxNS2WCBbps</a>
+                </div>
+
+                <div class="video-link">
+                    <strong>📹 Reference Video - Extended Foxy Tutorial:</strong><br>
+                    "Wedding Dance Lessons at Home - Foxy Dance Steps (3)" (Includes transitions) (2022)<br>
+                    <a href="https://www.youtube.com/watch?v=U5agw6fXPU0" target="_blank" class="copyable">https://www.youtube.com/watch?v=U5agw6fXPU0</a>
+                </div>
+
+                <h4>Home Practice (Between Lesson and Practice Session)</h4>
+
+                <div class="home-exercise">
+                    <strong>🏠 Exercise 1 - Solo Footwork (Daily):</strong> Practice the Foxy cradle step footwork alone (without a partner). Use music at a moderate tempo. Start slowly, then gradually increase speed as you become comfortable. Practice the full 6-count cycle 10–15 times per day. Focus on:
+                        <ul style="margin-left: 20px;">
+                            <li>Heel leads on the long steps (counts 1 and 4)</li>
+                            <li>Staying on beat with the music</li>
+                            <li>Maintaining good posture (no leaning, no hunching)</li>
+                        </ul>
+                </div>
+
+                <div class="home-exercise">
+                    <strong>🏠 Exercise 2 - Mirror Work:</strong> Practice the footwork in front of a mirror. Watch your posture. Are your shoulders hunching? Is your head dropping? Correct in real-time. This video feedback is invaluable.
+                </div>
+
+                <h4>Practice Session (3–4 Days After Lesson)</h4>
+                <p><strong>With Your Leader (30–45 minutes):</strong></p>
+                <ol style="margin-left: 20px;">
+                    <li>Warm-Up (5 min): Bouncing on the knees in time with music, gradually adding side sways.</li>
+                    <li>Foxy Cradle Solo (5 min): You dance the footwork alone while your leader watches and offers feedback on timing, posture, and foot placement.</li>
+                    <li>Foxy Cradle in Frame (15 min):
+                        <ol style="margin-left: 20px;">
+                            <li>You and your leader assume closed frame.</li>
+                            <li>Your leader leads the Foxy cradle pattern, and you follow using the footwork you've learned.</li>
+                            <li>Start slowly, then gradually increase tempo with music.</li>
+                            <li>Repeat the pattern 8–10 times.</li>
+                        </ol>
+                    </li>
+                    <li>Feedback & Refinement (10 min): Your leader notes what's working well and what needs adjustment. You may practice specific parts again.</li>
+                </ol>
+
+                <p><strong>What You've Learned This Week:</strong> "You've learned your first complete dance pattern: the Foxy cradle step. You've applied your foundation (posture, frame, elasticity) to footwork and rhythm. You're dancing!"</p>
+            </div>
+
+            <!-- WEEK 6 -->
+            <div class="lesson-card">
+                <span class="lesson-number">WEEK 6</span>
+                <div class="lesson-title">Foxy Basics: Forward Basic & Promenade Position</div>
+                
+                <div class="objective">
+                    <strong>Learning Objectives:</strong> Learn the follower's footwork for the Foxy forward basic step; understand promenade position (side-by-side); practice transitions; build a small repertoire of Foxy variations.
+                </div>
+
+                <h4>Lesson Content</h4>
+                <p><strong>Opening:</strong> "Last week, you learned the Foxy cradle step—the stationary basic. This week, we're going to add movement around the dance floor. You'll learn the forward basic (which travels) and a new position called promenade, where you and your leader are side-by-side instead of face-to-face."</p>
+
+                <p><strong>What You're Going to Learn Today:</strong> "We're going to learn the forward basic and promenade position. These will give you more variety and let you travel around the room while dancing."</p>
+
+                <p><strong>Content:</strong></p>
+                <ol style="margin-left: 20px;">
+                    <li><strong>Foxy Forward Basic - Follower's Part:</strong>
+                        <ul style="margin-left: 20px;">
+                            <li><strong>Count 1 (Slow):</strong> Left foot back (walking backward).</li>
+                            <li><strong>Count 2 (Quick):</strong> Right foot side.</li>
+                            <li><strong>Count 3 (Quick):</strong> Left foot replace weight.</li>
+                            <li><strong>Count 4 (Slow):</strong> Right foot forward (traveling forward in line of dance).</li>
+                            <li><strong>Count 5 (Quick):</strong> Left foot side.</li>
+                            <li><strong>Count 6 (Quick):</strong> Right foot replace weight.</li>
+                        </ul>
+                    </li>
+                    <li><strong>Promenade Position (Introduction):</strong>
+                        <ul style="margin-left: 20px;">
+                            <li>You and your leader turn slightly so that you're standing side-by-side (not face-to-face).</li>
+                            <li>Your leader's right arm remains around your back (or on your right arm).</li>
+                            <li>Your left hand still holds his right hand, but you're now next to each other, facing the same direction.</li>
+                            <li>This position allows you to travel more easily around the room.</li>
+                        </ul>
+                    </li>
+                    <li><strong>Transitioning Between Positions:</strong>
+                        <ul style="margin-left: 20px;">
+                            <li>From cradle step to forward basic: Your leader gently changes the lead (more forward energy).</li>
+                            <li>From closed position to promenade: Your leader turns you both slightly outward so you're side-by-side.</li>
+                            <li>Instructor demonstrates these transitions slowly, then at tempo.</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <div class="video-link">
+                    <strong>📹 Reference Video - Foxy Forward Basic &amp; Variations:</strong><br>
+                    "Wedding Dance Lessons at Home - Foxy Dance Steps (3)" (2022)<br>
+                    <a href="https://www.youtube.com/watch?v=U5agw6fXPU0" target="_blank" class="copyable">https://www.youtube.com/watch?v=U5agw6fXPU0</a>
+                </div>
+
+                <p><strong>Key Points:</strong></p>
+                <ul style="margin-left: 20px;">
+                    <li>The forward basic travels around the room (unlike the cradle step, which stays in one spot).</li>
+                    <li>Your posture and elasticity remain constant—only the footwork and position change.</li>
+                    <li>Promenade position feels more open and allows for greater travel.</li>
+                </ul>
+
+                <h4>Home Practice (Between Lesson and Practice Session)</h4>
+
+                <div class="home-exercise">
+                    <strong>🏠 Exercise 1 - Solo Forward Basic Footwork:</strong> Practice the forward basic footwork alone (without a partner). Use music. The key difference from the cradle step is that counts 1–3 are backward, and counts 4–6 are forward. Practice 10–15 repetitions daily. Focus on traveling in a straight line around your living space.
+                </div>
+
+                <div class="home-exercise">
+                    <strong>🏠 Exercise 2 - Directional Awareness:</strong> Walk around your living space (without dancing) while maintaining good posture. Feel how your body moves forward and backward. Feel how you might position yourself side-by-side with someone (promenade). This builds spatial awareness that supports the forward basic.
+                </div>
+
+                <h4>Practice Session (3–4 Days After Lesson)</h4>
+                <p><strong>With Your Leader (30–45 minutes):</strong></p>
+                <ol style="margin-left: 20px;">
+                    <li>Warm-Up (5 min): Bouncing on the knees, with side sways.</li>
+                    <li>Cradle Step Review (5 min): Dance the cradle step from Week 5 to refresh your muscle memory.</li>
+                    <li>Forward Basic Solo (5 min): Dance the forward basic footwork alone while your leader watches.</li>
+                    <li>Forward Basic in Frame (10 min): You and your leader dance the forward basic in closed position, traveling around the room. Start slowly, then add music at tempo.</li>
+                    <li>Promenade Position Intro (5 min): Your leader guides you into promenade position and leads a simple forward basic in this new position. You may need to do this slowly at first.</li>
+                    <li>Feedback & Refinement (5 min).</li>
+                </ol>
+
+                <p><strong>What You've Learned This Week:</strong> "You now have two Foxy variations in your toolkit: the cradle step (stationary) and the forward basic (traveling). You're building a small repertoire, which means you can dance for longer periods without repeating the same step over and over."</p>
+            </div>
+
+            <!-- WEEK 7 -->
+            <div class="lesson-card">
+                <span class="lesson-number">WEEK 7</span>
+                <div class="lesson-title">Turns & Responsive Following: Building Confidence</div>
+                
+                <div class="objective">
+                    <strong>Learning Objectives:</strong> Learn simple turning mechanics; practice responsive following when the leader changes direction; build confidence in feeling and responding to varied leads; introduce the concept of "reading" a leader.
+                </div>
+
+                <h4>Lesson Content</h4>
+                <p><strong>Opening:</strong> "You've learned structured patterns: the cradle step and the forward basic. Now we're going to add the element that makes partner dancing truly interactive: turns and directional changes. You're moving from 'kata' (structured patterns) into 'sparring' (responsive dancing)."</p>
+
+                <p><strong>What You're Going to Learn Today:</strong> "We're going to learn how to turn, how to respond when your leader leads you into a different direction, and how to maintain your connection and posture while turning. Most importantly, we're going to practice <strong>feeling</strong> the leader's intention and responding smoothly."</p>
+
+                <p><strong>Content:</strong></p>
+                <ol style="margin-left: 20px;">
+                    <li><strong>Basic Turning Mechanics:</strong>
+                        <ul style="margin-left: 20px;">
+                            <li>Turns in ballroom happen on the ball of the foot (not the heel).</li>
+                            <li>Keep your posture upright and centered as you turn.</li>
+                            <li>Your frame stays solid—the leader "turns" you by shifting his frame slightly.</li>
+                            <li>You don't initiate the turn; you respond to the leader's frame shift.</li>
+                        </ul>
+                    </li>
+                    <li><strong>Simple Turns in the Foxy:</strong>
+                        <ul style="margin-left: 20px;">
+                            <li>The leader can add a gentle rotation to the forward basic or cradle step.</li>
+                            <li>This rotation is subtle—maybe 1/8 or 1/4 turn per step cycle—not a dramatic spin.</li>
+                            <li>You feel the rotation in the leader's frame and respond by turning with him.</li>
+                        </ul>
+                    </li>
+                    <li><strong>Responsive Following Drill:</strong>
+                        <ul style="margin-left: 20px;">
+                            <li>You and your leader dance the Foxy forward basic.</li>
+                            <li>The leader randomly decides to add a gentle rotation (turn) to the next cycle or to lead back to cradle step.</li>
+                            <li>You respond based on what you feel in the frame—not on what you anticipate.</li>
+                            <li>This trains you to "read" the leader in real-time.</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <div class="video-link">
+                    <strong>📹 Reference Video - Foxy Turning &amp; Transitions:</strong><br>
+                    "Foxy Dance Steps: 4-Count to 6-Count Transitions &amp; Timing Change" (2021)<br>
+                    <a href="https://www.youtube.com/watch?v=AHhIZo19nCE" target="_blank" class="copyable">https://www.youtube.com/watch?v=AHhIZo19nCE</a>
+                </div>
+
+                <div class="video-link">
+                    <strong>📹 Reference Video - Leading Turns Responsively:</strong><br>
+                    "Foxy Dance Steps: Leading the Left Rock Turn" (2021)<br>
+                    <a href="https://www.youtube.com/watch?v=svi6IlfLJMs" target="_blank" class="copyable">https://www.youtube.com/watch?v=svi6IlfLJMs</a>
+                </div>
+
+                <h4>Home Practice (Between Lesson and Practice Session)</h4>
+
+                <div class="home-exercise">
+                    <strong>🏠 Exercise 1 - Solo Turning Practice:</strong> Stand with good posture. On the ball of your right foot, slowly rotate your body 1/4 turn to the left. Return to center. Repeat 5–10 times. Then do the same with your left foot, turning right. This builds your sense of balance on the ball of the foot.
+                </div>
+
+                <div class="home-exercise">
+                    <strong>🏠 Exercise 2 - Foxy Footwork with Imaginary Turns:</strong> Practice the Foxy forward basic footwork, but add gentle rotations (turns) every other cycle. Imagine your leader is guiding you. This blends the footwork with the turning concept.
+                </div>
+
+                <h4>Practice Session (3–4 Days After Lesson)</h4>
+                <p><strong>With Your Leader (30–45 minutes):</strong></p>
+                <ol style="margin-left: 20px;">
+                    <li>Warm-Up (5 min): Bouncing on the knees with side sways.</li>
+                    <li>Cradle & Forward Basic Review (5 min): Dance both patterns at tempo to refresh.</li>
+                    <li>Simple Turns Drill (10 min):
+                        <ol style="margin-left: 20px;">
+                            <li>Dance the forward basic with gentle 1/4 turns every cycle.</li>
+                            <li>Start slowly, then add music at tempo.</li>
+                            <li>Focus on maintaining posture and frame while turning.</li>
+                        </ol>
+                    </li>
+                    <li>Responsive Following Drill (10 min):
+                        <ol style="margin-left: 20px;">
+                            <li>Your leader mixes cradle steps, forward basics, and forward basics with turns—randomly, without warning.</li>
+                            <li>You respond based on what you feel, not on what you predict.</li>
+                            <li>This is the transition into true social dancing.</li>
+                        </ol>
+                    </li>
+                    <li>Feedback: Your leader notes your responsiveness and confidence.</li>
+                </ol>
+
+                <p><strong>What You've Learned This Week:</strong> "You've now experienced responsive following. You've learned that partner dancing is not about executing a fixed sequence—it's about feeling your partner's lead and responding smoothly. This is a major milestone."</p>
+            </div>
+
+            <!-- WEEK 8 -->
+            <div class="lesson-card">
+                <span class="lesson-number">WEEK 8</span>
+                <div class="lesson-title">Integration & Social Dancing - Final Lesson</div>
+                
+                <div class="objective">
+                    <strong>Learning Objectives:</strong> Combine all skills (posture, frame, elasticity, footwork, responsiveness) into fluid, confident dancing; practice sustained dancing to various music; discuss transition to social dance venues; reflect on progress.
+                </div>
+
+                <h4>Lesson Content</h4>
+                <p><strong>Opening:</strong> "You've made a remarkable journey over eight weeks. You started with posture and frame. You've learned footwork, turned, and responded to varied leads. Today, we're going to put it all together and celebrate what you've achieved. You're ready to dance socially."</p>
+
+                <p><strong>What You're Going to Learn Today:</strong> "We're not learning new steps today. Instead, we're integrating everything you've learned and practicing sustained dancing. We're also going to talk about how to take these skills into a social dance setting and continue improving."</p>
+
+                <p><strong>Content:</strong></p>
+                <ol style="margin-left: 20px;">
+                    <li><strong>Full Foxy Repertoire Review:</strong>
+                        <ul style="margin-left: 20px;">
+                            <li>Cradle step (stationary basic)</li>
+                            <li>Forward basic (traveling)</li>
+                            <li>Forward basic with gentle turns</li>
+                            <li>Transitions between positions</li>
+                        </ul>
+                    </li>
+                    <li><strong>Extended Dance Practice:</strong>
+                        <ul style="margin-left: 20px;">
+                            <li>Dance the Foxy for one full song (3–4 minutes) without stopping.</li>
+                            <li>Your leader varies the patterns—cradle step, forward basic, turns—to keep things interesting.</li>
+                            <li>You respond smoothly and confidently, using all the skills you've developed.</li>
+                            <li>Do this 2–3 times, with different songs at different tempos.</li>
+                        </ul>
+                    </li>
+                    <li><strong>Transitions to Social Dance Venues:</strong>
+                        <ul style="margin-left: 20px;">
+                            <li>Discuss how to apply these skills in a real ballroom or social dance venue.</li>
+                            <li>Talk about different music styles and how the Foxy and similar dances can be adapted.</li>
+                            <li>Discuss etiquette (line of dance, respect for other couples, etc.).</li>
+                            <li>Address common concerns: nervousness, wanting to dance more, finding dance partners, etc.</li>
+                        </ul>
+                    </li>
+                    <li><strong>Reflection & Feedback:</strong>
+                        <ul style="margin-left: 20px;">
+                            <li>Instructor gives detailed feedback on your progress, strengths, and areas for continued focus.</li>
+                            <li>You reflect on what has changed in eight weeks.</li>
+                            <li>Discuss future learning goals and next steps (e.g., learning additional dances, attending social dances, etc.).</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <div class="video-link">
+                    <strong>📹 Reference Video - Full Foxy Routine &amp; Variations:</strong><br>
+                    "Foxy Dance Routine (Beginner Patterns)" (2020)<br>
+                    <a href="https://www.youtube.com/watch?v=BXZa0SRZmp0" target="_blank" class="copyable">https://www.youtube.com/watch?v=BXZa0SRZmp0</a>
+                </div>
+
+                <h4>Home Practice (After the Course)</h4>
+
+                <div class="home-exercise">
+                    <strong>🏠 Exercise 1 - Regular Practice with Your Partner:</strong> Aim for one 30–45 minute practice session per week. Dance the Foxy and begin exploring other dances (waltz, quickstep, etc.). The key is to maintain and build on the foundation you've developed.
+                </div>
+
+                <div class="home-exercise">
+                    <strong>🏠 Exercise 2 - Social Dance Venues:</strong> Begin attending social ballroom or dance lounges in your area. Apply what you've learned with different leaders. Social dancing will accelerate your improvement and give you confidence.
+                </div>
+
+                <div class="home-exercise">
+                    <strong>🏠 Exercise 3 - Continued Learning:</strong> Consider taking lessons on additional dances (American Slow Waltz, East Coast Swing, Nightclub Two Step, Country Two Step, etc.). Each dance will deepen your understanding of leading and following.
+                </div>
+
+                <p><strong>What You've Learned This Week & Beyond:</strong> "Over eight weeks, you've transformed from a beginner with little recent partner dancing experience into a confident follower who can dance the Foxy, respond to varied leads, and enjoy social dancing. You understand the biomechanics of partner dancing: posture, frame, elasticity, and responsiveness. These principles will serve you in every dance you learn. The journey continues, but you are now equipped to dance socially and enjoy the partnership that good dancing brings."</p>
+            </div>
+        </section>
+
+        <!-- EQUIPMENT & ENVIRONMENT -->
+        <section id="equipment">
+            <h2>5. Equipment, Shoes & Practice Environments</h2>
+
+            <h3>A. Dance Shoes for Social Partner Dancing</h3>
+
+            <p><strong>Why Specialized Shoes Matter:</strong> Dance shoes are designed to facilitate the turning, sliding, and balance required in partner dancing. Regular street shoes inhibit these movements.</p>
+
+            <p><strong>Key Features of Proper Ballroom Dance Shoes:</strong></p>
+            <ul style="margin-left: 20px;">
+                <li><strong>Smooth Leather Soles (Bottom):</strong> Leather (not rubber) on the soles allows for smooth gliding across the dance floor without excessive friction. This is essential for both balance and the aesthetic of the movement.</li>
+                <li><strong>Laces or Adjustable Closures:</strong> Laces allow you to adjust the fit throughout the dancing day as your feet swell slightly. Adjustability is important for comfort and stability.</li>
+                <li><strong>Low Heel (for Beginners):</strong> Beginners benefit from low heels (usually 1.5–2 inches for women) because:
+                    <ul style="margin-left: 20px;">
+                        <li>They encourage good posture (higher heels tilt your pelvis forward, which can cause posture issues).</li>
+                        <li>They keep your center of gravity lower, making balance easier.</li>
+                        <li>They provide more stability, reducing the risk of ankle turning or falling.</li>
+                        <li>They're more comfortable for extended dancing.</li>
+                    </ul>
+                </li>
+                <li><strong>Snug Fit Around the Heel & Arch:</strong> The shoes should fit snugly so your foot doesn't slide inside the shoe while turning. A loose shoe compromises balance and control.</li>
+                <li><strong>Closed Toe (for Safety):</strong> Closed-toe shoes protect your feet in crowded dance venues and provide better support.</li>
+            </p>
+
+            <p><strong>Recommended Shoe Characteristics for Beginners:</strong></p>
+            <table class="schedule-table">
+                <tr>
+                    <th>Feature</th>
+                    <th>Recommended Specification</th>
+                    <th>Why</th>
+                </tr>
+                <tr>
+                    <td>Heel Height</td>
+                    <td>Low (1.5–2 inches)</td>
+                    <td>Encourages posture, lowers center of gravity, easier balance</td>
+                </tr>
+                <tr>
+                    <td>Sole Material</td>
+                    <td>Smooth leather</td>
+                    <td>Allows gliding; prevents catching on the floor</td>
+                </tr>
+                <tr>
+                    <td>Closure</td>
+                    <td>Laces or buckles</td>
+                    <td>Allows adjustment; keeps foot secure</td>
+                </tr>
+                <tr>
+                    <td>Fit</td>
+                    <td>Snug at heel and arch</td>
+                    <td>Prevents sliding inside shoe during turns</td>
+                </tr>
+                <tr>
+                    <td>Toe Box</td>
+                    <td>Closed</td>
+                    <td>Safety in crowded venues; better support</td>
+                </tr>
+            </table>
+
+            <p><strong>Budget Consideration:</strong> Quality ballroom dance shoes are available at various price points. Even an inexpensive pair (USD $40–60) is better than no dance shoes. Many online retailers and local dance shops carry beginner-friendly options.</p>
+
+            <h3>B. Practice Flooring at Home</h3>
+
+            <p><strong>Why Floor Surface Matters:</strong> The floor surface affects your ability to practice key skills: gliding, pivoting on the ball of the foot, and maintaining balance. A too-sticky floor prevents gliding; a too-slippery floor prevents stability.</p>
+
+            <p><strong>Ideal Home Practice Surface:</strong></p>
+            <ul style="margin-left: 20px;">
+                <li><strong>Linoleum or Vinyl in Socks:</strong> This is an excellent, budget-friendly option. Linoleum provides moderate friction (not too slippery, not too sticky). Dancing in socks on linoleum allows smooth gliding without slipping. This mimics a professional dance floor well enough for practice.</li>
+                <li><strong>Smooth Hardwood (if available):</strong> Hardwood floors in good condition work well. Ensure the floor is clean and dust-free to prevent slipping.</li>
+                <li><strong>Sprung Dance Floors (Premium Option):</strong> If you have access to a dance studio or community center, sprung dance floors (which have a slight give) are ideal for comfort and reducing injury risk during extended practice.</li>
+            </ul>
+
+            <p><strong>Surfaces to Avoid:</strong></p>
+            <ul style="margin-left: 20px;">
+                <li><strong>Carpet:</strong> Too much friction. Shoes catch; feet don't glide. Turning is difficult and uncomfortable.</li>
+                <li><strong>Tile or Concrete without Socks:</strong> Too slippery and hard on the joints. Risk of slipping and injury.</li>
+                <li><strong>Thick Rugs:</strong> Uneven surface; catches feet; prevents smooth movement.</li>
+            </ul>
+
+            <p><strong>Recommended Home Practice Setup:</strong></p>
+            <ul style="margin-left: 20px;">
+                <li>Linoleum or vinyl flooring (kitchen or utility room is often ideal)</li>
+                <li>Dance shoes or smooth-soled shoes with socks</li>
+                <li>A small clear space (ideally 8 feet x 12 feet minimum) for practicing patterns</li>
+                <li>A music system (phone, tablet, or speaker) to play dance music</li>
+                <li>A mirror (if possible) for posture feedback</li>
+                <li>Proper lighting</li>
+            </ul>
+
+            <p><strong>Why Practice at Home is Valuable:</strong> Home practice allows you to refine foundational skills—posture, frame, footwork—without the pressure or distraction of a studio or social venue. Even 20–30 minutes of focused practice at home per week significantly accelerates improvement.</p>
+        </section>
+
+        <!-- APPENDIX -->
+        <section id="appendix">
+            <h2>6. Appendix: Reference Materials & Resources</h2>
+
+            <h3>A. Key Video Resources by Topic</h3>
+
+            <h4>Posture & Frame Fundamentals</h4>
+            <div class="video-link">
+                <a href="https://www.youtube.com/watch?v=8JXRPxsdlpc" target="_blank">1. "Ballroom Frame in 5 SIMPLE STEPS!!!" (2021)</a><br>
+                <span style="font-size: 0.9em;">Concise, clear breakdown of frame with instructor demonstrations.</span>
+            </div>
+
+            <div class="video-link">
+                <a href="http://augustaballroomdance.com/principles-of-dance-posture-poise-and-frame/" target="_blank">2. "Principles of Dance: Posture, Poise and Frame" (Educational Article)</a><br>
+                <span style="font-size: 0.9em;">Detailed explanation of posture and frame principles.</span>
+            </div>
+
+            <div class="video-link">
+                <a href="https://www.youtube.com/watch?v=i-rXHXlSov4" target="_blank">3. "Frame - Lindy Hop and Swing Dance" (2022)</a><br>
+                <span style="font-size: 0.9em;">Frame concepts applicable to many partner dances.</span>
+            </div>
+
+            <h4>Connection & Partnership</h4>
+            <div class="video-link">
+                <a href="https://www.youtube.com/watch?v=O_HV4qvGSKs" target="_blank">4. "The Secret to Pro Level Partnering & Connection" (2025)</a><br>
+                <span style="font-size: 0.9em;">Advanced but foundational concepts about responsive partnership.</span>
+            </div>
+
+            <h4>East Coast Swing (Related Dances)</h4>
+            <div class="video-link">
+                <a href="https://www.youtube.com/watch?v=J3WmepkloY8" target="_blank">5. "How to Swing Dance for Beginners | East Coast Swing Basics Steps" (2020)</a><br>
+                <span style="font-size: 0.9em;">Beginner-friendly breakdown of East Coast Swing frame and footwork.</span>
+            </div>
+
+            <div class="video-link">
+                <a href="https://www.youtube.com/watch?v=sHCOUb5SlkU" target="_blank">6. "How to Swing Dance for Beginners | East Coast Swing (1) Basic Step" (2023)</a><br>
+                <span style="font-size: 0.9em;">Detailed East Coast Swing basic with follower perspective.</span>
+            </div>
+
+            <h4>Foxy Dance Steps (Primary Course Pattern)</h4>
+            <div class="video-link">
+                <a href="https://www.youtube.com/watch?v=YxNS2WCBbps" target="_blank">7. "Wedding Dance Lessons at Home - Foxy Dance Steps (1)" (2022)</a><br>
+                <span style="font-size: 0.9em;">Introduction to Foxy cradle step with clear breakdowns.</span>
+            </div>
+
+            <div class="video-link">
+                <a href="https://www.youtube.com/watch?v=U5agw6fXPU0" target="_blank">8. "Wedding Dance Lessons at Home - Foxy Dance Steps (3)" (2022)</a><br>
+                <span style="font-size: 0.9em;">Foxy transitions and variations including promenade position.</span>
+            </div>
+
+            <div class="video-link">
+                <a href="https://www.youtube.com/watch?v=AHhIZo19nCE" target="_blank">9. "Foxy Dance Steps: 4-Count to 6-Count Transitions & Timing Change" (2021)</a><br>
+                <span style="font-size: 0.9em;">Advanced Foxy concepts: transitions and timing flexibility.</span>
+            </div>
+
+            <div class="video-link">
+                <a href="https://www.youtube.com/watch?v=svi6IlfLJMs" target="_blank">10. "Foxy Dance Steps: Leading the Left Rock Turn" (2021)</a><br>
+                <span style="font-size: 0.9em;">Technique focus: turning and responsive following in Foxy.</span>
+            </div>
+
+            <div class="video-link">
+                <a href="https://www.youtube.com/watch?v=BXZa0SRZmp0" target="_blank">11. "Foxy Dance Routine (Beginner Patterns)" (2020)</a><br>
+                <span style="font-size: 0.9em;">Full beginner-level Foxy routine combining multiple patterns.</span>
+            </div>
+
+            <h3>B. Key Concepts Reviewed</h3>
+
+            <table class="schedule-table">
+                <tr>
+                    <th>Concept</th>
+                    <th>Definition</th>
+                    <th>Why It Matters</th>
+                    <th>Week Introduced</th>
+                </tr>
+                <tr>
+                    <td><strong>Posture</strong></td>
+                    <td>Alignment of head, shoulders, ribs, and hips; proper weight distribution</td>
+                    <td>Foundation for all movement; enables balance and communication</td>
+                    <td>Week 1</td>
+                </tr>
+                <tr>
+                    <td><strong>Frame</strong></td>
+                    <td>Positioning of arms and connection points with partner</td>
+                    <td>The channel through which leads are transmitted</td>
+                    <td>Week 2</td>
+                </tr>
+                <tr>
+                    <td><strong>Elasticity</strong></td>
+                    <td>Responsive compression/decompression; feeling and reacting to pressure changes</td>
+                    <td>Enables natural, sustainable connection without rigid tension</td>
+                    <td>Week 3</td>
+                </tr>
+                <tr>
+                    <td><strong>Lead & Follow</strong></td>
+                    <td>Leader initiates movement; follower responds to pressure and frame changes</td>
+                    <td>Core dynamic of partner dancing; responsive following is learned, not intuitive</td>
+                    <td>Week 4</td>
+                </tr>
+                <tr>
+                    <td><strong>Footwork</strong></td>
+                    <td>Specific foot placements and weight changes that execute dance steps</td>
+                    <td>The physical expression of dance patterns; must be coordinated with frame</td>
+                    <td>Week 5</td>
+                </tr>
+                <tr>
+                    <td><strong>Responsiveness</strong></td>
+                    <td>Ability to feel subtle cues from leader and adapt movement in real-time</td>
+                    <td>Transitions from "kata" (structured patterns) to "sparring" (social dancing)</td>
+                    <td>Week 7</td>
+                </tr>
+            </table>
+
+            <h3>C. Recommended Music Styles & Tempos for Practice</h3>
+
+            <table class="schedule-table">
+                <tr>
+                    <th>Dance</th>
+                    <th>Typical Tempo (BPM)</th>
+                    <th>Music Style</th>
+                    <th>Practice Application</th>
+                </tr>
+                <tr>
+                    <td><strong>Foxy</strong></td>
+                    <td>90–110 BPM</td>
+                    <td>Foxtrot, smooth ballroom, light jazz</td>
+                    <td>Primary course pattern. Practice with moderate-tempo music.</td>
+                </tr>
+                <tr>
+                    <td><strong>American Slow Waltz</strong></td>
+                    <td>90–100 BPM</td>
+                    <td>Waltz, slow ballroom, classical-influenced</td>
+                    <td>Natural progression from Foxy. Emphasizes frame and flowing movement.</td>
+                </tr>
+                <tr>
+                    <td><strong>Nightclub Two Step</strong></td>
+                    <td>80–90 BPM</td>
+                    <td>Country, slow groove, lounge music</td>
+                    <td>Relaxed, social dance. Often taught after foundational dances.</td>
+                </tr>
+                <tr>
+                    <td><strong>East Coast Swing</strong></td>
+                    <td>125–150 BPM (swing tempo)</td>
+                    <td>Swing, rock & roll, upbeat pop</td>
+                    <td>Faster tempo; develops rhythm and quicker footwork.</td>
+                </tr>
+                <tr>
+                    <td><strong>Country Two Step</strong></td>
+                    <td>120–130 BPM</td>
+                    <td>Country, line dance music, pop-country</td>
+                    <td>Fun, social, often danced in country venues.</td>
+                </tr>
+            </table>
+
+            <h3>D. Common Beginner Challenges & Solutions</h3>
+
+            <p><strong>Challenge 1: "I keep anticipating the lead instead of responding."</strong></p>
+            <ul style="margin-left: 20px;">
+                <li><strong>Solution:</strong> Practice the palm-to-palm drills (Week 4) to train your nervous system to feel pressure rather than predict. Tell yourself: "I am responding to what I feel right now, not to what I think will happen next."</li>
+            </ul>
+
+            <p><strong>Challenge 2: "My arms get tired during practice."</strong></p>
+            <ul style="margin-left: 20px;">
+                <li><strong>Solution:</strong> This usually indicates tension rather than elasticity. Review Week 3 (elasticity). Your frame should feel light and connected, not "held up." Engage your back muscles (lats) and core, not your arm muscles.</li>
+            </ul>
+
+            <p><strong>Challenge 3: "I feel clumsy with the footwork."</strong></p>
+            <ul style="margin-left: 20px;">
+                <li><strong>Solution:</strong> Practice footwork alone before practicing with your leader. Use a mirror. Start at very slow tempos and gradually increase speed. Muscle memory takes time—consistent practice (even just 15–20 minutes daily) accelerates development.</li>
+            </ul>
+
+            <p><strong>Challenge 4: "I'm having trouble staying on beat with the music."</strong></p>
+            <ul style="margin-left: 20px;">
+                <li><strong>Solution:</strong> Spend extra time on the warm-up (bouncing on the knees in time with music). This develops rhythm at a fundamental level. Use metronome apps if needed. Dance to music you enjoy—it's easier to feel the rhythm in music you like.</li>
+            </ul>
+
+            <p><strong>Challenge 5: "My posture collapses when I get tired."</strong></p>
+            <ul style="margin-left: 20px;">
+                <li><strong>Solution:</strong> Posture is a physical skill that requires practice and muscular endurance. Do the solo posture drills (Week 1) daily. Short, frequent practice sessions are more effective than one long session. Gradually increase practice duration as your postural endurance improves.</li>
+            </ul>
+
+            <h3>E. Continuing Education Beyond Week 8</h3>
+
+            <p><strong>Natural Progressions from Foxy:</strong></p>
+            <ul style="margin-left: 20px;">
+                <li><strong>American Slow Waltz:</strong> Similar frame and foundational concepts; emphasizes smooth, flowing movement.</li>
+                <li><strong>Nightclub Two Step:</strong> Relaxed, social dance; good for lounge and casual venues.</li>
+                <li><strong>East Coast Swing:</strong> Faster tempo; introduces more varied footwork and some underarm turns.</li>
+                <li><strong>Country Two Step:</strong> Similar structure to Foxy but with country music; often danced socially in country venues.</li>
+                <li><strong>Quickstep:</strong> Advanced; much faster tempo; builds on Foxy fundamentals but requires quicker footwork.</li>
+            </ul>
+
+            <p><strong>Recommended Practice Venues:</strong></p>
+            <ul style="margin-left: 20px;">
+                <li><strong>Ballroom Dance Studios:</strong> Professional instruction; group classes; structured environment.</li>
+                <li><strong>Social Ballroom Venues:</strong> Practice dances; meet other dancers; experience varied leaders/followers.</li>
+                <li><strong>Dance Lounges & Country Dance Bars:</strong> Social dancing; live music; casual, fun atmosphere.</li>
+                <li><strong>Community Centers:</strong> Often offer beginner group classes at low cost.</li>
+            </ul>
+
+            <p><strong>Mindset for Continued Growth:</strong></p>
+            <div class="key-principle">
+                Every new dance you learn will feel awkward at first. This is normal. The foundational skills you've developed (posture, frame, elasticity, responsiveness) apply to <strong>every</strong> partner dance. Each new dance teaches you something new about partnership, rhythm, and movement. Embrace the learning process. Enjoy the partnership. Dance regularly, and you will improve continuously.
+            </div>
+        </section>
+
+        <!-- FINAL NOTES -->
+        <section>
+            <h2>Final Notes for the Instructor</h2>
+
+            <p><strong>Pedagogical Reminders:</strong></p>
+            <ul style="margin-left: 20px;">
+                <li><strong>Always Show the Final Product First:</strong> Before breaking down a step, demonstrate the completed movement at full speed. This gives the learner context and motivation.</li>
+                <li><strong>Use "Tell, Show, Tell" Structure:</strong> Explain what you're about to teach. Demonstrate/practice it. Summarize what was learned. This reinforces learning.</li>
+                <li><strong>Use Countdowns:</strong> Always use a countdown sequence (5, 6, 7, 8) before starting a pattern. This ensures everyone is on beat.</li>
+                <li><strong>Emphasize Connection Over Steps:</strong> Remind the follower frequently that the goal is <strong>connection</strong>, not perfect footwork. A follower with good connection and average footwork will dance beautifully. A follower with perfect footwork but no connection will dance mechanically.</li>
+                <li><strong>Practice Solo First, Then With Partner:</strong> Whenever possible, have the follower practice new footwork alone (with mirror feedback) before dancing with the leader. This builds confidence and reduces cognitive overload.</li>
+                <li><strong>Adjust Pacing as Needed:</strong> If a follower needs extra time on posture or frame, spend it. The foundation is more important than rushing through the lesson plan.</li>
+            </ul>
+
+            <p><strong>Equipment & Setup Reminders:</strong></p>
+            <ul style="margin-left: 20px;">
+                <li>Have the student wear proper dance shoes (or at minimum, smooth-soled shoes with socks).</li>
+                <li>Practice on appropriate flooring (linoleum with socks, hardwood, or professional dance floor—not carpet).</li>
+                <li>Use music at appropriate tempos for each lesson.</li>
+                <li>Have a mirror available for posture feedback.</li>
+            </ul>
+
+            <p><strong>Home Practice Reminders for the Student:</strong></p>
+            <ul style="margin-left: 20px;">
+                <li>Consistent, short practice sessions (15–30 minutes, 3–4 times per week) are more effective than infrequent long sessions.</li>
+                <li>Practice solo posture and footwork drills before practicing with your partner.</li>
+                <li>Use a mirror whenever possible to get visual feedback on posture and frame.</li>
+                <li>Don't skip the warm-up (bouncing on the knees). It's not "wasting time"—it's building rhythm and body awareness.</li>
+                <li>If you feel frustrated, take a break. Learning partner dancing is a journey, not a race.</li>
+            </ul>
+        </section>
+
+        <footer>
+            <p><strong>Course Completion Date:</strong> <span id="timestamp-footer"></span></p>
+            <p>This syllabus was created with the intention of providing a comprehensive, structured pathway for beginner followers to learn social partner dancing with an emphasis on connection, responsiveness, and proper biomechanics. The course balances structured learning (kata phase) with responsive, adaptive dancing (sparring phase), mirroring the progression of martial arts training.</p>
+            <p><strong>For questions, updates, or feedback on this syllabus, please contact your instructor.</strong></p>
+        </footer>
+    </div>
+
+    <button class="print-button" onclick="window.print()">🖨️ Print / Save as PDF</button>
+
+    <script>
+        // Generate timestamp
+        const now = new Date();
+        const options = { 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric', 
+            hour: '2-digit', 
+            minute: '2-digit',
+            second: '2-digit',
+            timeZoneName: 'short'
+        };
+        const timestamp = now.toLocaleDateString('en-US', options);
+
+        document.getElementById('timestamp').textContent = timestamp;
+        document.getElementById('timestamp-footer').textContent = timestamp;
+
+        // Smooth scroll for TOC links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+
+        // Make copyable URLs more user-friendly
+        document.querySelectorAll('.copyable').forEach(el => {
+            el.addEventListener('click', function(e) {
+                e.preventDefault();
+                navigator.clipboard.writeText(this.textContent);
+                const originalText = this.textContent;
+                this.textContent = '✓ Copied!';
+                setTimeout(() => {
+                    this.textContent = originalText;
+                }, 2000);
+            });
+        });
+    </script>
 </body>
 </html>
