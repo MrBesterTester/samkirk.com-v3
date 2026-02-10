@@ -47,6 +47,8 @@ npm run start
 
 ### Standard Operating Procedures
 
+> **Note:** The **Admin** nav link only appears in development mode (`NODE_ENV=development`). In production, `/admin` is still accessible by URL but hidden from the navigation for security.
+
 #### Resume Management
 
 **Initial setup (new environment):**
