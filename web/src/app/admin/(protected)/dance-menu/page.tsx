@@ -13,7 +13,7 @@ interface SelectedFile {
   extension: string;
 }
 
-const REQUIRED_EXTENSIONS = [".md", ".txt", ".html"];
+const REQUIRED_EXTENSIONS = [".txt", ".html"];
 const ALLOWED_EXTENSIONS = [".md", ".txt", ".html", ".pdf"];
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 
@@ -203,7 +203,7 @@ export default function AdminDanceMenuPage() {
       </h1>
       <p className="mt-4 text-lg text-zinc-600 dark:text-zinc-400">
         Upload and publish the weekly dance menu bundle. Upload files in multiple
-        formats (.md, .txt, .html) to publish a new menu.
+        formats (.txt, .html) to publish a new menu.
       </p>
 
       {/* Upload area */}
@@ -249,7 +249,7 @@ export default function AdminDanceMenuPage() {
               or drag and drop multiple files
             </p>
             <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-500">
-              Required: .md, .txt, .html — Optional: .pdf — Max 10MB per file
+              Required: .txt, .html — Optional: .md, .pdf — Max 10MB per file
             </p>
           </div>
         </div>
@@ -513,8 +513,8 @@ export default function AdminDanceMenuPage() {
               />
             </svg>
             <span>
-              Upload all three required formats (.md, .txt, .html) to publish.
-              PDF is optional.
+              Upload both required formats (.txt, .html) to publish.
+              Markdown and PDF are optional.
             </span>
           </li>
           <li className="flex items-start gap-2">

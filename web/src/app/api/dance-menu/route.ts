@@ -21,10 +21,10 @@ interface DanceMenuResponse {
 }
 
 const FORMAT_NAMES: Record<string, string> = {
-  "menu.md": "Markdown",
-  "menu.txt": "Plain Text",
-  "menu.html": "HTML",
-  "menu.pdf": "PDF",
+  "sams-dance-menu.md": "Markdown",
+  "sams-dance-menu.txt": "Plain Text",
+  "sams-dance-menu.html": "HTML",
+  "sams-dance-menu.pdf": "PDF",
 };
 
 /**
@@ -57,7 +57,7 @@ export async function GET(
     }
 
     // Get the HTML content for display
-    const htmlPath = PublicPaths.danceMenuFile("menu.html");
+    const htmlPath = PublicPaths.danceMenuFile("sams-dance-menu.html");
     let htmlContent: string | undefined;
 
     if (await fileExists(bucket, htmlPath)) {

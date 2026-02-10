@@ -68,7 +68,7 @@ async function uploadBundleToGCS(bundle: ValidatedBundle): Promise<string[]> {
  *
  * Upload or replace the dance menu bundle files.
  *
- * Request: multipart/form-data with multiple files (at least .md, .txt, .html)
+ * Request: multipart/form-data with multiple files (at least .txt, .html)
  *
  * Response:
  * - 200: Success with list of uploaded files

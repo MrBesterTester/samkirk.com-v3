@@ -181,27 +181,27 @@ describe("dance-menu-upload", () => {
 
     it("validates a complete bundle with all required files", () => {
       const bundle = validateBundle([
-        createValidFile(".md", "# Menu"),
         createValidFile(".txt", "Menu text"),
         createValidFile(".html", "<html><body>Menu</body></html>"),
       ]);
 
-      expect(bundle.files).toHaveLength(3);
-      expect(bundle.hasMarkdown).toBe(true);
+      expect(bundle.files).toHaveLength(2);
+      expect(bundle.hasMarkdown).toBe(false);
       expect(bundle.hasText).toBe(true);
       expect(bundle.hasHtml).toBe(true);
       expect(bundle.hasPdf).toBe(false);
     });
 
-    it("validates bundle with optional PDF", () => {
+    it("validates bundle with optional markdown and PDF", () => {
       const bundle = validateBundle([
-        createValidFile(".md", "# Menu"),
         createValidFile(".txt", "Menu text"),
         createValidFile(".html", "<html><body>Menu</body></html>"),
+        createValidFile(".md", "# Menu"),
         createValidPdf(),
       ]);
 
       expect(bundle.files).toHaveLength(4);
+      expect(bundle.hasMarkdown).toBe(true);
       expect(bundle.hasPdf).toBe(true);
     });
 
@@ -220,14 +220,12 @@ describe("dance-menu-upload", () => {
       // Missing .html
       expect(() =>
         validateBundle([
-          createValidFile(".md", "# Menu"),
           createValidFile(".txt", "Menu text"),
         ])
       ).toThrow(DanceMenuUploadError);
 
       try {
         validateBundle([
-          createValidFile(".md", "# Menu"),
           createValidFile(".txt", "Menu text"),
         ]);
       } catch (e) {
@@ -242,18 +240,16 @@ describe("dance-menu-upload", () => {
     it("throws for duplicate extensions", () => {
       expect(() =>
         validateBundle([
-          createValidFile(".md", "# Menu 1"),
-          createValidFile(".md", "# Menu 2"),
-          createValidFile(".txt", "Menu text"),
+          createValidFile(".txt", "Menu text 1"),
+          createValidFile(".txt", "Menu text 2"),
           createValidFile(".html", "<html>Menu</html>"),
         ])
       ).toThrow(DanceMenuUploadError);
 
       try {
         validateBundle([
-          createValidFile(".md", "# Menu 1"),
-          createValidFile(".md", "# Menu 2"),
-          createValidFile(".txt", "Menu text"),
+          createValidFile(".txt", "Menu text 1"),
+          createValidFile(".txt", "Menu text 2"),
           createValidFile(".html", "<html>Menu</html>"),
         ]);
       } catch (e) {
@@ -263,18 +259,15 @@ describe("dance-menu-upload", () => {
     });
 
     it("calculates total size correctly", () => {
-      const mdContent = "# Menu";
       const txtContent = "Menu text";
       const htmlContent = "<html><body>Menu</body></html>";
 
       const bundle = validateBundle([
-        createValidFile(".md", mdContent),
         createValidFile(".txt", txtContent),
         createValidFile(".html", htmlContent),
       ]);
 
       const expectedSize =
-        Buffer.byteLength(mdContent) +
         Buffer.byteLength(txtContent) +
         Buffer.byteLength(htmlContent);
 
@@ -283,15 +276,13 @@ describe("dance-menu-upload", () => {
 
     it("sets correct storage filenames", () => {
       const bundle = validateBundle([
-        { filename: "my-custom-menu.md", size: 5, content: Buffer.from("test1") },
-        { filename: "dance-menu-v2.txt", size: 5, content: Buffer.from("test2") },
-        { filename: "week-2-menu.html", size: 5, content: Buffer.from("test3") },
+        { filename: "dance-menu-v2.txt", size: 5, content: Buffer.from("test1") },
+        { filename: "week-2-menu.html", size: 5, content: Buffer.from("test2") },
       ]);
 
       const filenames = bundle.files.map((f) => f.storageFilename);
-      expect(filenames).toContain("menu.md");
-      expect(filenames).toContain("menu.txt");
-      expect(filenames).toContain("menu.html");
+      expect(filenames).toContain("sams-dance-menu.txt");
+      expect(filenames).toContain("sams-dance-menu.html");
     });
 
     it("throws for bundle exceeding max size", () => {
@@ -303,9 +294,8 @@ describe("dance-menu-upload", () => {
 
       expect(() =>
         validateBundle([
-          { filename: "menu.md", size: largeContent.length, content: Buffer.from(largeContent) },
           { filename: "menu.txt", size: largeContent.length, content: Buffer.from(largeContent) },
-          { filename: "menu.html", size: 5, content: Buffer.from("test") },
+          { filename: "menu.html", size: largeContent.length, content: Buffer.from(largeContent) },
         ])
       ).toThrow(DanceMenuUploadError);
     });
@@ -322,9 +312,9 @@ describe("dance-menu-upload", () => {
 
   describe("constants", () => {
     it("has correct required extensions", () => {
-      expect(REQUIRED_EXTENSIONS).toContain(".md");
       expect(REQUIRED_EXTENSIONS).toContain(".txt");
       expect(REQUIRED_EXTENSIONS).toContain(".html");
+      expect(REQUIRED_EXTENSIONS).not.toContain(".md");
       expect(REQUIRED_EXTENSIONS).not.toContain(".pdf");
     });
 

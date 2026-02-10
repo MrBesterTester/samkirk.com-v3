@@ -131,7 +131,7 @@ export default function DanceMenuPage() {
   return (
     <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
       <h1 className="text-3xl font-bold tracking-tight text-text-primary">
-        Dance Menu
+        Sam&apos;s Dance Menu
       </h1>
       <p className="mt-4 text-lg text-text-secondary">
         View and download the current weekly dance menu.
@@ -240,9 +240,16 @@ export default function DanceMenuPage() {
                     Current Menu
                   </h2>
                 </div>
-                <div className="p-6">
+                <div
+                  className="rounded-b-xl p-6"
+                  style={{
+                    backgroundColor: "#ffffff",
+                    color: "#18181b",
+                    colorScheme: "light",
+                  }}
+                >
                   <div
-                    className="prose prose-zinc dark:prose-invert max-w-none prose-headings:font-semibold prose-a:text-accent"
+                    className="prose prose-zinc max-w-none prose-headings:font-semibold"
                     dangerouslySetInnerHTML={{
                       __html: loadState.data.htmlContent,
                     }}

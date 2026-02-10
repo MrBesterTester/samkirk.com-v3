@@ -4,9 +4,9 @@ import "server-only";
  * Dance Menu bundle upload validation and utilities.
  *
  * A valid bundle must contain:
- * - At least one .md file
  * - At least one .txt file
  * - At least one .html file
+ * - Optionally, a .md file
  * - Optionally, a .pdf file
  *
  * All files are stored under dance-menu/current/ in the public bucket.
@@ -25,7 +25,7 @@ export type AllowedExtension = (typeof ALLOWED_EXTENSIONS)[number];
 /**
  * Required file extensions that must be present in a valid bundle.
  */
-export const REQUIRED_EXTENSIONS: AllowedExtension[] = [".md", ".txt", ".html"];
+export const REQUIRED_EXTENSIONS: AllowedExtension[] = [".txt", ".html"];
 
 /**
  * Maximum file size per file (10MB).
@@ -51,10 +51,10 @@ export const MIME_TYPES: Record<AllowedExtension, string> = {
  * Standardized file names for the dance menu files.
  */
 export const STANDARD_FILENAMES: Record<AllowedExtension, string> = {
-  ".md": "menu.md",
-  ".txt": "menu.txt",
-  ".html": "menu.html",
-  ".pdf": "menu.pdf",
+  ".md": "sams-dance-menu.md",
+  ".txt": "sams-dance-menu.txt",
+  ".html": "sams-dance-menu.html",
+  ".pdf": "sams-dance-menu.pdf",
 };
 
 /**
