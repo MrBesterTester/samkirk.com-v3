@@ -21,11 +21,11 @@ related: [REQ-028, REQ-030]
 Create `docs/feature-test-matrix.md` mapping every feature from SPECIFICATION.md to its tests and/or verifications, identifying and documenting coverage gaps.
 
 ## Checklist
-- [ ] Create `docs/feature-test-matrix.md`
-- [ ] Extract features from `docs/SPECIFICATION.md`
-- [ ] Map each feature to test(s) and/or verification(s)
-- [ ] Identify and document coverage gaps
-- [ ] TEST: No feature row is empty
+- [x] Create `docs/feature-test-matrix.md`
+- [x] Extract features from `docs/SPECIFICATION.md`
+- [x] Map each feature to test(s) and/or verification(s)
+- [x] Identify and document coverage gaps
+- [x] TEST: No feature row is empty
 
 ## Blueprint Guidance
 - **Goal**: Create `docs/feature-test-matrix.md` mapping features to tests

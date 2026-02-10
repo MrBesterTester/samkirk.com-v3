@@ -21,8 +21,8 @@ related: [REQ-001]
 Migrate the profile photo from the v2 project to v3's public directory so it can be used in the hero section.
 
 ## Checklist
-- [ ] **[Codex/Opus]** Copy photo from v2 to `web/public/profile-photo.jpg`
-- [ ] **[Codex/Opus]** TEST: Verify image loads at `/profile-photo.jpg`
+- [x] **[Codex/Opus]** Copy photo from v2 to `web/public/profile-photo.jpg`
+- [x] **[Codex/Opus]** TEST: Verify image loads at `/profile-photo.jpg`
 
 ## Blueprint Guidance
 ### 0.2 Copy profile photo asset

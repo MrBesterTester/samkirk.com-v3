@@ -21,10 +21,10 @@ related: [REQ-032, REQ-033]
 Verify that the do-work integration works correctly with the master-test document set: `/ingest-todo` creates REQ files, `start step` and `continue step` read all three companion docs, and REQ files have proper `source_doc` frontmatter.
 
 ## Checklist
-- [ ] Verify `/ingest-todo docs/master-test-TODO.md` creates REQ files
-- [ ] Verify `start step 1.1 master-test` reads all three companion docs
-- [ ] Verify `continue step 1.1 master-test` works
-- [ ] TEST: REQ files have `source_doc: docs/master-test-TODO.md` frontmatter
+- [x] Verify `/ingest-todo docs/master-test-TODO.md` creates REQ files
+- [x] Verify `start step 1.1 master-test` reads all three companion docs
+- [x] Verify `continue step 1.1 master-test` works
+- [x] TEST: REQ files have `source_doc: docs/master-test-TODO.md` frontmatter
 
 ## Blueprint Guidance
 This step validates the Dylan Davis bridge integration for the master-test document set. The `/ingest-todo` skill should parse the TODO, resolve the `master-test` prefix to find the companion SPECIFICATION and BLUEPRINT, and create REQ files with proper `source_step`, `source_doc`, `blueprint_ref`, `model_hint`, and `batch` frontmatter.

@@ -21,11 +21,11 @@ related: [REQ-005, REQ-006, REQ-007, REQ-008, REQ-009]
 Embed the complete song dedication content on the home page, including lyrics display and audio player/link, styled to fit the single-scroll aesthetic.
 
 ## Checklist
-- [ ] **[Opus 4.5]** Embed complete song dedication content
-- [ ] **[Opus 4.5]** Include lyrics display
-- [ ] **[Opus 4.5]** Include audio player/link
-- [ ] **[Opus 4.5]** Style to fit single-scroll aesthetic
-- [ ] **[Gemini 3 Pro]** TEST: Visual inspection, audio playback
+- [x] **[Opus 4.5]** Embed complete song dedication content
+- [x] **[Opus 4.5]** Include lyrics display
+- [x] **[Opus 4.5]** Include audio player/link
+- [x] **[Opus 4.5]** Style to fit single-scroll aesthetic
+- [x] **[Gemini 3 Pro]** TEST: Visual inspection, audio playback
 
 ## Blueprint Guidance
 ### 2.6 Add Song Dedication full embed

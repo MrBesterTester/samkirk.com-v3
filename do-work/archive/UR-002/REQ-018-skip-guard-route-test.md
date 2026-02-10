@@ -21,11 +21,11 @@ related: [REQ-019]
 Add GCP credential skip guards to `web/src/app/api/public/[...path]/route.test.ts` so the 3 tests skip cleanly when GCP is unavailable instead of throwing errors.
 
 ## Checklist
-- [ ] Add `hasGcpCredentials()` check at top of file
-- [ ] Move `getPublicBucket()` from describe-scope into `beforeAll` behind guard
-- [ ] Add `it.skipIf(!gcpAvailable)` to all 3 test cases
-- [ ] Guard `beforeAll`/`afterAll` bodies with early return
-- [ ] TEST: `npm test` — 1225+ pass, 0 fail (3 extra skips)
+- [x] Add `hasGcpCredentials()` check at top of file
+- [x] Move `getPublicBucket()` from describe-scope into `beforeAll` behind guard
+- [x] Add `it.skipIf(!gcpAvailable)` to all 3 test cases
+- [x] Guard `beforeAll`/`afterAll` bodies with early return
+- [x] TEST: `npm test` — 1225+ pass, 0 fail (3 extra skips)
 
 ## Blueprint Guidance
 - **Goal**: Make `web/src/app/api/public/[...path]/route.test.ts` skip cleanly when GCP is unavailable

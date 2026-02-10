@@ -21,14 +21,14 @@ related: [REQ-020]
 Add test results archive functionality to the master test runner: create timestamped archive directories, write `summary.md` with frontmatter, write raw logs per suite (gitignored), and support `--ref` and `--no-archive` flags.
 
 ## Checklist
-- [ ] Create archive directory `do-work/archive/test-runs/YYYY-MM-DD_HH-MM-SS/`
-- [ ] Write `summary.md` with frontmatter (timestamp, triggered_by, gcp_available, overall)
-- [ ] Write summary table and test index to `summary.md`
-- [ ] Write raw logs per suite (gitignored)
-- [ ] Implement `--ref` flag for REQ cross-linking
-- [ ] Implement `--no-archive` flag to skip writing
-- [ ] If `--release`: include `release_candidate: true` in frontmatter
-- [ ] TEST: `npm run test:all` — archives `summary.md` to `do-work/archive/test-runs/`
+- [x] Create archive directory `do-work/archive/test-runs/YYYY-MM-DD_HH-MM-SS/`
+- [x] Write `summary.md` with frontmatter (timestamp, triggered_by, gcp_available, overall)
+- [x] Write summary table and test index to `summary.md`
+- [x] Write raw logs per suite (gitignored)
+- [x] Implement `--ref` flag for REQ cross-linking
+- [x] Implement `--no-archive` flag to skip writing
+- [x] If `--release`: include `release_candidate: true` in frontmatter
+- [x] TEST: `npm run test:all` — archives `summary.md` to `do-work/archive/test-runs/`
 
 ## Blueprint Guidance
 - **Goal**: After all suites complete, write `summary.md` and raw logs to the archive

@@ -21,8 +21,8 @@ related: [REQ-020, REQ-021]
 Add a `.gitignore` entry to keep raw test log files out of git while allowing the committed `summary.md` files.
 
 ## Checklist
-- [ ] Add `do-work/archive/test-runs/*/*.log` to `.gitignore`
-- [ ] TEST: `git status` does not show `.log` files after a test run
+- [x] Add `do-work/archive/test-runs/*/*.log` to `.gitignore`
+- [x] TEST: `git status` does not show `.log` files after a test run
 
 ## Blueprint Guidance
 - **Goal**: Keep raw logs out of git, commit only summary.md

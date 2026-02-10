@@ -21,11 +21,11 @@ related: [REQ-006, REQ-007, REQ-008, REQ-009, REQ-010]
 Redesign the home page hero section with the profile photo positioned upper-left on desktop and centered on mobile, plus name, location, and tagline text.
 
 ## Checklist
-- [ ] **[Opus 4.5]** Redesign hero with profile photo positioning
-- [ ] **[Opus 4.5]** Photo: upper-left on desktop (absolute positioned)
-- [ ] **[Opus 4.5]** Photo: centered above text on mobile
-- [ ] **[Opus 4.5]** Add name, location, and tagline text
-- [ ] **[Gemini 3 Pro]** TEST: Compare with v2, test responsive behavior
+- [x] **[Opus 4.5]** Redesign hero with profile photo positioning
+- [x] **[Opus 4.5]** Photo: upper-left on desktop (absolute positioned)
+- [x] **[Opus 4.5]** Photo: centered above text on mobile
+- [x] **[Opus 4.5]** Add name, location, and tagline text
+- [x] **[Gemini 3 Pro]** TEST: Compare with v2, test responsive behavior
 
 ## Blueprint Guidance
 ### 2.1 Create Hero section with photo

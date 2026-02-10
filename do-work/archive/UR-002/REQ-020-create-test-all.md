@@ -21,14 +21,14 @@ related: [REQ-021, REQ-022]
 Create the master test runner script at `web/scripts/test-all.ts` that orchestrates all test suites with CLI argument parsing, GCP credential auto-detection, sequential suite execution, test count parsing, colored summary table output, and `--release` mode.
 
 ## Checklist
-- [ ] Create `web/scripts/test-all.ts` with CLI arg parsing
-- [ ] Implement GCP credential auto-detection
-- [ ] Implement sequential suite execution via `child_process.spawn`
-- [ ] Parse test counts from Vitest and Playwright stdout patterns
-- [ ] Build test index (scan for `describe`/`test.describe` strings)
-- [ ] Print colored summary table to console
-- [ ] Implement `--release` mode (implies `--gcp`, no-skip, verification checklist)
-- [ ] TEST: `npm run test:all -- --unit --e2e` runs and produces output
+- [x] Create `web/scripts/test-all.ts` with CLI arg parsing
+- [x] Implement GCP credential auto-detection
+- [x] Implement sequential suite execution via `child_process.spawn`
+- [x] Parse test counts from Vitest and Playwright stdout patterns
+- [x] Build test index (scan for `describe`/`test.describe` strings)
+- [x] Print colored summary table to console
+- [x] Implement `--release` mode (implies `--gcp`, no-skip, verification checklist)
+- [x] TEST: `npm run test:all -- --unit --e2e` runs and produces output
 
 ## Blueprint Guidance
 - **Goal**: Single-entry-point test runner that orchestrates all suites

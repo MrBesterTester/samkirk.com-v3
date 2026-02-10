@@ -21,11 +21,11 @@ related: [REQ-028, REQ-029]
 Create `docs/verification-registry.md` documenting the manual verification procedures (VER-001 through VER-003) with full metadata per SPECIFICATION section 5.3.
 
 ## Checklist
-- [ ] Create `docs/verification-registry.md`
-- [ ] Document VER-001: Visual inspect resume PDF layout
-- [ ] Document VER-002: OAuth flow in fresh browser session
-- [ ] Document VER-003: Cloud Run deployment serves traffic
-- [ ] TEST: Runner `--release` output references registry entries
+- [x] Create `docs/verification-registry.md`
+- [x] Document VER-001: Visual inspect resume PDF layout
+- [x] Document VER-002: OAuth flow in fresh browser session
+- [x] Document VER-003: Cloud Run deployment serves traffic
+- [x] TEST: Runner `--release` output references registry entries
 
 ## Blueprint Guidance
 - **Goal**: Create `docs/verification-registry.md` for manual verification procedures
@@ -69,7 +69,7 @@ Rationale: Clear document creation task with defined format. Just need to discov
 ## Exploration
 
 - **Section 5.3 metadata fields**: ID, Headline, Description, Type (Verification/manual), Features covered, Procedure (step-by-step), Inputs (what verifier needs), Expected outputs (what passing looks like), GCP required (Yes/No).
-- **Runner `--release` output** (`web/scripts/test-all.ts` lines 867-873): Hardcodes checklist in archived summary.md: `- [ ] VER-001: Visual inspect resume PDF layout`, `- [ ] VER-002: OAuth flow in fresh browser session`, `- [ ] VER-003: Cloud Run deployment serves traffic`.
+- **Runner `--release` output** (`web/scripts/test-all.ts` lines 867-873): Hardcodes checklist in archived summary.md: `- [x] VER-001: Visual inspect resume PDF layout`, `- [x] VER-002: OAuth flow in fresh browser session`, `- [x] VER-003: Cloud Run deployment serves traffic`.
 - **Feature-test matrix GAP-004**: Deployment coverage note suggests VER-001 through VER-003 for domain serving, www redirect, Cloud Run health.
 - **VER-001 context** (SPEC 8.2): Resume tool outputs markdown + rendered HTML, 2-page constraint, need visual inspection for layout/page breaks.
 - **VER-002 context** (SPEC 9): Google OAuth restricted to sam@samkirk.com, admin functions (resume upload, dance menu upload, submissions).

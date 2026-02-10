@@ -21,10 +21,10 @@ related: [REQ-005, REQ-006, REQ-007, REQ-008, REQ-010]
 Add a Photo Fun section to the home page with a heading, description of AI photo editing features, and an external link to photo-fun.samkirk.com opening in a new tab.
 
 ## Checklist
-- [ ] **[Opus 4.5]** Add Photo Fun section with heading
-- [ ] **[Opus 4.5]** Write description of AI photo editing features
-- [ ] **[Opus 4.5]** Add external link to photo-fun.samkirk.com (new tab)
-- [ ] **[Gemini 3 Pro]** TEST: Click link, verify external site opens
+- [x] **[Opus 4.5]** Add Photo Fun section with heading
+- [x] **[Opus 4.5]** Write description of AI photo editing features
+- [x] **[Opus 4.5]** Add external link to photo-fun.samkirk.com (new tab)
+- [x] **[Gemini 3 Pro]** TEST: Click link, verify external site opens
 
 ## Blueprint Guidance
 ### 2.5 Add Photo Fun link section

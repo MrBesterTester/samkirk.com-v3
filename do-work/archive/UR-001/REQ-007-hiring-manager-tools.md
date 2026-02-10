@@ -21,12 +21,12 @@ related: [REQ-005, REQ-006, REQ-008, REQ-009, REQ-010]
 Add a "Hiring Manager?" section to the home page with three ToolPreview cards for Fit, Resume, and Interview tools, laid out as a grid on desktop and stacked on mobile.
 
 ## Checklist
-- [ ] **[Opus 4.5]** Add "Hiring Manager?" section heading
-- [ ] **[Opus 4.5]** Create "How Do I Fit?" preview card with CTA
-- [ ] **[Opus 4.5]** Create "Custom Resume" preview card with CTA
-- [ ] **[Opus 4.5]** Create "Interview Me Now" preview with sample Q&A
-- [ ] **[Opus 4.5]** Layout: grid on desktop, stack on mobile
-- [ ] **[Gemini 3 Pro]** TEST: Click CTAs, verify navigation works
+- [x] **[Opus 4.5]** Add "Hiring Manager?" section heading
+- [x] **[Opus 4.5]** Create "How Do I Fit?" preview card with CTA
+- [x] **[Opus 4.5]** Create "Custom Resume" preview card with CTA
+- [x] **[Opus 4.5]** Create "Interview Me Now" preview with sample Q&A
+- [x] **[Opus 4.5]** Layout: grid on desktop, stack on mobile
+- [x] **[Gemini 3 Pro]** TEST: Click CTAs, verify navigation works
 
 ## Blueprint Guidance
 ### 2.3 Add Hiring Manager tools section

@@ -723,7 +723,9 @@ completed_at: 2025-01-26T10:45:00Z
 ---
 ```
 
-2. **Append implementation summary** to the request file (if not already present):
+2. **Check off all checklist items** — replace every `- [ ]` with `- [x]` in the request file body. The file is completed; unchecked boxes contradict the status and make the historical record ambiguous.
+
+3. **Append implementation summary** to the request file (if not already present):
 ```markdown
 ## Implementation Summary
 
@@ -732,12 +734,12 @@ completed_at: 2025-01-26T10:45:00Z
 *Completed by work action (Route [A/B/C])*
 ```
 
-3. **Create archive folder** if it doesn't exist:
+4. **Create archive folder** if it doesn't exist:
 ```bash
 mkdir -p do-work/archive
 ```
 
-4. **Archive the request file** — behavior depends on whether the REQ has a UR:
+5. **Archive the request file** — behavior depends on whether the REQ has a UR:
 
 **If REQ has `user_request: UR-NNN` (new system):**
    - Read the UR's `input.md` from `do-work/user-requests/UR-NNN/`
@@ -958,6 +960,7 @@ Use this checklist to ensure you don't skip critical steps:
 □ Step 6: Spawn implementation agent
 □ Step 6.5: Run tests, append ## Testing section
 □ Step 7: Update frontmatter: status: completed, completed_at: <timestamp>
+□ Step 7: Check off all - [ ] → - [x] in request file body
 □ Step 7: Append ## Implementation Summary section
 □ Step 7: Archive REQ (see UR vs legacy archival logic)
 □ Step 7: If user_request exists → check if all UR's REQs complete → move UR folder to archive/
@@ -977,6 +980,7 @@ Use this checklist to ensure you don't skip critical steps:
 - Forgetting to document planning status for Routes A/B (write "Planning not required")
 - Forgetting to check/archive related UR folders or legacy context documents
 - Archiving a UR folder before all its REQs are complete
+- Leaving `- [ ]` unchecked in completed files (check them off when marking status: completed)
 
 ---
 

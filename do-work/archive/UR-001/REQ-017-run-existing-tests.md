@@ -21,9 +21,9 @@ related: [REQ-016]
 Run all unit tests (`npm test`) and E2E tests (`npm run test:e2e:real`) to verify no regressions from the visual upgrade. Fix any failing tests.
 
 ## Checklist
-- [ ] **[Codex/Opus]** Run `npm test` — all unit tests pass
-- [ ] **[Gemini 3 Pro]** Run `npm run test:e2e:real` — all E2E tests pass
-- [ ] **[Codex/Opus]** Fix any failing tests
+- [x] **[Codex/Opus]** Run `npm test` — all unit tests pass
+- [x] **[Gemini 3 Pro]** Run `npm run test:e2e:real` — all E2E tests pass
+- [x] **[Codex/Opus]** Fix any failing tests
 
 ## Blueprint Guidance
 ### 5.3 Run existing tests

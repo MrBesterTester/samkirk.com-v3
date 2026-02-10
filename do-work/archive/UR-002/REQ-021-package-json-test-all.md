@@ -21,8 +21,8 @@ related: [REQ-020, REQ-022]
 Wire up the `test:all` npm script in `web/package.json` to run the master test runner created in Step 2.1.
 
 ## Checklist
-- [ ] Add `"test:all": "npx tsx scripts/test-all.ts"` to `web/package.json`
-- [ ] TEST: `npm run test:all -- --unit` works
+- [x] Add `"test:all": "npx tsx scripts/test-all.ts"` to `web/package.json`
+- [x] TEST: `npm run test:all -- --unit` works
 
 ## Blueprint Guidance
 - **Goal**: Wire up the npm script

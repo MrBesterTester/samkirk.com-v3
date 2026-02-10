@@ -21,9 +21,9 @@ related: [REQ-004]
 Add "Fremont, California" to the header after "Sam Kirk", with responsive behavior that hides or abbreviates on mobile.
 
 ## Checklist
-- [ ] **[Opus 4.5]** Add "Fremont, California" after "Sam Kirk" in header
-- [ ] **[Opus 4.5]** Hide/abbreviate location on mobile for space
-- [ ] **[Gemini 3 Pro]** TEST: Visual check on desktop and mobile viewports
+- [x] **[Opus 4.5]** Add "Fremont, California" after "Sam Kirk" in header
+- [x] **[Opus 4.5]** Hide/abbreviate location on mobile for space
+- [x] **[Gemini 3 Pro]** TEST: Visual check on desktop and mobile viewports
 
 ## Blueprint Guidance
 ### 1.1 Update Header with location

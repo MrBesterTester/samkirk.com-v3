@@ -21,9 +21,9 @@ related: [REQ-031, REQ-032]
 Add a link to `README_dev_guide.md` from the existing root `README.md`, and update the Testing section commands to include `npm run test:all`.
 
 ## Checklist
-- [ ] Add `[Developer Guide](README_dev_guide.md)` link to Testing section or Key docs list
-- [ ] Update Testing section commands to include `npm run test:all`
-- [ ] TEST: Link resolves correctly
+- [x] Add `[Developer Guide](README_dev_guide.md)` link to Testing section or Key docs list
+- [x] Update Testing section commands to include `npm run test:all`
+- [x] TEST: Link resolves correctly
 
 ## Blueprint Guidance
 - **Goal**: Add a link to `README_dev_guide.md` from the existing root `README.md`

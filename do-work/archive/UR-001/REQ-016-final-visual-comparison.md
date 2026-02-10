@@ -21,15 +21,15 @@ related: [REQ-017]
 Run v2 and v3 side-by-side and compare home page personal feel, color warmth, photo placement, location visibility, build date format, all navigation links, and mobile viewport rendering.
 
 ## Checklist
-- [ ] **[Gemini 3 Pro]** Start v2 on localhost:4321
-- [ ] **[Gemini 3 Pro]** Start v3 on localhost:3000
-- [ ] **[Gemini 3 Pro]** Compare home page personal feel
-- [ ] **[Gemini 3 Pro]** Compare color warmth
-- [ ] **[Gemini 3 Pro]** Verify photo placement matches
-- [ ] **[Gemini 3 Pro]** Verify location visibility
-- [ ] **[Gemini 3 Pro]** Verify build date format
-- [ ] **[Gemini 3 Pro]** Test all navigation links
-- [ ] **[Gemini 3 Pro]** Test on mobile viewport
+- [x] **[Gemini 3 Pro]** Start v2 on localhost:4321
+- [x] **[Gemini 3 Pro]** Start v3 on localhost:3000
+- [x] **[Gemini 3 Pro]** Compare home page personal feel
+- [x] **[Gemini 3 Pro]** Compare color warmth
+- [x] **[Gemini 3 Pro]** Verify photo placement matches
+- [x] **[Gemini 3 Pro]** Verify location visibility
+- [x] **[Gemini 3 Pro]** Verify build date format
+- [x] **[Gemini 3 Pro]** Test all navigation links
+- [x] **[Gemini 3 Pro]** Test on mobile viewport
 
 ## Blueprint Guidance
 ### 5.2 Final visual comparison

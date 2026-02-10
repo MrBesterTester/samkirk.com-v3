@@ -21,14 +21,14 @@ related: [REQ-011, REQ-013]
 Create a new exploration page at `/explorations/tensor-logic` describing the educational Tensor Logic demo, with features list, link to external site, arXiv reference, and updates to the Explorations hub and header nav.
 
 ## Checklist
-- [ ] **[Opus 4.5]** Create `web/src/app/explorations/tensor-logic/page.tsx`
-- [ ] **[Opus 4.5]** Add title, description of educational demo
-- [ ] **[Opus 4.5]** List features (8 examples, 5 AI paradigms)
-- [ ] **[Opus 4.5]** Add link to tensor-logic.samkirk.com
-- [ ] **[Opus 4.5]** Add reference to arXiv paper
-- [ ] **[Codex/Opus]** Update Explorations hub to include Tensor Logic
-- [ ] **[Codex/Opus]** Update Header navigation dropdown
-- [ ] **[Gemini 3 Pro]** TEST: Navigation from Explorations hub
+- [x] **[Opus 4.5]** Create `web/src/app/explorations/tensor-logic/page.tsx`
+- [x] **[Opus 4.5]** Add title, description of educational demo
+- [x] **[Opus 4.5]** List features (8 examples, 5 AI paradigms)
+- [x] **[Opus 4.5]** Add link to tensor-logic.samkirk.com
+- [x] **[Opus 4.5]** Add reference to arXiv paper
+- [x] **[Codex/Opus]** Update Explorations hub to include Tensor Logic
+- [x] **[Codex/Opus]** Update Header navigation dropdown
+- [x] **[Gemini 3 Pro]** TEST: Navigation from Explorations hub
 
 ## Blueprint Guidance
 ### 3.2 Create Tensor Logic link page

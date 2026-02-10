@@ -4,6 +4,14 @@ What's new, what's better, what's different. Most recent stuff on top.
 
 ---
 
+## 0.10.4 — The Checkbox (2026-02-10)
+
+Completed REQ files were archived with unchecked `- [ ]` boxes — contradicting their `status: completed`. The work action now checks off all checklist items when marking a request complete, so the file reads as a truthful record.
+
+- Added Step 7 sub-step: replace `- [ ]` with `- [x]` on completion
+- Added checkbox item to orchestrator checklist
+- Added to common mistakes list
+
 ## 0.10.3 — The Disambiguator (2026-02-09)
 
 The 0.10.2 fix changed "step 3" to "step 4", but "step 4" is still ambiguous — it could mean Step 4 (Planning Phase) in the main workflow. Changed to "item 4 below" so agents route to the cleanup/exit list item, not the planning phase.

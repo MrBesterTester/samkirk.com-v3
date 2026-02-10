@@ -21,11 +21,11 @@ related: [REQ-012, REQ-013]
 Create a dedicated `/photo-fun` page with title, description of the AI photo editing app, features list, and a prominent CTA button linking to the external site. Add it to header navigation.
 
 ## Checklist
-- [ ] **[Opus 4.5]** Create `web/src/app/photo-fun/page.tsx`
-- [ ] **[Opus 4.5]** Add title, description, features list
-- [ ] **[Opus 4.5]** Add prominent CTA button to external site
-- [ ] **[Codex/Opus]** Add to Header navigation
-- [ ] **[Gemini 3 Pro]** TEST: Navigation, link functionality
+- [x] **[Opus 4.5]** Create `web/src/app/photo-fun/page.tsx`
+- [x] **[Opus 4.5]** Add title, description, features list
+- [x] **[Opus 4.5]** Add prominent CTA button to external site
+- [x] **[Codex/Opus]** Add to Header navigation
+- [x] **[Gemini 3 Pro]** TEST: Navigation, link functionality
 
 ## Blueprint Guidance
 ### 3.1 Create Photo Fun link page

@@ -21,10 +21,10 @@ related: [REQ-025]
 Run the complete master test suite and verify that all moving parts work: console output format, archive writing, gitignore for raw logs, and exit code behavior.
 
 ## Checklist
-- [ ] Run `npm run test:all` and verify console output format
-- [ ] Verify `summary.md` written to archive with correct content
-- [ ] Verify raw logs written but gitignored
-- [ ] Verify exit code behavior (0 on pass, 1 on fail)
+- [x] Run `npm run test:all` and verify console output format
+- [x] Verify `summary.md` written to archive with correct content
+- [x] Verify raw logs written but gitignored
+- [x] Verify exit code behavior (0 on pass, 1 on fail)
 
 ## Blueprint Guidance
 - **Goal**: Run the complete master test suite and verify all moving parts

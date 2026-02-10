@@ -21,11 +21,11 @@ related: [REQ-002]
 Create a balanced color palette combining v2's warmth (dark slate + cyan accents) with v3's clean zinc/blue feel. Define semantic color tokens in Tailwind config and document usage guidelines.
 
 ## Checklist
-- [ ] **[Opus 4.5]** Design balanced color palette (v2 warmth + v3 clean)
-- [ ] **[Opus 4.5]** Define color tokens in `tailwind.config.ts`
-- [ ] **[Opus 4.5]** Document color usage guidelines
-- [ ] **[Opus 4.5]** Ensure dark mode compatibility
-- [ ] **[Gemini 3 Pro]** TEST: Visual inspection of color swatches
+- [x] **[Opus 4.5]** Design balanced color palette (v2 warmth + v3 clean)
+- [x] **[Opus 4.5]** Define color tokens in `tailwind.config.ts`
+- [x] **[Opus 4.5]** Document color usage guidelines
+- [x] **[Opus 4.5]** Ensure dark mode compatibility
+- [x] **[Gemini 3 Pro]** TEST: Visual inspection of color swatches
 
 ## Blueprint Guidance
 ### 0.1 Define new color palette

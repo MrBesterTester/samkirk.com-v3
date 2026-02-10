@@ -21,13 +21,13 @@ related: [REQ-015]
 Update all components across the site to use the new color tokens defined in Phase 0.1, ensuring consistent usage in header, footer, cards, CTAs, and text. Verify dark mode still works.
 
 ## Checklist
-- [ ] **[Opus 4.5]** Update Header colors
-- [ ] **[Opus 4.5]** Update Footer colors
-- [ ] **[Opus 4.5]** Update card/surface colors
-- [ ] **[Opus 4.5]** Update CTA/button colors
-- [ ] **[Opus 4.5]** Update text colors (primary, secondary, muted)
-- [ ] **[Gemini 3 Pro]** TEST: Visual inspection of all pages
-- [ ] **[Gemini 3 Pro]** TEST: Dark mode verification
+- [x] **[Opus 4.5]** Update Header colors
+- [x] **[Opus 4.5]** Update Footer colors
+- [x] **[Opus 4.5]** Update card/surface colors
+- [x] **[Opus 4.5]** Update CTA/button colors
+- [x] **[Opus 4.5]** Update text colors (primary, secondary, muted)
+- [x] **[Gemini 3 Pro]** TEST: Visual inspection of all pages
+- [x] **[Gemini 3 Pro]** TEST: Dark mode verification
 
 ## Blueprint Guidance
 ### 4.1 Apply new color palette globally

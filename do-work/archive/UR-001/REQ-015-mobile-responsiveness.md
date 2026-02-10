@@ -21,12 +21,12 @@ related: [REQ-014]
 Audit all pages for mobile responsiveness at iPhone SE (375px) and iPhone 14 (390px) widths. Verify no horizontal scrolling, all content readable, and touch targets at least 44px. Fix any issues found.
 
 ## Checklist
-- [ ] **[Gemini 3 Pro]** Test all pages at 375px width (iPhone SE)
-- [ ] **[Gemini 3 Pro]** Test all pages at 390px width (iPhone 14)
-- [ ] **[Gemini 3 Pro]** Verify no horizontal scrolling
-- [ ] **[Gemini 3 Pro]** Verify all content readable
-- [ ] **[Gemini 3 Pro]** Verify touch targets at least 44px
-- [ ] **[Opus 4.5]** Fix any responsiveness issues found
+- [x] **[Gemini 3 Pro]** Test all pages at 375px width (iPhone SE)
+- [x] **[Gemini 3 Pro]** Test all pages at 390px width (iPhone 14)
+- [x] **[Gemini 3 Pro]** Verify no horizontal scrolling
+- [x] **[Gemini 3 Pro]** Verify all content readable
+- [x] **[Gemini 3 Pro]** Verify touch targets at least 44px
+- [x] **[Opus 4.5]** Fix any responsiveness issues found
 
 ## Blueprint Guidance
 ### 4.2 Mobile responsiveness audit

@@ -21,10 +21,10 @@ related: [REQ-005, REQ-006, REQ-007, REQ-009, REQ-010]
 Add a Dance Menu teaser section to the home page with a heading, preview/snippet content, and a CTA linking to the full `/dance-menu` page.
 
 ## Checklist
-- [ ] **[Opus 4.5]** Add Dance Menu section heading
-- [ ] **[Opus 4.5]** Create preview/teaser content
-- [ ] **[Opus 4.5]** Add CTA linking to `/dance-menu`
-- [ ] **[Gemini 3 Pro]** TEST: Visual inspection, CTA navigation
+- [x] **[Opus 4.5]** Add Dance Menu section heading
+- [x] **[Opus 4.5]** Create preview/teaser content
+- [x] **[Opus 4.5]** Add CTA linking to `/dance-menu`
+- [x] **[Gemini 3 Pro]** TEST: Visual inspection, CTA navigation
 
 ## Blueprint Guidance
 ### 2.4 Add Dance Menu preview

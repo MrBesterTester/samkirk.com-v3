@@ -21,10 +21,10 @@ related: [REQ-003]
 Add a dynamic build date to the Footer component in v2's format (`v{MM-DD-YYYY_HH:MM}` PST), requiring a "use client" directive.
 
 ## Checklist
-- [ ] **[Opus 4.5]** Add `"use client"` directive to Footer component
-- [ ] **[Opus 4.5]** Implement build date generation (v2 format, PST timezone)
-- [ ] **[Opus 4.5]** Style build date: `text-xs font-mono`
-- [ ] **[Gemini 3 Pro]** TEST: Verify footer shows correct PST time
+- [x] **[Opus 4.5]** Add `"use client"` directive to Footer component
+- [x] **[Opus 4.5]** Implement build date generation (v2 format, PST timezone)
+- [x] **[Opus 4.5]** Style build date: `text-xs font-mono`
+- [x] **[Gemini 3 Pro]** TEST: Verify footer shows correct PST time
 
 ## Blueprint Guidance
 ### 1.2 Update Footer with build date

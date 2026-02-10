@@ -21,10 +21,10 @@ related: [REQ-018]
 Add GCP credential skip guards to `web/e2e/full-app.spec.ts` so the 4 GCP-dependent tests skip cleanly when GCP is unavailable.
 
 ## Checklist
-- [ ] Add `dotenv` config loading at top
-- [ ] Add `const gcpAvailable = Boolean(process.env.GCP_PROJECT_ID)`
-- [ ] Add `test.skip(!gcpAvailable, "Requires GCP credentials")` to 4 tests
-- [ ] TEST: `npm run test:e2e` — 24+ pass, 0 fail (4 skips)
+- [x] Add `dotenv` config loading at top
+- [x] Add `const gcpAvailable = Boolean(process.env.GCP_PROJECT_ID)`
+- [x] Add `test.skip(!gcpAvailable, "Requires GCP credentials")` to 4 tests
+- [x] TEST: `npm run test:e2e` — 24+ pass, 0 fail (4 skips)
 
 ## Blueprint Guidance
 - **Goal**: Make 4 GCP-dependent tests in `web/e2e/full-app.spec.ts` skip cleanly

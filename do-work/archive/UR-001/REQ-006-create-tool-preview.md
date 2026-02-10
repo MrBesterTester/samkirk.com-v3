@@ -21,11 +21,11 @@ related: [REQ-005, REQ-007, REQ-008, REQ-009, REQ-010]
 Build a reusable ToolPreview component that accepts title, description, preview content, CTA text, and CTA link. Used by the Hiring Manager tools section and other preview cards.
 
 ## Checklist
-- [ ] **[Opus 4.5]** Create `web/src/components/ToolPreview.tsx`
-- [ ] **[Opus 4.5]** Props: title, description, previewContent, ctaText, ctaLink
-- [ ] **[Opus 4.5]** Style with card, hover effects, consistent colors
-- [ ] **[Codex/Opus]** Export from `web/src/components/index.ts`
-- [ ] **[Codex/Opus]** TEST: Component renders correctly
+- [x] **[Opus 4.5]** Create `web/src/components/ToolPreview.tsx`
+- [x] **[Opus 4.5]** Props: title, description, previewContent, ctaText, ctaLink
+- [x] **[Opus 4.5]** Style with card, hover effects, consistent colors
+- [x] **[Codex/Opus]** Export from `web/src/components/index.ts`
+- [x] **[Codex/Opus]** TEST: Component renders correctly
 
 ## Blueprint Guidance
 ### 2.2 Create Tool Preview components

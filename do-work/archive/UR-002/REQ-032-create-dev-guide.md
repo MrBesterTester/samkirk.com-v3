@@ -21,13 +21,13 @@ related: [REQ-031, REQ-033]
 Create `README_dev_guide.md` at the project root as a standalone reference document for day-to-day test workflows, distilled from BLUEPRINT Phase 7 sections 7.1-7.8.
 
 ## Checklist
-- [ ] Create `README_dev_guide.md` at project root
-- [ ] Write do-work test workflows (new test, fix/rewrite, triage)
-- [ ] Write manual verification procedures
-- [ ] Write test running commands (release vs debugging)
-- [ ] Write suite reference table and conventions
-- [ ] Write manual fallback section (`start step` / `continue step`)
-- [ ] TEST: All commands in guide match implemented test runner
+- [x] Create `README_dev_guide.md` at project root
+- [x] Write do-work test workflows (new test, fix/rewrite, triage)
+- [x] Write manual verification procedures
+- [x] Write test running commands (release vs debugging)
+- [x] Write suite reference table and conventions
+- [x] Write manual fallback section (`start step` / `continue step`)
+- [x] TEST: All commands in guide match implemented test runner
 
 ## Blueprint Guidance
 - **Goal**: Create a standalone developer guide at the project root that consolidates the day-to-day test workflows from the blueprint into a reference document
