@@ -29,15 +29,18 @@ export default function Home() {
               Fremont, California
             </p>
             <p className="mt-4 text-xl leading-8 text-text-secondary">
-              Software engineer with expertise in AI/ML, full-stack development,
-              and building products that solve real problems.
+              Software engineer with expertise in genAI mainly with Cursor and Claude Code for full-stack development,
+              and building products that solve real problems. Decades of
+              experience in test automation at all levels of the computer stack
+              to make sure your genAI product runs right; includes firmware that
+              tests hardware.
             </p>
           </div>
         </div>
       </section>
 
       {/* Quick Actions for Hiring Managers */}
-      <section className="mt-16">
+      <section className="mt-8">
         <h2 className="text-center text-2xl font-semibold text-text-primary">
           Hiring Manager?
         </h2>
@@ -80,13 +83,13 @@ export default function Home() {
       </section>
 
       {/* Table of Contents */}
-      <div className="mt-16 space-y-10">
+      <div className="mt-8 space-y-10">
         <section>
           <h2 className="text-2xl font-semibold text-text-primary">
-            Dance Menu
+            My Dance Menu
           </h2>
           <p className="mt-1 text-text-secondary">
-            Weekly curated playlists for social dancers — Swing, Waltz, Two Step, and more, refreshed every week with Claude Cowork.
+            Weekly curated playlists for social dancers (curated with Claude Cowork) — Swing, Waltz, Two Step, and more.
           </p>
           <Link
             href="/dance-menu"
@@ -115,7 +118,7 @@ export default function Home() {
 
         <section>
           <h2 className="text-2xl font-semibold text-text-primary">
-            Song Dedication
+            Song Dedication to Mom
           </h2>
           <p className="mt-1 text-text-secondary">
             A song that means something, with the story and lyrics behind it.
