@@ -4,6 +4,12 @@ What's new, what's better, what's different. Most recent stuff on top.
 
 ---
 
+## 0.10.6 — The Right Folder (2026-02-10)
+
+The 0.10.5 fix added `user-requests/UR-NNN/` as a check location, but that's wrong — completed REQs from earlier iterations land in `archive/UR-NNN/` (via cleanup consolidation), not `user-requests/`. Fixed to match cleanup.md's correct logic.
+
+- Changed third check location from `do-work/user-requests/UR-NNN/` to `do-work/archive/UR-NNN/`
+
 ## 0.10.5 — The Missing Folder (2026-02-10)
 
 The UR completion check only looked in `working/` and `archive/` for completed REQs, missing ones already moved into the UR folder itself. This could strand partial UR folders in `user-requests/` because the orchestrator never saw all REQs as done.

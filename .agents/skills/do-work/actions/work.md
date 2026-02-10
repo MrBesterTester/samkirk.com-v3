@@ -744,7 +744,7 @@ mkdir -p do-work/archive
 **If REQ has `user_request: UR-NNN` (new system):**
    - Read the UR's `input.md` from `do-work/user-requests/UR-NNN/`
    - Check its `requests` array (e.g., `[REQ-018, REQ-019, REQ-020]`)
-   - Check if ALL listed REQs are now completed (in `do-work/working/` with `status: completed`, already in `archive/`, or already moved into the UR folder `do-work/user-requests/UR-NNN/`)
+   - Check if ALL listed REQs are now completed (in `do-work/working/` with `status: completed`, already in `archive/` root, or already consolidated into `do-work/archive/UR-NNN/`)
    - If **all REQs complete**:
      - Move the completed REQ file into the UR folder: `mv do-work/working/REQ-XXX.md do-work/user-requests/UR-NNN/`
      - Move any other completed REQs from `do-work/archive/` that belong to this UR into the UR folder
