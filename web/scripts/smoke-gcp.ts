@@ -28,6 +28,7 @@
  *   12. Interview Chat Test (Step 8.2)
  */
 
+import { randomBytes } from "crypto";
 import { config } from "dotenv";
 import { resolve } from "path";
 
@@ -522,7 +523,14 @@ Generated at: ${new Date().toISOString()}
   console.log("\n--- Section 5: Resume Chunking Test ---\n");
   sectionsRun++;
 
+  const RESUME_GCS_PATH = "resume/master.md";
+  const RESUME_INDEX_COLLECTION = "resumeIndex";
+  const RESUME_INDEX_DOC = "current";
   const RESUME_CHUNKS_COLLECTION = "resumeChunks";
+
+  const resumeIndexRef = firestore
+    .collection(RESUME_INDEX_COLLECTION)
+    .doc(RESUME_INDEX_DOC);
 
   // Test resume with multiple sections for chunking
   const chunkTestResumeContent = `# Sam Kirk - Test Resume
@@ -578,11 +586,36 @@ Graduated with honors.
 Generated for smoke test at: ${new Date().toISOString()}
 `;
 
-  // Store original chunk data if any exists
+  // Store original state to restore later
+  let originalResumeExists = false;
+  let originalResumeContent: string | null = null;
+  let originalIndexData: Record<string, unknown> | null = null;
   let originalChunks: Array<{ id: string; data: Record<string, unknown> }> = [];
 
   try {
-    // First, store original resume state (reuse from Step 5 if needed)
+    // Store original resume state
+    log("Checking for existing resume...");
+    try {
+      const [existingContent] = await privateBucket
+        .file(RESUME_GCS_PATH)
+        .download();
+      originalResumeContent = existingContent.toString("utf-8");
+      originalResumeExists = true;
+      log("Found existing resume (will restore after test)", true);
+    } catch {
+      log("No existing resume found", true);
+    }
+
+    try {
+      const existingIndex = await resumeIndexRef.get();
+      if (existingIndex.exists) {
+        originalIndexData = existingIndex.data() as Record<string, unknown>;
+        log("Found existing resume index (will restore after test)", true);
+      }
+    } catch {
+      // Ignore
+    }
+
     log("Checking for existing chunks...");
     const existingChunksSnapshot = await firestore
       .collection(RESUME_CHUNKS_COLLECTION)
