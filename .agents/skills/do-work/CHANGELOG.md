@@ -4,6 +4,12 @@ What's new, what's better, what's different. Most recent stuff on top.
 
 ---
 
+## 0.10.5 — The Missing Folder (2026-02-10)
+
+The UR completion check only looked in `working/` and `archive/` for completed REQs, missing ones already moved into the UR folder itself. This could strand partial UR folders in `user-requests/` because the orchestrator never saw all REQs as done.
+
+- Added `do-work/user-requests/UR-NNN/` as a third location in the Step 7 completion check
+
 ## 0.10.4 — The Checkbox (2026-02-10)
 
 Completed REQ files were archived with unchecked `- [ ]` boxes — contradicting their `status: completed`. The work action now checks off all checklist items when marking a request complete, so the file reads as a truthful record.
