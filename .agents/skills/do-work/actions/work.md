@@ -197,7 +197,7 @@ Request files use YAML frontmatter for tracking. Fields are added progressively 
 # Set by do action when created
 id: REQ-001
 title: Short descriptive title
-status: pending
+status: pending | claimed | completed | failed
 created_at: 2025-01-26T10:00:00Z
 user_request: UR-001  # Links to originating user request (may be absent on legacy REQs)
 
@@ -207,7 +207,6 @@ route: A | B | C
 
 # Set by work action when finished
 completed_at: 2025-01-26T10:45:00Z
-status: completed | failed
 commit: abc1234  # Git commit hash (if git repo)
 error: "Description of failure"  # Only if failed
 ---
@@ -219,7 +218,7 @@ error: "Description of failure"  # Only if failed
 |-------|--------|------|-------------|
 | `id` | do | Creation | Request identifier (REQ-NNN) |
 | `title` | do | Creation | Short title for the request |
-| `status` | Both | Throughout | Current state (see flow below) |
+| `status` | Both | Throughout | `pending` → `claimed` → `completed` or `failed` |
 | `created_at` | do | Creation | ISO timestamp when request was captured |
 | `user_request` | do | Creation | UR identifier linking to originating user request (absent on legacy REQs) |
 | `claimed_at` | work | Claim | ISO timestamp when work began |
