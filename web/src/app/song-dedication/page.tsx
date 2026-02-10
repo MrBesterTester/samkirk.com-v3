@@ -2,72 +2,25 @@ export default function SongDedicationPage() {
   return (
     <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
       <h1 className="text-3xl font-bold tracking-tight text-text-primary">
-        Song Dedication
+        Resilience in the Storm
       </h1>
       <p className="mt-4 text-lg text-text-secondary">
-        A special dedication through music.
+        A song created for my mother using ChatGPT and Udio.com. It celebrates
+        her strength through hurricanes Ian and Milton.
       </p>
 
-      {/* About Section */}
+      {/* Audio Section */}
       <section className="mt-12">
         <div className="rounded-xl border border-border bg-primary p-6 shadow-sm">
-          <h2 className="text-xl font-semibold text-text-primary">
-            About This Dedication
-          </h2>
-          <p className="mt-3 text-text-secondary">
-            {/* Placeholder for dedication context/story */}
-            This song holds a special meaning. The story behind this dedication
-            will be shared here.
-          </p>
-        </div>
-      </section>
-
-      {/* Audio Section */}
-      <section className="mt-8">
-        <div className="rounded-xl border border-border bg-primary p-6 shadow-sm">
-          <h2 className="text-xl font-semibold text-text-primary">
-            Listen
-          </h2>
+          <h2 className="text-xl font-semibold text-text-primary">Listen</h2>
           <div className="mt-4">
-            {/* Placeholder for audio embed (Spotify, YouTube, SoundCloud, etc.) */}
-            <div className="flex items-center justify-center rounded-lg bg-secondary py-12">
-              <div className="text-center">
-                <svg
-                  className="mx-auto h-12 w-12 text-text-muted"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  aria-hidden="true"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M9 9l10.5-3m0 6.553v3.75a2.25 2.25 0 01-1.632 2.163l-1.32.377a1.803 1.803 0 11-.99-3.467l2.31-.66a2.25 2.25 0 001.632-2.163zm0 0V2.25L9 5.25v10.303m0 0v3.75a2.25 2.25 0 01-1.632 2.163l-1.32.377a1.803 1.803 0 01-.99-3.467l2.31-.66A2.25 2.25 0 009 15.553z"
-                  />
-                </svg>
-                <p className="mt-2 text-sm text-text-muted">
-                  Audio player will be embedded here
-                </p>
-              </div>
-            </div>
-            {/* Alternative: External link to song */}
-            <p className="mt-4 text-center text-sm text-text-muted">
-              Or listen on{" "}
-              <a
-                href="#"
-                className="font-medium text-accent hover:text-accent-hover"
-              >
-                Spotify
-              </a>{" "}
-              /{" "}
-              <a
-                href="#"
-                className="font-medium text-accent hover:text-accent-hover"
-              >
-                YouTube
-              </a>
-            </p>
+            <audio controls className="w-full">
+              <source
+                src="/assets/Resilience in the Storm.mp3"
+                type="audio/mpeg"
+              />
+              Your browser does not support the audio element.
+            </audio>
           </div>
         </div>
       </section>
@@ -75,51 +28,113 @@ export default function SongDedicationPage() {
       {/* Lyrics Section */}
       <section className="mt-8">
         <div className="rounded-xl border border-border bg-primary p-6 shadow-sm">
-          <h2 className="text-xl font-semibold text-text-primary">
-            Lyrics
-          </h2>
+          <h2 className="text-xl font-semibold text-text-primary">Lyrics</h2>
           <div className="mt-4 space-y-6">
+            <p className="text-sm italic text-text-muted">
+              I Will Survive (Hurricane Edition for Mom)
+            </p>
+
             {/* Verse 1 */}
-            <div className="lyrics-verse">
+            <div>
               <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-text-muted">
                 Verse 1
               </p>
               <p className="whitespace-pre-line text-text-secondary">
-                {/* Placeholder lyrics - replace with actual lyrics */}
-                Song lyrics will appear here.
-                {"\n"}Each line of the verse
-                {"\n"}will be displayed
-                {"\n"}with proper formatting.
+                {`At first, I was afraid, I was petrified,
+Watching those dark clouds roll in with nowhere to hide.
+I've been through so many storms, I've learned to hold my ground,
+I knew somehow, I'd make it through, no way I'd get knocked down.`}
               </p>
             </div>
 
-            {/* Chorus */}
-            <div className="lyrics-chorus rounded-lg bg-secondary p-4">
+            {/* Pre-Chorus 1 */}
+            <div>
+              <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-text-muted">
+                Pre-Chorus
+              </p>
+              <p className="whitespace-pre-line text-text-secondary">
+                {`Oh, I watched those trees, swaying in the breeze,
+Boarded up the windows, just to give my heart some ease.
+I knew that wind would howl, like it always does,
+But I've been here before, and I know just what it was.`}
+              </p>
+            </div>
+
+            {/* Chorus 1 */}
+            <div className="rounded-lg bg-secondary p-4">
               <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-text-muted">
                 Chorus
               </p>
               <p className="whitespace-pre-line font-medium text-text-primary">
-                {/* Placeholder chorus - replace with actual lyrics */}
-                The chorus will stand out
-                {"\n"}with a subtle background
-                {"\n"}to differentiate it from verses.
+                {`Oh yes, I survive, every storm that comes alive,
+I've felt the worst of Hurricane Ian, and still, I thrive.
+I've got my strength, my stubborn will, and a spirit that's alive,
+I survive, oh I survive, yeah yeah!`}
               </p>
             </div>
 
             {/* Verse 2 */}
-            <div className="lyrics-verse">
+            <div>
               <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-text-muted">
                 Verse 2
               </p>
               <p className="whitespace-pre-line text-text-secondary">
-                {/* Placeholder lyrics - replace with actual lyrics */}
-                Additional verses
-                {"\n"}follow the same pattern
-                {"\n"}maintaining consistency.
+                {`It's Ft Myers here, where I've spent my years,
+Hurricanes can't take away all that I hold dear.
+Oh, they may huff and puff, but they won't bring me down,
+In my heart, I'm standing tall, with my feet on solid ground.`}
               </p>
             </div>
 
-            {/* Additional sections can be added following the same pattern */}
+            {/* Pre-Chorus 2 */}
+            <div>
+              <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-text-muted">
+                Pre-Chorus
+              </p>
+              <p className="whitespace-pre-line text-text-secondary">
+                {`Through winds that wail and rain that pounds,
+The storm will pass, but here I'm safe and sound.
+For I know my way, I know the drill,
+And I'll be here long after those winds stand still.`}
+              </p>
+            </div>
+
+            {/* Chorus 2 */}
+            <div className="rounded-lg bg-secondary p-4">
+              <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-text-muted">
+                Chorus
+              </p>
+              <p className="whitespace-pre-line font-medium text-text-primary">
+                {`Oh yes, I survive, every storm that comes alive,
+Even mighty Hurricane Milton, I'll wave goodbye.
+With a heart so bold and strong, I'm here to stay, I'll carry on,
+I survive, I survive, every day, yeah yeah!`}
+              </p>
+            </div>
+
+            {/* Outro */}
+            <div>
+              <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-text-muted">
+                Outro
+              </p>
+              <p className="whitespace-pre-line text-text-secondary">
+                {`I've faced the winds, I've faced the rain,
+But I'm still here, singing my refrain.
+From storm to storm, I've stayed alive,
+For 93 years strong, yes, I will survive!`}
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-6 border-t border-border pt-4">
+            <a
+              href="https://chatgpt.com/share/6924cdc3-cb0c-800d-b2d5-599def3d2114"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm font-medium text-accent hover:text-accent-hover"
+            >
+              View ChatGPT Thread &rarr;
+            </a>
           </div>
         </div>
       </section>
@@ -127,10 +142,10 @@ export default function SongDedicationPage() {
       {/* Song Info Footer */}
       <footer className="mt-8 text-center text-sm text-text-muted">
         <p>
-          <span className="font-medium">Song Title</span> by{" "}
-          <span className="font-medium">Artist Name</span>
+          Created with{" "}
+          <span className="font-medium">ChatGPT</span> and{" "}
+          <span className="font-medium">Udio.com</span>
         </p>
-        <p className="mt-1">Album Name &bull; Year</p>
       </footer>
     </div>
   );
