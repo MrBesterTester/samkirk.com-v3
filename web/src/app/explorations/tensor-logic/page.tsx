@@ -10,8 +10,45 @@ export default function TensorLogicPage() {
         AI.
       </p>
 
+      {/* CTA Section */}
+      <section className="mt-8">
+        <div className="rounded-xl border border-border bg-primary p-8 shadow-sm">
+          <div className="text-center">
+            <h2 className="text-xl font-semibold text-text-primary">
+              Try It Out
+            </h2>
+            <p className="mt-2 text-text-secondary">
+              Explore the interactive demo and see how tensor logic unifies AI
+              paradigms.
+            </p>
+            <a
+              href="https://www.tensor-logic.samkirk.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-6 inline-flex items-center gap-2 rounded-lg bg-accent px-8 py-3 text-base font-semibold text-white shadow-sm transition-colors hover:bg-accent-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+            >
+              Launch Tensor Logic
+              <svg
+                className="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={2}
+                stroke="currentColor"
+                aria-hidden="true"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"
+                />
+              </svg>
+            </a>
+          </div>
+        </div>
+      </section>
+
       {/* Features Section */}
-      <section className="mt-12">
+      <section className="mt-8">
         <div className="rounded-xl border border-border bg-primary p-6 shadow-sm">
           <h2 className="text-xl font-semibold text-text-primary">
             Features
@@ -110,42 +147,6 @@ export default function TensorLogicPage() {
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="mt-8">
-        <div className="rounded-xl border border-border bg-primary p-8 shadow-sm">
-          <div className="text-center">
-            <h2 className="text-xl font-semibold text-text-primary">
-              Try It Out
-            </h2>
-            <p className="mt-2 text-text-secondary">
-              Explore the interactive demo and see how tensor logic unifies AI
-              paradigms.
-            </p>
-            <a
-              href="https://tensor-logic.samkirk.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-6 inline-flex items-center gap-2 rounded-lg bg-accent px-8 py-3 text-base font-semibold text-white shadow-sm transition-colors hover:bg-accent-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
-            >
-              Launch Tensor Logic
-              <svg
-                className="h-5 w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={2}
-                stroke="currentColor"
-                aria-hidden="true"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"
-                />
-              </svg>
-            </a>
-          </div>
-        </div>
-      </section>
     </div>
   );
 }
