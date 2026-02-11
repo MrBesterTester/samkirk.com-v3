@@ -4,6 +4,7 @@ Personal website + genAI demo tools for `samkirk.com`.
 
 ### Table of Contents
 
+- [Punch Down List](#punch-down-list)
 - [Principles of Operation (POO)](#principles-of-operation-poo)
 - [Standard Operating Procedures (SOP)](#standard-operating-procedures-sop)
   - [Resume Management](#resume-management)
@@ -14,6 +15,14 @@ Personal website + genAI demo tools for `samkirk.com`.
 - [Scripts](#scripts)
 - [Development Methodology](#development-methodology)
 - [Notes](#notes)
+
+### Punch Down List
+
+Requests on hold — to be picked up after current priorities:
+
+- [REQ-035: Fix DNS for tensor-logic.samkirk.com](do-work/archive/hold/REQ-035-fix-tensor-logic-dns.md)
+- [REQ-036: Add full month, extended Dance Menu](do-work/archive/hold/REQ-036-full-month-dance-menu.md)
+- [REQ-037: Add photo option on generated resume](do-work/archive/hold/REQ-037-photo-option-generated-resume.md)
 
 ### Principles of Operation (POO)
 
