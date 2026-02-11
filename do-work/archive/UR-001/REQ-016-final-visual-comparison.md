@@ -7,6 +7,7 @@ user_request: UR-001
 claimed_at: 2026-02-05T17:12:00-08:00
 route: B
 completed_at: 2026-02-05T17:20:00-08:00
+commit: 1aedc1c
 source_step: "5.2"
 source_doc: "docs/v2-upgrade-TODO.md"
 blueprint_ref: "docs/v2-upgrade-BLUEPRINT.md"

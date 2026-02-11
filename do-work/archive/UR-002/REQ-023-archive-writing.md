@@ -7,6 +7,7 @@ user_request: UR-002
 claimed_at: 2026-02-06T14:05:00-08:00
 route: B
 completed_at: 2026-02-06T14:06:00-08:00
+commit: 1edb7e7
 source_step: "3.1"
 source_doc: "docs/master-test-TODO.md"
 blueprint_ref: "docs/master-test-BLUEPRINT.md"
