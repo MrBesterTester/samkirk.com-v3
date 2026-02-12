@@ -1,127 +1,982 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Category Theory</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    body {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-      line-height: 1.6;
-      color: #3f3f46;
-      background: transparent;
-      padding: 1.5rem;
-    }
-    h2 {
-      font-size: 1.5rem;
-      font-weight: 600;
-      color: #18181b;
-      margin-bottom: 1rem;
-    }
-    h3 {
-      font-size: 1.125rem;
-      font-weight: 600;
-      color: #27272a;
-      margin-top: 1.5rem;
-      margin-bottom: 0.75rem;
-    }
-    p {
-      margin-bottom: 1rem;
-    }
-    ul {
-      margin-bottom: 1rem;
-      padding-left: 1.5rem;
-    }
-    li {
-      margin-bottom: 0.5rem;
-    }
-    code {
-      background: #f4f4f5;
-      padding: 0.125rem 0.375rem;
-      border-radius: 0.25rem;
-      font-size: 0.875rem;
-    }
-    .placeholder-notice {
-      background: #fef3c7;
-      border: 1px solid #f59e0b;
-      border-radius: 0.5rem;
-      padding: 1rem;
-      margin-bottom: 1.5rem;
-    }
-    .placeholder-notice p {
-      margin: 0;
-      color: #92400e;
-    }
-    @media (prefers-color-scheme: dark) {
-      body {
-        color: #a1a1aa;
-      }
-      h2 {
-        color: #fafafa;
-      }
-      h3 {
-        color: #e4e4e7;
-      }
-      code {
-        background: #27272a;
-      }
-      .placeholder-notice {
-        background: #422006;
-        border-color: #b45309;
-      }
-      .placeholder-notice p {
-        color: #fcd34d;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Concrete Everyday Examples of Category Diagrams</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.8;
+            color: #333;
+            background-color: #f9f9f9;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 15px;
+        }
+        
+        h2 {
+            color: #34495e;
+            margin-top: 40px;
+            margin-bottom: 15px;
+            font-size: 1.6em;
+        }
+        
+        h3 {
+            color: #555;
+            margin-top: 25px;
+            margin-bottom: 12px;
+            font-size: 1.2em;
+        }
+        
+        .example {
+            margin: 30px 0;
+            padding: 25px;
+            background: #f0f8ff;
+            border-left: 5px solid #3498db;
+            border-radius: 4px;
+        }
+        
+        .story-section {
+            margin: 20px 0;
+            padding: 15px;
+            background: #fff9e6;
+            border-radius: 4px;
+            border-left: 4px solid #f39c12;
+        }
+        
+        .objects {
+            margin: 15px 0;
+        }
+        
+        .objects strong {
+            color: #e74c3c;
+        }
+        
+        .objects ul {
+            list-style-position: inside;
+            margin-left: 20px;
+        }
+        
+        .objects li {
+            margin: 8px 0;
+        }
+        
+        .diagram-container {
+            margin: 25px 0;
+            padding: 20px;
+            background: white;
+            border: 2px solid #bdc3c7;
+            border-radius: 6px;
+            text-align: center;
+        }
+        
+        svg {
+            max-width: 100%;
+            height: auto;
+            display: inline-block;
+        }
+        
+        .math-section {
+            margin: 20px 0;
+            padding: 15px;
+            background: #e8f5e9;
+            border-radius: 4px;
+            border-left: 4px solid #27ae60;
+        }
+        
+        .math-section strong {
+            color: #27ae60;
+        }
+        
+        .interpretation {
+            margin: 15px 0;
+            padding: 12px;
+            background: #fce4ec;
+            border-radius: 4px;
+            border-left: 4px solid #e91e63;
+            font-style: italic;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            background: white;
+            border-radius: 4px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        table th {
+            background: #34495e;
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+        
+        table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #ecf0f1;
+        }
+        
+        table tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+        
+        table tr:hover {
+            background: #ecf0f1;
+        }
+        
+        .summary {
+            margin-top: 50px;
+            padding: 25px;
+            background: #ecf0f1;
+            border-radius: 6px;
+            border: 2px solid #bdc3c7;
+        }
+        
+        .key-takeaway {
+            margin: 30px 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 6px;
+            font-size: 1.1em;
+        }
+        
+        .key-takeaway strong {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+        
+        .practice-section {
+            margin: 30px 0;
+            padding: 20px;
+            background: #fff3e0;
+            border-left: 5px solid #ff9800;
+            border-radius: 4px;
+        }
+        
+        .practice-section ol {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+        
+        .practice-section li {
+            margin: 10px 0;
+        }
+        
+        .diagram-label {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 10px;
+            font-style: italic;
+        }
+    </style>
 </head>
 <body>
-  <div class="placeholder-notice">
-    <p><strong>Note:</strong> This is placeholder content. The full exploration will be added later.</p>
-  </div>
+    <div class="container">
+        <h1>Concrete Everyday Examples of Category Diagrams</h1>
+        <p style="color: #666; margin-bottom: 30px;">Real-world examples you can visualize and understand intuitively, with visual diagrams.</p>
 
-  <h2>Introduction to Category Theory</h2>
-  <p>
-    Category theory is a branch of mathematics that deals with abstract structures and relationships between them.
-    It provides a unifying framework for understanding mathematical concepts across different areas.
-  </p>
+        <!-- Example 1: Triangle -->
+        <div class="example">
+            <h2>Example 1: TRIANGLE DIAGRAM</h2>
+            <h3>The Cooking Shortcut</h3>
+            
+            <div class="story-section">
+                <strong>The Story:</strong>
+                <p style="margin-top: 10px;">You're preparing ingredients for dinner. You need to chop onions.</p>
+            </div>
 
-  <h3>Why Category Theory Matters for Programming</h3>
-  <p>
-    Category theory has become increasingly relevant to software engineering, particularly in:
-  </p>
-  <ul>
-    <li><strong>Functional programming</strong> — Concepts like functors, monads, and natural transformations come directly from category theory</li>
-    <li><strong>Type systems</strong> — Category theory provides the theoretical foundation for advanced type systems</li>
-    <li><strong>Composition</strong> — Understanding how to compose functions and systems safely</li>
-    <li><strong>Abstraction</strong> — Identifying common patterns across different domains</li>
-  </ul>
+            <div class="objects">
+                <strong>Objects:</strong>
+                <ul>
+                    <li><strong>A</strong> = Whole onion (natural state)</li>
+                    <li><strong>B</strong> = Chopped onion (cut into pieces)</li>
+                    <li><strong>C</strong> = Finely minced onion (super small pieces)</li>
+                </ul>
+            </div>
 
-  <h3>Key Concepts</h3>
-  <p>
-    Some fundamental concepts in category theory include:
-  </p>
-  <ul>
-    <li><strong>Objects and morphisms</strong> — The basic building blocks of a category</li>
-    <li><strong>Composition</strong> — How morphisms combine: if <code>f: A → B</code> and <code>g: B → C</code>, then <code>g ∘ f: A → C</code></li>
-    <li><strong>Identity</strong> — Every object has an identity morphism</li>
-    <li><strong>Functors</strong> — Structure-preserving maps between categories</li>
-    <li><strong>Natural transformations</strong> — Maps between functors</li>
-  </ul>
+            <div class="objects">
+                <strong>The Paths:</strong>
+                <ul>
+                    <li><strong>f</strong>: Roughly chop the onion (A → B)</li>
+                    <li><strong>h</strong>: Fine mince the whole onion directly (A → C)</li>
+                    <li><strong>g</strong>: Further refine the chopped onion into mince (B → C)</li>
+                </ul>
+            </div>
 
-  <h3>Further Reading</h3>
-  <p>
-    To dive deeper into category theory, consider exploring these resources:
-  </p>
-  <ul>
-    <li>"Category Theory for Programmers" by Bartosz Milewski</li>
-    <li>"Categories for the Working Mathematician" by Saunders Mac Lane</li>
-    <li>The nLab wiki for advanced topics</li>
-  </ul>
+            <div class="interpretation">
+                <strong>The Commutativity:</strong> No matter which way you prepare the onion, you end up with the same finely minced result:
+                <ul style="margin-top: 10px;">
+                    <li>Path 1: Roughly chop, then fine mince the chunks = g ∘ f</li>
+                    <li>Path 2: Fine mince the whole onion directly = h</li>
+                    <li><strong>These must be equal: g ∘ f = h</strong></li>
+                </ul>
+                <p style="margin-top: 10px;">It doesn't matter if you chop roughly first or go straight to mincing—you get the same finely minced onion either way.</p>
+            </div>
+
+            <div class="diagram-container">
+                <svg width="300" height="280" viewBox="0 0 300 280">
+                    <!-- Nodes -->
+                    <circle cx="150" cy="40" r="35" fill="#e8f4f8" stroke="#3498db" stroke-width="2"/>
+                    <text x="150" y="40" text-anchor="middle" dominant-baseline="middle" font-size="13" font-weight="bold">A</text>
+                    <text x="150" y="55" text-anchor="middle" dominant-baseline="middle" font-size="11">Whole Onion</text>
+                    
+                    <circle cx="60" cy="200" r="35" fill="#e8f4f8" stroke="#3498db" stroke-width="2"/>
+                    <text x="60" y="200" text-anchor="middle" dominant-baseline="middle" font-size="13" font-weight="bold">B</text>
+                    <text x="60" y="215" text-anchor="middle" dominant-baseline="middle" font-size="11">Chopped</text>
+                    
+                    <circle cx="240" cy="200" r="35" fill="#e8f4f8" stroke="#3498db" stroke-width="2"/>
+                    <text x="240" y="200" text-anchor="middle" dominant-baseline="middle" font-size="13" font-weight="bold">C</text>
+                    <text x="240" y="215" text-anchor="middle" dominant-baseline="middle" font-size="11">Minced</text>
+                    
+                    <!-- Arrows -->
+                    <defs>
+                        <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                            <polygon points="0 0, 10 3, 0 6" fill="#3498db"/>
+                        </marker>
+                    </defs>
+                    
+                    <!-- A to B -->
+                    <path d="M 120 80 L 80 160" stroke="#3498db" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+                    <text x="95" y="115" font-size="12" fill="#3498db" font-weight="bold">f</text>
+                    
+                    <!-- A to C -->
+                    <path d="M 180 80 L 220 160" stroke="#3498db" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+                    <text x="205" y="115" font-size="12" fill="#3498db" font-weight="bold">h</text>
+                    
+                    <!-- B to C -->
+                    <path d="M 95 200 L 205 200" stroke="#3498db" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+                    <text x="150" y="220" font-size="12" fill="#3498db" font-weight="bold">g</text>
+                </svg>
+                <div class="diagram-label">Triangle: Two paths from A to C must be equal</div>
+            </div>
+
+            <div class="math-section">
+                <strong>The Mathematics:</strong>
+                <div style="margin-top: 10px; font-size: 1.1em;">$$g \circ f = h$$</div>
+                <p style="margin-top: 15px;">This says: "Chopping then refining equals fine mincing directly."</p>
+            </div>
+        </div>
+
+        <!-- Example 2: Square -->
+        <div class="example">
+            <h2>Example 2: COMMUTATIVE SQUARE</h2>
+            <h3>Recipe Scaling with Unit Conversion</h3>
+            
+            <div class="story-section">
+                <strong>The Story:</strong>
+                <p style="margin-top: 10px;">You have a chocolate chip cookie recipe. Does it matter if you double the recipe and then convert to metric, vs. converting to metric first and then doubling?</p>
+            </div>
+
+            <div class="objects">
+                <strong>Objects:</strong>
+                <ul>
+                    <li><strong>A</strong> = Original recipe (US cups/tbsp)</li>
+                    <li><strong>B</strong> = Doubled recipe (US cups/tbsp)</li>
+                    <li><strong>C</strong> = Original recipe (grams/ml)</li>
+                    <li><strong>D</strong> = Doubled recipe (grams/ml)</li>
+                </ul>
+            </div>
+
+            <div class="objects">
+                <strong>The Morphisms:</strong>
+                <ul>
+                    <li><strong>f</strong>: Double all ingredients (A → B)</li>
+                    <li><strong>g</strong>: Convert to metric units (A → C)</li>
+                    <li><strong>h</strong>: Convert to metric units (B → D)</li>
+                    <li><strong>k</strong>: Double all ingredients (C → D)</li>
+                </ul>
+            </div>
+
+            <div class="interpretation">
+                <strong>The Commutativity:</strong>
+                <ul style="margin-top: 10px;">
+                    <li>Path 1: Double the recipe, THEN convert to metric = h ∘ f</li>
+                    <li>Path 2: Convert to metric, THEN double = k ∘ g</li>
+                    <li><strong>These must be equal: h ∘ f = k ∘ g</strong></li>
+                </ul>
+                <p style="margin-top: 10px;"><strong>Multiplication and unit conversion commute</strong>—you get the same final recipe either way!</p>
+            </div>
+
+            <div class="diagram-container">
+                <svg width="350" height="280" viewBox="0 0 350 280">
+                    <!-- Top left -->
+                    <rect x="20" y="20" width="70" height="60" fill="#fff3e0" stroke="#ff9800" stroke-width="2" rx="4"/>
+                    <text x="55" y="35" text-anchor="middle" font-size="13" font-weight="bold">A</text>
+                    <text x="55" y="52" text-anchor="middle" font-size="11">Original</text>
+                    <text x="55" y="65" text-anchor="middle" font-size="11">(Cups)</text>
+                    
+                    <!-- Top right -->
+                    <rect x="260" y="20" width="70" height="60" fill="#fff3e0" stroke="#ff9800" stroke-width="2" rx="4"/>
+                    <text x="295" y="35" text-anchor="middle" font-size="13" font-weight="bold">B</text>
+                    <text x="295" y="52" text-anchor="middle" font-size="11">Doubled</text>
+                    <text x="295" y="65" text-anchor="middle" font-size="11">(Cups)</text>
+                    
+                    <!-- Bottom left -->
+                    <rect x="20" y="200" width="70" height="60" fill="#fff3e0" stroke="#ff9800" stroke-width="2" rx="4"/>
+                    <text x="55" y="215" text-anchor="middle" font-size="13" font-weight="bold">C</text>
+                    <text x="55" y="232" text-anchor="middle" font-size="11">Original</text>
+                    <text x="55" y="245" text-anchor="middle" font-size="11">(Grams)</text>
+                    
+                    <!-- Bottom right -->
+                    <rect x="260" y="200" width="70" height="60" fill="#fff3e0" stroke="#ff9800" stroke-width="2" rx="4"/>
+                    <text x="295" y="215" text-anchor="middle" font-size="13" font-weight="bold">D</text>
+                    <text x="295" y="232" text-anchor="middle" font-size="11">Doubled</text>
+                    <text x="295" y="245" text-anchor="middle" font-size="11">(Grams)</text>
+                    
+                    <!-- Arrows -->
+                    <defs>
+                        <marker id="arrow2" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                            <polygon points="0 0, 10 3, 0 6" fill="#ff9800"/>
+                        </marker>
+                    </defs>
+                    
+                    <!-- Top arrow A to B -->
+                    <path d="M 95 50 L 260 50" stroke="#ff9800" stroke-width="2" fill="none" marker-end="url(#arrow2)"/>
+                    <text x="175" y="40" text-anchor="middle" font-size="11" fill="#ff9800" font-weight="bold">f (double)</text>
+                    
+                    <!-- Right arrow B to D -->
+                    <path d="M 295 80 L 295 200" stroke="#ff9800" stroke-width="2" fill="none" marker-end="url(#arrow2)"/>
+                    <text x="320" y="140" font-size="11" fill="#ff9800" font-weight="bold">h</text>
+                    
+                    <!-- Left arrow A to C -->
+                    <path d="M 55 80 L 55 200" stroke="#ff9800" stroke-width="2" fill="none" marker-end="url(#arrow2)"/>
+                    <text x="25" y="140" font-size="11" fill="#ff9800" font-weight="bold">g</text>
+                    
+                    <!-- Bottom arrow C to D -->
+                    <path d="M 95 230 L 260 230" stroke="#ff9800" stroke-width="2" fill="none" marker-end="url(#arrow2)"/>
+                    <text x="175" y="255" text-anchor="middle" font-size="11" fill="#ff9800" font-weight="bold">k (double)</text>
+                </svg>
+                <div class="diagram-label">Commutative Square: Both paths give same result</div>
+            </div>
+
+            <div class="math-section">
+                <strong>The Mathematics:</strong>
+                <div style="margin-top: 10px; font-size: 1.1em;">$$h \circ f = k \circ g$$</div>
+                <p style="margin-top: 15px;">This says: "Doubling then converting = Converting then doubling."</p>
+            </div>
+        </div>
+
+        <!-- Example 3: Product -->
+        <div class="example">
+            <h2>Example 3: PRODUCT (Universal Construction)</h2>
+            <h3>Creating a Dating Profile</h3>
+            
+            <div class="story-section">
+                <strong>The Story:</strong>
+                <p style="margin-top: 10px;">You're creating an online dating profile. The profile needs two pieces of information combined together.</p>
+            </div>
+
+            <div class="objects">
+                <strong>Objects:</strong>
+                <ul>
+                    <li><strong>A</strong> = Set of names {Alice, Bob, Charlie}</li>
+                    <li><strong>B</strong> = Set of hobbies {Cooking, Reading, Hiking}</li>
+                    <li><strong>P</strong> = All possible (name, hobby) pairs</li>
+                </ul>
+            </div>
+
+            <div style="padding: 15px; background: #f0f8ff; border-radius: 4px; margin: 15px 0;">
+                <strong>The Product:</strong>
+                <p style="margin-top: 10px;">P = A × B has 3 × 3 = 9 elements:</p>
+                <ul style="margin: 10px 0 0 30px; columns: 3; column-gap: 20px;">
+                    <li>(Alice, Cooking)</li>
+                    <li>(Alice, Reading)</li>
+                    <li>(Alice, Hiking)</li>
+                    <li>(Bob, Cooking)</li>
+                    <li>(Bob, Reading)</li>
+                    <li>(Bob, Hiking)</li>
+                    <li>(Charlie, Cooking)</li>
+                    <li>(Charlie, Reading)</li>
+                    <li>(Charlie, Hiking)</li>
+                </ul>
+            </div>
+
+            <div class="objects">
+                <strong>The Projections:</strong>
+                <ul>
+                    <li><strong>π₁</strong>: Extract the name from a profile</li>
+                    <li><strong>π₂</strong>: Extract the hobby from a profile</li>
+                </ul>
+            </div>
+
+            <div class="interpretation">
+                <strong>The Universal Property:</strong>
+                <p style="margin-top: 10px;">Imagine you're importing data from another app (X) that knows about people and their hobbies. The product P guarantees that there exists a <strong>UNIQUE</strong> way to pair them up correctly, preserving all the information from the external source.</p>
+            </div>
+
+            <div class="diagram-container">
+                <svg width="380" height="300" viewBox="0 0 380 300">
+                    <!-- X -->
+                    <rect x="150" y="20" width="80" height="50" fill="#fce4ec" stroke="#e91e63" stroke-width="2" rx="4"/>
+                    <text x="190" y="52" text-anchor="middle" font-size="12" font-weight="bold">External</text>
+                    <text x="190" y="65" text-anchor="middle" font-size="12" font-weight="bold">Data (X)</text>
+                    
+                    <!-- P -->
+                    <rect x="140" y="120" width="100" height="50" fill="#e3f2fd" stroke="#2196f3" stroke-width="2" rx="4"/>
+                    <text x="190" y="152" text-anchor="middle" font-size="13" font-weight="bold">Profiles</text>
+                    <text x="190" y="165" text-anchor="middle" font-size="11">(A × B)</text>
+                    
+                    <!-- A -->
+                    <rect x="310" y="120" width="60" height="50" fill="#fff3e0" stroke="#ff9800" stroke-width="2" rx="4"/>
+                    <text x="340" y="148" text-anchor="middle" font-size="13" font-weight="bold">Names</text>
+                    <text x="340" y="162" text-anchor="middle" font-size="11">(A)</text>
+                    
+                    <!-- B -->
+                    <rect x="10" y="120" width="60" height="50" fill="#f3e5f5" stroke="#9c27b0" stroke-width="2" rx="4"/>
+                    <text x="40" y="148" text-anchor="middle" font-size="12" font-weight="bold">Hobbies</text>
+                    <text x="40" y="162" text-anchor="middle" font-size="11">(B)</text>
+                    
+                    <!-- Arrows -->
+                    <defs>
+                        <marker id="arrow3" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                            <polygon points="0 0, 10 3, 0 6" fill="#333"/>
+                        </marker>
+                        <marker id="arrow3d" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                            <polygon points="0 0, 10 3, 0 6" fill="#999"/>
+                        </marker>
+                    </defs>
+                    
+                    <!-- X to P (solid, unique) -->
+                    <path d="M 190 70 L 190 120" stroke="#2196f3" stroke-width="3" fill="none" marker-end="url(#arrow3)"/>
+                    <text x="210" y="95" font-size="11" fill="#2196f3" font-weight="bold">h (unique!)</text>
+                    
+                    <!-- P to A -->
+                    <path d="M 240 145 L 310 145" stroke="#ff9800" stroke-width="2" fill="none" marker-end="url(#arrow3)"/>
+                    <text x="275" y="137" text-anchor="middle" font-size="10" fill="#ff9800" font-weight="bold">π₁</text>
+                    
+                    <!-- P to B -->
+                    <path d="M 140 145 L 70 145" stroke="#9c27b0" stroke-width="2" fill="none" marker-end="url(#arrow3)"/>
+                    <text x="105" y="137" text-anchor="middle" font-size="10" fill="#9c27b0" font-weight="bold">π₂</text>
+                    
+                    <!-- X to A (dashed) -->
+                    <path d="M 220 45 L 310 120" stroke="#999" stroke-width="2" stroke-dasharray="5,5" fill="none" marker-end="url(#arrow3d)"/>
+                    <text x="270" y="75" font-size="10" fill="#999" font-weight="bold">f</text>
+                    
+                    <!-- X to B (dashed) -->
+                    <path d="M 160 45 L 70 120" stroke="#999" stroke-width="2" stroke-dasharray="5,5" fill="none" marker-end="url(#arrow3d)"/>
+                    <text x="110" y="75" font-size="10" fill="#999" font-weight="bold">g</text>
+                </svg>
+                <div class="diagram-label">Product: Unique pairing of external data</div>
+            </div>
+
+            <div class="math-section">
+                <strong>The Mathematics:</strong>
+                <div style="margin-top: 10px; font-size: 1.1em;">$$\pi_1 \circ h = f \quad \text{and} \quad \pi_2 \circ h = g$$</div>
+                <p style="margin-top: 15px;">This says: "The unique function h preserves both external data functions."</p>
+            </div>
+        </div>
+
+        <!-- Example 4: Pullback -->
+        <div class="example">
+            <h2>Example 4: PULLBACK (Fiber Product)</h2>
+            <h3>Finding Compatible Couples</h3>
+            
+            <div class="story-section">
+                <strong>The Story:</strong>
+                <p style="margin-top: 10px;">You're a matchmaker. You have hikers and photographers, and you want to find pairs who like the same locations.</p>
+            </div>
+
+            <div class="objects">
+                <strong>Objects:</strong>
+                <ul>
+                    <li><strong>A</strong> = People who love hiking {Alice, Bob, Charlie}</li>
+                    <li><strong>B</strong> = People interested in photography {Diana, Eugene, Frank}</li>
+                    <li><strong>C</strong> = Geographic regions {Mountains, Coast, Desert}</li>
+                    <li><strong>P</strong> = Compatible couples (pullback)</li>
+                </ul>
+            </div>
+
+            <div class="objects">
+                <strong>The Maps:</strong>
+                <ul>
+                    <li><strong>k</strong>: Where each hiker prefers to hike (A → C)</li>
+                    <li><strong>h</strong>: Where each photographer prefers to shoot (B → C)</li>
+                </ul>
+            </div>
+
+            <div style="padding: 15px; background: #f0f8ff; border-radius: 4px; margin: 15px 0;">
+                <strong>The Pullback:</strong>
+                <p>P = {(person from A, person from B) : they like the same location}</p>
+                <p style="margin-top: 10px;"><strong>Compatible pairs in P:</strong></p>
+                <ul style="margin: 10px 0 0 30px;">
+                    <li>(Alice, Diana) — both love Mountains</li>
+                    <li>(Bob, Eugene) — both love Coast</li>
+                    <li>(Charlie, Diana) — both love Mountains</li>
+                </ul>
+            </div>
+
+            <div class="interpretation">
+                <strong>The Interpretation:</strong>
+                <p style="margin-top: 10px;">The pullback P is the set of compatible pairs—people who would enjoy outdoor activities together in the same location!</p>
+            </div>
+
+            <div class="diagram-container">
+                <svg width="380" height="320" viewBox="0 0 380 320">
+                    <!-- P -->
+                    <rect x="150" y="20" width="80" height="50" fill="#c8e6c9" stroke="#4caf50" stroke-width="2" rx="4"/>
+                    <text x="190" y="52" text-anchor="middle" font-size="12" font-weight="bold">Compatible</text>
+                    <text x="190" y="67" text-anchor="middle" font-size="11" font-weight="bold">Couples (P)</text>
+                    
+                    <!-- A -->
+                    <rect x="290" y="120" width="70" height="50" fill="#fff3e0" stroke="#ff9800" stroke-width="2" rx="4"/>
+                    <text x="325" y="148" text-anchor="middle" font-size="12" font-weight="bold">Hikers</text>
+                    <text x="325" y="163" text-anchor="middle" font-size="11">(A)</text>
+                    
+                    <!-- B -->
+                    <rect x="20" y="120" width="70" height="50" fill="#f3e5f5" stroke="#9c27b0" stroke-width="2" rx="4"/>
+                    <text x="55" y="148" text-anchor="middle" font-size="12" font-weight="bold">Photo.</text>
+                    <text x="55" y="163" text-anchor="middle" font-size="11">(B)</text>
+                    
+                    <!-- C -->
+                    <rect x="150" y="240" width="80" height="50" fill="#e0f2f1" stroke="#009688" stroke-width="2" rx="4"/>
+                    <text x="190" y="265" text-anchor="middle" font-size="12" font-weight="bold">Regions</text>
+                    <text x="190" y="280" text-anchor="middle" font-size="11">(C)</text>
+                    
+                    <!-- Arrows -->
+                    <defs>
+                        <marker id="arrow4" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                            <polygon points="0 0, 10 3, 0 6" fill="#333"/>
+                        </marker>
+                    </defs>
+                    
+                    <!-- P to A -->
+                    <path d="M 230 45 L 290 135" stroke="#ff9800" stroke-width="2" fill="none" marker-end="url(#arrow4)"/>
+                    <text x="265" y="82" font-size="11" fill="#ff9800" font-weight="bold">f</text>
+                    
+                    <!-- P to B -->
+                    <path d="M 150 45 L 90 135" stroke="#9c27b0" stroke-width="2" fill="none" marker-end="url(#arrow4)"/>
+                    <text x="115" y="82" font-size="11" fill="#9c27b0" font-weight="bold">g</text>
+                    
+                    <!-- A to C -->
+                    <path d="M 325 170 L 230 240" stroke="#ff9800" stroke-width="2" fill="none" marker-end="url(#arrow4)"/>
+                    <text x="285" y="205" font-size="11" fill="#ff9800" font-weight="bold">k</text>
+                    
+                    <!-- B to C -->
+                    <path d="M 55 170 L 150 240" stroke="#9c27b0" stroke-width="2" fill="none" marker-end="url(#arrow4)"/>
+                    <text x="95" y="205" font-size="11" fill="#9c27b0" font-weight="bold">h</text>
+                </svg>
+                <div class="diagram-label">Pullback: Finding compatible pairs via intermediary</div>
+            </div>
+
+            <div class="math-section">
+                <strong>The Mathematics:</strong>
+                <div style="margin-top: 10px; font-size: 1.1em;">$$k \circ f = h \circ g$$</div>
+                <p style="margin-top: 15px;">This says: "Every compatible couple maps to the same region, regardless of path."</p>
+            </div>
+        </div>
+
+        <!-- Example 5: Pushout -->
+        <div class="example">
+            <h2>Example 5: PUSHOUT (Universal Gluing)</h2>
+            <h3>Combining Two Neighborhoods</h3>
+            
+            <div class="story-section">
+                <strong>The Story:</strong>
+                <p style="margin-top: 10px;">You're merging two neighborhoods along a shared central plaza, respecting all existing connections.</p>
+            </div>
+
+            <div class="objects">
+                <strong>Objects:</strong>
+                <ul>
+                    <li><strong>A</strong> = North Neighborhood {Houses N1, N2, N3}</li>
+                    <li><strong>B</strong> = South Neighborhood {Houses S1, S2, S3}</li>
+                    <li><strong>C</strong> = Central Plaza {buildings P1, P2}</li>
+                    <li><strong>P</strong> = The merged city (A ∪_C B)</li>
+                </ul>
+            </div>
+
+            <div class="objects">
+                <strong>The Maps:</strong>
+                <ul>
+                    <li><strong>f</strong>: Connection points from North to Plaza (A → C)</li>
+                    <li><strong>g</strong>: Connection points from South to Plaza (B → C)</li>
+                </ul>
+            </div>
+
+            <div class="interpretation">
+                <strong>The Universal Property:</strong>
+                <p style="margin-top: 10px;">P is the best way to combine the two neighborhoods while respecting that both neighborhoods connect to the central plaza. In the merged city, we identify these common connection points.</p>
+            </div>
+
+            <div class="diagram-container">
+                <svg width="380" height="320" viewBox="0 0 380 320">
+                    <!-- A -->
+                    <rect x="20" y="20" width="70" height="50" fill="#ffe0b2" stroke="#ff6f00" stroke-width="2" rx="4"/>
+                    <text x="55" y="48" text-anchor="middle" font-size="12" font-weight="bold">North</text>
+                    <text x="55" y="62" text-anchor="middle" font-size="10" font-weight="bold">(A)</text>
+                    
+                    <!-- B -->
+                    <rect x="290" y="20" width="70" height="50" fill="#ffe0b2" stroke="#ff6f00" stroke-width="2" rx="4"/>
+                    <text x="325" y="48" text-anchor="middle" font-size="12" font-weight="bold">South</text>
+                    <text x="325" y="62" text-anchor="middle" font-size="10" font-weight="bold">(B)</text>
+                    
+                    <!-- C -->
+                    <rect x="150" y="100" width="80" height="50" fill="#e1bee7" stroke="#7b1fa2" stroke-width="2" rx="4"/>
+                    <text x="190" y="128" text-anchor="middle" font-size="12" font-weight="bold">Central</text>
+                    <text x="190" y="142" text-anchor="middle" font-size="10" font-weight="bold">Plaza (C)</text>
+                    
+                    <!-- P -->
+                    <rect x="140" y="220" width="100" height="50" fill="#c8e6c9" stroke="#4caf50" stroke-width="2" rx="4"/>
+                    <text x="190" y="248" text-anchor="middle" font-size="12" font-weight="bold">Merged City</text>
+                    <text x="190" y="262" text-anchor="middle" font-size="10" font-weight="bold">(P)</text>
+                    
+                    <!-- Arrows -->
+                    <defs>
+                        <marker id="arrow5" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                            <polygon points="0 0, 10 3, 0 6" fill="#333"/>
+                        </marker>
+                    </defs>
+                    
+                    <!-- A to C -->
+                    <path d="M 90 45 L 150 120" stroke="#ff6f00" stroke-width="2" fill="none" marker-end="url(#arrow5)"/>
+                    <text x="110" y="75" font-size="11" fill="#ff6f00" font-weight="bold">f</text>
+                    
+                    <!-- B to C -->
+                    <path d="M 290 45 L 230 120" stroke="#ff6f00" stroke-width="2" fill="none" marker-end="url(#arrow5)"/>
+                    <text x="270" y="75" font-size="11" fill="#ff6f00" font-weight="bold">g</text>
+                    
+                    <!-- A to P -->
+                    <path d="M 55 70 L 170 220" stroke="#4caf50" stroke-width="2" fill="none" marker-end="url(#arrow5)"/>
+                    <text x="95" y="140" font-size="11" fill="#4caf50" font-weight="bold">f'</text>
+                    
+                    <!-- B to P -->
+                    <path d="M 325 70 L 210 220" stroke="#4caf50" stroke-width="2" fill="none" marker-end="url(#arrow5)"/>
+                    <text x="290" y="140" font-size="11" fill="#4caf50" font-weight="bold">g'</text>
+                    
+                    <!-- C to P -->
+                    <path d="M 190 150 L 190 220" stroke="#7b1fa2" stroke-width="2" fill="none" marker-end="url(#arrow5)"/>
+                </svg>
+                <div class="diagram-label">Pushout: Universal gluing respecting shared boundaries</div>
+            </div>
+
+            <div class="math-section">
+                <strong>The Mathematics:</strong>
+                <div style="margin-top: 10px; font-size: 1.1em;">$$f' \circ f = g' \circ g$$</div>
+                <p style="margin-top: 15px;">This says: "Both neighborhoods' connections to the plaza are respected in the merge."</p>
+            </div>
+        </div>
+
+        <!-- Example 6: Exact Sequence -->
+        <div class="example">
+            <h2>Example 6: EXACT SEQUENCE</h2>
+            <h3>A Restaurant Supply Chain</h3>
+            
+            <div class="story-section">
+                <strong>The Story:</strong>
+                <p style="margin-top: 10px;">Tracking ingredients through a restaurant kitchen from arrival to plating.</p>
+            </div>
+
+            <div class="objects">
+                <strong>Objects:</strong>
+                <ul>
+                    <li><strong>A</strong> = Fresh ingredients arriving {tomatoes, lettuce, cheese, ...}</li>
+                    <li><strong>B</strong> = Prepared dishes in the kitchen {Salad, Pasta, Soup, ...}</li>
+                    <li><strong>C</strong> = Plated meals ready to serve</li>
+                </ul>
+            </div>
+
+            <div class="objects">
+                <strong>The Morphisms:</strong>
+                <ul>
+                    <li><strong>f</strong>: Transform fresh ingredients into prepared dishes (A → B)</li>
+                    <li><strong>g</strong>: Plate the prepared dishes (B → C)</li>
+                </ul>
+            </div>
+
+            <div class="interpretation">
+                <strong>Exactness at B:</strong> image(f) = kernel(g)
+                <p style="margin-top: 10px;">This means every prepared dish came from fresh ingredients, and dishes that can't be plated are exactly those improperly prepared. Nothing wasted, nothing unexpected!</p>
+            </div>
+
+            <div class="diagram-container">
+                <svg width="450" height="120" viewBox="0 0 450 120">
+                    <!-- 0 (left) -->
+                    <circle cx="20" cy="60" r="12" fill="white" stroke="#333" stroke-width="2"/>
+                    <text x="20" y="65" text-anchor="middle" dominant-baseline="middle" font-size="12" font-weight="bold">0</text>
+                    
+                    <!-- A -->
+                    <rect x="80" y="35" width="70" height="50" fill="#fff3e0" stroke="#ff9800" stroke-width="2" rx="4"/>
+                    <text x="115" y="60" text-anchor="middle" font-size="12" font-weight="bold">Fresh</text>
+                    <text x="115" y="75" text-anchor="middle" font-size="10">Ingredients</text>
+                    
+                    <!-- B -->
+                    <rect x="205" y="35" width="70" height="50" fill="#f3e5f5" stroke="#9c27b0" stroke-width="2" rx="4"/>
+                    <text x="240" y="60" text-anchor="middle" font-size="12" font-weight="bold">Prepared</text>
+                    <text x="240" y="75" text-anchor="middle" font-size="10">Dishes</text>
+                    
+                    <!-- C -->
+                    <rect x="330" y="35" width="70" height="50" fill="#e3f2fd" stroke="#2196f3" stroke-width="2" rx="4"/>
+                    <text x="365" y="60" text-anchor="middle" font-size="12" font-weight="bold">Plated</text>
+                    <text x="365" y="75" text-anchor="middle" font-size="10">Meals</text>
+                    
+                    <!-- 0 (right) -->
+                    <circle cx="430" cy="60" r="12" fill="white" stroke="#333" stroke-width="2"/>
+                    <text x="430" y="65" text-anchor="middle" dominant-baseline="middle" font-size="12" font-weight="bold">0</text>
+                    
+                    <!-- Arrows -->
+                    <defs>
+                        <marker id="arrow6" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                            <polygon points="0 0, 10 3, 0 6" fill="#333"/>
+                        </marker>
+                    </defs>
+                    
+                    <!-- 0 to A -->
+                    <path d="M 32 60 L 80 60" stroke="#333" stroke-width="2" fill="none" marker-end="url(#arrow6)"/>
+                    
+                    <!-- A to B -->
+                    <path d="M 150 60 L 205 60" stroke="#333" stroke-width="2" fill="none" marker-end="url(#arrow6)"/>
+                    <text x="177" y="50" text-anchor="middle" font-size="10" font-weight="bold">f</text>
+                    
+                    <!-- B to C -->
+                    <path d="M 275 60 L 330 60" stroke="#333" stroke-width="2" fill="none" marker-end="url(#arrow6)"/>
+                    <text x="302" y="50" text-anchor="middle" font-size="10" font-weight="bold">g</text>
+                    
+                    <!-- C to 0 -->
+                    <path d="M 400 60 L 418 60" stroke="#333" stroke-width="2" fill="none" marker-end="url(#arrow6)"/>
+                </svg>
+                <div class="diagram-label">Exact Sequence: Data flowing without loss</div>
+            </div>
+
+            <div class="math-section">
+                <strong>The Mathematics:</strong>
+                <div style="margin-top: 10px; font-size: 1.1em;">$$\text{im}(f) = \ker(g)$$</div>
+                <p style="margin-top: 15px;">This says: "Everything prepared gets used, and nothing unexpected appears."</p>
+            </div>
+        </div>
+
+        <!-- Example 7: Natural Transformation -->
+        <div class="example">
+            <h2>Example 7: NATURAL TRANSFORMATION</h2>
+            <h3>Consistent Unit Conversion</h3>
+            
+            <div class="story-section">
+                <strong>The Story:</strong>
+                <p style="margin-top: 10px;">You're a translator for recipes. Two chefs work in different units, and you translate consistently.</p>
+            </div>
+
+            <div class="objects">
+                <strong>Objects and Functors:</strong>
+                <ul>
+                    <li><strong>F</strong> = Recipes in US units (cups, tablespoons)</li>
+                    <li><strong>G</strong> = Recipes in metric units (ml, grams)</li>
+                    <li><strong>η</strong> = Your translation function</li>
+                </ul>
+            </div>
+
+            <div class="interpretation">
+                <strong>The Naturality:</strong>
+                <p style="margin-top: 10px;">If a chef scales a recipe (doubles it), your translation is consistent: scaling first then translating equals translating first then scaling. The translation "respects" the scaling operation!</p>
+            </div>
+
+            <div class="diagram-container">
+                <svg width="400" height="280" viewBox="0 0 400 280">
+                    <!-- F(X) -->
+                    <rect x="20" y="20" width="85" height="60" fill="#fff3e0" stroke="#ff9800" stroke-width="2" rx="4"/>
+                    <text x="62" y="42" text-anchor="middle" font-size="11" font-weight="bold">Recipe A</text>
+                    <text x="62" y="57" text-anchor="middle" font-size="10">(US units)</text>
+                    
+                    <!-- G(X) -->
+                    <rect x="295" y="20" width="85" height="60" fill="#e3f2fd" stroke="#2196f3" stroke-width="2" rx="4"/>
+                    <text x="337" y="42" text-anchor="middle" font-size="11" font-weight="bold">Recipe A</text>
+                    <text x="337" y="57" text-anchor="middle" font-size="10">(Metric)</text>
+                    
+                    <!-- F(Y) -->
+                    <rect x="20" y="180" width="85" height="60" fill="#fff3e0" stroke="#ff9800" stroke-width="2" rx="4"/>
+                    <text x="62" y="202" text-anchor="middle" font-size="11" font-weight="bold">Recipe B</text>
+                    <text x="62" y="217" text-anchor="middle" font-size="10">(US units)</text>
+                    
+                    <!-- G(Y) -->
+                    <rect x="295" y="180" width="85" height="60" fill="#e3f2fd" stroke="#2196f3" stroke-width="2" rx="4"/>
+                    <text x="337" y="202" text-anchor="middle" font-size="11" font-weight="bold">Recipe B</text>
+                    <text x="337" y="217" text-anchor="middle" font-size="10">(Metric)</text>
+                    
+                    <!-- Arrows -->
+                    <defs>
+                        <marker id="arrow7" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                            <polygon points="0 0, 10 3, 0 6" fill="#333"/>
+                        </marker>
+                    </defs>
+                    
+                    <!-- F(X) to G(X) - Translation -->
+                    <path d="M 105 50 L 295 50" stroke="#27ae60" stroke-width="2.5" fill="none" marker-end="url(#arrow7)"/>
+                    <text x="200" y="37" text-anchor="middle" font-size="11" fill="#27ae60" font-weight="bold">η_A (translate)</text>
+                    
+                    <!-- F(X) to F(Y) - Scaling -->
+                    <path d="M 62 80 L 62 180" stroke="#e74c3c" stroke-width="2.5" fill="none" marker-end="url(#arrow7)"/>
+                    <text x="35" y="130" font-size="11" fill="#e74c3c" font-weight="bold">scale</text>
+                    
+                    <!-- G(X) to G(Y) - Scaling -->
+                    <path d="M 337 80 L 337 180" stroke="#e74c3c" stroke-width="2.5" fill="none" marker-end="url(#arrow7)"/>
+                    <text x="365" y="130" font-size="11" fill="#e74c3c" font-weight="bold">scale</text>
+                    
+                    <!-- F(Y) to G(Y) - Translation -->
+                    <path d="M 105 210 L 295 210" stroke="#27ae60" stroke-width="2.5" fill="none" marker-end="url(#arrow7)"/>
+                    <text x="200" y="233" text-anchor="middle" font-size="11" fill="#27ae60" font-weight="bold">η_B (translate)</text>
+                </svg>
+                <div class="diagram-label">Natural Transformation: Consistent operations across contexts</div>
+            </div>
+
+            <div class="math-section">
+                <strong>The Mathematics:</strong>
+                <div style="margin-top: 10px; font-size: 1.1em;">$$G(f) \circ \eta_A = \eta_B \circ F(f)$$</div>
+                <p style="margin-top: 15px;">This says: "Translation commutes with scaling—the translation is natural."</p>
+            </div>
+        </div>
+
+        <!-- Example 8: Adjoint Functors -->
+        <div class="example">
+            <h2>Example 8: ADJOINT FUNCTORS</h2>
+            <h3>Free Samples and Discounted Purchases</h3>
+            
+            <div class="story-section">
+                <strong>The Story:</strong>
+                <p style="margin-top: 10px;">A coffee shop offers free sample cups to get people interested, and sells full drinks at a discount to converts. The free samples and discounted sales are in perfect balance—neither side takes advantage.</p>
+            </div>
+
+            <div class="objects">
+                <strong>Objects:</strong>
+                <ul>
+                    <li><strong>F</strong> = The "free sample" functor (offers samples to non-customers)</li>
+                    <li><strong>G</strong> = The "discount purchase" functor (converts samplers to buyers)</li>
+                    <li><strong>X</strong> = The set of non-customers</li>
+                    <li><strong>Y</strong> = The set of customers</li>
+                </ul>
+            </div>
+
+            <div class="objects">
+                <strong>The Adjunction:</strong>
+                <ul>
+                    <li><strong>F ⊣ G</strong> means: "Free samples are the left adjoint of discount purchases"</li>
+                    <li>Giving free samples to non-customers optimally prepares them for the discount offer</li>
+                    <li>The discount purchase functor optimally converts samples to real sales</li>
+                </ul>
+            </div>
+
+            <div class="interpretation">
+                <strong>The Balance:</strong>
+                <p style="margin-top: 10px;">There's a perfect, natural bijection between:</p>
+                <ul style="margin-top: 10px;">
+                    <li><strong>Morphisms from X to G(Y):</strong> "Non-customer X appreciates discount offer G(Y)"</li>
+                    <li><strong>Morphisms from F(X) to Y:</strong> "Free sample F(X) converts to purchasing behavior Y"</li>
+                </ul>
+                <p style="margin-top: 10px;">This bijection is natural—it respects all the underlying relationships between customers and offers.</p>
+            </div>
+
+            <div class="diagram-container">
+                <svg width="420" height="320" viewBox="0 0 420 320">
+                    <!-- Top: Non-customers -->
+                    <rect x="40" y="20" width="80" height="50" fill="#ffe0b2" stroke="#ff6f00" stroke-width="2" rx="4"/>
+                    <text x="80" y="42" text-anchor="middle" font-size="11" font-weight="bold">Non-</text>
+                    <text x="80" y="55" text-anchor="middle" font-size="11" font-weight="bold">customers</text>
+                    <text x="80" y="67" text-anchor="middle" font-size="9" fill="#666">(X)</text>
+                    
+                    <!-- Top: Customers -->
+                    <rect x="300" y="20" width="80" height="50" fill="#e3f2fd" stroke="#2196f3" stroke-width="2" rx="4"/>
+                    <text x="340" y="42" text-anchor="middle" font-size="11" font-weight="bold">Customers</text>
+                    <text x="340" y="60" text-anchor="middle" font-size="9" fill="#666">(Y)</text>
+                    
+                    <!-- Bottom Left: F(X) -->
+                    <rect x="20" y="170" width="120" height="60" fill="#c8e6c9" stroke="#4caf50" stroke-width="2" rx="4"/>
+                    <text x="80" y="193" text-anchor="middle" font-size="11" font-weight="bold">Free Samples</text>
+                    <text x="80" y="208" text-anchor="middle" font-size="10">Available to non-</text>
+                    <text x="80" y="220" text-anchor="middle" font-size="10">customers F(X)</text>
+                    
+                    <!-- Bottom Right: G(Y) -->
+                    <rect x="280" y="170" width="120" height="60" fill="#fce4ec" stroke="#e91e63" stroke-width="2" rx="4"/>
+                    <text x="340" y="193" text-anchor="middle" font-size="11" font-weight="bold">Discounted</text>
+                    <text x="340" y="208" text-anchor="middle" font-size="10">Offers for</text>
+                    <text x="340" y="220" text-anchor="middle" font-size="10">customers G(Y)</text>
+                    
+                    <!-- Arrows -->
+                    <defs>
+                        <marker id="arrow8" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                            <polygon points="0 0, 10 3, 0 6" fill="#333"/>
+                        </marker>
+                        <marker id="arrow8bi" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                            <polygon points="0 0, 10 3, 0 6" fill="#9c27b0"/>
+                        </marker>
+                    </defs>
+                    
+                    <!-- X to G(Y) upper path -->
+                    <path d="M 120 45 L 300 45" stroke="#666" stroke-width="2" fill="none" marker-end="url(#arrow8)"/>
+                    <text x="210" y="32" text-anchor="middle" font-size="10" fill="#666" font-weight="bold">appreciates</text>
+                    
+                    <!-- X to F(X) left path -->
+                    <path d="M 80 70 L 80 170" stroke="#ff6f00" stroke-width="2.5" fill="none" marker-end="url(#arrow8)"/>
+                    <text x="50" y="120" text-anchor="middle" font-size="10" fill="#ff6f00" font-weight="bold">F</text>
+                    
+                    <!-- G(Y) to Y right path -->
+                    <path d="M 340 70 L 340 170" stroke="#2196f3" stroke-width="2.5" fill="none" marker-end="url(#arrow8)"/>
+                    <text x="365" y="120" text-anchor="middle" font-size="10" fill="#2196f3" font-weight="bold">G</text>
+                    
+                    <!-- F(X) to G(Y) bottom path -->
+                    <path d="M 140 200 L 280 200" stroke="#9c27b0" stroke-width="3" fill="none" marker-end="url(#arrow8bi)"/>
+                    <text x="210" y="218" text-anchor="middle" font-size="10" fill="#9c27b0" font-weight="bold">converts to</text>
+                    
+                    <!-- Bijection label -->
+                    <text x="210" y="280" text-anchor="middle" font-size="11" fill="#9c27b0" font-weight="bold">Natural Bijection:</text>
+                    <text x="210" y="298" text-anchor="middle" font-size="10" fill="#666">Hom(X, G(Y)) ≅ Hom(F(X), Y)</text>
+                </svg>
+                <div class="diagram-label">Adjoint Functors: Perfect balance between two operations</div>
+            </div>
+
+            <div class="math-section">
+                <strong>The Mathematics:</strong>
+                <div style="margin-top: 10px; font-size: 1.1em;">$$F \dashv G$$</div>
+                <div style="margin-top: 15px; font-size: 1.1em;">$$\text{Hom}_{\mathcal{D}}(F(X), Y) \cong \text{Hom}_{\mathcal{C}}(X, G(Y))$$</div>
+                <p style="margin-top: 15px;">This says: "Free samples and discounts are adjoint—there's a perfect bijection between appreciation of the offer and conversion to purchase."</p>
+            </div>
+        </div>
+
+        <!-- Summary -->
+        <div class="summary">
+            <h2>Summary: Why These Diagrams Matter</h2>
+            <p style="margin-bottom: 15px;">Category diagrams aren't just abstract squiggles—they capture <strong>relationships and transformations</strong> in the real world:</p>
+            <ul style="margin-left: 20px; margin-bottom: 15px;">
+                <li><strong>Triangles</strong> show that different paths to the same goal are equivalent</li>
+                <li><strong>Squares</strong> demonstrate that certain operations commute (order doesn't matter)</li>
+                <li><strong>Products</strong> capture combining information optimally</li>
+                <li><strong>Pullbacks</strong> find compatible elements via shared properties</li>
+                <li><strong>Pushouts</strong> combine objects while respecting their overlaps</li>
+                <li><strong>Exact sequences</strong> track data flowing through a system</li>
+                <li><strong>Natural transformations</strong> ensure consistency across different contexts</li>
+                <li><strong>Adjoint functors</strong> reveal perfect balances and dualities</li>
+            </ul>
+            <p style="color: #27ae60; font-weight: bold;">Once you see categories everywhere, you start understanding the hidden structures in mathematics—and in life!</p>
+        </div>
+
+        <div class="key-takeaway">
+            <strong>The Big Picture</strong>
+            <p>Category diagrams are the language of relationships. They tell stories about how things transform, connect, and balance. Master these eight patterns, and you've got a toolkit for understanding structure at the deepest level.</p>
+        </div>
+    </div>
 </body>
 </html>

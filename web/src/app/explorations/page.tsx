@@ -1,16 +1,24 @@
 import Link from "next/link";
 
-const explorations = [
+interface Exploration {
+  href: string;
+  title: string;
+  description: string;
+  external?: boolean;
+}
+
+const explorations: Exploration[] = [
   {
     href: "/explorations/category-theory",
     title: "Category Theory",
     description:
-      "Exploring the mathematical foundations of abstraction and composition.",
+      "Examples of Category Theory using common, everyday (non-mathematical) objects.",
   },
   {
-    href: "/explorations/pocket-flow",
+    href: "https://mrbestertester.github.io/pf-understand/",
     title: "Pocket Flow",
-    description: "A lightweight framework for building AI workflows.",
+    description: "Tutorials using Pocket Flow for understanding Crawl4Ai, Modular's Max, and two different tutorials on the Mojo programming language. Hosted as a GitHub Pages website.",
+    external: true,
   },
   {
     href: "/explorations/dance-instruction",
@@ -20,7 +28,7 @@ const explorations = [
   {
     href: "/explorations/uber-level-ai-skills",
     title: "Uber Level AI Skills",
-    description: "Advanced techniques for getting the most out of AI tools.",
+    description: "Advanced techniques for getting the most out of AI tools. Taken from Nate B. Jones.",
   },
   {
     href: "/explorations/tensor-logic",
@@ -41,20 +49,38 @@ export default function ExplorationsPage() {
       </p>
 
       <div className="mt-12 grid gap-6 sm:grid-cols-2">
-        {explorations.map((exploration) => (
-          <Link
-            key={exploration.href}
-            href={exploration.href}
-            className="group rounded-xl border border-border bg-primary p-6 shadow-sm transition-all hover:border-accent hover:shadow-md"
-          >
-            <h2 className="text-xl font-semibold text-text-primary group-hover:text-accent">
-              {exploration.title}
-            </h2>
-            <p className="mt-2 text-sm text-text-secondary">
-              {exploration.description}
-            </p>
-          </Link>
-        ))}
+        {explorations.map((exploration) => {
+          const className = "group rounded-xl border border-border bg-primary p-6 shadow-sm transition-all hover:border-accent hover:shadow-md";
+          const content = (
+            <>
+              <h2 className="text-xl font-semibold text-text-primary group-hover:text-accent">
+                {exploration.title}
+              </h2>
+              <p className="mt-2 text-sm text-text-secondary">
+                {exploration.description}
+              </p>
+            </>
+          );
+          return exploration.external ? (
+            <a
+              key={exploration.href}
+              href={exploration.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={className}
+            >
+              {content}
+            </a>
+          ) : (
+            <Link
+              key={exploration.href}
+              href={exploration.href}
+              className={className}
+            >
+              {content}
+            </Link>
+          );
+        })}
       </div>
     </div>
   );

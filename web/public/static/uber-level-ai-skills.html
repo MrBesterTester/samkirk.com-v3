@@ -1,194 +1,749 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Uber Level AI Skills</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    body {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-      line-height: 1.6;
-      color: #3f3f46;
-      background: transparent;
-      padding: 1.5rem;
-    }
-    h2 {
-      font-size: 1.5rem;
-      font-weight: 600;
-      color: #18181b;
-      margin-bottom: 1rem;
-    }
-    h3 {
-      font-size: 1.125rem;
-      font-weight: 600;
-      color: #27272a;
-      margin-top: 1.5rem;
-      margin-bottom: 0.75rem;
-    }
-    p {
-      margin-bottom: 1rem;
-    }
-    ul {
-      margin-bottom: 1rem;
-      padding-left: 1.5rem;
-    }
-    ol {
-      margin-bottom: 1rem;
-      padding-left: 1.5rem;
-    }
-    li {
-      margin-bottom: 0.5rem;
-    }
-    code {
-      background: #f4f4f5;
-      padding: 0.125rem 0.375rem;
-      border-radius: 0.25rem;
-      font-size: 0.875rem;
-    }
-    .placeholder-notice {
-      background: #fef3c7;
-      border: 1px solid #f59e0b;
-      border-radius: 0.5rem;
-      padding: 1rem;
-      margin-bottom: 1.5rem;
-    }
-    .placeholder-notice p {
-      margin: 0;
-      color: #92400e;
-    }
-    .tip {
-      background: #ecfdf5;
-      border: 1px solid #10b981;
-      border-radius: 0.5rem;
-      padding: 1rem;
-      margin: 1rem 0;
-    }
-    .tip p {
-      margin: 0;
-      color: #065f46;
-    }
-    .tip strong {
-      color: #047857;
-    }
-    @media (prefers-color-scheme: dark) {
-      body {
-        color: #a1a1aa;
-      }
-      h2 {
-        color: #fafafa;
-      }
-      h3 {
-        color: #e4e4e7;
-      }
-      code {
-        background: #27272a;
-      }
-      .placeholder-notice {
-        background: #422006;
-        border-color: #b45309;
-      }
-      .placeholder-notice p {
-        color: #fcd34d;
-      }
-      .tip {
-        background: #022c22;
-        border-color: #059669;
-      }
-      .tip p {
-        color: #6ee7b7;
-      }
-      .tip strong {
-        color: #34d399;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Skill Tree Reference - Nate B. Jones Framework</title>
+    <style>
+        :root {
+            --color-primary: #2180d8;
+            --color-primary-hover: #1a66b8;
+            --color-primary-active: #1a5ca5;
+            --color-background: #f5f5f5;
+            --color-surface: #ffffff;
+            --color-text: #1f2121;
+            --color-text-secondary: #626c7c;
+            --color-border: #e0e0e0;
+            --color-success: #208d8d;
+            --color-accent-1: #2ba89f;
+            --color-accent-2: #f59e61;
+            --color-accent-3: #c01547;
+            --radius-base: 8px;
+            --spacing-sm: 8px;
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--color-background);
+            color: var(--color-text);
+            line-height: 1.6;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-active) 100%);
+            color: white;
+            padding: var(--spacing-lg);
+            text-align: center;
+            box-shadow: var(--shadow-md);
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: var(--spacing-md);
+        }
+
+        header p {
+            font-size: 1.1em;
+            opacity: 0.95;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: var(--spacing-lg);
+        }
+
+        .intro-section {
+            background: var(--color-surface);
+            padding: var(--spacing-lg);
+            border-radius: var(--radius-base);
+            margin-bottom: var(--spacing-lg);
+            border-left: 4px solid var(--color-primary);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .intro-section h2 {
+            color: var(--color-primary);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .intro-section p {
+            margin-bottom: var(--spacing-md);
+            color: var(--color-text-secondary);
+        }
+
+        .root-node {
+            background: var(--color-surface);
+            padding: var(--spacing-lg);
+            border-radius: var(--radius-base);
+            margin-bottom: var(--spacing-lg);
+            border-left: 4px solid var(--color-accent-3);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .root-node h2 {
+            color: var(--color-accent-3);
+            margin-bottom: var(--spacing-md);
+            font-size: 1.5em;
+        }
+
+        .skill-level {
+            background: var(--color-surface);
+            padding: var(--spacing-lg);
+            border-radius: var(--radius-base);
+            margin-bottom: var(--spacing-lg);
+            box-shadow: var(--shadow-sm);
+            border-left: 4px solid var(--color-accent-1);
+        }
+
+        .skill-level.level-1 {
+            border-left-color: #3b82f6;
+        }
+
+        .skill-level.level-2 {
+            border-left-color: #10b981;
+        }
+
+        .skill-level.level-3 {
+            border-left-color: #f59e61;
+        }
+
+        .skill-level.level-4 {
+            border-left-color: #a78bfa;
+        }
+
+        .skill-level h2 {
+            color: var(--color-primary);
+            margin-bottom: var(--spacing-md);
+            font-size: 1.8em;
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+        }
+
+        .level-badge {
+            display: inline-block;
+            background-color: var(--color-primary);
+            color: white;
+            padding: var(--spacing-sm) calc(var(--spacing-sm) * 1.5);
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 600;
+        }
+
+        .skill-level.level-1 .level-badge {
+            background-color: #3b82f6;
+        }
+
+        .skill-level.level-2 .level-badge {
+            background-color: #10b981;
+        }
+
+        .skill-level.level-3 .level-badge {
+            background-color: #f59e61;
+        }
+
+        .skill-level.level-4 .level-badge {
+            background-color: #a78bfa;
+        }
+
+        .skill-node {
+            background-color: #f9fafb;
+            border: 1px solid var(--color-border);
+            padding: var(--spacing-md);
+            margin-bottom: var(--spacing-md);
+            border-radius: calc(var(--radius-base) - 2px);
+            border-left: 3px solid var(--color-primary);
+        }
+
+        .skill-node h4 {
+            color: var(--color-primary);
+            margin-bottom: var(--spacing-sm);
+            font-size: 1.1em;
+        }
+
+        .skill-node p {
+            color: var(--color-text-secondary);
+            font-size: 0.95em;
+            line-height: 1.7;
+        }
+
+        .failure-mode {
+            background-color: #fef2f2;
+            border-left: 3px solid var(--color-accent-3);
+            padding: var(--spacing-md);
+            margin-top: var(--spacing-md);
+            border-radius: calc(var(--radius-base) - 2px);
+        }
+
+        .failure-mode strong {
+            color: var(--color-accent-3);
+        }
+
+        .analogy-section {
+            background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+            border-left: 4px solid var(--color-accent-2);
+            padding: var(--spacing-lg);
+            border-radius: var(--radius-base);
+            margin-bottom: var(--spacing-lg);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .analogy-section h2 {
+            color: var(--color-accent-2);
+            margin-bottom: var(--spacing-md);
+            font-size: 1.5em;
+        }
+
+        .analogy-section p {
+            color: var(--color-text-secondary);
+            margin-bottom: var(--spacing-md);
+            line-height: 1.8;
+        }
+
+        .orchestration-section {
+            background: linear-gradient(135deg, #fef3c7 0%, #fed7aa 100%);
+            border-left: 4px solid #d97706;
+            padding: var(--spacing-lg);
+            border-radius: var(--radius-base);
+            margin-bottom: var(--spacing-lg);
+            box-shadow: var(--shadow-md);
+        }
+
+        .orchestration-section h2 {
+            color: #92400e;
+            margin-bottom: var(--spacing-md);
+            font-size: 1.8em;
+        }
+
+        .orchestration-section p {
+            color: #78350f;
+            margin-bottom: var(--spacing-md);
+            line-height: 1.8;
+        }
+
+        .orchestration-section ul {
+            margin-left: var(--spacing-lg);
+            color: #78350f;
+        }
+
+        .orchestration-section li {
+            margin-bottom: var(--spacing-sm);
+            line-height: 1.7;
+        }
+
+        .key-takeaway {
+            background-color: #eff6ff;
+            border-left: 3px solid var(--color-primary);
+            padding: var(--spacing-md);
+            margin: var(--spacing-md) 0;
+            border-radius: calc(var(--radius-base) - 2px);
+            font-style: italic;
+            color: var(--color-text);
+        }
+
+        .context-box {
+            background-color: #f0fdf4;
+            border-left: 3px solid var(--color-success);
+            padding: var(--spacing-md);
+            margin: var(--spacing-md) 0;
+            border-radius: calc(var(--radius-base) - 2px);
+            color: var(--color-text-secondary);
+        }
+
+        .context-box strong {
+            color: var(--color-success);
+        }
+
+        ul, ol {
+            margin-left: var(--spacing-lg);
+            color: var(--color-text-secondary);
+        }
+
+        li {
+            margin-bottom: var(--spacing-sm);
+            line-height: 1.7;
+        }
+
+        strong {
+            color: var(--color-text);
+            font-weight: 600;
+        }
+
+        a {
+            color: var(--color-primary);
+            text-decoration: none;
+            border-bottom: 1px solid var(--color-primary);
+        }
+
+        a:hover {
+            color: var(--color-primary-hover);
+            border-bottom: 1px solid var(--color-primary-hover);
+        }
+
+        .download-btn {
+            display: inline-block;
+            background-color: var(--color-primary);
+            color: white;
+            padding: var(--spacing-md) var(--spacing-lg);
+            border-radius: var(--radius-base);
+            text-decoration: none;
+            font-weight: 600;
+            margin-bottom: var(--spacing-lg);
+            cursor: pointer;
+            border: none;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s ease;
+        }
+
+        .download-btn:hover {
+            background-color: var(--color-primary-hover);
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        .toc {
+            background-color: #f9fafb;
+            border: 1px solid var(--color-border);
+            padding: var(--spacing-lg);
+            border-radius: var(--radius-base);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .toc h3 {
+            color: var(--color-primary);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .toc ul {
+            list-style: none;
+            margin-left: 0;
+        }
+
+        .toc a {
+            display: block;
+            padding: var(--spacing-sm) 0;
+            color: var(--color-primary);
+            text-decoration: none;
+            border: none;
+        }
+
+        .toc a:hover {
+            color: var(--color-primary-hover);
+            text-decoration: underline;
+        }
+
+        footer {
+            background-color: #f3f4f6;
+            border-top: 1px solid var(--color-border);
+            padding: var(--spacing-lg);
+            text-align: center;
+            color: var(--color-text-secondary);
+            margin-top: var(--spacing-lg);
+        }
+
+        .video-reference {
+            background: #f0fdf4;
+            border-left: 3px solid #16a34a;
+            padding: var(--spacing-md);
+            margin-bottom: var(--spacing-lg);
+            border-radius: calc(var(--radius-base) - 2px);
+        }
+
+        .video-reference a {
+            color: #16a34a;
+            border-bottom: 1px solid #16a34a;
+        }
+
+        .video-reference a:hover {
+            color: #15803d;
+            border-bottom: 1px solid #15803d;
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8em;
+            }
+
+            .container {
+                padding: var(--spacing-md);
+            }
+
+            .skill-level h2 {
+                font-size: 1.4em;
+            }
+        }
+    </style>
 </head>
 <body>
-  <div class="placeholder-notice">
-    <p><strong>Note:</strong> This is placeholder content. The full exploration will be added later.</p>
-  </div>
+    <header>
+        <h1>🧠 AI Skill Tree Reference</h1>
+        <p>Nate B. Jones Framework: The New Technical Skill Tree for the Age of AI</p>
+    </header>
 
-  <h2>Uber Level AI Skills</h2>
-  <p>
-    Advanced techniques for getting dramatically more value from AI tools like ChatGPT, Claude, and Gemini.
-    These are hard-won lessons from extensive real-world usage.
-  </p>
+    <div class="container">
+        <div class="video-reference">
+            <strong>📹 Original Source:</strong> <a href="https://www.youtube.com/watch?v=fyHnGHxGuhI" target="_blank" rel="noopener noreferrer">Tool-Mode vs Infrastructure-Mode: The Bet 90% of Companies Are Losing</a> by Nate B. Jones (January 4, 2026)
+        </div>
 
-  <h3>The Skill Hierarchy</h3>
-  <p>
-    AI proficiency can be broken into levels:
-  </p>
-  <ol>
-    <li><strong>Basic</strong> — Simple Q&A, accepting first responses</li>
-    <li><strong>Intermediate</strong> — Prompt engineering, iteration, context management</li>
-    <li><strong>Advanced</strong> — Multi-turn workflows, tool integration, output verification</li>
-    <li><strong>Uber</strong> — System design with AI, meta-prompting, autonomous workflows</li>
-  </ol>
+        <div class="toc">
+            <h3>📋 Quick Navigation</h3>
+            <ul>
+                <li><a href="#overview">Overview: What Changed</a></li>
+                <li><a href="#root-node">Root Node: Separate Generation from Decisioning</a></li>
+                <li><a href="#level-1">Level 1: Conditioning</a></li>
+                <li><a href="#level-2">Level 2: Authority</a></li>
+                <li><a href="#level-3">Level 3: Workflows</a></li>
+                <li><a href="#level-4">Level 4: Compounding</a></li>
+                <li><a href="#factorio">The Factorio Analogy</a></li>
+                <li><a href="#orchestration">Orchestrating Uncertainty Without Losing Authority</a></li>
+            </ul>
+        </div>
 
-  <h3>Key Techniques</h3>
-  
-  <h3>1. Context is King</h3>
-  <p>
-    The most important factor in AI output quality is the context you provide:
-  </p>
-  <ul>
-    <li>Give relevant background before asking questions</li>
-    <li>Include examples of desired output format</li>
-    <li>Specify constraints and edge cases upfront</li>
-    <li>Use structured formats (markdown, JSON) for complex inputs</li>
-  </ul>
+        <div class="intro-section" id="overview">
+            <h2>🎯 Overview: What Changed in AI Era</h2>
+            <p>Andre Karpathy, a renowned AI researcher, stated he's "never felt this behind as a programmer." This reflects a fundamental phase transition in technical leverage. The core issue is not that engineers need to code faster—it's that <strong>what it means to be technical has fundamentally changed</strong>.</p>
+            
+            <p>For decades, technical leverage came from writing more correct instructions faster. Today, leverage comes from <strong>orchestrating probabilistic systems</strong> while maintaining human authority.</p>
 
-  <div class="tip">
-    <p><strong>Pro tip:</strong> Start complex sessions by having the AI summarize its understanding of the task before proceeding.</p>
-  </div>
+            <h3 style="color: var(--color-primary); margin-top: var(--spacing-lg); margin-bottom: var(--spacing-md);">Four Critical Breakdowns:</h3>
 
-  <h3>2. Iterative Refinement</h3>
-  <p>
-    Don't expect perfection on the first try:
-  </p>
-  <ul>
-    <li>Start with a rough draft, then refine</li>
-    <li>Ask the AI to critique its own output</li>
-    <li>Use follow-up prompts to address specific issues</li>
-    <li>Build up complex artifacts in stages</li>
-  </ul>
+            <div class="key-takeaway">
+                <strong>1. Control Is No Longer the Default:</strong> In the old world, you authored behavior and owned it completely. In the new world, you condition behavior through prompts, context, and constraints—but don't fully control the output.
+            </div>
 
-  <h3>3. Verification Strategies</h3>
-  <p>
-    AI outputs need verification, especially for:
-  </p>
-  <ul>
-    <li>Factual claims (check sources)</li>
-    <li>Code (test before using)</li>
-    <li>Calculations (verify independently)</li>
-    <li>Edge cases (probe explicitly)</li>
-  </ul>
+            <div class="key-takeaway">
+                <strong>2. Effort No Longer Maps to Output:</strong> Being smarter or working harder doesn't guarantee proportional leverage. The new bottleneck is knowing how to set up delegation loops with LLMs, not manual execution speed.
+            </div>
 
-  <h3>4. Workflow Design</h3>
-  <p>
-    For complex tasks, design your AI workflow:
-  </p>
-  <ul>
-    <li>Break large tasks into smaller, verifiable steps</li>
-    <li>Use different prompting strategies for different phases</li>
-    <li>Maintain artifacts (specs, outlines) between sessions</li>
-    <li>Know when to start fresh vs. continue iterating</li>
-  </ul>
+            <div class="key-takeaway">
+                <strong>3. The Abstraction Stack Inverted:</strong> Historically, high-level reasoning collapsed downward into code. Now, low-level implementation expands upward from intent. The job shifts from constructing to supervising.
+            </div>
 
-  <h3>Coming Soon</h3>
-  <p>
-    Additional content will cover:
-  </p>
-  <ul>
-    <li>Specific prompting patterns with examples</li>
-    <li>Model selection strategies</li>
-    <li>Building reusable prompt libraries</li>
-    <li>Integrating AI into development workflows</li>
-  </ul>
+            <div class="key-takeaway">
+                <strong>4. Old Boundaries Don't Apply:</strong> The critical divide is no longer "engineer vs. non-engineer"—it's "someone who can delegate generation from decisioning" vs. "someone who can't."
+            </div>
+        </div>
+
+        <div class="root-node" id="root-node">
+            <h2>🌳 The Root Node: Separate Generation from Decisioning</h2>
+            <p>This is the foundation of the entire skill tree. <strong>Everything else builds on this one principle.</strong></p>
+            
+            <p>LLMs are exceptional at generating content: drafts, options, code, summaries, transformations, hypotheses, structured outputs. What they cannot do reliably is <strong>make the final authority decision</strong> about what's true, safe, or planned.</p>
+
+            <div class="context-box">
+                <strong>⚠️ Critical Principle:</strong> The workflow must decide, the system must decide, or the human must decide—but the model should never decide what's true, what's safe, or what's planned.
+            </div>
+
+            <p style="margin-top: var(--spacing-md);">This means:</p>
+            <ul>
+                <li>You can architect models inside workflows to produce extremely dependable, accurate outputs measured against human-defined correctness</li>
+                <li>An LLM by itself—without workflow harness—cannot reliably decide what's correct, safe, or approved</li>
+                <li>When organizations get burned with LLMs, it's almost always because they left a token generator as the judge</li>
+            </ul>
+
+            <div class="failure-mode">
+                <strong>Failure Mode:</strong> Organizations that don't separate generation from decisioning end up shipping incorrect information, missing safety guardrails, and losing trust.
+            </div>
+        </div>
+
+        <div class="skill-level level-1" id="level-1">
+            <h2><span class="level-badge">Level 1</span> Conditioning: Steering the Probabilistic Component</h2>
+            <p>Once you understand the generation/decisioning split, Level 1 teaches you how to condition (steer) probabilistic systems toward reliable outputs.</p>
+
+            <div class="skill-node">
+                <h4>Node 1A: Intent Specification</h4>
+                <p>In deterministic systems, ambiguous requirements are problematic but don't cause hallucinations. In probabilistic systems, ambiguity is "gasoline on the fire"—the model happily fills gaps with plausible nonsense.</p>
+                <p><strong>Key skill:</strong> Create very tight problem contracts with specific purpose, audience, constraints, and definitions.</p>
+                <p style="margin-top: var(--spacing-sm); color: var(--color-text);">This isn't just managerial overhead—it's steering the inputs to reduce variance and increase output reliability.</p>
+            </div>
+
+            <div class="skill-node">
+                <h4>Node 1B: Context Engineering</h4>
+                <p>A huge amount of model failure is simply context failure: wrong material, missing material, too much material, poor ordering, conflicting instructions, truncated history.</p>
+                <p><strong>Key skill:</strong> Reliably decide what goes in the context window, what stays out, what is summarized, what is quoted, what must be preserved verbatim, and what isn't trusted.</p>
+                <p style="margin-top: var(--spacing-sm); color: var(--color-text);">Context engineering is the new databases and IO of the AI stack.</p>
+            </div>
+
+            <div class="skill-node">
+                <h4>Node 1C: Constraint Design</h4>
+                <p>Constraints transform a token generator into a reliable component. Without constraints, a probabilistic system is a slot machine. With constraints, it becomes a reliable machine that can do real work.</p>
+                <p><strong>Key constraints include:</strong></p>
+                <ul style="margin-top: var(--spacing-sm);">
+                    <li>Defined output formats and schemas</li>
+                    <li>Defined rubrics for evaluation</li>
+                    <li>Required citations</li>
+                    <li>Allowed tools access</li>
+                    <li>Token budgets and stop conditions</li>
+                </ul>
+            </div>
+
+            <div class="failure-mode">
+                <strong>Failure Mode of Level 1:</strong> Skipping Level 1 leaves you with vague prompts, poor context, and no constraints—resulting in wildly inconsistent outputs that vary from acceptable to unusable.
+            </div>
+        </div>
+
+        <div class="skill-level level-2" id="level-2">
+            <h2><span class="level-badge">Level 2</span> Authority: Keeping Ownership Without Full Authorship</h2>
+            <p>Once you can condition outputs reliably, Level 2 teaches you how to maintain authority in an AI system—how to take responsibility for work you didn't directly author.</p>
+
+            <div class="context-box">
+                <strong>The Authority Challenge:</strong> In the old world, writing the code gave you automatic authority. You could point to a line and explain causality. In the probabilistic world, authority requires explicit system design.
+            </div>
+
+            <div class="skill-node">
+                <h4>Node 2A: Verification Design</h4>
+                <p>How does truth come into the loop? How do you know output is correct? The model can generate plausible falsehoods, so you need explicit verification mechanisms.</p>
+                <p><strong>Verification types:</strong></p>
+                <ul style="margin-top: var(--spacing-sm);">
+                    <li><strong>Deterministic:</strong> Schema validation, unit tests, logical checks</li>
+                    <li><strong>Procedural:</strong> Human review, critique, adversarial prompting</li>
+                </ul>
+                <p style="margin-top: var(--spacing-md); color: var(--color-text;"><strong>Key insight:</strong> Verification replaces the old guarantee you got from authored logic. It's not optional—it's essential.</p>
+            </div>
+
+            <div class="skill-node">
+                <h4>Node 2B: Provenance and Chain of Custody</h4>
+                <p>In the past, chain of custody was implicit—you could see the code and knew who wrote it. In the AI era, you must design for provenance explicitly.</p>
+                <p><strong>Key elements:</strong></p>
+                <ul style="margin-top: var(--spacing-sm);">
+                    <li>Sources, citations, and quotes showing where claims come from</li>
+                    <li>Retrieved documents as evidence</li>
+                    <li>Traceability as a first-class system design object</li>
+                    <li>Auditability built in from day one</li>
+                </ul>
+                <p style="margin-top: var(--spacing-md); color: var(--color-text);">In a deterministic world, you get this from code inspection. In a probabilistic world, it's about evidence.</p>
+            </div>
+
+            <div class="skill-node">
+                <h4>Node 2C: Permissions and Security Boundaries</h4>
+                <p>The model cannot be your security boundary. This is critical for any system that can email customers, move money, change permissions, or merge code.</p>
+                <p><strong>Best practices:</strong></p>
+                <ul style="margin-top: var(--spacing-sm);">
+                    <li>Treat permissioning like any other system component</li>
+                    <li>Use deterministic, least-privilege permission schemes</li>
+                    <li>Implement allow lists, scope tools, approval steps</li>
+                    <li>Maintain comprehensive audit trails</li>
+                </ul>
+                <p style="margin-top: var(--spacing-md); color: var(--color-text);">This is how you instantiate agents responsibly. Permission envelopes ensure agents aren't over-permissioned.</p>
+            </div>
+
+            <div class="failure-mode">
+                <strong>Failure Mode of Level 2:</strong> Skipping verification, provenance, and permissions means you ship work you can't defend, can't trace, and potentially expose your organization to security risks.
+            </div>
+        </div>
+
+        <div class="skill-level level-3" id="level-3">
+            <h2><span class="level-badge">Level 3</span> Workflows: Building Automated Factories</h2>
+            <p>Once you can condition and verify outputs, Level 3 teaches you to scale—to take intelligence as raw material and turn it into production factories. This is where compounding leverage emerges.</p>
+
+            <div class="skill-node">
+                <h4>Node 3A: Pipeline Decomposition</h4>
+                <p>Stop treating the model like a chatbot. Start treating it as a component in a larger pipeline.</p>
+                <p><strong>Key practices:</strong></p>
+                <ul style="margin-top: var(--spacing-sm);">
+                    <li>Build intermediate artifacts and checkpoints</li>
+                    <li>Keep the generator away from final decisions</li>
+                    <li>Make failures local instead of global</li>
+                    <li>Make workflows runnable by someone other than you</li>
+                </ul>
+                <p style="margin-top: var(--spacing-md); color: var(--color-text);">This decomposition enables delegation and reproducibility.</p>
+            </div>
+
+            <div class="skill-node">
+                <h4>Node 3B: Failure Mode Taxonomy</h4>
+                <p>In deterministic systems, debugging means tracing logic through code. In probabilistic systems, debugging means classifying and categorizing failure modes.</p>
+                <p><strong>Common failure categories:</strong></p>
+                <ul style="margin-top: var(--spacing-sm);">
+                    <li>Context missing or wrong retrieval</li>
+                    <li>Tool declared incorrectly or tool execution failed</li>
+                    <li>Constraints conflicting or causing issues</li>
+                    <li>Hallucination or task underspecification</li>
+                    <li>Model refusal or budget exceeded</li>
+                </ul>
+                <p style="margin-top: var(--spacing-md); color: var(--color-text);">Having a complete taxonomy prevents mindless prompt tweaking and directs fixes to the correct system layer.</p>
+            </div>
+
+            <div class="skill-node">
+                <h4>Node 3C: Observability and System Legibility</h4>
+                <p>You cannot fully inspect a model's internal reasoning, so you must compensate by making the surrounding system extremely observable.</p>
+                <p><strong>Key observability elements:</strong></p>
+                <ul style="margin-top: var(--spacing-sm);">
+                    <li>Traces of all tool calls made</li>
+                    <li>Inputs used at each step</li>
+                    <li>Documents retrieved or context used</li>
+                    <li>Intermediate outputs at checkpoints</li>
+                    <li>Validations passed or failed</li>
+                    <li>Timing, cost, and resource usage</li>
+                </ul>
+                <p style="margin-top: var(--spacing-md); color: var(--color-text);">This is scaling the auditability skills from Level 2 to the workflow layer. You make the system legible end-to-end.</p>
+            </div>
+
+            <div class="failure-mode">
+                <strong>Failure Mode of Level 3:</strong> Without pipeline decomposition, failure taxonomies, and observability, you end up with monolithic workflows that fail mysteriously, can't be debugged, and can't be handed to others.
+            </div>
+        </div>
+
+        <div class="skill-level level-4" id="level-4">
+            <h2><span class="level-badge">Level 4</span> Compounding: Making It Durable and Self-Improving</h2>
+            <p>The highest leverage comes from building systems that compound over time—workflows that learn, improve, and become more reliable with use.</p>
+
+            <div class="skill-node">
+                <h4>Node 4A: Evaluation Harnesses</h4>
+                <p>Without evaluation harnesses, it's impossible to compound. You just end up improvising faster with no way to measure improvement.</p>
+                <p><strong>Evaluation components:</strong></p>
+                <ul style="margin-top: var(--spacing-sm);">
+                    <li>Golden sets of known-good examples</li>
+                    <li>Regression tests to ensure outputs don't degrade</li>
+                    <li>Scorecards and thresholds for quality gates</li>
+                    <li>Automated scoring where possible</li>
+                </ul>
+                <p style="margin-top: var(--spacing-md); color: var(--color-text);">With a robust eval harness, you can confidently change prompts, models, retrieval methods, or tools without playing Russian roulette.</p>
+            </div>
+
+            <div class="skill-node">
+                <h4>Node 4B: Feedback Loops and Self-Correction</h4>
+                <p>The highest leverage comes from agents operating in loops where they can continuously improve through feedback.</p>
+                <p><strong>Example loops:</strong></p>
+                <ul style="margin-top: var(--spacing-sm);">
+                    <li>Draft → Critique → Revise → Recheck → Ship</li>
+                    <li>Retrieve → Site Evidence → Verify → Finalize</li>
+                    <li>Generate → Test → Fix → Validate</li>
+                </ul>
+                <p style="margin-top: var(--spacing-md); color: var(--color-text);">These loops make the generator less risky (errors caught before final shipment) and more transferable (you don't need genius-level prompting, just good evaluation).</p>
+            </div>
+
+            <div class="skill-node">
+                <h4>Node 4C: Drift Management and Governance</h4>
+                <p>Models will change, data will change, teams will change, attackers will adapt. Governance means your system remains reliable through all this change.</p>
+                <p><strong>Governance practices:</strong></p>
+                <ul style="margin-top: var(--spacing-sm);">
+                    <li>Version control for models, prompts, and evaluation sets</li>
+                    <li>Auditability policies and documentation</li>
+                    <li>Regular re-evaluation as components shift</li>
+                    <li>Rollback and rollforward procedures</li>
+                    <li>Alert systems for performance degradation</li>
+                </ul>
+                <p style="margin-top: var(--spacing-md); color: var(--color-text);">Treat AI systems like production infrastructure—because they are.</p>
+            </div>
+
+            <div class="failure-mode">
+                <strong>Failure Mode of Level 4:</strong> Without evaluation, feedback loops, and governance, systems decay. Model updates break workflows. Context changes cause silent failures. Authority and control deteriorate over time.
+            </div>
+        </div>
+
+        <div class="analogy-section" id="factorio">
+            <h2>🏭 The Factorio Analogy: Building Automated Factories</h2>
+            <p>Nate uses the video game Factorio as an analogy for what Levels 3 and 4 of the skill tree represent.</p>
+            
+            <p>In Factorio, you start by manually gathering and processing resources. As you progress, you build factories with conveyor belts, assembly lines, and automation systems. Each factory:</p>
+            <ul>
+                <li>Breaks complex problems into component steps</li>
+                <li>Uses intermediate storage and checkpoints</li>
+                <li>Has monitoring and metrics for each step</li>
+                <li>Can be expanded and iterated upon</li>
+                <li>Eventually runs without your constant intervention</li>
+            </ul>
+
+            <p>The parallel to AI workflows is direct:</p>
+            <ul>
+                <li><strong>Manual execution:</strong> Manually prompting the model for each task</li>
+                <li><strong>Pipeline building:</strong> Creating multi-step workflows with intermediate outputs</li>
+                <li><strong>Automation:</strong> Building feedback loops and evaluation systems that continuously improve</li>
+                <li><strong>Scaling:</strong> Expanding the factory to handle more complexity with human oversight, not human execution</li>
+            </ul>
+
+            <p style="margin-top: var(--spacing-lg); color: var(--color-text); font-weight: 600;">Just as Factorio players eventually automate complex resource chains and reach exponential productivity, Level 3 and 4 practitioners build AI factories that handle increasingly complex cognitive work—with human authority preserved at decision points.</p>
+        </div>
+
+        <div class="orchestration-section" id="orchestration">
+            <h2>⚖️ Orchestrating Uncertainty Without Losing Authority</h2>
+            <p><strong>This is the ultimate level of skill to acquire in 2026 and beyond.</strong></p>
+
+            <p>After mastering all four skill levels, the capstone skill is learning to orchestrate probabilistic systems—handling uncertainty, managing complexity, delegating generation—all while maintaining meaningful human authority and control.</p>
+
+            <h3 style="color: #92400e; margin-top: var(--spacing-lg); margin-bottom: var(--spacing-md);">The Core Challenge</h3>
+            <p>The old model assumed:</p>
+            <ul>
+                <li>You author → You have authority</li>
+                <li>You understand the code → You can defend the behavior</li>
+                <li>You maintain control → You ship with confidence</li>
+            </ul>
+
+            <p style="margin-top: var(--spacing-lg);">The new model requires:</p>
+            <ul>
+                <li>You condition → You steer toward desired outcomes</li>
+                <li>You verify → You establish truth independently</li>
+                <li>You govern → You maintain quality through change</li>
+            </ul>
+
+            <h3 style="color: #92400e; margin-top: var(--spacing-lg); margin-bottom: var(--spacing-md);">Orchestrating Without Losing Authority Means:</h3>
+            <ul>
+                <li><strong>Separate generation from decisioning:</strong> Let the model generate options quickly, but keep humans in the decision loop</li>
+                <li><strong>Design for verification:</strong> Build systems that can prove correctness and safety independently of authorship</li>
+                <li><strong>Build observable workflows:</strong> Make systems legible so you can audit, debug, and defend them</li>
+                <li><strong>Implement feedback loops:</strong> Create systems that self-correct and improve, reducing manual intervention over time</li>
+                <li><strong>Govern for durability:</strong> Ensure systems remain reliable as models, data, and teams change</li>
+                <li><strong>Maintain least privilege:</strong> Ensure models and agents can't exceed their permission envelope</li>
+            </ul>
+
+            <h3 style="color: #92400e; margin-top: var(--spacing-lg); margin-bottom: var(--spacing-md);">Why This Is the 2026 Competitive Advantage</h3>
+            <p style="margin-bottom: var(--spacing-md);">Organizations that recognize this as a <strong>workforce-wide challenge</strong> and build deliberate skill trees around orchestrating uncertainty will:</p>
+            <ul>
+                <li>Realize <strong>10X speedups</strong> in knowledge work productivity</li>
+                <li>Maintain quality and reliability through scaling</li>
+                <li>Distribute AI competency beyond engineering departments</li>
+                <li>Build systems that compound leverage over time</li>
+            </ul>
+
+            <p style="margin-top: var(--spacing-lg);">Organizations clinging to old technical vs. non-technical hierarchies—expecting engineers to be the only ones who "do AI"—<strong>will fall behind in 2026.</strong></p>
+
+            <p style="margin-top: var(--spacing-lg); background-color: rgba(255, 255, 255, 0.3); padding: var(--spacing-md); border-radius: calc(var(--radius-base) - 2px);">Every profession is becoming some version of: <em>orchestrate probabilistic components while keeping authority.</em> That is the definition of knowledge work now.</p>
+        </div>
+
+        <div style="background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%); padding: var(--spacing-lg); border-radius: var(--radius-base); margin-top: var(--spacing-lg);">
+            <h2 style="color: var(--color-text); margin-bottom: var(--spacing-md);">🔑 Quick Summary: The Skill Tree Hierarchy</h2>
+            <ol style="color: var(--color-text);">
+                <li><strong>Root Node:</strong> Understand generation/decisioning separation</li>
+                <li><strong>Level 1 (Conditioning):</strong> Steer outputs through intent, context, constraints</li>
+                <li><strong>Level 2 (Authority):</strong> Maintain control through verification, provenance, permissions</li>
+                <li><strong>Level 3 (Workflows):</strong> Scale through pipelines, failure taxonomies, observability</li>
+                <li><strong>Level 4 (Compounding):</strong> Build durability through evals, feedback loops, governance</li>
+                <li><strong>Capstone:</strong> Orchestrate uncertainty while preserving human authority</li>
+            </ol>
+        </div>
+
+        <button class="download-btn" onclick="downloadAsHTML()">📥 Download This Reference as HTML File</button>
+
+        <footer>
+            <p><strong>Created from:</strong> "Tool-Mode vs Infrastructure-Mode: The Bet 90% of Companies Are Losing" by Nate B. Jones (January 4, 2026)</p>
+            <p style="margin-top: var(--spacing-md); font-size: 0.9em;">This reference guide is designed to be used as documentation for AI Projects and Anthropic Skills development. Bookmark, download, and iterate on this framework as you build.</p>
+        </footer>
+    </div>
+
+    <script>
+        function downloadAsHTML() {
+            const htmlContent = document.documentElement.outerHTML;
+            const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', 'AI-Skill-Tree-Reference-Nate-Jones.html');
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    </script>
 </body>
 </html>
