@@ -124,6 +124,26 @@ export default function Home() {
 
         <section>
           <h2 className="text-2xl font-semibold text-text-primary">
+            Villa Madu Bali
+          </h2>
+          <p className="mt-1 text-text-secondary">
+            A lovely, exotic Indonesian resort in Bali.
+          </p>
+          <ul className="mt-1 list-disc pl-5 text-sm text-text-muted">
+            <li>Done on www.Replit.com after trying two other non-coding AI web site builders to replace the old version written in WordPress.</li>
+          </ul>
+          <a
+            href="https://www.villamadubali.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-2 inline-block font-medium text-accent hover:text-accent-hover"
+          >
+            Visit VillaMaduBali.com &rarr;
+          </a>
+        </section>
+
+        <section>
+          <h2 className="text-2xl font-semibold text-text-primary">
             Song Dedication to Mom
           </h2>
           <p className="mt-1 text-text-secondary">
