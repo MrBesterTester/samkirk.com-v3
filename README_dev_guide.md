@@ -62,6 +62,9 @@ gcloud auth application-default print-access-token
 # If the above fails, set up credentials and verify:
 gcloud auth application-default login
 gcloud auth application-default print-access-token
+
+# To log out / clean up credentials:
+gcloud auth application-default revoke
 ```
 
 For full GCP project setup (Firestore, Cloud Storage, environment variables), see [`docs/GCP-SETUP.md`](docs/GCP-SETUP.md).
