@@ -58,7 +58,7 @@ export function Header() {
             <li key={link.href} className="relative group">
               <Link
                 href={link.href}
-                className="rounded-md px-3 py-2 text-sm font-medium text-text-secondary transition-colors hover:bg-secondary hover:text-text-primary"
+                className="inline-block rounded-md px-3 py-2 text-center text-sm font-medium text-text-secondary transition-colors hover:bg-secondary hover:text-text-primary"
               >
                 {link.label}
               </Link>
