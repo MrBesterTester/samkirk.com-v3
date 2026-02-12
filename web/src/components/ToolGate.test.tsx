@@ -55,10 +55,10 @@ describe("ToolGate", () => {
     expect(screen.queryByTestId("protected-content")).not.toBeInTheDocument();
   });
 
-  it("shows captcha gate after successful session init", async () => {
+  it("shows captcha gate after successful session init with captchaPassed=false", async () => {
     mockFetch.mockResolvedValueOnce({
       ok: true,
-      json: async () => ({ sessionId: "test-session", isNew: true }),
+      json: async () => ({ sessionId: "test-session", isNew: true, captchaPassed: false }),
     });
 
     render(
@@ -74,10 +74,27 @@ describe("ToolGate", () => {
     expect(screen.queryByTestId("protected-content")).not.toBeInTheDocument();
   });
 
+  it("skips captcha and shows children when captchaPassed=true", async () => {
+    mockFetch.mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({ sessionId: "test-session", isNew: false, captchaPassed: true }),
+    });
+
+    render(
+      <ToolGate toolName="Test Tool">
+        <div data-testid="protected-content">Protected</div>
+      </ToolGate>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByTestId("protected-content")).toBeInTheDocument();
+    });
+  });
+
   it("shows default title when toolName not provided", async () => {
     mockFetch.mockResolvedValueOnce({
       ok: true,
-      json: async () => ({ sessionId: "test-session", isNew: true }),
+      json: async () => ({ sessionId: "test-session", isNew: true, captchaPassed: false }),
     });
 
     render(

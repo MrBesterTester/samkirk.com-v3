@@ -4,6 +4,7 @@ import {
   getSessionIdFromCookies,
   setSessionCookie,
   createSession,
+  getSession,
   isSessionValid,
   hashIp,
   SESSION_TTL_MS,
@@ -16,6 +17,7 @@ interface SessionInitResponse {
   sessionId: string;
   expiresAt: string;
   isNew: boolean;
+  captchaPassed: boolean;
 }
 
 /**
@@ -77,13 +79,16 @@ export async function POST(
       const isValid = await isSessionValid(existingSessionId);
 
       if (isValid) {
-        // Session exists and is valid - return it
+        // Session exists and is valid - check if captcha already passed
+        const sessionDoc = await getSession(existingSessionId);
+        const captchaPassed = !!sessionDoc?.captchaPassedAt;
         const expiresAt = new Date(Date.now() + SESSION_TTL_MS).toISOString();
 
         return NextResponse.json({
           sessionId: existingSessionId,
           expiresAt,
           isNew: false,
+          captchaPassed,
         });
       }
     }
@@ -103,6 +108,7 @@ export async function POST(
       sessionId,
       expiresAt: sessionData.expiresAt.toDate().toISOString(),
       isNew: true,
+      captchaPassed: false,
     });
   } catch (error) {
     console.error("Session init error:", error);

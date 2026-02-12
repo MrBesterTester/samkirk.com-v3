@@ -54,7 +54,13 @@ export function ToolGate({ children, toolName }: ToolGateProps) {
           return;
         }
 
-        setStatus("captcha");
+        const data = await response.json();
+
+        if (data.captchaPassed) {
+          setStatus("ready");
+        } else {
+          setStatus("captcha");
+        }
       } catch {
         if (cancelled) return;
         setStatus("error");

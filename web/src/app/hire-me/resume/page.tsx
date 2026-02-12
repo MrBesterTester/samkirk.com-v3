@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { ToolGate } from "@/components";
 
 // ============================================================================
@@ -46,6 +46,8 @@ interface JobInputFormProps {
   isLoading: boolean;
 }
 
+const JOB_INPUT_STORAGE_KEY = "hire-me-job-input";
+
 function JobInputForm({ onSubmit, isLoading }: JobInputFormProps) {
   const [inputMode, setInputMode] = useState<InputMode>("paste");
   const [pasteText, setPasteText] = useState("");
@@ -53,12 +55,37 @@ function JobInputForm({ onSubmit, isLoading }: JobInputFormProps) {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  // Pre-populate from sessionStorage on mount
+  useEffect(() => {
+    try {
+      const stored = sessionStorage.getItem(JOB_INPUT_STORAGE_KEY);
+      if (stored) {
+        const parsed = JSON.parse(stored) as { mode: string; text?: string; url?: string };
+        if (parsed.mode === "paste" && parsed.text) {
+          setInputMode("paste");
+          setPasteText(parsed.text);
+        } else if (parsed.mode === "url" && parsed.url) {
+          setInputMode("url");
+          setUrlText(parsed.url);
+        }
+      }
+    } catch {
+      // Ignore parse errors
+    }
+  }, []);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
     if (inputMode === "paste") {
+      try {
+        sessionStorage.setItem(JOB_INPUT_STORAGE_KEY, JSON.stringify({ mode: "paste", text: pasteText }));
+      } catch { /* quota errors */ }
       onSubmit("paste", { text: pasteText });
     } else if (inputMode === "url") {
+      try {
+        sessionStorage.setItem(JOB_INPUT_STORAGE_KEY, JSON.stringify({ mode: "url", url: urlText }));
+      } catch { /* quota errors */ }
       onSubmit("url", { url: urlText });
     } else if (inputMode === "file" && selectedFile) {
       onSubmit("file", { file: selectedFile });
