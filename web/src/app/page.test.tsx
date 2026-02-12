@@ -36,15 +36,15 @@ describe("Home page", () => {
     // Verify CTA links point to correct tool routes
     const fitLinks = screen.getAllByRole("link", { name: /analyze fit/i });
     expect(fitLinks.length).toBeGreaterThanOrEqual(1);
-    expect(fitLinks[0]).toHaveAttribute("href", "/tools/fit");
+    expect(fitLinks[0]).toHaveAttribute("href", "/hire-me/fit");
 
     const resumeLinks = screen.getAllByRole("link", { name: /generate resume/i });
     expect(resumeLinks.length).toBeGreaterThanOrEqual(1);
-    expect(resumeLinks[0]).toHaveAttribute("href", "/tools/resume");
+    expect(resumeLinks[0]).toHaveAttribute("href", "/hire-me/resume");
 
     const interviewLinks = screen.getAllByRole("link", { name: /start interview/i });
     expect(interviewLinks.length).toBeGreaterThanOrEqual(1);
-    expect(interviewLinks[0]).toHaveAttribute("href", "/tools/interview");
+    expect(interviewLinks[0]).toHaveAttribute("href", "/hire-me/interview");
   });
 
   it("renders TOC sections with links to each page", () => {

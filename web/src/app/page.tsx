@@ -53,19 +53,19 @@ export default function Home() {
             title="How Do I Fit?"
             description="Get a detailed fit analysis with scoring and rationale."
             ctaText="Analyze Fit"
-            ctaLink="/tools/fit"
+            ctaLink="/hire-me/fit"
           />
           <ToolPreview
             title="Custom Resume"
             description="Generate a tailored resume for your specific role."
             ctaText="Generate Resume"
-            ctaLink="/tools/resume"
+            ctaLink="/hire-me/resume"
           />
           <ToolPreview
             title="Interview Me NOW"
             description="Ask questions about my experience and background."
             ctaText="Start Interview"
-            ctaLink="/tools/interview"
+            ctaLink="/hire-me/interview"
             previewContent={
               <div className="space-y-2 text-sm">
                 <p className="font-medium text-text-secondary">

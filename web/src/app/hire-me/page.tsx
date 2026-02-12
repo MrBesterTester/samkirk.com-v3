@@ -2,19 +2,19 @@ import Link from "next/link";
 
 const tools = [
   {
-    href: "/tools/fit",
+    href: "/hire-me/fit",
     title: "How Do I Fit?",
     description:
       "Submit a job opportunity and get a detailed fit analysis with scoring and rationale.",
   },
   {
-    href: "/tools/resume",
+    href: "/hire-me/resume",
     title: "Get a Custom Resume",
     description:
       "Generate a tailored 2-page resume optimized for a specific job posting.",
   },
   {
-    href: "/tools/interview",
+    href: "/hire-me/interview",
     title: "Interview Me NOW",
     description:
       "Have an interactive Q&A conversation about Sam's career and experience.",
@@ -25,7 +25,7 @@ export default function ToolsPage() {
   return (
     <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
       <h1 className="text-3xl font-bold tracking-tight text-text-primary">
-        AI Tools
+        Hire Me
       </h1>
       <p className="mt-4 text-lg text-text-secondary">
         These tools help hiring managers quickly evaluate whether Sam Kirk is a

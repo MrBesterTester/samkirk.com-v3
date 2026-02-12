@@ -85,8 +85,8 @@ describe("Header", () => {
     const homeLinks = screen.getAllByRole("link", { name: /^home$/i });
     expect(homeLinks[0]).toHaveAttribute("href", "/");
 
-    const toolsLinks = screen.getAllByRole("link", { name: /^tools$/i });
-    expect(toolsLinks[0]).toHaveAttribute("href", "/tools");
+    const hireMeLinks = screen.getAllByRole("link", { name: /^hire me$/i });
+    expect(hireMeLinks[0]).toHaveAttribute("href", "/hire-me");
 
     const danceMenuLinks = screen.getAllByRole("link", {
       name: /^dance menu$/i,

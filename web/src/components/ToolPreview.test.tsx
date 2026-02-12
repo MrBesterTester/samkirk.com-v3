@@ -7,7 +7,7 @@ describe("ToolPreview", () => {
     title: "Fit Analysis",
     description: "Get a detailed fit analysis with scoring.",
     ctaText: "Try it now",
-    ctaLink: "/tools/fit",
+    ctaLink: "/hire-me/fit",
   };
 
   it("renders title and description", () => {
@@ -26,7 +26,7 @@ describe("ToolPreview", () => {
 
     const ctaLink = screen.getByRole("link", { name: /try it now/i });
     expect(ctaLink).toBeInTheDocument();
-    expect(ctaLink).toHaveAttribute("href", "/tools/fit");
+    expect(ctaLink).toHaveAttribute("href", "/hire-me/fit");
   });
 
   it("renders icon when provided", () => {

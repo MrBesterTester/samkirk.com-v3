@@ -46,6 +46,18 @@ export function StaticHtmlViewer({
       }
     };
 
+    // Check if already loaded (e.g. cached iframe loaded before effect ran)
+    try {
+      const iframeDoc =
+        iframe.contentDocument || iframe.contentWindow?.document;
+      if (iframeDoc?.readyState === "complete" && iframeDoc.body?.innerHTML) {
+        handleLoad();
+        return;
+      }
+    } catch {
+      // Cross-origin — fall through to listener
+    }
+
     iframe.addEventListener("load", handleLoad);
     return () => iframe.removeEventListener("load", handleLoad);
   }, [minHeight]);
@@ -73,7 +85,7 @@ export function StaticHtmlViewer({
           opacity: isLoaded ? 1 : 0,
           transition: "opacity 0.2s ease-in-out",
         }}
-        sandbox="allow-same-origin"
+        sandbox="allow-same-origin allow-scripts"
       />
     </div>
   );
