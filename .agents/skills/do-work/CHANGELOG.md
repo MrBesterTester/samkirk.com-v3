@@ -4,6 +4,12 @@ What's new, what's better, what's different. Most recent stuff on top.
 
 ---
 
+## 0.10.9 — The Timestamp (2026-02-12)
+
+The failure frontmatter example was missing `completed_at`, which should be set when work finishes regardless of success or failure. Agents following the example would create incomplete records, breaking the `claimed_at` → `completed_at` timing chain.
+
+- Added `completed_at` to the failure frontmatter example in work.md
+
 ## 0.10.8 — The Matchmaker (2026-02-12)
 
 The "move archive REQs into UR folder" step didn't explain how to identify which REQs belong to the current UR. An agent could move all, none, or guess wrong. Now it explicitly says to read each file's frontmatter and check `user_request: UR-NNN`.

@@ -848,6 +848,7 @@ created_at: 2025-01-26T10:00:00Z
 user_request: UR-001
 claimed_at: 2025-01-26T10:30:00Z
 route: B
+completed_at: 2025-01-26T10:45:00Z
 error: "Brief description of what went wrong"
 # ... any custom fields stay at the bottom
 ---
