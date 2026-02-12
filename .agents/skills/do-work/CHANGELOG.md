@@ -4,6 +4,12 @@ What's new, what's better, what's different. Most recent stuff on top.
 
 ---
 
+## 0.10.8 — The Matchmaker (2026-02-12)
+
+The "move archive REQs into UR folder" step didn't explain how to identify which REQs belong to the current UR. An agent could move all, none, or guess wrong. Now it explicitly says to read each file's frontmatter and check `user_request: UR-NNN`.
+
+- Clarified archive REQ identification in work.md line 750: scan frontmatter for matching `user_request` field
+
 ## 0.10.7 — The Full Picture (2026-02-10)
 
 Both 0.10.5 and 0.10.6 were half-right. The `user-requests/UR-NNN/` check (0.10.5) covers partial-failure recovery — when work.md's "all complete" path moves REQs into the UR folder but crashes before archiving it. The `archive/UR-NNN/` check (0.10.6) covers cleanup consolidation. Both are needed, and cleanup.md was also missing the UR-folder-itself check.

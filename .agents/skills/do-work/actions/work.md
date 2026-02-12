@@ -747,7 +747,7 @@ mkdir -p do-work/archive
    - Check if ALL listed REQs are now completed (in `do-work/working/` with `status: completed`, already in `archive/` root, already consolidated into `do-work/archive/UR-NNN/`, or already moved into the UR folder `do-work/user-requests/UR-NNN/`)
    - If **all REQs complete**:
      - Move the completed REQ file into the UR folder: `mv do-work/working/REQ-XXX.md do-work/user-requests/UR-NNN/`
-     - Move any other completed REQs from `do-work/archive/` that belong to this UR into the UR folder
+     - Move any other completed REQs from `do-work/archive/` that belong to this UR into the UR folder (scan each `REQ-*.md` file directly in `do-work/archive/`, read its frontmatter, and move it if `user_request: UR-NNN` matches the current UR)
      - Move the entire UR folder to archive: `mv do-work/user-requests/UR-NNN do-work/archive/`
    - If **not all REQs complete**:
      - Move the REQ file directly to archive for now: `mv do-work/working/REQ-XXX.md do-work/archive/`
