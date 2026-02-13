@@ -1,33 +1,36 @@
 # Interview Transcript
 
 **Candidate:** Sam Kirk
-**Date:** 2/12/2026
+**Date:** 2/13/2026
 **Total Messages:** 4
 
 ---
 
-**Interviewer:** *(2:29:05 PM)*
+**Interviewer:** *(12:49:07 PM)*
 
 What programming languages do you know?
 
 ---
 
-**Sam Kirk:** *(2:29:05 PM)*
+**Sam Kirk:** *(12:49:07 PM)*
 
-I have experience with a variety of programming languages. I have over 15 years of experience with C, using it at companies like TRW/Vidar, ROLM/IBM, Frox, Media Vision, ESS, Teradyne, Sun, and AOptix. I also have over 8 years of experience with Python, which I've used at LTX-Credence, Cadence, Excelfore, Talis BioMedical, and in my consulting work at SAK Consulting. Additionally, I have a couple of years of experience with C++ from my time at LTX-Credence. I'm also familiar with assembly languages like 68K and 8080 assembly.
+I have experience with a variety of programming languages over my career. I have 8+ years of experience with Python, from my time at LTX-Credence where I used it for generating XML timing patterns, to my current consulting work at SAK Consulting where I use it for AI-assisted software development. I also have 15+ years of experience with C, going back to my early days at TRW/Vidar and continuing through positions at Sun Microsystems and Teradyne. I also have experience with C++, which I used at LTX-Credence for implementing timing calibration for an ATE instrument.
 
+I'm also familiar with JavaScript, TypeScript, SQL, and Go. I'm currently learning Rust.
 
 ---
 
-**Interviewer:** *(2:29:05 PM)*
+**Interviewer:** *(12:49:07 PM)*
 
 Tell me about your most recent role.
 
 ---
 
-**Sam Kirk:** *(2:29:05 PM)*
+**Sam Kirk:** *(12:49:07 PM)*
 
-Most recently, I've been working as Chief Consulting Engineer at SAK Consulting since March 2022. My focus has been on AI-assisted software development and applying genAI to testing and documentation. I've been using tools like Python, Next.js, Cursor, Claude Code, Vertex AI, and others to build full-stack applications and develop AI-powered tools for hiring managers. I've also been focused on studying and applying genAI to software development, with a strong emphasis on testing and documentation.
+Currently, I'm working as Chief Consulting Engineer at SAK Consulting, which I started in March 2022. My focus is on AI-assisted software development and applying generative AI to testing and documentation. I consider this a self-study, graduate-level course on genAI applied to software development, with emphasis on testing and up-to-date documentation.
+
+I've been building a suite of tools using Python, Next.js, Cursor, Claude Code, Vertex AI, and other technologies. Some of my projects include AI-powered tools for hiring managers like "How Do I Fit?", a custom resume generator, and an interactive Q&A chatbot called "Interview Me NOW". I've also created a photo transformation app using Google Gemini and built websites for clients. I'm essentially a journeyman "ChatBot Boss", practicing prompt engineering for software development, testing, and documentation.
 
 
 ---
@@ -36,9 +39,9 @@ Most recently, I've been working as Chief Consulting Engineer at SAK Consulting 
 
 1. **Employment History > Sr. Software Engineer — LTX-Credence (2012-2014)** — h1:Employment History > h2:Sr. Software Engineer — LTX-Credence (2012-2014)
 2. **Aggregated Skills Summary** — h1:Aggregated Skills Summary
-3. **Employment History > Chief Consulting Engineer — SAK Consulting (Current, 2022-present) > Projects — Creative & Explorations** — h1:Employment History > h2:Chief Consulting Engineer — SAK Consulting (Current, 2022-present) > h3:Projects — Creative & Explorations
-4. **Samuel A. Kirk > Contact Information** — h1:Samuel A. Kirk > h2:Contact Information
-5. **Employment History > Field Applications Engineer — Motorola Semiconductor (1984-1985)** — h1:Employment History > h2:Field Applications Engineer — Motorola Semiconductor (1984-1985)
+3. **Sam Kirk > Summary > Experience > Education > Master of Science in Computer Science** — h1:Sam Kirk > h2:Summary > h2:Experience > h2:Education > h3:Master of Science in Computer Science
+4. **Employment History > Chief Consulting Engineer — SAK Consulting (Current, 2022-present) > Projects — Creative & Explorations** — h1:Employment History > h2:Chief Consulting Engineer — SAK Consulting (Current, 2022-present) > h3:Projects — Creative & Explorations
+5. **Sam Kirk > Summary** — h1:Sam Kirk > h2:Summary
 
 ---
 
