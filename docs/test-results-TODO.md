@@ -31,69 +31,69 @@
   - [x] Add `attributeSuiteToFixture()` — use suite start/end timestamps for attribution
   - [x] Add `fixtureUpdates` field to `ArchiveOptions` interface
 
-- [ ] **[Opus 4.5]** 2.2 Write Fixture Updates section in `summary.md`
-  - [ ] Insert `## Fixture Updates` section after Test Index in `writeArchive()`
-  - [ ] Table format: File | Suite | Type
-  - [ ] Count footer: `_N fixture(s) updated during this run._`
-  - [ ] Handle zero-update case: `No fixtures were updated during this run.`
+- [x] **[Opus 4.5]** 2.2 Write Fixture Updates section in `summary.md`
+  - [x] Insert `## Fixture Updates` section after Test Index in `writeArchive()`
+  - [x] Table format: File | Suite | Type
+  - [x] Count footer: `_N fixture(s) updated during this run._`
+  - [x] Handle zero-update case: `No fixtures were updated during this run.`
 
-- [ ] **[Opus 4.5]** 2.3 Wire mtime tracking into `main()`
-  - [ ] Snapshot before suite execution (~line 1000)
-  - [ ] Diff after suite execution (~line 1038)
-  - [ ] Pass `fixtureUpdates` to `writeArchive()`
-  - [ ] TEST: Run `npm run test:all -- --unit --no-gcp` and verify Fixture Updates section in new `summary.md`
+- [x] **[Opus 4.5]** 2.3 Wire mtime tracking into `main()`
+  - [x] Snapshot before suite execution (~line 1000)
+  - [x] Diff after suite execution (~line 1038)
+  - [x] Pass `fixtureUpdates` to `writeArchive()`
+  - [x] TEST: Run `npm run test:all -- --unit --no-gcp` and verify Fixture Updates section in new `summary.md`
 
 ## Phase 3: Remaining Viewer Flags
 
-- [ ] **[Sonnet 4]** 3.1 Add `--full` flag (include test index)
-  - [ ] Parse `## Test Index` section from `summary.md`
-  - [ ] Append test index table to default output
-  - [ ] TEST: `npm run test:results -- --full`
+- [x] **[Sonnet 4]** 3.1 Add `--full` flag (include test index)
+  - [x] Parse `## Test Index` section from `summary.md`
+  - [x] Append test index table to default output
+  - [x] TEST: `npm run test:results -- --full`
 
-- [ ] **[Sonnet 4]** 3.2 Add `--log <suite>` flag
-  - [ ] Resolve `<suite>.log` path in selected archive directory
-  - [ ] Print raw log contents (or error if file missing / suite was skipped)
-  - [ ] TEST: `npm run test:results -- --log unit-tests`
+- [x] **[Sonnet 4]** 3.2 Add `--log <suite>` flag
+  - [x] Resolve `<suite>.log` path in selected archive directory
+  - [x] Print raw log contents (or error if file missing / suite was skipped)
+  - [x] TEST: `npm run test:results -- --log unit-tests`
 
-- [ ] **[Sonnet 4]** 3.3 Add `--run <timestamp>` flag
-  - [ ] Partial match on archive directory name (e.g. `2026-02-09` matches first dir starting with that prefix)
-  - [ ] Error if no match or ambiguous match
-  - [ ] TEST: `npm run test:results -- --run 2026-02-09`
+- [x] **[Sonnet 4]** 3.3 Add `--run <timestamp>` flag
+  - [x] Partial match on archive directory name (e.g. `2026-02-09` matches first dir starting with that prefix)
+  - [x] Error if no match or ambiguous match
+  - [x] TEST: `npm run test:results -- --run 2026-02-09`
 
-- [ ] **[Sonnet 4]** 3.4 Add `--fixtures` flag (fixture inventory)
-  - [ ] Walk `web/test-fixtures/` recursively, list all files with mtime
-  - [ ] Annotate auto-generated files with their generating test (hardcoded known locations + mtime heuristic for unknown)
-  - [ ] TEST: `npm run test:results -- --fixtures`
+- [x] **[Sonnet 4]** 3.4 Add `--fixtures` flag (fixture inventory)
+  - [x] Walk `web/test-fixtures/` recursively, list all files with mtime
+  - [x] Annotate auto-generated files with their generating test (hardcoded known locations + mtime heuristic for unknown)
+  - [x] TEST: `npm run test:results -- --fixtures`
 
-- [ ] **[Sonnet 4]** 3.5 Add `--diff` flag (compare latest two runs)
-  - [ ] Find two most recent archives
-  - [ ] Compare: suites that changed status, pass/fail count deltas, duration deltas
-  - [ ] Print side-by-side comparison
-  - [ ] TEST: `npm run test:results -- --diff`
+- [x] **[Sonnet 4]** 3.5 Add `--diff` flag (compare latest two runs)
+  - [x] Find two most recent archives
+  - [x] Compare: suites that changed status, pass/fail count deltas, duration deltas
+  - [x] Print side-by-side comparison
+  - [x] TEST: `npm run test:results -- --diff`
 
-- [ ] **[Sonnet 4]** 3.6 Add `--json` flag
-  - [ ] Output parsed summary as JSON object (frontmatter + suite results + fixture updates)
-  - [ ] TEST: `npm run test:results -- --json | node -e "JSON.parse(require('fs').readFileSync(0,'utf8'))"`
+- [x] **[Sonnet 4]** 3.6 Add `--json` flag
+  - [x] Output parsed summary as JSON object (frontmatter + suite results + fixture updates)
+  - [x] TEST: `npm run test:results -- --json | node -e "JSON.parse(require('fs').readFileSync(0,'utf8'))"`
 
 ## Phase 4: Registration and Documentation
 
-- [ ] **[Sonnet 4]** 4.1 Register npm script in `web/package.json`
-  - [ ] Add `"test:results": "npx tsx scripts/test-results.ts"` before `test:all`
+- [x] **[Sonnet 4]** 4.1 Register npm script in `web/package.json`
+  - [x] Add `"test:results": "npx tsx scripts/test-results.ts"` before `test:all`
 
-- [ ] **[Sonnet 4]** 4.2 Create user-level instructions in `README_dev_guide.md`
-  - [ ] Replace "Viewing Previous Results" section with a usage guide for `npm run test:results`
-  - [ ] Include examples for each flag with expected output descriptions
-  - [ ] Document common workflows: "check latest results", "compare runs", "debug a suite failure", "see what fixtures changed"
-  - [ ] Keep Playwright HTML report and `.last-run.json` lines as-is (they serve a different purpose)
-  - [ ] Update Test Fixtures section to explain that fixture updates now appear automatically in test run summaries
+- [x] **[Sonnet 4]** 4.2 Create user-level instructions in `README_dev_guide.md`
+  - [x] Replace "Viewing Previous Results" section with a usage guide for `npm run test:results`
+  - [x] Include examples for each flag with expected output descriptions
+  - [x] Document common workflows: "check latest results", "compare runs", "debug a suite failure", "see what fixtures changed"
+  - [x] Keep Playwright HTML report and `.last-run.json` lines as-is (they serve a different purpose)
+  - [x] Update Test Fixtures section to explain that fixture updates now appear automatically in test run summaries
 
 ## Phase 5: Verification
 
-- [ ] **[Sonnet 4]** 5.1 End-to-end verification
-  - [ ] Run `npm run test:all -- --unit --no-gcp` to generate fresh archive with Fixture Updates section
-  - [ ] Run `npm run test:results` — confirm latest summary displayed
-  - [ ] Run `npm run test:results -- --list` — confirm all archives listed
-  - [ ] Run `npm run test:results -- --log unit-tests` — confirm raw log output
-  - [ ] Run `npm run test:results -- --diff` — confirm two-run comparison
-  - [ ] Run `npm run test:results -- --fixtures` — confirm fixture inventory
-  - [ ] Run `npm run test:results -- --json` — confirm valid JSON output
+- [x] **[Sonnet 4]** 5.1 End-to-end verification
+  - [x] Run `npm run test:all -- --unit --no-gcp` to generate fresh archive with Fixture Updates section
+  - [x] Run `npm run test:results` — confirm latest summary displayed
+  - [x] Run `npm run test:results -- --list` — confirm all archives listed
+  - [x] Run `npm run test:results -- --log unit-tests` — confirm raw log output
+  - [x] Run `npm run test:results -- --diff` — confirm two-run comparison
+  - [x] Run `npm run test:results -- --fixtures` — confirm fixture inventory
+  - [x] Run `npm run test:results -- --json` — confirm valid JSON output
