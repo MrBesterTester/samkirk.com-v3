@@ -8,7 +8,11 @@ This is the day-to-day reference for running, writing, and managing tests in sam
 
 - [Test Suites at a Glance](#test-suites-at-a-glance)
 - [Running Tests](#running-tests)
+  - [Commands](#commands)
+  - [Prerequisites](#prerequisites)
   - [First Run (Incremental)](#first-run-incremental)
+  - [Viewing Previous Results](#viewing-previous-results)
+    - [Test Fixtures](#test-fixtures)
 - [Release Qualification](#release-qualification)
 - [Writing a New Test](#writing-a-new-test)
 - [Fixing or Rewriting a Test](#fixing-or-rewriting-a-test)
@@ -35,6 +39,8 @@ All four suites are orchestrated by the master test runner (`npm run test:all`),
 ---
 
 ## Running Tests
+
+### Commands
 
 **Full run** (auto-detects GCP):
 
@@ -90,7 +96,7 @@ npm run test:e2e:ui                       # Playwright UI mode (interactive)
 npm run test:all -- --no-archive
 ```
 
-**E2E test prerequisites:**
+### Prerequisites
 
 The Playwright E2E tests (`--e2e`) use system Chrome directly — they do **not** require the Claude in Chrome extension or the Playwright MCP server (those are development tools for AI-assisted debugging, not test dependencies). No manual dev server is needed — Playwright starts one automatically with captcha bypass enabled.
 
@@ -147,6 +153,38 @@ Fix any failures at each step before moving to the next. Once all four pass indi
 ```bash
 npm run test:all
 ```
+
+### Viewing Previous Results
+
+```bash
+# Latest archived summary (most recent full run):
+ls -t do-work/archive/test-runs/ | head -1    # find the latest run
+cat do-work/archive/test-runs/<TIMESTAMP>/summary.md
+
+# Raw logs from that run (gitignored, local only):
+cat do-work/archive/test-runs/<TIMESTAMP>/unit-tests.log
+cat do-work/archive/test-runs/<TIMESTAMP>/e2e-tests.log
+cat do-work/archive/test-runs/<TIMESTAMP>/e2e-real-llm.log
+cat do-work/archive/test-runs/<TIMESTAMP>/gcp-smoke.log
+
+# Playwright HTML report (E2E only, viewable in browser):
+npx playwright show-report web/playwright-report
+
+# Playwright last-run status (E2E only):
+cat web/test-results/.last-run.json
+```
+
+Each `test:all` run archives a `summary.md` with pass/fail counts, durations, and a test index, plus per-suite `.log` files with full output. The summary is committed; logs are gitignored.
+
+#### Test Fixtures
+
+Real inputs and outputs from each tool are saved in `web/test-fixtures/`. Each subdirectory has a README with a data-flow diagram and file descriptions. Browse these to understand what the tools produce without re-running tests.
+
+| Directory | Tool | Key files |
+|-----------|------|-----------|
+| [`interview-chat/`](web/test-fixtures/interview-chat/README.md) | Interview Tool | `e2e-real-llm-transcript.md` (real Vertex AI output), `conversation-transcript.md` (smoke test), `test-questions.json` |
+| [`resume-generator/`](web/test-fixtures/resume-generator/README.md) | Custom Resume | `e2e-generated-resume.md` (real Vertex AI output), `generated-resume.html` (styled HTML), `job-description.txt` |
+| [`fit-report/`](web/test-fixtures/fit-report/README.md) | How Do I Fit? | `generated-report.md` (final report), `llm-response.json` (raw LLM output), `extracted-fields.json` |
 
 ---
 
