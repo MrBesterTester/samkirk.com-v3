@@ -88,23 +88,23 @@ function createMockResumeChunks(): ResumeChunk[] {
   return [
     {
       chunkId: "chunk_001",
-      title: "Summary",
-      sourceRef: "h2:Summary",
+      title: "Career Summary",
+      sourceRef: "h1:Career Summary",
       content:
-        "Experienced software engineer with 10+ years building scalable web applications.",
+        "45+ years in Silicon Valley developing software and firmware tests for hardware and software.",
     },
     {
       chunkId: "chunk_002",
-      title: "Experience > TechCorp",
-      sourceRef: "h2:Experience > h3:TechCorp",
+      title: "Employment History > SAK Consulting",
+      sourceRef: "h1:Employment History > h2:Chief Consulting Engineer — SAK Consulting (Current, 2022-present)",
       content:
-        "Senior Engineer at TechCorp (2019-2024). Led development of React-based dashboard. Implemented Node.js microservices.",
+        "Chief Consulting Engineer at SAK Consulting (2022-present). AI-assisted software development, genAI applied to testing and documentation.",
     },
     {
       chunkId: "chunk_003",
-      title: "Skills",
-      sourceRef: "h2:Skills",
-      content: "TypeScript, React, Node.js, Python, GCP, AWS, PostgreSQL",
+      title: "Aggregated Skills Summary",
+      sourceRef: "h1:Aggregated Skills Summary",
+      content: "Python: 8+ years, C: 15+ years, Linux/Unix: Continuous since 1980",
     },
   ];
 }
@@ -334,9 +334,9 @@ describe("buildResumeGenerationPrompt", () => {
 
     expect(prompt).toContain("## Sam's Resume Context");
     expect(prompt).toContain("SOURCE OF TRUTH");
-    expect(prompt).toContain("[CHUNK 1: Summary]");
-    expect(prompt).toContain("[CHUNK 2: Experience > TechCorp]");
-    expect(prompt).toContain("[CHUNK 3: Skills]");
+    expect(prompt).toContain("[CHUNK 1: Career Summary]");
+    expect(prompt).toContain("[CHUNK 2: Employment History > SAK Consulting]");
+    expect(prompt).toContain("[CHUNK 3: Aggregated Skills Summary]");
   });
 
   it("should include instructions", () => {

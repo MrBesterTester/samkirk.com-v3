@@ -1,18 +1,18 @@
 [
   {
-    "title": "Summary",
-    "content": "Experienced software engineer with 10+ years building scalable web applications and AI systems. Expert in TypeScript, React, Node.js, and GCP."
+    "title": "Career Summary",
+    "content": "45+ years in Silicon Valley developing software and firmware tests for hardware and software, power-on self-test (POST) firmware, online and off-line diagnostic software, mixed-signal hardware testing, and data visualization."
   },
   {
-    "title": "Experience > TechCorp",
-    "content": "Senior Engineer at TechCorp (2019-2024)\n- Led development of AI-powered analytics dashboard serving 50K+ users\n- Built microservices architecture using Node.js and GCP Cloud Run\n- Mentored team of 5 engineers and conducted 200+ code reviews\n- Reduced API latency by 40% through optimization"
+    "title": "Employment History > SAK Consulting (2022-present)",
+    "content": "Chief Consulting Engineer at Samuel A. Kirk Consulting (3/2022-present)\n- AI-assisted software development, genAI applied to testing and documentation\n- Technologies: Python, Next.js, Cursor, Claude Code, Vertex AI, Google Gemini\n- Built samkirk.com portfolio with AI-powered hiring manager tools\n- \"Hire Me\" AI Tools Suite: How Do I Fit?, Custom Resume Generator, Interview Me NOW"
   },
   {
-    "title": "Skills",
-    "content": "Programming: TypeScript, JavaScript, Python, Go\nFrontend: React, Next.js, Tailwind CSS\nBackend: Node.js, Express, PostgreSQL, Redis\nCloud: GCP (Cloud Run, Firestore, BigQuery), AWS\nAI/ML: TensorFlow, LangChain, RAG systems"
+    "title": "Aggregated Skills Summary",
+    "content": "Python: 8+ years\nC: 15+ years\nC++: 2 years\nLinux/Unix: Continuous since 1980\nDomains: Medical point-of-care, Automotive OTA, ATE Systems, Servers, Digital Audio, SSDs, CPUs, Ethernet, Laser Communication"
   },
   {
     "title": "Education",
-    "content": "B.S. Computer Science, UC Berkeley, 2014 - Graduated with honors"
+    "content": "MS, Applied Math & Systems Sciences, University of Louisville, 1982\nBA, Philosophy & Mathematics, Ohio State University, 1973"
   }
 ]

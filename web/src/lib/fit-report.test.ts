@@ -99,21 +99,21 @@ function createMockResumeChunks(): ResumeChunk[] {
   return [
     {
       chunkId: "chunk_001",
-      title: "Summary",
-      sourceRef: "h2:Summary",
-      content: "Experienced software engineer with 10 years...",
+      title: "Career Summary",
+      sourceRef: "h1:Career Summary",
+      content: "45+ years in Silicon Valley developing software and firmware tests...",
     },
     {
       chunkId: "chunk_002",
-      title: "Experience > Tech Corp",
-      sourceRef: "h2:Experience > h3:Tech Corp",
-      content: "Senior Engineer at Tech Corp (2019-2024)...",
+      title: "Employment History > SAK Consulting",
+      sourceRef: "h1:Employment History > h2:Chief Consulting Engineer — SAK Consulting (Current, 2022-present)",
+      content: "Chief Consulting Engineer at SAK Consulting (2022-present)...",
     },
     {
       chunkId: "chunk_003",
-      title: "Skills",
-      sourceRef: "h2:Skills",
-      content: "TypeScript, React, Node.js, Python, GCP...",
+      title: "Aggregated Skills Summary",
+      sourceRef: "h1:Aggregated Skills Summary",
+      content: "Python: 8+ years, C: 15+ years, Linux/Unix: Continuous since 1980...",
     },
   ];
 }
@@ -130,7 +130,7 @@ function createValidLLMResponse(): string {
       {
         name: "Experience Level",
         score: "Well",
-        rationale: "10 years experience exceeds the 5 years required.",
+        rationale: "45+ years experience exceeds the 5 years required.",
       },
       {
         name: "Location/Remote",
@@ -281,10 +281,10 @@ describe("buildFitAnalysisPrompt", () => {
     const prompt = buildFitAnalysisPrompt(state, chunks);
 
     expect(prompt).toContain("## Sam's Resume Context");
-    expect(prompt).toContain("[CHUNK 1: Summary]");
-    expect(prompt).toContain("[CHUNK 2: Experience > Tech Corp]");
-    expect(prompt).toContain("[CHUNK 3: Skills]");
-    expect(prompt).toContain("Experienced software engineer with 10 years");
+    expect(prompt).toContain("[CHUNK 1: Career Summary]");
+    expect(prompt).toContain("[CHUNK 2: Employment History > SAK Consulting]");
+    expect(prompt).toContain("[CHUNK 3: Aggregated Skills Summary]");
+    expect(prompt).toContain("45+ years in Silicon Valley");
   });
 
   it("should include instructions section", () => {
@@ -513,8 +513,8 @@ describe("generateCitations", () => {
     expect(citations).toHaveLength(3);
     expect(citations[0]).toEqual({
       chunkId: "chunk_001",
-      title: "Summary",
-      sourceRef: "h2:Summary",
+      title: "Career Summary",
+      sourceRef: "h1:Career Summary",
     });
   });
 
@@ -523,8 +523,8 @@ describe("generateCitations", () => {
     const citations = generateCitations(chunks);
 
     expect(citations[1].chunkId).toBe("chunk_002");
-    expect(citations[1].title).toBe("Experience > Tech Corp");
-    expect(citations[1].sourceRef).toBe("h2:Experience > h3:Tech Corp");
+    expect(citations[1].title).toBe("Employment History > SAK Consulting");
+    expect(citations[1].sourceRef).toBe("h1:Employment History > h2:Chief Consulting Engineer — SAK Consulting (Current, 2022-present)");
   });
 
   it("should handle empty chunks array", () => {

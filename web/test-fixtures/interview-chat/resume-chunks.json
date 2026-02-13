@@ -1,23 +1,23 @@
 [
   {
     "chunkId": "_smoke_interview_chunk_001",
-    "title": "Summary",
-    "sourceRef": "h2:Summary",
-    "content": "Sam Kirk is an experienced software engineer with 10+ years building scalable web applications and AI systems. Expert in TypeScript, React, Node.js, and GCP.",
+    "title": "Career Summary",
+    "sourceRef": "h1:Career Summary",
+    "content": "Samuel A. Kirk has 45+ years in Silicon Valley developing software and firmware tests for hardware and software, power-on self-test (POST) firmware, online and off-line diagnostic software, mixed-signal hardware testing, and data visualization.",
     "version": 9996
   },
   {
     "chunkId": "_smoke_interview_chunk_002",
-    "title": "Experience",
-    "sourceRef": "h2:Experience",
-    "content": "Senior Engineer at TechCorp (2019-2024)\n- Led development of AI-powered analytics dashboard serving 50K+ users\n- Built microservices architecture using Node.js and GCP Cloud Run\n- Mentored team of 5 engineers\n\nSoftware Engineer at StartupXYZ (2016-2019)\n- Full-stack development with React and Node.js\n- Implemented CI/CD pipelines",
+    "title": "Employment History",
+    "sourceRef": "h1:Employment History",
+    "content": "Chief Consulting Engineer at SAK Consulting (3/2022-present)\n- AI-assisted software development, genAI applied to testing and documentation\n- Technologies: Python, Next.js, Cursor, Claude Code, Vertex AI\n\nTest Engineer III at Talis BioMedical (2/2020-3/2022)\n- Medical point-of-care test instruments using Python\n\nSr. Diagnostic Software Engineer at Cadence Design Systems (10/2015-3/2017)\n- Hi-speed digital logic emulation, test station construction using Python, BeagleBone Black",
     "version": 9996
   },
   {
     "chunkId": "_smoke_interview_chunk_003",
     "title": "Skills",
-    "sourceRef": "h2:Skills",
-    "content": "Programming: TypeScript, JavaScript, Python, Go\nCloud: GCP (Cloud Run, Firestore, BigQuery), AWS\nAI/ML: TensorFlow, LangChain, RAG systems\nLocation: Open to remote work, based in San Francisco Bay Area",
+    "sourceRef": "h1:Aggregated Skills Summary",
+    "content": "Python: 8+ years\nC: 15+ years\nLinux/Unix: Continuous since 1980\nDomains: Medical point-of-care, Automotive OTA, ATE Systems, Servers, Digital Audio, SSDs\nLocation: Fremont, CA",
     "version": 9996
   }
 ]
