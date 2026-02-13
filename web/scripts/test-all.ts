@@ -1105,13 +1105,20 @@ async function main(): Promise<void> {
   log(`Running ${toRun.length} suite(s), ${skipped.length} skipped`);
   console.log("-------------------------------------------------------------------");
 
+  // Snapshot fixture mtimes before suite execution
+  const fixturesBefore = snapshotFixtureMtimes();
+
   // Execute suites sequentially
   const results: SuiteResult[] = [...skipped];
+  const suiteTiming: { name: string; startMs: number; endMs: number }[] = [];
 
   for (const suite of toRun) {
     console.log("");
+    const startMs = Date.now();
     const result = await runSuite(suite, args.verbose);
+    const endMs = Date.now();
     results.push(result);
+    suiteTiming.push({ name: suite.name, startMs, endMs });
 
     // If a suite fails and we're not in release mode, print its output
     if (result.status === "failed" && !args.verbose) {
@@ -1124,6 +1131,11 @@ async function main(): Promise<void> {
       console.log(colorize(`--- end ${suite.name} output ---`, ANSI.red));
     }
   }
+
+  // Diff fixture mtimes after suite execution
+  const fixturesAfter = snapshotFixtureMtimes();
+  const fixtureDiffs = diffFixtureMtimes(fixturesBefore, fixturesAfter);
+  const fixtureUpdates = attributeSuiteToFixture(fixtureDiffs, suiteTiming, fixturesAfter);
 
   // Sort results to match suite definition order
   const suiteOrder = suites.map((s) => s.name);
@@ -1147,7 +1159,7 @@ async function main(): Promise<void> {
     noArchive: args.noArchive,
     gcpAvailable,
     testIndex,
-    fixtureUpdates: [], // Wired in REQ-047
+    fixtureUpdates,
   });
 
   // Exit code
