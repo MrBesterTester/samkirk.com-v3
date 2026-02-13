@@ -93,6 +93,57 @@ test.describe("Resume Tool Happy Path", () => {
     await expect(page.getByRole("button", { name: /generate another resume/i })).toBeVisible();
   });
 
+  test("should complete full flow via URL mode: input → generating → results", async ({
+    page,
+  }) => {
+    // Wait for initialization and captcha bypass
+    await expect(page.getByRole("heading", { name: "Get a Custom Resume" })).toBeVisible();
+
+    // Wait for the job input form to appear (after captcha passes)
+    await expect(page.getByRole("textbox", { name: /job posting text/i })).toBeVisible({
+      timeout: 10000,
+    });
+
+    // Switch to URL mode
+    await page.getByRole("button", { name: /enter url/i }).click();
+
+    // Verify URL input is visible
+    const urlInput = page.getByRole("textbox", { name: /job posting url/i });
+    await expect(urlInput).toBeVisible();
+
+    // Enter a test URL — use the dev server's own page as a reliable, always-available URL.
+    // The backend will fetch this HTML and extract text from it to use as "job posting" content.
+    await urlInput.fill("http://localhost:3000/hire-me/resume");
+
+    // Click the generate button
+    const generateButton = page.getByRole("button", { name: /generate custom resume/i });
+    await expect(generateButton).toBeEnabled();
+    await generateButton.click();
+
+    // Wait for generating state
+    await expect(page.getByText(/generating your custom resume/i)).toBeVisible({ timeout: 5000 });
+
+    // Wait for the resume to be ready (this can take time due to LLM call)
+    await expect(page.getByText(/your custom resume is ready/i)).toBeVisible({
+      timeout: 240000, // 4 minutes for LLM generation
+    });
+
+    // Verify the results page is displayed
+    await expect(page.getByText(/your custom resume is ready/i)).toBeVisible();
+
+    // Verify key elements of the results
+    await expect(page.getByText(/professional summary/i)).toBeVisible();
+    await expect(page.getByText(/experience entries/i)).toBeVisible();
+    await expect(page.getByText(/skill categories/i)).toBeVisible();
+
+    // Verify factual accuracy note is present
+    await expect(page.getByText(/factual accuracy guaranteed/i)).toBeVisible();
+
+    // Verify action buttons are present
+    await expect(page.getByRole("button", { name: /download resume bundle/i })).toBeVisible();
+    await expect(page.getByRole("button", { name: /generate another resume/i })).toBeVisible();
+  });
+
   test("should allow generating another resume after completion", async ({ page }) => {
     // This is a lighter test that just verifies the form loads correctly
     await expect(page.getByRole("heading", { name: "Get a Custom Resume" })).toBeVisible();

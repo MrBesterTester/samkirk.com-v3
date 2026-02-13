@@ -4,6 +4,7 @@
 
 ## Table of Contents
 
+- [Input/Output Modality Coverage](#inputoutput-modality-coverage)
 - [Overview](#overview)
 - [1. Unit Tests — Library (1,173 hire-me tests of 1,232 total)](#1-unit-tests--library-1173-hire-me-tests-of-1232-total)
   - [TEST-003 — Environment parsing (3)](#test-003--environment-parsing-3-tests)
@@ -78,6 +79,64 @@
   - [TEST-650 — Real LLM — Fit tool (1)](#test-650--real-llm--fit-tool-1-test)
   - [TEST-651 — Real LLM — Resume tool (1)](#test-651--real-llm--resume-tool-1-test)
   - [TEST-652 — Real LLM — Interview tool (1)](#test-652--real-llm--interview-tool-1-test)
+
+---
+
+## Input/Output Modality Coverage
+
+Analysis of whether tests cover all user-facing input and output modalities across the three hire-me tools.
+
+### User-Facing Inputs
+
+**Job Description Input (Fit + Resume tools) — 3 modes:**
+
+| Mode | Unit Tests | E2E Tests | Gap? |
+|------|-----------|-----------|------|
+| **Paste text** | TEST-010: valid text, whitespace, empty, too-short/too-long (5 cases) | TEST-610/620: pastes job posting, full flow completes | Covered |
+| **Enter URL** | TEST-010: HTML fetch, content-type detection, non-HTML rejection, redirects, timeout (8 cases) | TEST-610/620: clicks "enter url", verifies input field **appears** | E2E never submits a URL end-to-end |
+| **Upload file** | TEST-010: size limits, extension filtering, MIME type checks, text extraction (10+ cases) | TEST-610/620: verifies upload mode **is available** | E2E never uploads a file end-to-end |
+
+**Interview Chat Input:**
+
+| Mode | Unit Tests | E2E Tests | Gap? |
+|------|-----------|-----------|------|
+| **Type message + Send button** | TEST-017: empty/oversized rejection, turn limits (20+ cases) | TEST-631: types and clicks send, message appears | Covered |
+| **Type message + Enter key** | — | TEST-631: types and presses Enter, verifies it sends | Covered |
+
+**Follow-up Questions (Fit tool only):**
+
+| Mode | Unit Tests | E2E Tests | Gap? |
+|------|-----------|-----------|------|
+| **Answer follow-up Q's** | TEST-011: input validation, type matching, answer history (10 cases) | TEST-610: "handles follow-up questions if any" | Covered (conditionally) |
+
+### User-Facing Outputs
+
+**On-Screen Results:**
+
+| Output | Unit Tests | E2E Tests | Gap? |
+|--------|-----------|-----------|------|
+| **Fit score + recommendation + categories** | TEST-012: markdown report with score, emoji, breakdowns (36 tests) | TEST-610: verifies score, recommendation, category breakdown visible | Covered |
+| **Generated resume** | TEST-014: header, summary, skills, experience, education (62 tests) | TEST-620: verifies summary, experience, skills, factual note visible | Covered |
+| **Chat response bubbles** | TEST-017: message formatting with role labels (44 tests) | TEST-631/632: verifies AI response appears, 2-message history | Covered |
+| **Typing indicator** | — | TEST-631: checks for typing indicator during AI wait | Covered |
+
+**Downloads:**
+
+| Output | Unit Tests | E2E Tests | Gap? |
+|--------|-----------|-----------|------|
+| **Download fit report** | TEST-021: HTML/markdown rendering, full document with CSS (56 tests); TEST-023: bundle with report.md, report.json | TEST-610: no download button test mentioned | **No E2E download test** |
+| **Download resume** | TEST-014: markdown generation; TEST-021: HTML rendering; TEST-023: bundle with resume.md, resume.json | TEST-620: download button **visible**, not clicked | **Button visibility only — no actual download** |
+| **Download interview transcript** | TEST-017: transcript generation with role labels, citations (8 tests); TEST-023: bundle with transcript.md | TEST-632: clicks download button, saves fixture | Closest to covered, but doesn't verify downloaded file content |
+
+### Summary of Gaps
+
+1. **URL input mode is never exercised end-to-end.** Unit tests prove the fetch/parse pipeline works, and E2E confirms the input field renders, but no E2E test pastes a URL, clicks analyze/generate, and verifies results.
+2. **File upload input mode is never exercised end-to-end.** Same pattern — unit tests validate metadata/content, E2E confirms the mode exists in the UI, but no test selects a file and submits it.
+3. **Fit report download has no E2E coverage at all.** The E2E happy path verifies on-screen results but doesn't mention a download button or action.
+4. **Resume download is visibility-only.** The button is confirmed present but never clicked; downloaded content is never verified.
+5. **Interview transcript download is the best covered** — the button is clicked and a fixture is saved — but even here the test doesn't verify the downloaded file's content/format matches expectations.
+
+**Bottom line:** Paste-in + on-screen display is well covered across all three tools. URL and file-upload input modes and download output are tested at the unit/library level but have no true end-to-end exercise through the browser UI.
 
 ---
 
