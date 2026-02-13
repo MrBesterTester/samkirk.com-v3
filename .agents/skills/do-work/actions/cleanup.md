@@ -6,7 +6,7 @@ The archive should be a collection of self-contained UR folders, each containing
 
 ## When This Runs
 
-- **Automatically** at the end of every work loop (after all pending REQs are processed)
+- **Automatically** at the end of the work loop (when the queue is empty or `--limit` is reached)
 - **Manually** when the user invokes it (e.g., `do work cleanup`, `do work tidy`)
 
 ## What It Does
@@ -24,10 +24,8 @@ For each UR folder in `do-work/user-requests/`:
    - `do-work/user-requests/UR-NNN/` itself (moved here by a partial archival attempt)
    - `do-work/archive/UR-NNN/` (already consolidated)
    - `do-work/archive/` root (loose in archive)
-   - `do-work/working/` (just completed, not yet moved)
 3. If **ALL** REQs are completed:
    - Gather any loose completed REQ files from `do-work/archive/` root into the UR folder
-   - Gather any completed REQ files from `do-work/working/` into the UR folder
    - Move the entire UR folder to `do-work/archive/UR-NNN/`
    - Report: `Archived UR-NNN (all N REQs complete)`
 4. If **NOT all** REQs are completed:
@@ -50,6 +48,10 @@ For each loose `REQ-*.md` file directly in `do-work/archive/` (not inside a subf
    - Move it to `do-work/archive/legacy/` (create the folder if needed)
    - Report: `Moved REQ-XXX to archive/legacy/ (no UR reference)`
 
+For each `CONTEXT-*.md` file directly in `do-work/archive/`:
+- Move to `do-work/archive/legacy/` (create if needed)
+- Report: `Moved CONTEXT-XXX to archive/legacy/ (legacy context doc)`
+
 ### Pass 3: Fix Misplaced Folders
 
 Check for UR folders that ended up in wrong locations within the archive.
@@ -57,12 +59,9 @@ Check for UR folders that ended up in wrong locations within the archive.
 1. Check if `do-work/archive/user-requests/` exists (this is a common mistake — the entire `user-requests/` dir got moved instead of individual UR folders)
 2. If it exists, for each `UR-NNN/` folder inside it:
    - If `do-work/archive/UR-NNN/` does NOT already exist: move it up to `do-work/archive/UR-NNN/`
-   - If `do-work/archive/UR-NNN/` DOES already exist: merge contents (move files from the misplaced folder into the correct one)
+   - If `do-work/archive/UR-NNN/` DOES already exist: move files from the misplaced folder into the correct one. If a filename exists in both locations, keep the file in the correct location (skip the duplicate) and report a warning
    - Report: `Fixed misplaced UR-NNN (was in archive/user-requests/)`
 3. If `do-work/archive/user-requests/` is now empty, remove it
-
-Also check for and consolidate any loose CONTEXT-*.md files:
-- Move to `do-work/archive/legacy/` alongside legacy REQs
 
 ## Reporting
 

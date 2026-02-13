@@ -23,6 +23,7 @@ Reads archived REQ files that have `source_step` and `source_doc` frontmatter (c
 Scan these locations for REQ files with `source_step` and `source_doc` frontmatter:
 - `do-work/archive/` (top-level archived REQs)
 - `do-work/archive/UR-*/` (REQs archived inside UR folders)
+- `do-work/user-requests/UR-*/` (completed REQs waiting for UR consolidation)
 
 For each REQ, read the frontmatter and collect:
 - `source_step` — the TODO step number (e.g., "0.1", "2.3")

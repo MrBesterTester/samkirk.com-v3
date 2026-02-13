@@ -4,6 +4,33 @@ What's new, what's better, what's different. Most recent stuff on top.
 
 ---
 
+## 0.11.0 — The Consistency Pass (2026-02-12)
+
+Comprehensive review and fix of 15 issues across all do-work action files, bridge skills, and CLAUDE.md. Failed REQs no longer silently block UR archival forever, screenshot handling no longer references folders that don't exist yet, and the schema now matches what agents actually write.
+
+- Fixed failed REQs blocking UR archival — added explicit "resolved" semantics and resolution paths (work.md)
+- Fixed screenshot copy in do action referencing UR folder before it exists — deferred to Step 5 (do.md)
+- Added `user-requests/UR-*/` as scan location for sync-todo and ingest-todo idempotency checks
+- Classified `related`, `batch`, `addendum_to` as optional do-action fields in schema and field ordering (work.md)
+- Added `exploring` and `implementing` to status schema and flow diagram (work.md)
+- Fixed cleanup trigger description to match work.md ("queue empty or limit reached") (cleanup.md)
+- Added filename collision guidance for merge in cleanup Pass 3 (cleanup.md)
+- Moved CONTEXT file handling from Pass 3 to Pass 2 where it belongs (cleanup.md)
+- Expanded ingest-todo idempotency to scan all 5 locations, with failed-REQ retry prompt
+- Changed `related` template default to `[]` with population guidance (ingest-todo)
+- Replaced ambiguous addendum question with non-destructive append default (do.md)
+- Added batch constraints skip note for single-REQ requests (do.md)
+- Added failed-REQ checklist rule: leave items unchecked on failure (work.md)
+- Added pre-existing test failure handling: note and proceed (work.md)
+- Updated stale "current prefixed set" in CLAUDE.md
+
+## 0.10.10 — The Boundary Cop (2026-02-12)
+
+Cleanup was searching `do-work/working/` for completed REQs and even gathering files from it — but its own rules say it must never touch `working/`. The work action is solely responsible for moving files out of `working/`, and completed REQs land in `archive/` or UR folders. Removed the dead search path and the contradictory gather step.
+
+- Removed `do-work/working/` from Pass 1 search locations
+- Removed gather step that pulled completed REQs from `working/`
+
 ## 0.10.9 — The Timestamp (2026-02-12)
 
 The failure frontmatter example was missing `completed_at`, which should be set when work finishes regardless of success or failure. Agents following the example would create incomplete records, breaking the `claimed_at` → `completed_at` timing chain.

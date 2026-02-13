@@ -395,7 +395,7 @@ Read all files in `do-work/` folder, **and list filenames in `do-work/working/` 
 **If the match is in the queue (`do-work/` root):**
 - If clearly the same thing: Tell user, don't create new file
 - If similar but potentially different: Use your environment's ask-user prompt/tool to clarify
-- If enhancement: Ask if they want to update the existing request
+- If enhancement: Append an addendum section (non-destructive). If the user wants a separate REQ instead, they'll say so
 
 **Updating a queued request (addendum, not rewrite):**
 
@@ -488,9 +488,8 @@ If the user passes a screenshot:
 
 1. **Find the cached/attached image**: Use your tool's attachment UI or image cache (Claude Code path above). If you have a direct file path from the tool, use that.
 2. **Verify it's the right image**: Use your tool's image viewing capability on the `.png` file to confirm it matches what the user shared
-3. **Copy to UR assets**: `cp ~/.claude/image-cache/[uuid]/[n].png do-work/user-requests/UR-[num]/assets/REQ-[num]-[slug].png`
-4. **Reference in request file**: Point to `do-work/user-requests/UR-[num]/assets/REQ-[num]-[slug].png` in the Assets section
-5. **Still write a description**: Even with the file saved, include a thorough text description for searchability and context
+3. **Note screenshot for UR assets**: Record the screenshot path for copying in Step 5. Do NOT copy yet — the UR folder doesn't exist until Step 5.
+4. **Still write a description**: Even with the file saved, include a thorough text description for searchability and context
 
 **Finding the right image (Claude Code example):**
 ```bash
@@ -534,7 +533,9 @@ Screenshot of settings with a dropdown.
 **1. Create the User Request (UR) folder:**
    a. Determine the next UR number (check `do-work/user-requests/` and `do-work/archive/UR-*/` for highest existing number)
    b. Create `do-work/user-requests/UR-NNN/input.md` with the verbatim user input (minimal format — see UR input.md Format above)
-   c. Leave the `requests` array empty initially — you will fill it in step 3
+   c. Create `do-work/user-requests/UR-NNN/assets/` folder
+   d. Copy any screenshots noted in Step 4 into the assets folder: `cp [source] do-work/user-requests/UR-NNN/assets/REQ-[num]-[slug].png`
+   e. Leave the `requests` array empty initially — you will fill it in step 3
 
 **2. Create REQ files** (one per distinct request):
    a. Determine the next REQ number (check `do-work/`, `working/`, and `archive/` for highest existing number)
@@ -557,7 +558,8 @@ For complex, multi-feature requests:
 1. Determine the next UR number (check `do-work/user-requests/` and `do-work/archive/UR-*/`)
 2. Create `do-work/user-requests/UR-NNN/`
 3. Create `do-work/user-requests/UR-NNN/assets/` (for screenshots/attachments)
-4. Write `do-work/user-requests/UR-NNN/input.md`:
+4. Copy any screenshots noted in Step 4 into the assets folder
+5. Write `do-work/user-requests/UR-NNN/input.md`:
 
 ```yaml
 ---
@@ -603,7 +605,8 @@ This is where lossiness happens. For each request:
 - Go back and fill in the `requests` array with all created REQ IDs
 - Update the "Extracted Requests" table
 
-**4.5. Identify Batch-Level Concerns:**
+**4.5. Identify Batch-Level Concerns (skip for single-REQ requests):**
+- Skip this step for single-REQ requests. Batch constraints only apply when 2+ REQs are created.
 - After creating all REQs, identify any requirements that apply to the BATCH as a whole, not individual REQs
 - Add these to the UR's input.md as a "Batch Constraints" section
 - Examples: sequencing ("make sure everything's stable first"), shared design principles, performance budgets, user tone signals ("keep it simple," "don't over-engineer")

@@ -218,9 +218,12 @@ error: "Description of failure"  # Only if failed
 |-------|--------|------|-------------|
 | `id` | do | Creation | Request identifier (REQ-NNN) |
 | `title` | do | Creation | Short title for the request |
-| `status` | Both | Throughout | `pending` → `claimed` → `testing` → `completed` or `failed` |
+| `status` | Both | Throughout | `pending` → `claimed` → [`exploring`] → [`implementing`] → `testing` → `completed` or `failed` |
 | `created_at` | do | Creation | ISO timestamp when request was captured |
 | `user_request` | do | Creation | UR identifier linking to originating user request (absent on legacy REQs) |
+| `related` | do | Creation | Array of related REQ IDs (optional, complex requests only) |
+| `batch` | do | Creation | Batch name grouping related requests (optional, complex requests only) |
+| `addendum_to` | do | Creation | Original REQ ID this request amends (optional, addendums only) |
 | `claimed_at` | work | Claim | ISO timestamp when work began |
 | `route` | work | Triage | Complexity route (A/B/C) |
 | `completed_at` | work | Completion | ISO timestamp when work finished |
@@ -229,7 +232,11 @@ error: "Description of failure"  # Only if failed
 
 ### Field Ordering Rule
 
-**When updating frontmatter, preserve the field order shown in the schema above.** Do-action fields (`id`, `title`, `status`, `created_at`, `user_request`) stay at the top. Work-action fields (`claimed_at`, `route`, `completed_at`, `commit`, `error`) are appended below them. Any custom fields from ingestion (`source_step`, `source_doc`, `blueprint_ref`, etc.) stay at the bottom.
+**When updating frontmatter, preserve the field order shown in the schema above.**
+- Do-action fields (`id`, `title`, `status`, `created_at`, `user_request`) stay at the top.
+- Optional do-action fields (`related`, `batch`, `addendum_to`) follow, if present.
+- Work-action fields (`claimed_at`, `route`, `completed_at`, `commit`, `error`) are appended below them.
+- Custom fields from ingestion (`source_step`, `source_doc`, `blueprint_ref`, `model_hint`, etc.) stay at the bottom.
 
 When adding `claimed_at` and `route` (Step 2/3), insert them **after** the do-action fields — do not place them before `created_at` or `user_request`. When adding `completed_at` (Step 7), insert it **after** `route`.
 
@@ -238,7 +245,7 @@ When adding `claimed_at` and `route` (Step 2/3), insert them **after** the do-ac
 ```
 pending (in do-work/, set by do action)
     → claimed (moved to working/, set by work action)
-    → [planning] → [exploring] → implementing → testing
+    → [exploring] → [implementing] → testing
     → completed (moved to archive/)
     ↘ failed (moved to archive/ with error)
 ```
@@ -632,6 +639,8 @@ Run tests that are relevant to the changed code, not the entire test suite (unle
 
 **Loop until tests pass or it becomes clear the request cannot be completed.**
 
+If failures are pre-existing (present before this REQ's changes), note them in the Testing section as pre-existing and proceed. Only failures introduced by this REQ's changes should trigger the fix loop.
+
 **5. If new tests are needed:**
 
 Spawn a **general-purpose agent** to write tests:
@@ -744,8 +753,9 @@ mkdir -p do-work/archive
 **If REQ has `user_request: UR-NNN` (new system):**
    - Read the UR's `input.md` from `do-work/user-requests/UR-NNN/`
    - Check its `requests` array (e.g., `[REQ-018, REQ-019, REQ-020]`)
-   - Check if ALL listed REQs are now completed (in `do-work/working/` with `status: completed`, already in `archive/` root, already consolidated into `do-work/archive/UR-NNN/`, or already moved into the UR folder `do-work/user-requests/UR-NNN/`)
-   - If **all REQs complete**:
+   - Check if ALL listed REQs are now resolved — meaning they have `status: completed` (not `failed`) in any of: `do-work/working/`, `do-work/archive/` root, `do-work/archive/UR-NNN/`, or `do-work/user-requests/UR-NNN/`
+   - REQs with `status: failed` in `do-work/archive/` do NOT count — the UR stays open until the failed REQ is retried and succeeds, or the user explicitly archives the UR
+   - If **all REQs resolved**:
      - Move the completed REQ file into the UR folder: `mv do-work/working/REQ-XXX.md do-work/user-requests/UR-NNN/`
      - Move any other completed REQs from `do-work/archive/` that belong to this UR into the UR folder (scan each `REQ-*.md` file directly in `do-work/archive/`, read its frontmatter, and move it if `user_request: UR-NNN` matches the current UR)
      - Move the entire UR folder to archive: `mv do-work/user-requests/UR-NNN do-work/archive/`
@@ -859,13 +869,20 @@ error: "Brief description of what went wrong"
 mkdir -p do-work/archive
 ```
 
-3. **Move the request file to archive** (failed items are also archived, status tells the story):
+3. **Leave checklist items as-is** — do not check them off. Unchecked items show what work was not completed.
+
+4. **Move the request file to archive** (failed items are also archived, status tells the story):
 ```bash
 mv do-work/working/REQ-XXX-slug.md do-work/archive/
 ```
 Note: Failed REQs always go directly to `do-work/archive/`, NOT into UR folders. A failed REQ does not count as "complete" for UR archival purposes — the UR folder stays in `user-requests/` until all REQs succeed or the user explicitly archives.
 
-4. **Report the failure to the user**
+**Resolution paths for failed REQs blocking a UR:**
+- Retry: create a new REQ for the same work (the do action handles this)
+- Skip: user runs `do work archive UR-NNN` to force-close the UR despite failures
+- The cleanup action will report URs blocked by failed REQs in its summary
+
+5. **Report the failure to the user**
 
 ### Step 8: Commit Changes (Git repos only)
 

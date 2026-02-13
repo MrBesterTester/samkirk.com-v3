@@ -114,7 +114,7 @@ source_doc: "{TODO file path}"
 blueprint_ref: "{BLUEPRINT file path}"
 model_hint: "{most common model label for this step}"
 batch: "{prefix}-phase-{phase number}"
-related: [{REQ IDs of other steps in same phase}]
+related: []  # Populated during ingestion with REQ IDs of other steps created in the same batch. If dependencies are unclear, leave empty.
 ---
 
 # {Step title} (Step {step number})
@@ -174,6 +174,13 @@ Tip: Run `do work verify` to check capture quality, or `do work run` to start pr
 ## Important Notes
 
 - **Granularity**: Each numbered step = one REQ. Individual checkbox items within a step are sub-requirements inside the REQ, NOT separate REQs.
-- **Idempotency**: Before creating REQs, check if REQs with matching `source_step` and `source_doc` already exist in `do-work/`, `do-work/working/`, or `do-work/archive/`. If a step was already ingested, skip it and note it in the report.
+- **Idempotency**: Before creating REQs, scan for existing REQs with matching `source_step` AND `source_doc` in:
+  - `do-work/` (pending queue)
+  - `do-work/working/` (in progress)
+  - `do-work/archive/` root (archived loose)
+  - `do-work/archive/UR-*/` (archived in UR folders)
+  - `do-work/user-requests/UR-*/` (completed, awaiting UR consolidation)
+  - If found with `status: completed` or `pending` or `claimed`: skip
+  - If found with `status: failed`: ask user whether to re-create or skip
 - **Custom frontmatter**: The `source_step`, `source_doc`, `blueprint_ref`, `model_hint`, and `batch` fields are custom extensions for the Dylan Davis bridge. The work action and sync-todo skill use these for traceability.
 - **Partial steps**: If a step has some checked and some unchecked items, include it but mark which items are already done. The builder should skip completed items.
