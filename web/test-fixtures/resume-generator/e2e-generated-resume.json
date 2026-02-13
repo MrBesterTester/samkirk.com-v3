@@ -1,67 +1,69 @@
 {
   "header": {
     "name": "Sam Kirk",
-    "title": "Senior Software Engineer - AI Platform",
+    "title": "Senior Software Engineer - AI/ML Platform",
     "email": "sam@samkirk.com",
     "location": "Fremont, CA"
   },
-  "summary": "Experienced software engineer specializing in full-stack development, cloud infrastructure, and AI/ML. Proven ability to lead teams, build scalable systems, and productionize machine learning models.",
+  "summary": "Veteran software engineer with 45+ years in Silicon Valley, bringing deep expertise in test automation, systems programming, and AI-assisted software development. Currently building AI-powered tools using Python, Vertex AI, and Google Gemini. Proven track record across medical devices, automotive OTA, ATE systems, and cloud-native applications.",
   "skills": [
-    { "category": "Languages", "items": ["TypeScript", "JavaScript", "Python", "Go", "SQL"] },
-    { "category": "Frontend", "items": ["React", "Next.js", "Tailwind CSS", "HTML/CSS"] },
-    { "category": "Backend", "items": ["Node.js", "Express", "FastAPI", "GraphQL", "REST APIs"] },
-    { "category": "Cloud & Infrastructure", "items": ["GCP", "AWS", "Docker", "Kubernetes", "Terraform"] },
-    { "category": "Databases", "items": ["PostgreSQL", "MongoDB", "Redis", "Firestore", "BigQuery"] },
-    { "category": "AI/ML", "items": ["TensorFlow", "PyTorch", "LangChain", "RAG systems", "LLM integration"] },
-    { "category": "Tools", "items": ["Git", "CI/CD", "GitHub Actions", "Datadog"] },
-    { "category": "Soft Skills", "items": ["Technical leadership", "Cross-functional collaboration", "Agile"] }
+    { "category": "Languages", "items": ["Python", "C", "C++", "JavaScript", "TypeScript", "SQL"] },
+    { "category": "Cloud & AI", "items": ["GCP", "Vertex AI", "Google Gemini", "Claude Code", "Cursor"] },
+    { "category": "Web Technologies", "items": ["Next.js", "Node.js", "HTML/CSS"] },
+    { "category": "Systems", "items": ["Linux/Unix (since 1980)", "Git", "CI/CD"] },
+    { "category": "Databases", "items": ["PostgreSQL", "Firestore"] },
+    { "category": "Domains", "items": ["AI-assisted development", "Test Automation", "ATE Systems", "Medical Devices", "Automotive OTA", "Digital Audio"] }
   ],
   "experience": [
     {
-      "title": "Senior Software Engineer",
-      "company": "Tech Company",
-      "dateRange": "2020 - Present",
+      "title": "Chief Consulting Engineer",
+      "company": "SAK Consulting",
+      "dateRange": "2022 - Present",
       "bullets": [
-        "Led development of AI-powered features for enterprise SaaS platform, improving user engagement by 40%",
-        "Architected and deployed a RAG-based Q&A system using LangChain and Vertex AI, serving 10K+ daily queries",
-        "Mentored team of 4 engineers, conducting code reviews and establishing best practices",
-        "Designed scalable microservices architecture handling 1M+ requests/day on GCP",
-        "Implemented CI/CD pipelines reducing deployment time by 60%"
+        "Building AI-powered hiring manager tools suite including fit analyzer, custom resume generator, and interactive chatbot",
+        "Developing full-stack applications using Python, Next.js, Vertex AI, and Google Gemini on GCP",
+        "Applying generative AI to software testing and documentation workflows",
+        "Building client websites and AI-assisted development tooling"
       ]
     },
     {
-      "title": "Software Engineer",
-      "company": "Startup Inc",
-      "dateRange": "2017 - 2020",
+      "title": "Test Engineer III",
+      "company": "Talis BioMedical",
+      "dateRange": "2020 - 2022",
       "bullets": [
-        "Full-stack engineer on a B2B SaaS platform serving 500+ enterprise clients",
-        "Built real-time data processing pipeline using Python and Apache Kafka",
-        "Developed customer-facing dashboard with React and D3.js for data visualization",
-        "Optimized PostgreSQL queries reducing average response time by 45%",
-        "Led migration from monolithic architecture to containerized microservices on AWS"
+        "Developed medical point-of-care test instrument software using Python",
+        "Worked on regulatory-compliant testing workflows for diagnostic devices"
       ]
     },
     {
-      "title": "Junior Developer",
-      "company": "Agency Co",
-      "dateRange": "2014 - 2017",
+      "title": "Sr. Diagnostic Software Engineer",
+      "company": "Cadence Design Systems",
+      "dateRange": "2015 - 2017",
       "bullets": [
-        "Started career building websites and web applications for diverse clients",
-        "Developed custom WordPress themes and plugins for e-commerce sites",
-        "Built internal tools automating repetitive tasks, saving 20+ hours/week"
+        "Built hi-speed digital logic emulation test stations using Python and BeagleBone Black",
+        "Created data visualization tools with numpy, pandas, and matplotlib"
+      ]
+    },
+    {
+      "title": "Sr. Software Engineer",
+      "company": "LTX-Credence",
+      "dateRange": "2012 - 2014",
+      "bullets": [
+        "Implemented timing calibration for ATE instruments using C++ and Python",
+        "Generated XML timing patterns for mixed-signal hardware testing"
       ]
     }
   ],
   "education": [
     {
-      "degree": "Master of Science in Computer Science",
-      "institution": "Stanford University",
-      "year": "2014"
+      "degree": "MS, Applied Math & Systems Sciences",
+      "institution": "University of Louisville",
+      "year": "1982"
     },
     {
-      "degree": "Bachelor of Science in Computer Science",
-      "institution": "UC Berkeley",
-      "year": "2012"
+      "degree": "BA, Philosophy & Mathematics",
+      "institution": "Ohio State University",
+      "year": "1973"
     }
   ],
   "_metadata": {

@@ -10,12 +10,15 @@
  *   --full              Show full details (all sections)
  *   --log <suite>       Print raw log for a suite
  *   --fixtures          Show fixture snapshot inventory
+ *   --fixtures show     Open fixture gallery in browser (localhost:8123)
  *   --diff <dir1> <dir2>  Compare two runs
  *   --json              Output as JSON
  */
 
 import { resolve } from "path";
 import { readFileSync, existsSync, readdirSync, statSync } from "fs";
+import { createServer } from "http";
+import { exec } from "child_process";
 
 // ============================================================================
 // ANSI Colors
@@ -83,6 +86,7 @@ interface ViewerArgs {
   full: boolean;
   log: string | null;
   fixtures: boolean;
+  fixturesShow: boolean;
   diff: [string, string] | null;
   json: boolean;
 }
@@ -110,12 +114,19 @@ function parseArgs(): ViewerArgs {
     return [argv[idx + 1], argv[idx + 2]];
   }
 
+  const fixturesIdx = argv.indexOf("--fixtures");
+  const fixturesShow =
+    fixturesIdx !== -1 &&
+    fixturesIdx + 1 < argv.length &&
+    argv[fixturesIdx + 1] === "show";
+
   return {
     list: hasFlag("--list"),
     run: getFlagValue("--run"),
     full: hasFlag("--full"),
     log: getFlagValue("--log"),
     fixtures: hasFlag("--fixtures"),
+    fixturesShow,
     diff: getDiffArgs(),
     json: hasFlag("--json"),
   };
@@ -1062,6 +1073,80 @@ function printDiffView(explicitArgs: [string, string] | null): void {
 }
 
 // ============================================================================
+// Fixtures Show (serve + open browser)
+// ============================================================================
+
+const FIXTURES_PORT = 8123;
+
+/** Serve the test-fixtures directory over HTTP and open in the default browser */
+function serveFixtures(): void {
+  const fixturesDir = resolve(__dirname, "../test-fixtures");
+
+  if (!existsSync(fixturesDir)) {
+    log("No test-fixtures directory found at web/test-fixtures/", false);
+    process.exit(1);
+  }
+
+  const MIME_TYPES: Record<string, string> = {
+    ".html": "text/html",
+    ".css": "text/css",
+    ".js": "application/javascript",
+    ".json": "application/json",
+    ".md": "text/plain; charset=utf-8",
+    ".txt": "text/plain; charset=utf-8",
+    ".png": "image/png",
+    ".jpg": "image/jpeg",
+    ".jpeg": "image/jpeg",
+    ".gif": "image/gif",
+    ".svg": "image/svg+xml",
+    ".zip": "application/zip",
+  };
+
+  const server = createServer((req, res) => {
+    const urlPath = req.url === "/" ? "/index.html" : req.url ?? "/index.html";
+    const filePath = resolve(fixturesDir, urlPath.replace(/^\//, ""));
+
+    // Prevent directory traversal
+    if (!filePath.startsWith(fixturesDir)) {
+      res.writeHead(403);
+      res.end("Forbidden");
+      return;
+    }
+
+    if (!existsSync(filePath) || statSync(filePath).isDirectory()) {
+      res.writeHead(404);
+      res.end("Not Found");
+      return;
+    }
+
+    const ext = filePath.substring(filePath.lastIndexOf("."));
+    const contentType = MIME_TYPES[ext] ?? "application/octet-stream";
+
+    res.writeHead(200, { "Content-Type": contentType });
+    res.end(readFileSync(filePath));
+  });
+
+  server.on("error", (err: NodeJS.ErrnoException) => {
+    if (err.code === "EADDRINUSE") {
+      // Port already in use — just open the browser
+      log(
+        `Port ${FIXTURES_PORT} already in use — opening browser`,
+      );
+      exec(`open http://localhost:${FIXTURES_PORT}/index.html`);
+      process.exit(0);
+    }
+    throw err;
+  });
+
+  server.listen(FIXTURES_PORT, () => {
+    const url = `http://localhost:${FIXTURES_PORT}/index.html`;
+    log(`Serving fixtures at ${url}`);
+    log("Press Ctrl+C to stop");
+    exec(`open ${url}`);
+  });
+}
+
+// ============================================================================
 // Main
 // ============================================================================
 
@@ -1107,6 +1192,10 @@ function main(): void {
     process.exit(0);
   }
   // --full is handled below alongside default view
+  if (args.fixturesShow) {
+    serveFixtures();
+    return; // server keeps process alive
+  }
   if (args.fixtures) {
     printFixturesView();
     console.log("");

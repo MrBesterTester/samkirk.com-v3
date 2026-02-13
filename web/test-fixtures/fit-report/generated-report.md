@@ -6,39 +6,39 @@
 
 ### Recommendation
 
-Strong overall fit for the Senior Software Engineer position. The candidate's extensive TypeScript/React/Node.js experience, cloud platform knowledge (GCP), and demonstrated ability to lead and mentor align well with the role requirements. The fully remote arrangement is ideal. The main gap is around deep ML framework experience, though the AI/ML platform work and GenAI focus partially compensates. Recommend proceeding with interview to assess ML infrastructure experience depth.
+Strong overall fit for the Senior Software Engineer position. The candidate's extensive experience (45+ years), active AI/ML development with Vertex AI and Gemini, and GCP cloud platform knowledge align well with the role. The main gap is around TypeScript/React/Node.js as primary skills, though the candidate has Next.js experience. Deep systems engineering background and current GenAI focus make this a compelling candidate. Recommend proceeding with interview to assess modern web stack depth.
 
 ---
 
 ## Category Breakdown
 
-### Technical Skills: ✅ Well
+### Technical Skills: ⚠️ Average
 
-Strong match with required TypeScript, React, and Node.js skills. Resume shows 10+ years of experience with these exact technologies at Tech Corp and StartupXYZ. Additional skills in Python, GCP, and containerization (Docker, Kubernetes) align with nice-to-have requirements.
+Strong Python experience (8+ years) and extensive C/C++ background align with backend requirements. GCP and Vertex AI experience match cloud platform preferences. However, the role emphasizes TypeScript and React/Node.js which are not primary strengths, though some JavaScript/TypeScript exposure through Next.js at SAK Consulting.
 
 ### Experience Level: ✅ Well
 
-10+ years of professional experience significantly exceeds the 5 years required. Senior-level role at Tech Corp demonstrates ability to lead projects, mentor engineers, and architect systems at scale. Experience handling 10M+ events/day shows familiarity with high-scale systems.
+45+ years of professional software engineering experience vastly exceeds the 5 years required. Extensive senior-level roles across SAK Consulting, Talis BioMedical, Cadence, LTX-Credence, and Sun Microsystems demonstrate ability to lead projects and work at scale.
 
 ### Location/Remote: ✅ Well
 
-Role is fully remote (US-based), which is an acceptable location arrangement per the evaluation criteria. No commute or onsite requirements to consider.
+Role is fully remote (US-based), which is an acceptable location arrangement per the evaluation criteria. Candidate is based in Fremont, CA. No commute or onsite requirements to consider.
 
-### Domain Knowledge: ⚠️ Average
+### Domain Knowledge: ✅ Well
 
-Resume shows recent focus on AI/ML platform development and GenAI applications, which aligns with the AI/ML Platform team. However, specific experience with TensorFlow/PyTorch ML frameworks is not explicitly mentioned in the resume, only the AI/ML tools like Vertex AI and LangChain.
+Currently building AI-powered tools using Vertex AI, Google Gemini, and Claude Code at SAK Consulting. Direct experience with GenAI/LLM technologies aligns well with the AI/ML Platform team. Deep domain knowledge in test automation and systems engineering provides strong foundation.
 
 ### Culture Fit: ✅ Well
 
-Strong evidence of collaboration through mentoring 4 junior engineers and conducting code reviews. Experience in distributed teams at previous roles. Passion for clean code and developer experience aligns with startup engineering values.
+Decades of cross-functional collaboration across diverse domains (medical devices, automotive, ATE, servers). Demonstrated ability to work independently and lead projects. Self-directed consulting work at SAK Consulting shows initiative and startup-compatible mindset.
 
 ---
 
 ## Unknowns & Assumptions
 
-- Specific ML framework experience (TensorFlow/PyTorch) - resume mentions AI/ML tools but not deep ML engineering
-- Team size and reporting structure at Test Corp
-- Exact tech stack version requirements (e.g., Node.js version, React version)
+- Depth of TypeScript/React/Node.js experience - resume shows Python and C as primary languages
+- Experience with containerization (Docker, Kubernetes) not explicitly mentioned
+- Specific experience with data pipelines and ETL processes
 
 ---
 
@@ -60,11 +60,11 @@ Strong evidence of collaboration through mentoring 4 junior engineers and conduc
 
 | # | Section | Source Reference |
 |---|---------|------------------|
-| 1 | Summary | h2:Summary |
-| 2 | Experience > Tech Corp | h2:Experience > h3:Tech Corp |
-| 3 | Experience > StartupXYZ | h2:Experience > h3:StartupXYZ |
-| 4 | Skills | h2:Skills |
-| 5 | Education | h2:Education |
+| 1 | Career Summary | h1:Career Summary |
+| 2 | Employment History > SAK Consulting | h1:Employment History > h2:Chief Consulting Engineer — SAK Consulting |
+| 3 | Aggregated Skills Summary | h1:Aggregated Skills Summary > h2:Primary Technologies |
+| 4 | Skills-to-Companies Matrix | h1:Skills-to-Companies Matrix |
+| 5 | Education | h1:Education |
 
 ---
 

@@ -1,31 +1,36 @@
 # Sam Kirk
-**Senior Software Engineer**
+**Senior Software Engineer — AI/ML Platform**
 
 sam@samkirk.com | Fremont, CA
 
 ## Professional Summary
 
-Experienced software engineer with 10+ years building scalable web applications and AI systems. Expert in TypeScript, React, Node.js, and GCP. Proven ability to lead development teams, optimize performance, and deliver high-impact solutions.
+Veteran software engineer with 45+ years in Silicon Valley specializing in test automation, firmware development, and AI-assisted software engineering. Currently focused on building AI-powered tools using Python, Vertex AI, and Google Gemini on GCP. Deep expertise in full-stack development and cloud-native applications.
 
 ## Skills
 
-**Programming Languages:** TypeScript, JavaScript, Python, Go
-**Frontend Technologies:** React, Next.js, Tailwind CSS
-**Backend Technologies:** Node.js, Express, PostgreSQL, Redis
-**Cloud Platforms:** GCP (Cloud Run, Firestore, BigQuery), AWS
-**AI/ML Technologies:** TensorFlow, LangChain, RAG systems
+**Programming Languages:** Python, C, C++, JavaScript, TypeScript
+**Cloud & AI:** GCP, Vertex AI, Google Gemini, Claude Code, Cursor
+**Web Technologies:** Next.js, Node.js, HTML/CSS
+**Systems:** Linux/Unix (since 1980), Git, CI/CD
+**Domains:** AI-assisted development, Test Automation, ATE Systems, Medical Devices
 
 ## Professional Experience
 
-### Senior Engineer — TechCorp
-*2019-2024*
+### Chief Consulting Engineer — SAK Consulting
+*2022 - Present*
 
-- Led development of AI-powered analytics dashboard, providing actionable insights to over 50,000 users and driving a 15% increase in user engagement.
-- Architected and built a microservices architecture using Node.js and GCP Cloud Run, resulting in improved scalability and maintainability of the platform.
-- Mentored a team of 5 engineers, fostering a collaborative and high-performing environment through regular coaching and guidance, and conducted over 200 code reviews to ensure code quality and best practices.
-- Reduced API latency by 40% through performance optimization techniques, including code profiling, caching strategies, and database query optimization, leading to a significant improvement in user experience.
-- Collaborated with product managers and designers to define and implement new features, ensuring alignment with business requirements and user needs, and contributing to the overall product roadmap.
+- Building AI-powered hiring manager tools including custom resume generator, fit analysis, and interactive Q&A chatbot using Python, Next.js, Vertex AI, and Google Gemini.
+- Applying generative AI to software testing and documentation workflows.
+- Developing full-stack web applications with modern cloud-native architecture on GCP.
+
+### Sr. Software Engineer — LTX-Credence
+*2012 - 2014*
+
+- Implemented timing calibration for ATE instruments using C++ and Python.
+- Generated XML timing patterns for mixed-signal hardware testing.
 
 ## Education
 
-**B.S. Computer Science** — UC Berkeley, 2014
+**MS, Applied Math & Systems Sciences** — University of Louisville, 1982
+**BA, Philosophy & Mathematics** — Ohio State University, 1973

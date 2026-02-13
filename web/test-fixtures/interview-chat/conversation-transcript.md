@@ -14,11 +14,11 @@ What is your background?
 
 **Sam Kirk:**
 
-I'm a software engineer with over 10 years of experience in building scalable web applications and AI systems. I specialize in TypeScript, React, Node.js, and GCP.
+I'm a software engineer with over 45 years of experience in Silicon Valley. I specialize in test automation, firmware development, and most recently AI-assisted software engineering.
 
-Most recently, I worked as a Senior Engineer at TechCorp from 2019 to 2024, where I led development of an AI-powered analytics dashboard serving over 50,000 users. I built microservices architecture using Node.js and GCP Cloud Run, and mentored a team of 5 engineers.
+Currently, I'm the Chief Consulting Engineer at SAK Consulting, which I started in 2022. I'm focused on applying generative AI to software development, building AI-powered tools using Python, Next.js, Vertex AI, and Google Gemini on GCP.
 
-Before that, I was at StartupXYZ from 2016 to 2019, doing full-stack development with React and Node.js, where I implemented CI/CD pipelines to streamline our deployment process.
+Before that, I worked at companies like Talis BioMedical on medical device testing, Cadence Design Systems on digital logic emulation, and LTX-Credence on ATE instrument calibration. Earlier in my career I was at Sun Microsystems, Teradyne, and several other Silicon Valley companies.
 
 ---
 
@@ -32,13 +32,13 @@ What are your technical skills?
 
 My core technical skills include:
 
-**Programming Languages:** TypeScript, JavaScript, Python, and Go. I'm most proficient in TypeScript, which I've used extensively for both frontend and backend development.
+**Programming Languages:** Python (8+ years), C (15+ years), C++, JavaScript, TypeScript. I've used Python extensively across my career from data visualization at Cadence to AI-powered tools at SAK Consulting.
 
-**Cloud Platforms:** I have deep experience with GCP, including Cloud Run, Firestore, and BigQuery. I'm also familiar with AWS.
+**Cloud & AI:** I work daily with GCP, Vertex AI, Google Gemini, Claude Code, and Cursor for AI-assisted development. This is the core of my current work at SAK Consulting.
 
-**AI/ML:** I've worked with TensorFlow and LangChain, and have hands-on experience building RAG (Retrieval-Augmented Generation) systems.
+**Systems:** Linux/Unix has been my primary operating environment continuously since 1980. I have deep experience with test automation across multiple hardware domains.
 
-**Location Flexibility:** I'm based in the San Francisco Bay Area and open to remote work opportunities.
+**Domains:** Medical point-of-care devices, automotive OTA, ATE systems, servers, digital audio, SSDs, CPUs, and laser communication.
 
 Is there a specific technology or skill area you'd like me to elaborate on?
 
@@ -60,9 +60,9 @@ What would you like to know about Sam's professional experience or skills?
 
 ## Sources Referenced
 
-1. **Summary** — h2:Summary
-2. **Experience** — h2:Experience
-3. **Skills** — h2:Skills
+1. **Career Summary** — h1:Career Summary
+2. **Employment History** — h1:Employment History
+3. **Aggregated Skills Summary** — h1:Aggregated Skills Summary
 
 ---
 

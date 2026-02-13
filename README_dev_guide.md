@@ -167,6 +167,7 @@ npm run test:results -- --full               # Latest with test index
 npm run test:results -- --run 2026-02-09     # Specific run (partial timestamp match)
 npm run test:results -- --log e2e-tests      # Raw E2E log output
 npm run test:results -- --fixtures           # Fixture inventory
+npm run test:results -- --fixtures show      # Open fixture gallery in browser
 npm run test:results -- --diff               # Compare last two runs
 npm run test:results -- --json               # Machine-readable JSON output
 ```
@@ -179,6 +180,7 @@ npm run test:results -- --json               # Machine-readable JSON output
 | Compare runs after a fix | `npm run test:results -- --diff` |
 | Debug a suite failure | `npm run test:results -- --log <suite>` |
 | See what fixtures changed | `npm run test:results -- --fixtures` |
+| Browse fixtures in browser | `npm run test:results -- --fixtures show` |
 
 **Other tools:**
 
