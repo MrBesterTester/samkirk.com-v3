@@ -97,31 +97,31 @@ test.describe("Fit Tool Happy Path", () => {
       { timeout: 30000 }
     );
 
-    // If there's a follow-up question, answer it
-    const followUpHeader = page.getByText(/follow-up question/i);
-    if (await followUpHeader.isVisible({ timeout: 1000 }).catch(() => false)) {
-      // There's a follow-up question - answer it
-      // Look for radio buttons (predefined options) or text input
-      // Click the parent <label> instead of the sr-only input, which is blocked by a styled span overlay
+    // Handle follow-up questions in a loop — the LLM may ask multiple (up to 5)
+    for (let i = 0; i < 10; i++) {
+      const followUpHeader = page.getByText(/follow-up question/i);
+      if (!(await followUpHeader.isVisible({ timeout: 2000 }).catch(() => false))) {
+        break; // No more follow-up questions — we're at generating or complete
+      }
+
+      // Answer the follow-up: click first radio label, or fill text input
       const radioLabels = page.locator('label:has(input[type="radio"])');
       const radioCount = await radioLabels.count();
 
       if (radioCount > 0) {
-        // Select the first option by clicking its label
         await radioLabels.first().click();
       } else {
-        // Free text input - provide a generic answer
         const answerInput = page.getByPlaceholder(/type your answer/i);
         if (await answerInput.isVisible().catch(() => false)) {
           await answerInput.fill("Senior level position, fully remote");
         }
       }
 
-      // Click continue
+      // Click continue and wait for next state
       const continueButton = page.getByRole("button", { name: /continue/i });
+      await expect(continueButton).toBeEnabled({ timeout: 5000 });
       await continueButton.click();
 
-      // Wait for processing again
       await page.waitForFunction(
         () => {
           const body = document.body.textContent || "";
@@ -135,17 +135,10 @@ test.describe("Fit Tool Happy Path", () => {
       );
     }
 
-    // If we're generating, wait for completion
-    const generatingText = page.getByText(/generating fit analysis/i);
-    if (await generatingText.isVisible({ timeout: 1000 }).catch(() => false)) {
-      // Wait for the report to complete (this can take time due to LLM call)
-      await expect(page.getByText(/fit analysis complete/i)).toBeVisible({
-        timeout: 240000, // 4 minutes for LLM generation
-      });
-    }
-
-    // Verify the results page is displayed
-    await expect(page.getByText(/fit analysis complete/i)).toBeVisible();
+    // Wait for the final results — LLM generation can take minutes
+    await expect(page.getByText(/fit analysis complete/i)).toBeVisible({
+      timeout: 240000, // 4 minutes for LLM generation
+    });
 
     // Verify key elements of the results
     await expect(page.getByText(/overall fit score/i)).toBeVisible();
@@ -232,30 +225,29 @@ test.describe("Fit Tool Happy Path", () => {
       { timeout: 30000 }
     );
 
-    // If there's a follow-up question, answer it
-    const followUpHeader = page.getByText(/follow-up question/i);
-    if (await followUpHeader.isVisible({ timeout: 1000 }).catch(() => false)) {
-      // There's a follow-up question - answer it
-      // Click the parent <label> instead of the sr-only input, which is blocked by a styled span overlay
+    // Handle follow-up questions in a loop — the LLM may ask multiple (up to 5)
+    for (let i = 0; i < 10; i++) {
+      const followUpHeader = page.getByText(/follow-up question/i);
+      if (!(await followUpHeader.isVisible({ timeout: 2000 }).catch(() => false))) {
+        break;
+      }
+
       const radioLabels = page.locator('label:has(input[type="radio"])');
       const radioCount = await radioLabels.count();
 
       if (radioCount > 0) {
-        // Select the first option by clicking its label
         await radioLabels.first().click();
       } else {
-        // Free text input - provide a generic answer
         const answerInput = page.getByPlaceholder(/type your answer/i);
         if (await answerInput.isVisible().catch(() => false)) {
           await answerInput.fill("Senior level position, fully remote");
         }
       }
 
-      // Click continue
       const continueButton = page.getByRole("button", { name: /continue/i });
+      await expect(continueButton).toBeEnabled({ timeout: 5000 });
       await continueButton.click();
 
-      // Wait for processing again
       await page.waitForFunction(
         () => {
           const body = document.body.textContent || "";
@@ -269,17 +261,10 @@ test.describe("Fit Tool Happy Path", () => {
       );
     }
 
-    // If we're generating, wait for completion
-    const generatingText = page.getByText(/generating fit analysis/i);
-    if (await generatingText.isVisible({ timeout: 1000 }).catch(() => false)) {
-      // Wait for the report to complete (this can take time due to LLM call)
-      await expect(page.getByText(/fit analysis complete/i)).toBeVisible({
-        timeout: 240000, // 4 minutes for LLM generation
-      });
-    }
-
-    // Verify the results page is displayed
-    await expect(page.getByText(/fit analysis complete/i)).toBeVisible();
+    // Wait for the final results — LLM generation can take minutes
+    await expect(page.getByText(/fit analysis complete/i)).toBeVisible({
+      timeout: 240000, // 4 minutes for LLM generation
+    });
 
     // Verify key elements of the results
     await expect(page.getByText(/overall fit score/i)).toBeVisible();
@@ -338,30 +323,29 @@ test.describe("Fit Tool Happy Path", () => {
       { timeout: 30000 }
     );
 
-    // If there's a follow-up question, answer it
-    const followUpHeader = page.getByText(/follow-up question/i);
-    if (await followUpHeader.isVisible({ timeout: 1000 }).catch(() => false)) {
-      // There's a follow-up question - answer it
-      // Click the parent <label> instead of the sr-only input, which is blocked by a styled span overlay
+    // Handle follow-up questions in a loop — the LLM may ask multiple (up to 5)
+    for (let i = 0; i < 10; i++) {
+      const followUpHeader = page.getByText(/follow-up question/i);
+      if (!(await followUpHeader.isVisible({ timeout: 2000 }).catch(() => false))) {
+        break;
+      }
+
       const radioLabels = page.locator('label:has(input[type="radio"])');
       const radioCount = await radioLabels.count();
 
       if (radioCount > 0) {
-        // Select the first option by clicking its label
         await radioLabels.first().click();
       } else {
-        // Free text input - provide a generic answer
         const answerInput = page.getByPlaceholder(/type your answer/i);
         if (await answerInput.isVisible().catch(() => false)) {
           await answerInput.fill("Senior level position, fully remote");
         }
       }
 
-      // Click continue
       const continueButton = page.getByRole("button", { name: /continue/i });
+      await expect(continueButton).toBeEnabled({ timeout: 5000 });
       await continueButton.click();
 
-      // Wait for processing again
       await page.waitForFunction(
         () => {
           const body = document.body.textContent || "";
@@ -375,17 +359,10 @@ test.describe("Fit Tool Happy Path", () => {
       );
     }
 
-    // If we're generating, wait for completion
-    const generatingText = page.getByText(/generating fit analysis/i);
-    if (await generatingText.isVisible({ timeout: 1000 }).catch(() => false)) {
-      // Wait for the report to complete (this can take time due to LLM call)
-      await expect(page.getByText(/fit analysis complete/i)).toBeVisible({
-        timeout: 240000, // 4 minutes for LLM generation
-      });
-    }
-
-    // Verify the results page is displayed
-    await expect(page.getByText(/fit analysis complete/i)).toBeVisible();
+    // Wait for the final results — LLM generation can take minutes
+    await expect(page.getByText(/fit analysis complete/i)).toBeVisible({
+      timeout: 240000, // 4 minutes for LLM generation
+    });
 
     // Verify key elements of the results
     await expect(page.getByText(/overall fit score/i)).toBeVisible();
