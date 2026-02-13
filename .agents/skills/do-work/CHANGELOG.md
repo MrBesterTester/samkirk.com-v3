@@ -4,6 +4,13 @@ What's new, what's better, what's different. Most recent stuff on top.
 
 ---
 
+## 0.11.2 — The Ghost Hunt (2026-02-12)
+
+Fixed UR consolidation scan checking `working/` for completed REQs. Completed REQs are never in `working/` — they're moved to `archive/` immediately. The scan now checks only `archive/` root, `archive/UR-NNN/`, and `user-requests/UR-NNN/`, with the current REQ counted as resolved implicitly.
+
+- Removed `do-work/working/` from UR consolidation scan locations (work.md)
+- Added explicit note that the current REQ counts as resolved since it just completed
+
 ## 0.11.1 — The Order of Things (2026-02-12)
 
 Added a Field Ordering Rule to do.md so agents creating REQ files produce frontmatter in the same order work.md expects. Previously only work.md had the rule (for updates), so creation-time tools like ingest-todo had no guidance and placed custom fields before optional do-action fields.
