@@ -2,7 +2,7 @@
 
 > Authoritative catalog of all automated tests. Each entry represents one top-level `describe` block (unit tests) or test group (E2E/scripts). Individual `it`/`test` counts are listed per entry.
 
-**Entries vs Individual Tests:** Each catalog entry (e.g., TEST-001) corresponds to a top-level `describe` block or test group — a logical grouping of related assertions. The "Tests" count on each entry is the number of individual `it()` / `test()` calls inside that group — each one a single assertion or scenario that produces its own pass/fail result. So 55 entries contain 1,212 individual test cases.
+**Entries vs Individual Tests:** Each catalog entry (e.g., TEST-001) corresponds to a top-level `describe` block or test group — a logical grouping of related assertions. The "Tests" count on each entry is the number of individual `it()` / `test()` calls inside that group — each one a single assertion or scenario that produces its own pass/fail result. So 68 entries contain 1,295 individual test cases.
 
 ## Table of Contents
 
@@ -33,6 +33,19 @@
   - [TEST-023 — Artifact bundler](#test-023--artifact-bundler)
   - [TEST-024 — Vertex AI error classes](#test-024--vertex-ai-error-classes)
   - [TEST-025 — Public proxy API route](#test-025--public-proxy-api-route)
+  - [TEST-026 — Footer component](#test-026--footer-component)
+  - [TEST-027 — Category Theory page](#test-027--category-theory-page)
+  - [TEST-028 — Dance Instruction page](#test-028--dance-instruction-page)
+  - [TEST-029 — Pocket Flow page](#test-029--pocket-flow-page)
+  - [TEST-030 — Uber Level AI Skills page](#test-030--uber-level-ai-skills-page)
+  - [TEST-031 — Explorations hub page](#test-031--explorations-hub-page)
+  - [TEST-032 — Home page](#test-032--home-page)
+  - [TEST-033 — Header component](#test-033--header-component)
+  - [TEST-034 — ReCaptcha component](#test-034--recaptcha-component)
+  - [TEST-035 — Song Dedication page](#test-035--song-dedication-page)
+  - [TEST-036 — StaticHtmlViewer component](#test-036--statichtmlviewer-component)
+  - [TEST-037 — ToolGate component](#test-037--toolgate-component)
+  - [TEST-038 — ToolPreview component](#test-038--toolpreview-component)
 - [2. E2E Tests (Playwright)](#2-e2e-tests-playwright)
   - [TEST-600 — Full app — Public pages](#test-600--full-app--public-pages)
   - [TEST-601 — Full app — Exploration pages](#test-601--full-app--exploration-pages)
@@ -72,11 +85,11 @@
 
 | Suite | Entries | Individual Tests | How to Run | GCP Required |
 |-------|---------|-----------------|------------|--------------|
-| Unit (Vitest) | 25 | 1,149 | `cd web && npm test` | No (2 tests in public-proxy need GCP) |
+| Unit (Vitest) | 38 | 1,232 | `cd web && npm test` | No (2 tests in public-proxy need GCP) |
 | E2E (Playwright) | 14 | 47 | `cd web && npx playwright test` | Partial (some tests need GCP/LLM) |
 | E2E Real LLM | 3 | 3 | `cd web && npm run test:e2e:real` | Yes |
 | GCP Smoke | 13 | 13 | `cd web && npm run smoke:gcp` | Yes |
-| **Total** | **55** | **1,212** | `cd web && npm run test:all` | — |
+| **Total** | **68** | **1,295** | `cd web && npm run test:all` | — |
 
 ---
 
@@ -113,12 +126,12 @@ Tests Zod-based env parsing: valid environment acceptance, missing required valu
 
 ### TEST-004 — CAPTCHA verification helpers
 
-- **Suite:** Unit | **Tests:** 11 | **GCP:** No
+- **Suite:** Unit | **Tests:** 14 | **GCP:** No
 - **Features:** 10.1
 - **Implementation:** `web/src/lib/captcha.test.ts`
 - **Run:** `npm test -- captcha.test`
 
-Tests reCAPTCHA request body construction (secret, token, optional remoteip, special chars) and error code mapping (missing-input, invalid-input, timeout, bad-request, server config, unknown codes, multi-code priority).
+Tests `buildVerifyRequestBody`: constructs URLSearchParams with secret and response token, includes remoteip when provided, preserves special characters in tokens, omits remoteip when empty string (4 tests). Tests `mapRecaptchaErrorCodes` with 10 cases: returns default "Captcha verification failed" for undefined and empty arrays, maps missing-input-response, invalid-input-response, timeout-or-duplicate, missing/invalid-input-secret (server config), bad-request, returns first match when multiple codes present, and returns default for unknown codes.
 
 ### TEST-005 — Rate limit module
 
@@ -239,12 +252,12 @@ Tests constants (max turns, token limits), system prompt construction (resume co
 
 ### TEST-018 — Interview guardrails classification
 
-- **Suite:** Unit | **Tests:** 175 | **GCP:** No
+- **Suite:** Unit | **Tests:** 196 | **GCP:** No
 - **Features:** 8.3
 - **Implementation:** `web/src/lib/interview-guardrails.test.ts`
 - **Run:** `npm test -- interview-guardrails.test`
 
-Tests constants (confidence thresholds, category lists), topic classification for allowed categories (work_history, projects, skills, education, availability, location_remote, compensation, career_goals, interview_meta), topic classification for disallowed categories (personal_life, politics, medical, religion, financial_private, general_assistant, prompt_injection, inappropriate), edge cases (empty input, very long input, mixed topics), checkGuardrails integration (allowed pass-through, blocked with redirect), redirect response generation (topic-specific, generic, persistent off-topic), persistent off-topic detection, classification prompt building, LLM response parsing, allowed/disallowed category accessors, confidence level handling, real-world interview questions, prompt injection resistance, general assistant rejection, and result structure validation. Uses `it.each` for parameterized coverage across 147 message samples.
+Tests the topic classifier that keeps interviews career-focused. Constants: subject name, contact email, LLM classification prompt (3 tests). Allowed topic classification via `it.each` (59 parameterized tests): work_history (8), projects (8), skills (8), education (7), availability (6), location_remote (7), compensation (5), career_goals (6), interview_meta (4). Disallowed topic classification via `it.each` (53 parameterized tests): personal_life (8), politics (7), medical (7), religion (6), financial_private (6), general_assistant (9), prompt_injection (6), inappropriate (4). Edge cases: empty/whitespace/very-short messages, ambiguous messages, mixed-case, priority resolution (8 tests). `checkGuardrails` integration: pass-through, redirect, LLM verification suggestion (6 tests). Redirect responses: per-category, generic, persistent off-topic with contact email (9 tests). `isPersistentlyOffTopic`: threshold logic, consecutive detection, last-N-only (6 tests). LLM helpers: prompt building, ALLOWED/DISALLOWED parsing with case and whitespace handling (7 tests). Category accessors (4 tests). Confidence levels (3 tests). Real-world interview examples: 10 allowed + 7 disallowed (2 parameterized tests). Prompt injection resistance: 8 attempts (1 parameterized test). General assistant rejection: 10 requests (1 parameterized test). Result structure validation (4 tests). Uses `it.each` for parameterized coverage across 147 message samples.
 
 ### TEST-019 — Submission module
 
@@ -308,6 +321,123 @@ Tests ContentBlockedError (message, code, safety ratings, response metadata), Ge
 - **Run:** `npm test -- route.test`
 
 Tests GCS file serving via proxy (status 200, content-type, cache-control headers), 404 for missing files (GCP integration), and directory traversal blocking (unit test, no GCP).
+
+### TEST-026 — Footer component
+
+- **Suite:** Unit | **Tests:** 2 | **GCP:** No
+- **Features:** 8.6
+- **Implementation:** `web/src/components/Footer.test.tsx`
+- **Run:** `npm test -- Footer.test`
+
+Renders copyright text with dynamically computed current year ("YYYY Sam Kirk"). Renders contact email as a clickable `mailto:sam@samkirk.com` link.
+
+### TEST-027 — Category Theory page
+
+- **Suite:** Unit | **Tests:** 3 | **GCP:** No
+- **Features:** 8.6
+- **Implementation:** `web/src/app/explorations/category-theory/page.test.tsx`
+- **Run:** `npm test -- category-theory`
+
+Renders "Category Theory" heading. Renders page description about everyday category theory examples. Renders `StaticHtmlViewer` iframe with `src="/static/category-theory.html"`.
+
+### TEST-028 — Dance Instruction page
+
+- **Suite:** Unit | **Tests:** 3 | **GCP:** No
+- **Features:** 8.6
+- **Implementation:** `web/src/app/explorations/dance-instruction/page.test.tsx`
+- **Run:** `npm test -- dance-instruction`
+
+Renders "Dance Instruction" heading. Renders description about teaching and learning dance. Renders `StaticHtmlViewer` iframe with `src="/static/dance-instruction.html"`.
+
+### TEST-029 — Pocket Flow page
+
+- **Suite:** Unit | **Tests:** 3 | **GCP:** No
+- **Features:** 8.6
+- **Implementation:** `web/src/app/explorations/pocket-flow/page.test.tsx`
+- **Run:** `npm test -- pocket-flow`
+
+Renders "Pocket Flow" heading. Renders description about the lightweight AI workflow framework. Renders `StaticHtmlViewer` iframe with `src="/static/pocket-flow.html"`.
+
+### TEST-030 — Uber Level AI Skills page
+
+- **Suite:** Unit | **Tests:** 3 | **GCP:** No
+- **Features:** 8.6
+- **Implementation:** `web/src/app/explorations/uber-level-ai-skills/page.test.tsx`
+- **Run:** `npm test -- uber-level-ai-skills`
+
+Renders "Uber Level AI Skills" heading. Renders description about advanced AI tool techniques. Renders `StaticHtmlViewer` iframe with `src="/static/uber-level-ai-skills.html"`.
+
+### TEST-031 — Explorations hub page
+
+- **Suite:** Unit | **Tests:** 3 | **GCP:** No
+- **Features:** 8.6
+- **Implementation:** `web/src/app/explorations/page.test.tsx`
+- **Run:** `npm test -- explorations/page.test`
+
+Renders "Explorations" heading. Renders links to all 5 exploration topics (Category Theory, Pocket Flow, Dance Instruction, Uber Level AI Skills, Tensor Logic) with correct hrefs. Renders topic descriptions.
+
+### TEST-032 — Home page
+
+- **Suite:** Unit | **Tests:** 5 | **GCP:** No
+- **Features:** 8.6
+- **Implementation:** `web/src/app/page.test.tsx`
+- **Run:** `npm test -- src/app/page.test`
+
+Renders "Sam Kirk" welcome heading. Renders "Hiring Manager" section. Renders all three AI tool cards (Fit Analysis, Custom Resume, Interview Me) with correct links to `/hire-me/fit`, `/hire-me/resume`, `/hire-me/interview`. Renders TOC sections (Dance Menu, Photo Fun, Song Dedication, Explorations) with links. Renders Villa Madu Bali section with external link.
+
+### TEST-033 — Header component
+
+- **Suite:** Unit | **Tests:** 6 | **GCP:** No
+- **Features:** 8.6
+- **Implementation:** `web/src/components/Header.test.tsx`
+- **Run:** `npm test -- Header.test`
+
+Renders "Sam Kirk" logo link with `href="/"`. Renders all main navigation links (Home, Hire Me, Dance Menu, Song Dedication, Photo Fun, Explorations) for desktop and mobile. Renders mobile menu button with `aria-expanded` attribute. Toggles mobile menu on button click (aria-expanded false→true). Verifies correct href attributes for all nav links. Renders desktop navigation with responsive `md:flex` class.
+
+### TEST-034 — ReCaptcha component
+
+- **Suite:** Unit | **Tests:** 6 | **GCP:** No
+- **Features:** 10.1
+- **Implementation:** `web/src/components/ReCaptcha.test.tsx`
+- **Run:** `npm test -- ReCaptcha.test`
+
+`ReCaptcha` component (4 tests): shows error when site key not configured, renders `recaptcha-container` element when key provided, shows loading placeholder with `animate-pulse`, applies custom className. `CaptchaGate` wrapper (2 tests): shows captcha initially while hiding children, renders custom title and description props.
+
+### TEST-035 — Song Dedication page
+
+- **Suite:** Unit | **Tests:** 6 | **GCP:** No
+- **Features:** 8.6
+- **Implementation:** `web/src/app/song-dedication/page.test.tsx`
+- **Run:** `npm test -- song-dedication`
+
+Renders "Resilience in the Storm" heading. Renders about section ("A song created for my mother"). Renders audio/listen section with audio element. Renders external listening links ("View ChatGPT thread"). Renders lyrics section with Verse 1, Chorus, Verse 2 labels. Renders song info footer with ChatGPT and Udio.com credits.
+
+### TEST-036 — StaticHtmlViewer component
+
+- **Suite:** Unit | **Tests:** 6 | **GCP:** No
+- **Features:** 8.6
+- **Implementation:** `web/src/components/StaticHtmlViewer.test.tsx`
+- **Run:** `npm test -- StaticHtmlViewer.test`
+
+Renders iframe with correct `/static/` prefixed src path. Applies `sandbox="allow-same-origin allow-scripts"` for security. Uses provided minHeight value. Uses default 400px minHeight when not specified. Renders "Loading content" indicator initially. Wraps iframe in styled container with `rounded-xl`, `border`, `overflow-hidden` classes.
+
+### TEST-037 — ToolGate component
+
+- **Suite:** Unit | **Tests:** 6 | **GCP:** No
+- **Features:** 10.1
+- **Implementation:** `web/src/components/ToolGate.test.tsx`
+- **Run:** `npm test -- ToolGate.test`
+
+Shows "Initializing..." loading state during session init fetch. Shows error state when session init returns HTTP 500. Shows captcha verification screen when `captchaPassed=false` in session response. Skips captcha and renders protected children when `captchaPassed=true`. Uses default "Please verify you're human" title when no `toolName` prop. Shows connection error when fetch rejects (network failure).
+
+### TEST-038 — ToolPreview component
+
+- **Suite:** Unit | **Tests:** 7 | **GCP:** No
+- **Features:** 8.6
+- **Implementation:** `web/src/components/ToolPreview.test.tsx`
+- **Run:** `npm test -- ToolPreview.test`
+
+Renders title and description text. Renders CTA link with correct href and label. Renders icon element when provided via props. Omits icon container when no icon prop. Renders previewContent when provided. Omits preview section when no previewContent. Applies card styling classes (`rounded-xl`, `border`, `shadow-sm`).
 
 ---
 
@@ -380,66 +510,66 @@ Verifies basic accessibility: home page has exactly one h1, tool pages have prop
 
 ### TEST-610 — Fit tool — Happy path
 
-- **Suite:** E2E | **Tests:** 3 | **GCP:** Yes
+- **Suite:** E2E | **Tests:** 4 | **GCP:** Yes
 - **Features:** 8.1, 7, 8.4
 - **Implementation:** `web/e2e/fit-tool.spec.ts` (Happy Path)
 - **Run:** `npx playwright test fit-tool`
 
-E2E test of the fit tool browser flow: navigates to fit tool page, pastes a job posting, submits, waits for LLM analysis, and verifies the fit report renders with scores, categories, and citations.
+Complete end-to-end fit analysis: pastes a sample job posting, clicks analyze, handles follow-up questions if any, waits for LLM analysis, and verifies results page shows fit score, recommendation, and category breakdown. Verifies all three input modes (paste/URL/upload) are available after completion. Clicks "enter url" and verifies URL input field appears. Validates analyze button is disabled when input is empty, enabled when text is entered, and disabled again when cleared.
 
 ### TEST-611 — Fit tool — Error handling
 
-- **Suite:** E2E | **Tests:** 2 | **GCP:** No
+- **Suite:** E2E | **Tests:** 1 | **GCP:** No
 - **Features:** 8.1, 13
 - **Implementation:** `web/e2e/fit-tool.spec.ts` (Error Handling)
 - **Run:** `npx playwright test fit-tool`
 
-E2E test of fit tool error states: verifies behavior with empty input, too-short input, and UI error messaging.
+Submits minimal invalid input ("x") via the fit tool form, clicks analyze, and waits for either an error message or a processing state to render — verifying the UI handles bad input without crashing.
 
 ### TEST-620 — Resume tool — Happy path
 
-- **Suite:** E2E | **Tests:** 4 | **GCP:** Yes
+- **Suite:** E2E | **Tests:** 5 | **GCP:** Yes
 - **Features:** 8.2, 7, 8.4
 - **Implementation:** `web/e2e/resume-tool.spec.ts` (Happy Path)
 - **Run:** `npx playwright test resume-tool`
 
-E2E test of the resume tool browser flow: navigates to resume tool page, pastes a job posting, submits, waits for LLM generation, and verifies the tailored resume renders with header, summary, skills, experience, and education.
+Complete end-to-end resume generation: pastes a sample job posting, clicks "generate custom resume", waits for generating state, and verifies results show professional summary, experience entries, skill categories, factual accuracy note, and download/generate-another buttons. Verifies all three input modes available after completion. Clicks "enter url" and verifies URL input field. Validates generate button disabled/enabled with empty/filled input. Checks "100% factual", "2-page format", "multiple formats" feature cards are visible.
 
 ### TEST-621 — Resume tool — Error handling
 
-- **Suite:** E2E | **Tests:** 2 | **GCP:** No
+- **Suite:** E2E | **Tests:** 1 | **GCP:** No
 - **Features:** 8.2, 13
 - **Implementation:** `web/e2e/resume-tool.spec.ts` (Error Handling)
 - **Run:** `npx playwright test resume-tool`
 
-E2E test of resume tool error states: verifies behavior with empty input and invalid submissions.
+Submits minimal invalid input ("x") via the resume tool form, clicks generate, and waits for either an error message, generating state, or ready state to render — verifying the UI handles bad input gracefully.
 
 ### TEST-630 — Interview tool — UI
 
-- **Suite:** E2E | **Tests:** 4 | **GCP:** No
+- **Suite:** E2E | **Tests:** 5 | **GCP:** No
 - **Features:** 8.3
 - **Implementation:** `web/e2e/interview-tool.spec.ts` (UI)
 - **Run:** `npx playwright test interview-tool`
 
-E2E test of interview tool UI: page loads with heading, chat interface is visible, input field and send button are present, and initial state shows welcome message.
+Verifies "Interview Me NOW" heading and description text. Waits for captcha pass and verifies welcome message with topic list (work history, technical skills, etc.). Checks chat input field, send button, and "press Enter to send" hint are visible. Verifies "real-time chat", "career-focused", "download transcript" feature cards. Checks new conversation button exists.
 
 ### TEST-631 — Interview tool — Input behavior
 
-- **Suite:** E2E | **Tests:** 4 | **GCP:** No
+- **Suite:** E2E | **Tests:** 5 | **GCP:** No
 - **Features:** 8.3
 - **Implementation:** `web/e2e/interview-tool.spec.ts` (Input Behavior)
 - **Run:** `npx playwright test interview-tool`
 
-E2E test of interview tool input handling: send button disabled with empty input, character counter works, input clears after send, and Enter key submits.
+Types a question and clicks send — verifies user message appears in chat. Types a message and presses Enter — verifies it sends. Sends a message and verifies input becomes disabled with "waiting for response" placeholder while AI responds. Sends a message and checks for typing indicator during wait. Clicks "new conversation" after sending a message and verifies the chat resets (message disappears, welcome message returns).
 
 ### TEST-632 — Interview tool — Conversation
 
-- **Suite:** E2E | **Tests:** 3 | **GCP:** Yes
+- **Suite:** E2E | **Tests:** 1 | **GCP:** Yes
 - **Features:** 8.3, 7
 - **Implementation:** `web/e2e/interview-tool.spec.ts` (Conversation)
 - **Run:** `npx playwright test interview-tool`
 
-E2E test of interview tool conversation flow: sends a question, receives an AI response, multi-turn conversation works, and guardrails redirect off-topic questions.
+Sends "What programming languages do you know?" in the interview chat, waits for AI response, verifies 2-message chat history is visible (user + assistant), clicks the download transcript button, and saves the response fixture to `test-fixtures/` for regression testing.
 
 ---
 
@@ -610,9 +740,9 @@ Verifies retention cleanup logic with real GCP: creates expired test submissions
 | 8.3 | Interview Tool | TEST-017, TEST-018, TEST-630, TEST-631, TEST-632, TEST-652, TEST-681 |
 | 8.4 | Citations | TEST-012, TEST-013, TEST-021, TEST-610, TEST-620, TEST-650, TEST-651, TEST-652 |
 | 8.5 | Dance Menu | TEST-022, TEST-600, TEST-675 |
-| 8.6 | Static Pages | TEST-600, TEST-601, TEST-603, TEST-606 |
+| 8.6 | Static Pages | TEST-026, TEST-027, TEST-028, TEST-029, TEST-030, TEST-031, TEST-032, TEST-033, TEST-035, TEST-036, TEST-038, TEST-600, TEST-601, TEST-603, TEST-606 |
 | 9 | Authentication | TEST-002, TEST-602 |
-| 10.1 | Session Management | TEST-001, TEST-004, TEST-604, TEST-672 |
+| 10.1 | Session Management | TEST-001, TEST-004, TEST-034, TEST-037, TEST-604, TEST-672 |
 | 10.2 | Rate Limiting | TEST-005 |
 | 10.3 | Spend Cap | TEST-006, TEST-677 |
 | 11 | Storage / Firestore / Retention | TEST-007, TEST-008, TEST-019, TEST-020, TEST-023, TEST-025, TEST-604, TEST-650, TEST-651, TEST-652, TEST-670, TEST-671, TEST-672, TEST-673, TEST-674, TEST-675, TEST-676, TEST-677, TEST-682 |
