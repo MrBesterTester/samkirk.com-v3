@@ -156,17 +156,33 @@ npm run test:all
 
 ### Viewing Previous Results
 
+Use `npm run test:results` to inspect archived test runs. This replaces manual `ls` + `cat` commands against the archive directory.
+
+**Command reference:**
+
 ```bash
-# Latest archived summary (most recent full run):
-ls -t do-work/archive/test-runs/ | head -1    # find the latest run
-cat do-work/archive/test-runs/<TIMESTAMP>/summary.md
+npm run test:results                         # Latest run summary + fixture updates
+npm run test:results -- --list               # All archived runs
+npm run test:results -- --full               # Latest with test index
+npm run test:results -- --run 2026-02-09     # Specific run (partial timestamp match)
+npm run test:results -- --log e2e-tests      # Raw E2E log output
+npm run test:results -- --fixtures           # Fixture inventory
+npm run test:results -- --diff               # Compare last two runs
+npm run test:results -- --json               # Machine-readable JSON output
+```
 
-# Raw logs from that run (gitignored, local only):
-cat do-work/archive/test-runs/<TIMESTAMP>/unit-tests.log
-cat do-work/archive/test-runs/<TIMESTAMP>/e2e-tests.log
-cat do-work/archive/test-runs/<TIMESTAMP>/e2e-real-llm.log
-cat do-work/archive/test-runs/<TIMESTAMP>/gcp-smoke.log
+**Common workflows:**
 
+| Task | Command |
+|------|---------|
+| Check latest results | `npm run test:results` |
+| Compare runs after a fix | `npm run test:results -- --diff` |
+| Debug a suite failure | `npm run test:results -- --log <suite>` |
+| See what fixtures changed | `npm run test:results -- --fixtures` |
+
+**Other tools:**
+
+```bash
 # Playwright HTML report (E2E only, viewable in browser):
 npx playwright show-report web/playwright-report
 
@@ -178,7 +194,7 @@ Each `test:all` run archives a `summary.md` with pass/fail counts, durations, an
 
 #### Test Fixtures
 
-Real inputs and outputs from each tool are saved in `web/test-fixtures/`. Each subdirectory has a README with a data-flow diagram and file descriptions. Browse these to understand what the tools produce without re-running tests.
+Real inputs and outputs from each tool are saved in `web/test-fixtures/`. Each subdirectory has a README with a data-flow diagram and file descriptions. Browse these to understand what the tools produce without re-running tests. Fixture updates now appear automatically in test run summaries when you run `npm run test:results`.
 
 | Directory | Tool | Key files |
 |-----------|------|-----------|
