@@ -25,8 +25,8 @@
  */
 
 import { spawn, execSync, type ChildProcess } from "child_process";
-import { resolve } from "path";
-import { readdirSync, readFileSync, existsSync, mkdirSync, writeFileSync } from "fs";
+import { resolve, relative } from "path";
+import { readdirSync, readFileSync, existsSync, mkdirSync, writeFileSync, statSync } from "fs";
 import { config } from "dotenv";
 
 // Load .env.local from the web directory (before any GCP checks)
@@ -104,6 +104,16 @@ interface TestFileEntry {
   path: string;
   /** Describe block names found in the file */
   describes: string[];
+}
+
+/** A fixture file that was created or updated during a test run */
+interface FixtureUpdate {
+  /** Relative path from test-fixtures/ */
+  file: string;
+  /** Which suite was responsible */
+  suite: string;
+  /** "created" or "updated" */
+  type: "created" | "updated";
 }
 
 // ============================================================================
@@ -409,6 +419,82 @@ function checkChromePrerequisite(suitesToRun: Suite[]): void {
     process.exit(1);
   }
   log("Chrome is running", true);
+}
+
+// ============================================================================
+// Fixture Mtime Tracking
+// ============================================================================
+
+/** Walk test-fixtures/ recursively and return Map<relativePath, mtimeMs> */
+function snapshotFixtureMtimes(): Map<string, number> {
+  const fixtureDir = resolve(__dirname, "..", "test-fixtures");
+  const mtimes = new Map<string, number>();
+
+  if (!existsSync(fixtureDir)) return mtimes;
+
+  function walk(dir: string): void {
+    const entries = readdirSync(dir, { withFileTypes: true });
+    for (const entry of entries) {
+      const full = resolve(dir, entry.name);
+      if (entry.isDirectory()) {
+        walk(full);
+      } else if (entry.name !== "README.md") {
+        const rel = relative(fixtureDir, full);
+        const stat = statSync(full);
+        mtimes.set(rel, stat.mtimeMs);
+      }
+    }
+  }
+
+  walk(fixtureDir);
+  return mtimes;
+}
+
+/** Compare before/after mtime snapshots; return files that were created or updated */
+function diffFixtureMtimes(
+  before: Map<string, number>,
+  after: Map<string, number>,
+): { file: string; type: "created" | "updated" }[] {
+  const changes: { file: string; type: "created" | "updated" }[] = [];
+
+  for (const [file, afterMtime] of after) {
+    const beforeMtime = before.get(file);
+    if (beforeMtime === undefined) {
+      changes.push({ file, type: "created" });
+    } else if (afterMtime !== beforeMtime) {
+      changes.push({ file, type: "updated" });
+    }
+  }
+
+  return changes;
+}
+
+/**
+ * Attribute fixture changes to suites using suite start/end timestamps.
+ *
+ * Since suites run sequentially, a file whose mtime falls within a suite's
+ * [startMs, endMs] window is attributed to that suite. Files that cannot be
+ * attributed are assigned to "unknown".
+ */
+function attributeSuiteToFixture(
+  diffs: { file: string; type: "created" | "updated" }[],
+  suiteTiming: { name: string; startMs: number; endMs: number }[],
+  afterSnapshot: Map<string, number>,
+): FixtureUpdate[] {
+  return diffs.map((d) => {
+    const mtime = afterSnapshot.get(d.file) ?? 0;
+
+    // Find the suite whose execution window contains this file's mtime
+    const suite = suiteTiming.find(
+      (s) => mtime >= s.startMs && mtime <= s.endMs,
+    );
+
+    return {
+      file: d.file,
+      suite: suite?.name ?? "unknown",
+      type: d.type,
+    };
+  });
 }
 
 // ============================================================================
@@ -821,6 +907,7 @@ interface ArchiveOptions {
   noArchive: boolean;
   gcpAvailable: boolean;
   testIndex: TestFileEntry[];
+  fixtureUpdates: FixtureUpdate[];
 }
 
 /** Write test-run archive: summary.md + per-suite .log files */
@@ -1043,6 +1130,7 @@ async function main(): Promise<void> {
     noArchive: args.noArchive,
     gcpAvailable,
     testIndex,
+    fixtureUpdates: [], // Wired in REQ-047
   });
 
   // Exit code
