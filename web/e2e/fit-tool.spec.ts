@@ -102,12 +102,13 @@ test.describe("Fit Tool Happy Path", () => {
     if (await followUpHeader.isVisible({ timeout: 1000 }).catch(() => false)) {
       // There's a follow-up question - answer it
       // Look for radio buttons (predefined options) or text input
-      const radioOptions = page.locator('input[type="radio"]');
-      const radioCount = await radioOptions.count();
+      // Click the parent <label> instead of the sr-only input, which is blocked by a styled span overlay
+      const radioLabels = page.locator('label:has(input[type="radio"])');
+      const radioCount = await radioLabels.count();
 
       if (radioCount > 0) {
-        // Select the first option
-        await radioOptions.first().click();
+        // Select the first option by clicking its label
+        await radioLabels.first().click();
       } else {
         // Free text input - provide a generic answer
         const answerInput = page.getByPlaceholder(/type your answer/i);
@@ -235,12 +236,13 @@ test.describe("Fit Tool Happy Path", () => {
     const followUpHeader = page.getByText(/follow-up question/i);
     if (await followUpHeader.isVisible({ timeout: 1000 }).catch(() => false)) {
       // There's a follow-up question - answer it
-      const radioOptions = page.locator('input[type="radio"]');
-      const radioCount = await radioOptions.count();
+      // Click the parent <label> instead of the sr-only input, which is blocked by a styled span overlay
+      const radioLabels = page.locator('label:has(input[type="radio"])');
+      const radioCount = await radioLabels.count();
 
       if (radioCount > 0) {
-        // Select the first option
-        await radioOptions.first().click();
+        // Select the first option by clicking its label
+        await radioLabels.first().click();
       } else {
         // Free text input - provide a generic answer
         const answerInput = page.getByPlaceholder(/type your answer/i);
@@ -340,12 +342,13 @@ test.describe("Fit Tool Happy Path", () => {
     const followUpHeader = page.getByText(/follow-up question/i);
     if (await followUpHeader.isVisible({ timeout: 1000 }).catch(() => false)) {
       // There's a follow-up question - answer it
-      const radioOptions = page.locator('input[type="radio"]');
-      const radioCount = await radioOptions.count();
+      // Click the parent <label> instead of the sr-only input, which is blocked by a styled span overlay
+      const radioLabels = page.locator('label:has(input[type="radio"])');
+      const radioCount = await radioLabels.count();
 
       if (radioCount > 0) {
-        // Select the first option
-        await radioOptions.first().click();
+        // Select the first option by clicking its label
+        await radioLabels.first().click();
       } else {
         // Free text input - provide a generic answer
         const answerInput = page.getByPlaceholder(/type your answer/i);
