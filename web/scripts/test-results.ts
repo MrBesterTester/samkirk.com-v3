@@ -394,15 +394,100 @@ function printDefaultView(
 }
 
 // ============================================================================
+// List View
+// ============================================================================
+
+/** Print a reverse-chronological table of all archived test runs */
+function printListView(): void {
+  const archiveDir = getArchiveDir();
+
+  if (!existsSync(archiveDir)) {
+    log("No test run archives found in do-work/archive/test-runs/", false);
+    process.exit(1);
+  }
+
+  const entries = readdirSync(archiveDir, { withFileTypes: true });
+  const dirs = entries
+    .filter((e) => e.isDirectory())
+    .map((e) => e.name)
+    .sort()
+    .reverse(); // newest first
+
+  if (dirs.length === 0) {
+    log("No test run archives found in do-work/archive/test-runs/", false);
+    process.exit(1);
+  }
+
+  // Collect parsed runs, skipping any with missing/unparseable summaries
+  const runs: { dirName: string; frontmatter: SummaryFrontmatter }[] = [];
+  for (const dirName of dirs) {
+    const summaryPath = resolve(archiveDir, dirName, "summary.md");
+    if (!existsSync(summaryPath)) continue;
+    try {
+      const content = readFileSync(summaryPath, "utf-8");
+      const fm = parseSummaryFrontmatter(content);
+      if (fm) runs.push({ dirName, frontmatter: fm });
+    } catch {
+      // skip unparseable archives
+    }
+  }
+
+  if (runs.length === 0) {
+    log("No parseable test run summaries found", false);
+    process.exit(1);
+  }
+
+  // Column widths
+  const COL_TS = 26;
+  const COL_OVERALL = 9;
+
+  console.log(SEPARATOR);
+  console.log(
+    `  ARCHIVED TEST RUNS (${runs.length} found)`,
+  );
+  console.log(SEPARATOR);
+  console.log("");
+
+  // Header
+  console.log(
+    "  " +
+      padRight("Timestamp", COL_TS) +
+      padRight("Overall", COL_OVERALL) +
+      "Suites",
+  );
+  console.log(`  ${THIN_SEP}`);
+
+  // Rows
+  for (const { frontmatter } of runs) {
+    const displayTs = formatTimestamp(frontmatter.timestamp);
+    const overallUpper = frontmatter.overall.toUpperCase();
+    const overallColor =
+      frontmatter.overall === "pass" ? ANSI.green : ANSI.red;
+    const suitesStr = frontmatter.suites_run.join(", ");
+
+    console.log(
+      "  " +
+        padRight(displayTs, COL_TS) +
+        colorize(padRight(overallUpper, COL_OVERALL), overallColor + ANSI.bold) +
+        suitesStr,
+    );
+  }
+
+  console.log(SEPARATOR);
+}
+
+// ============================================================================
 // Main
 // ============================================================================
 
 function main(): void {
   const args = parseArgs();
 
-  // Handle flags that are parsed but not yet implemented
+  // Handle --list flag
   if (args.list) {
-    log("--list flag not implemented yet");
+    console.log("");
+    printListView();
+    console.log("");
     process.exit(0);
   }
   if (args.log !== null) {
