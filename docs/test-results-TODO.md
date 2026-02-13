@@ -8,28 +8,28 @@
 
 ## Phase 1: Core Viewer Script
 
-- [ ] **[Opus 4.5]** 1.1 Create `web/scripts/test-results.ts` with default mode (latest run summary)
-  - [ ] Add `log()`, ANSI color helpers matching existing script conventions
-  - [ ] Parse CLI args (`--list`, `--run`, `--full`, `--log`, `--fixtures`, `--diff`, `--json`)
-  - [ ] Implement `findLatestArchive()` — sort `do-work/archive/test-runs/` lexicographically
-  - [ ] Implement `parseSummaryFrontmatter()` — regex-based YAML extraction (timestamp, suites_run, overall, gcp_available, triggered_by, release_candidate)
-  - [ ] Implement `parseSummaryTable()` — extract suite rows (name, status, passed, failed, skipped, duration)
-  - [ ] Implement `parseFixtureUpdates()` — extract Fixture Updates section (added in Phase 2)
-  - [ ] Print formatted terminal output: header, summary table, fixture updates, archive path
-  - [ ] TEST: Run against existing archives in `do-work/archive/test-runs/`
+- [x] **[Opus 4.5]** 1.1 Create `web/scripts/test-results.ts` with default mode (latest run summary)
+  - [x] Add `log()`, ANSI color helpers matching existing script conventions
+  - [x] Parse CLI args (`--list`, `--run`, `--full`, `--log`, `--fixtures`, `--diff`, `--json`)
+  - [x] Implement `findLatestArchive()` — sort `do-work/archive/test-runs/` lexicographically
+  - [x] Implement `parseSummaryFrontmatter()` — regex-based YAML extraction (timestamp, suites_run, overall, gcp_available, triggered_by, release_candidate)
+  - [x] Implement `parseSummaryTable()` — extract suite rows (name, status, passed, failed, skipped, duration)
+  - [x] Implement `parseFixtureUpdates()` — extract Fixture Updates section (added in Phase 2)
+  - [x] Print formatted terminal output: header, summary table, fixture updates, archive path
+  - [x] TEST: Run against existing archives in `do-work/archive/test-runs/`
 
-- [ ] **[Opus 4.5]** 1.2 Add `--list` mode
-  - [ ] Scan all archive directories, parse each `summary.md` frontmatter
-  - [ ] Print reverse-chronological table: timestamp, overall status, suites run
-  - [ ] TEST: Verify all 7+ existing archives appear correctly
+- [x] **[Opus 4.5]** 1.2 Add `--list` mode
+  - [x] Scan all archive directories, parse each `summary.md` frontmatter
+  - [x] Print reverse-chronological table: timestamp, overall status, suites run
+  - [x] TEST: Verify all 7+ existing archives appear correctly
 
 ## Phase 2: Fixture Mtime Tracking in Test Runner
 
-- [ ] **[Opus 4.5]** 2.1 Add fixture snapshot functions to `web/scripts/test-all.ts`
-  - [ ] Add `snapshotFixtureMtimes()` — walk `web/test-fixtures/` recursively, return `Map<string, number>`
-  - [ ] Add `diffFixtureMtimes()` — compare before/after snapshots, return changed files with type (created/updated)
-  - [ ] Add `attributeSuiteToFixture()` — use suite start/end timestamps for attribution
-  - [ ] Add `fixtureUpdates` field to `ArchiveOptions` interface
+- [x] **[Opus 4.5]** 2.1 Add fixture snapshot functions to `web/scripts/test-all.ts`
+  - [x] Add `snapshotFixtureMtimes()` — walk `web/test-fixtures/` recursively, return `Map<string, number>`
+  - [x] Add `diffFixtureMtimes()` — compare before/after snapshots, return changed files with type (created/updated)
+  - [x] Add `attributeSuiteToFixture()` — use suite start/end timestamps for attribution
+  - [x] Add `fixtureUpdates` field to `ArchiveOptions` interface
 
 - [ ] **[Opus 4.5]** 2.2 Write Fixture Updates section in `summary.md`
   - [ ] Insert `## Fixture Updates` section after Test Index in `writeArchive()`

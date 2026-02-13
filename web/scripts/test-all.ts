@@ -993,6 +993,23 @@ function writeArchive(opts: ArchiveOptions): void {
     summaryLines.push("No test files found.");
   }
 
+  // Fixture updates section
+  summaryLines.push("");
+  summaryLines.push("## Fixture Updates");
+  summaryLines.push("");
+  if (opts.fixtureUpdates.length > 0) {
+    summaryLines.push("| File | Suite | Type |");
+    summaryLines.push("|------|-------|------|");
+    for (const f of opts.fixtureUpdates) {
+      summaryLines.push(`| ${f.file} | ${f.suite} | ${f.type} |`);
+    }
+    summaryLines.push("");
+    const n = opts.fixtureUpdates.length;
+    summaryLines.push(`_${n} fixture(s) updated during this run._`);
+  } else {
+    summaryLines.push("No fixtures were updated during this run.");
+  }
+
   // Manual verifications section
   summaryLines.push("");
   summaryLines.push("## Manual Verifications (informational -- not gated)");
