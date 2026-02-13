@@ -108,13 +108,13 @@ title: "{Step title}"
 status: pending
 created_at: {ISO 8601 timestamp}
 user_request: UR-NNN
+related: []  # Populated during ingestion with REQ IDs of other steps created in the same batch. If dependencies are unclear, leave empty.
+batch: "{prefix}-phase-{phase number}"
 # work-action fields (claimed_at, route, completed_at, commit, error) go here
 source_step: "{step number}"
 source_doc: "{TODO file path}"
 blueprint_ref: "{BLUEPRINT file path}"
 model_hint: "{most common model label for this step}"
-batch: "{prefix}-phase-{phase number}"
-related: []  # Populated during ingestion with REQ IDs of other steps created in the same batch. If dependencies are unclear, leave empty.
 ---
 
 # {Step title} (Step {step number})
