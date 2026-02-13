@@ -111,12 +111,12 @@ The Playwright E2E tests (`--e2e`) use system Chrome directly — they do **not*
 | `.env.local` exists | `test -f web/.env.local && echo OK` | `cp web/.env.local.example web/.env.local` and fill in values |
 | GCP credentials (ADC) | `gcloud auth application-default print-access-token > /dev/null && echo OK` | `gcloud auth application-default login` |
 
-For the **Real LLM E2E** suite (`--e2e-real`), you also need:
+For the **Real LLM E2E** suite (`--e2e-real`), these prerequisites are handled automatically:
 
-| Prerequisite | Check if done | Setup (if needed) |
+| Prerequisite | Automated? | Manual fallback |
 |---|---|---|
-| Seeded resume | `gcloud storage cat gs://samkirk-v3-private/resume/master.md --range=0-50` | `cd web && npm run seed:resume` |
-| Vertex AI API enabled | `gcloud services list --enabled --filter=aiplatform` | `gcloud services enable aiplatform.googleapis.com` |
+| Seeded resume | **Yes** — auto-seeds via `seed-resume.ts` if missing | `cd web && npm run seed:resume` |
+| Vertex AI API enabled | **Detected** — pauses and prompts you to enable, then retries on Enter | `gcloud services enable aiplatform.googleapis.com` |
 
 Real LLM tests cost ~$0.03–0.15 per run in Vertex AI tokens.
 
@@ -142,7 +142,7 @@ npm run test:all -- --e2e --no-gcp
 npm run test:all -- --smoke
 ```
 
-**Step 4 — Real LLM E2E** (needs seeded resume + Vertex AI):
+**Step 4 — Real LLM E2E** (auto-seeds resume; needs Vertex AI API enabled):
 
 ```bash
 npm run test:all -- --e2e-real

@@ -4,24 +4,26 @@
  * Run with: cd web && npm run test:e2e:real
  *
  * This script:
- * 1. Requires seeded resume data in GCS/Firestore (run npm run seed:resume first)
- * 2. Tests the Fit tool flow with real Vertex AI
- * 3. Tests the Resume tool flow with real Vertex AI
- * 4. Tests the Interview tool flow with real Vertex AI
- * 5. Validates response structures
- * 6. Cleans up test data
+ * 1. Verifies Vertex AI API is enabled (exits with instructions if not)
+ * 2. Auto-seeds resume data if not already present in GCS/Firestore
+ * 3. Tests the Fit tool flow with real Vertex AI
+ * 4. Tests the Resume tool flow with real Vertex AI
+ * 5. Tests the Interview tool flow with real Vertex AI
+ * 6. Validates response structures
+ * 7. Cleans up test data
  *
  * Note: Incurs real Vertex AI costs (~$0.03-0.15 per run)
  *
  * Prerequisites:
  * - GCP credentials set up (GOOGLE_APPLICATION_CREDENTIALS or gcloud auth)
  * - web/.env.local file with required environment variables
- * - Seeded resume data (npm run seed:resume)
+ * - Vertex AI API enabled (gcloud services enable aiplatform.googleapis.com)
  */
 
 import { config } from "dotenv";
 import { resolve } from "path";
 import { randomBytes } from "crypto";
+import { spawnSync } from "child_process";
 
 // Load .env.local from the web directory
 config({ path: resolve(__dirname, "../.env.local") });
@@ -1105,28 +1107,89 @@ async function main(): Promise<void> {
     location: env.VERTEX_AI_LOCATION,
   });
 
+  // Step 2: Verify Vertex AI API is accessible
+  log("Verifying Vertex AI API access...");
+  async function checkVertexAI(): Promise<void> {
+    const testModel = vertexAI.getGenerativeModel({ model: env.VERTEX_AI_MODEL });
+    await testModel.countTokens({ contents: [{ role: "user", parts: [{ text: "test" }] }] });
+  }
+
+  function isApiDisabledError(error: unknown): boolean {
+    const message = error instanceof Error ? error.message : String(error);
+    return (
+      message.includes("PERMISSION_DENIED") ||
+      message.includes("SERVICE_DISABLED") ||
+      message.includes("is disabled") ||
+      message.includes("has not been used") ||
+      message.includes("aiplatform.googleapis.com")
+    );
+  }
+
+  function waitForEnter(prompt: string): Promise<void> {
+    return new Promise((resolve) => {
+      process.stdout.write(prompt);
+      process.stdin.setEncoding("utf-8");
+      process.stdin.once("data", () => resolve());
+      process.stdin.resume();
+    });
+  }
+
+  try {
+    await checkVertexAI();
+    log("Vertex AI API is accessible", true);
+  } catch (error) {
+    if (!isApiDisabledError(error)) throw error;
+
+    log("Vertex AI API is not enabled for this project.", false);
+    console.log("\nTo enable it, run this in another terminal:");
+    console.log(`  gcloud services enable aiplatform.googleapis.com --project=${env.GCP_PROJECT_ID}`);
+
+    await waitForEnter("\nPress Enter after enabling the API to retry...");
+
+    try {
+      log("Retrying Vertex AI API check...");
+      await checkVertexAI();
+      log("Vertex AI API is accessible", true);
+    } catch (retryError) {
+      if (isApiDisabledError(retryError)) {
+        log("Vertex AI API is still not accessible.", false);
+        process.exit(1);
+      }
+      throw retryError;
+    }
+  }
+
   // Track test data for cleanup
   const cleanupTasks: Array<() => Promise<void>> = [];
 
   try {
-    // Step 2: Verify resume is seeded
+    // Step 3: Verify resume is seeded (auto-seed if missing)
     log("Checking for seeded resume data...");
     const resumeIndexRef = firestore.collection(RESUME_INDEX_COLLECTION).doc(RESUME_INDEX_DOC);
-    const resumeIndex = await resumeIndexRef.get();
+    let resumeIndex = await resumeIndexRef.get();
 
-    if (!resumeIndex.exists) {
-      log("Resume not seeded. Run 'npm run seed:resume' first.", false);
-      process.exit(1);
+    if (!resumeIndex.exists || (resumeIndex.data()?.chunkCount ?? 0) === 0) {
+      log("Resume not seeded — auto-seeding now...");
+      const seedResult = spawnSync("npx", ["tsx", "scripts/seed-resume.ts"], {
+        cwd: resolve(__dirname, ".."),
+        stdio: "inherit",
+        env: process.env,
+      });
+      if (seedResult.status !== 0) {
+        log("Auto-seeding failed. Run 'npm run seed:resume' manually.", false);
+        process.exit(1);
+      }
+      // Re-check after seeding
+      resumeIndex = await resumeIndexRef.get();
+      if (!resumeIndex.exists || (resumeIndex.data()?.chunkCount ?? 0) === 0) {
+        log("Resume still not found after seeding.", false);
+        process.exit(1);
+      }
     }
 
     const indexData = resumeIndex.data();
     const resumeVersion = indexData?.version ?? 0;
     const chunkCount = indexData?.chunkCount ?? 0;
-
-    if (chunkCount === 0) {
-      log("No resume chunks found. Run 'npm run seed:resume' first.", false);
-      process.exit(1);
-    }
 
     log(`Found resume version ${resumeVersion} with ${chunkCount} chunks`, true);
 
