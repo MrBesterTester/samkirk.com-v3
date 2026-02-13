@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test Fixtures — samkirk-v3</title>
+  <style>
+    :root { --bg: #fff; --fg: #222; --muted: #666; --border: #ddd; --code-bg: #f5f5f5; --section-bg: #fafafa; --accent: #0969da; }
+    @media (prefers-color-scheme: dark) {
+      :root { --bg: #1a1a1a; --fg: #e0e0e0; --muted: #999; --border: #333; --code-bg: #252525; --section-bg: #222; --accent: #58a6ff; }
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; max-width: 1280px; margin: 0 auto; padding: 2rem 1.5rem; background: var(--bg); color: var(--fg); line-height: 1.6; }
+
+    /* Header */
+    h1 { font-size: 1.5rem; margin-bottom: 0.25rem; }
+    h1 + p { color: var(--muted); margin-bottom: 1.5rem; }
+    nav { margin-bottom: 2rem; padding: 1rem; background: var(--section-bg); border: 1px solid var(--border); border-radius: 6px; }
+    nav ul { list-style: none; display: flex; gap: 2rem; }
+    nav a { color: var(--accent); text-decoration: none; font-weight: 500; }
+    nav a:hover { text-decoration: underline; }
+
+    /* Sections */
+    section { margin-bottom: 3rem; }
+    h2 { font-size: 1.25rem; border-bottom: 2px solid var(--border); padding-bottom: 0.4rem; margin-bottom: 1rem; }
+    h3 { font-size: 1rem; margin: 1.25rem 0 0.5rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; }
+    pre.flow { background: var(--code-bg); padding: 1rem; border-radius: 6px; overflow-x: auto; font-size: 0.8rem; line-height: 1.4; margin-bottom: 1rem; border: 1px solid var(--border); }
+
+    /* Two-column layout */
+    .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 0.5rem; }
+    @media (max-width: 800px) { .compare { grid-template-columns: 1fr; } }
+    .pane { background: var(--section-bg); border: 1px solid var(--border); border-radius: 6px; padding: 1.25rem; overflow: auto; }
+    .pane-label { font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem; }
+    .pane-label .tag { margin: 0; }
+
+    /* File links */
+    .file-links { font-size: 0.8rem; margin-top: 1rem; padding-top: 0.75rem; border-top: 1px solid var(--border); color: var(--muted); }
+    .file-links a { margin-right: 1rem; }
+
+    /* Tags */
+    .tag { display: inline-block; font-size: 0.7rem; padding: 0.1rem 0.4rem; border-radius: 3px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.03em; }
+    .tag-input { background: #ddf4ff; color: #0550ae; }
+    .tag-output { background: #dafbe1; color: #116329; }
+    @media (prefers-color-scheme: dark) {
+      .tag-input { background: #0d2744; color: #58a6ff; }
+      .tag-output { background: #0d2f1e; color: #3fb950; }
+    }
+    a { color: var(--accent); }
+
+    /* Input pane: job description */
+    .jd-text { white-space: pre-wrap; font-size: 0.82rem; line-height: 1.5; font-family: 'SF Mono', Menlo, monospace; }
+
+    /* Output pane: resume iframe */
+    .pane iframe { border: 1px solid var(--border); border-radius: 4px; width: 100%; background: #fff; }
+
+    /* Output pane: fit report */
+    .report h4 { font-size: 1rem; margin: 1rem 0 0.25rem; }
+    .report h4:first-child { margin-top: 0; }
+    .report h5 { font-size: 0.9rem; margin: 0.75rem 0 0.25rem; }
+    .report p { margin: 0.4rem 0; font-size: 0.9rem; }
+    .report hr { border: none; border-top: 1px solid var(--border); margin: 1rem 0; }
+    .report table { width: 100%; border-collapse: collapse; margin: 0.5rem 0; font-size: 0.85rem; }
+    .report th { text-align: left; padding: 0.3rem 0.5rem; border-bottom: 2px solid var(--border); color: var(--muted); font-weight: 600; }
+    .report td { padding: 0.25rem 0.5rem; border-bottom: 1px solid var(--border); }
+
+    /* Output pane: transcript */
+    .transcript .turn { padding: 0.6rem 0; border-bottom: 1px solid var(--border); }
+    .transcript .turn:last-child { border-bottom: none; }
+    .transcript .speaker { font-weight: 600; font-size: 0.82rem; color: var(--muted); margin-bottom: 0.25rem; }
+    .transcript .speaker .time { font-weight: 400; }
+    .transcript .turn p { margin: 0.3rem 0; font-size: 0.9rem; }
+    .transcript .meta { color: var(--muted); font-size: 0.82rem; margin-bottom: 0.75rem; }
+
+    /* Input pane: test questions */
+    .questions { font-size: 0.9rem; }
+    .questions .q { margin-bottom: 1rem; }
+    .questions .q-text { font-weight: 500; margin-bottom: 0.25rem; }
+    .questions .q-meta { font-size: 0.8rem; color: var(--muted); }
+    .questions .q-meta code { font-size: 0.75rem; background: var(--code-bg); padding: 0.1rem 0.3rem; border-radius: 3px; }
+    .questions .q-offtopic { border-left: 3px solid #d1242f; padding-left: 0.75rem; }
+    .questions h5 { font-size: 0.85rem; color: var(--muted); margin: 1rem 0 0.5rem; text-transform: uppercase; letter-spacing: 0.04em; }
+
+    /* Sources footer */
+    .sources { font-size: 0.78rem; color: var(--muted); margin-top: 1rem; padding-top: 0.75rem; border-top: 1px solid var(--border); }
+    .sources ol { padding-left: 1.25rem; }
+    .sources li { margin: 0.15rem 0; }
+  </style>
+</head>
+<body>
+
+<h1>Test Fixtures</h1>
+<p>Real inputs and outputs from each tool, captured by test suites. <a href="https://github.com/samkirk-v3">samkirk-v3</a></p>
+
+<nav>
+  <ul>
+    <li><a href="#resume-generator">Resume Generator</a></li>
+    <li><a href="#fit-report">Fit Report</a></li>
+    <li><a href="#interview-chat">Interview Chat</a></li>
+  </ul>
+</nav>
+
+<!-- ============================================================ -->
+<!-- RESUME GENERATOR                                             -->
+<!-- ============================================================ -->
+<section id="resume-generator">
+  <h2>Resume Generator</h2>
+
+  <h3>Data Flow</h3>
+  <pre class="flow">job-description.txt + resume-chunks.json  →  buildResumeGenerationPrompt()  →  LLM (Gemini)  →  parseResumeResponse()  →  generated-resume.md  →  renderMarkdown()  →  generated-resume.html</pre>
+
+  <div class="compare">
+    <!-- INPUT -->
+    <div class="pane">
+      <div class="pane-label"><span class="tag tag-input">input</span> Job Description</div>
+      <div class="jd-text">Senior Software Engineer - AI/ML Platform
+
+We are looking for a Senior Software Engineer to join our
+AI Platform team.
+
+Requirements:
+- 5+ years of software development experience
+- Strong experience with TypeScript and Node.js
+- Experience with cloud platforms (GCP preferred)
+- Familiarity with machine learning concepts
+- Excellent communication skills
+
+Responsibilities:
+- Design and implement scalable AI/ML platform services
+- Build APIs and microservices for model serving
+- Collaborate with data scientists and ML engineers
+- Optimize system performance and reliability
+- Mentor junior engineers
+
+Location: Remote-friendly
+Compensation: $150,000 - $200,000</div>
+      <div class="file-links">
+        <a href="resume-generator/job-description.txt">job-description.txt</a>
+        <a href="resume-generator/resume-chunks.json">resume-chunks.json</a>
+      </div>
+    </div>
+
+    <!-- OUTPUT -->
+    <div class="pane">
+      <div class="pane-label"><span class="tag tag-output">output</span> generated-resume.html</div>
+      <iframe src="resume-generator/generated-resume.html" height="520" loading="lazy"></iframe>
+      <div class="file-links">
+        <a href="resume-generator/generated-resume.md">generated-resume.md</a>
+        <a href="resume-generator/generated-resume.html">generated-resume.html</a>
+        <a href="resume-generator/e2e-generated-resume.md">e2e-generated-resume.md</a>
+        <a href="resume-generator/e2e-generated-resume.json">e2e-generated-resume.json</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- FIT REPORT                                                   -->
+<!-- ============================================================ -->
+<section id="fit-report">
+  <h2>Fit Report &mdash; "How Do I Fit?"</h2>
+
+  <h3>Data Flow</h3>
+  <pre class="flow">job-description.txt + resume-chunks.json  →  buildFitAnalysisPrompt()  →  LLM (Gemini)  →  llm-response.json  →  parseFitAnalysisResponse()  →  generateMarkdownReport()  →  generated-report.md</pre>
+
+  <div class="compare">
+    <!-- INPUT -->
+    <div class="pane">
+      <div class="pane-label"><span class="tag tag-input">input</span> Job Description</div>
+      <div class="jd-text">Senior Software Engineer - AI/ML Platform
+=========================================
+
+Company: Test Corp
+Location: Fully Remote (US-based)
+Department: Engineering
+
+About the Role
+--------------
+We're looking for a Senior Software Engineer to join our AI/ML
+Platform team. You'll be building the infrastructure that powers
+our machine learning systems, working with cutting-edge technologies
+to scale our AI capabilities.
+
+This is a fully remote position for candidates based in the
+United States.
+
+Requirements
+------------
+- 5+ years of software engineering experience
+- Strong proficiency in TypeScript and modern JavaScript
+- Experience with React and Node.js ecosystems
+- Familiarity with cloud platforms (GCP, AWS, or Azure)
+- Experience with containerization and orchestration (Docker, Kubernetes)
+- Strong communication skills and ability to work in a distributed team
+
+Nice to Have
+------------
+- Experience with Python and ML frameworks (TensorFlow, PyTorch)
+- Experience with data pipelines and ETL processes
+- Familiarity with GenAI/LLM technologies
+- AWS certification
+
+Compensation
+------------
+$150,000 - $200,000 base salary
+Equity package
+Comprehensive health, dental, and vision benefits
+401(k) with company match
+Unlimited PTO
+
+About Test Corp
+---------------
+Test Corp is a Series B startup building the next generation of
+AI-powered productivity tools. We're backed by top-tier VCs and
+are growing rapidly.</div>
+      <div class="file-links">
+        <a href="fit-report/job-description.txt">job-description.txt</a>
+        <a href="fit-report/resume-chunks.json">resume-chunks.json</a>
+        <a href="fit-report/extracted-fields.json">extracted-fields.json</a>
+      </div>
+    </div>
+
+    <!-- OUTPUT -->
+    <div class="pane report">
+      <div class="pane-label"><span class="tag tag-output">output</span> generated-report.md</div>
+
+      <h4>Fit Analysis Report</h4>
+      <p><strong>Job:</strong> Senior Software Engineer at Test Corp</p>
+      <p><strong>Overall Fit:</strong> &#x2705; Well</p>
+
+      <h5>Recommendation</h5>
+      <p>Strong overall fit for the Senior Software Engineer position. The candidate's extensive TypeScript/React/Node.js experience, cloud platform knowledge (GCP), and demonstrated ability to lead and mentor align well with the role requirements. The fully remote arrangement is ideal. The main gap is around deep ML framework experience, though the AI/ML platform work and GenAI focus partially compensates.</p>
+
+      <hr>
+
+      <h5>Technical Skills: &#x2705; Well</h5>
+      <p>Strong match with required TypeScript, React, and Node.js skills. Resume shows 10+ years of experience with these exact technologies. Additional skills in Python, GCP, and containerization align with nice-to-have requirements.</p>
+
+      <h5>Experience Level: &#x2705; Well</h5>
+      <p>10+ years of professional experience significantly exceeds the 5 years required. Senior-level role demonstrates ability to lead projects, mentor engineers, and architect systems at scale.</p>
+
+      <h5>Location/Remote: &#x2705; Well</h5>
+      <p>Role is fully remote (US-based), which is an acceptable location arrangement.</p>
+
+      <h5>Domain Knowledge: &#x26A0;&#xFE0F; Average</h5>
+      <p>Recent focus on AI/ML platform development and GenAI applications aligns with the AI/ML Platform team. However, specific experience with TensorFlow/PyTorch ML frameworks is not explicitly mentioned.</p>
+
+      <h5>Culture Fit: &#x2705; Well</h5>
+      <p>Strong evidence of collaboration through mentoring 4 junior engineers and conducting code reviews. Experience in distributed teams at previous roles.</p>
+
+      <hr>
+
+      <h5>Extracted Job Details</h5>
+      <table>
+        <tbody>
+          <tr><td><strong>Job Title</strong></td><td>Senior Software Engineer</td></tr>
+          <tr><td><strong>Company</strong></td><td>Test Corp</td></tr>
+          <tr><td><strong>Seniority</strong></td><td>senior</td></tr>
+          <tr><td><strong>Location</strong></td><td>fully_remote</td></tr>
+          <tr><td><strong>Must-Have</strong></td><td>TypeScript, React, Node.js</td></tr>
+          <tr><td><strong>Nice-To-Have</strong></td><td>Python, AWS</td></tr>
+          <tr><td><strong>Years Required</strong></td><td>5</td></tr>
+          <tr><td><strong>Compensation</strong></td><td>$150k&ndash;$200k</td></tr>
+        </tbody>
+      </table>
+
+      <hr>
+
+      <h5>Citations</h5>
+      <table>
+        <thead><tr><th>#</th><th>Section</th><th>Source Reference</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>Summary</td><td>h2:Summary</td></tr>
+          <tr><td>2</td><td>Experience &gt; Tech Corp</td><td>h2:Experience &gt; h3:Tech Corp</td></tr>
+          <tr><td>3</td><td>Experience &gt; StartupXYZ</td><td>h2:Experience &gt; h3:StartupXYZ</td></tr>
+          <tr><td>4</td><td>Skills</td><td>h2:Skills</td></tr>
+          <tr><td>5</td><td>Education</td><td>h2:Education</td></tr>
+        </tbody>
+      </table>
+
+      <div class="file-links">
+        <a href="fit-report/generated-report.md">generated-report.md</a>
+        <a href="fit-report/llm-response.json">llm-response.json</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- INTERVIEW CHAT                                               -->
+<!-- ============================================================ -->
+<section id="interview-chat">
+  <h2>Interview Chat &mdash; "Interview Me NOW"</h2>
+
+  <h3>Data Flow</h3>
+  <pre class="flow">resume-chunks.json  →  buildInterviewSystemPrompt()  →  User Message  →  checkGuardrails()  →  LLM (Gemini)  →  Assistant Response  →  generateTranscript()  →  conversation-transcript.md</pre>
+
+  <div class="compare">
+    <!-- INPUT -->
+    <div class="pane">
+      <div class="pane-label"><span class="tag tag-input">input</span> Test Questions</div>
+      <div class="questions">
+        <h5>Career Questions</h5>
+        <div class="q">
+          <div class="q-text">"What is your background?"</div>
+          <div class="q-meta">Expected topics: <code>engineer</code> <code>experience</code> <code>years</code></div>
+        </div>
+        <div class="q">
+          <div class="q-text">"What are your technical skills?"</div>
+          <div class="q-meta">Expected topics: <code>typescript</code> <code>python</code> <code>cloud</code> <code>gcp</code></div>
+        </div>
+
+        <h5>Off-Topic (Guardrail Test)</h5>
+        <div class="q q-offtopic">
+          <div class="q-text">"What are your political views?"</div>
+          <div class="q-meta">Expected: redirect to career topics</div>
+        </div>
+      </div>
+      <div class="file-links">
+        <a href="interview-chat/test-questions.json">test-questions.json</a>
+        <a href="interview-chat/resume-chunks.json">resume-chunks.json</a>
+      </div>
+    </div>
+
+    <!-- OUTPUT -->
+    <div class="pane transcript">
+      <div class="pane-label"><span class="tag tag-output">output</span> e2e-real-llm-transcript.md</div>
+      <div class="meta"><strong>Candidate:</strong> Sam Kirk &nbsp;&bull;&nbsp; <strong>Date:</strong> 2/13/2026 &nbsp;&bull;&nbsp; <strong>Messages:</strong> 4</div>
+
+      <div class="turn">
+        <div class="speaker">Interviewer <span class="time">12:49 PM</span></div>
+        <p>What programming languages do you know?</p>
+      </div>
+
+      <div class="turn">
+        <div class="speaker">Sam Kirk <span class="time">12:49 PM</span></div>
+        <p>I have experience with a variety of programming languages over my career. I have 8+ years of experience with Python, from my time at LTX-Credence where I used it for generating XML timing patterns, to my current consulting work at SAK Consulting where I use it for AI-assisted software development. I also have 15+ years of experience with C, going back to my early days at TRW/Vidar and continuing through positions at Sun Microsystems and Teradyne. I also have experience with C++, which I used at LTX-Credence for implementing timing calibration for an ATE instrument.</p>
+        <p>I'm also familiar with JavaScript, TypeScript, SQL, and Go. I'm currently learning Rust.</p>
+      </div>
+
+      <div class="turn">
+        <div class="speaker">Interviewer <span class="time">12:49 PM</span></div>
+        <p>Tell me about your most recent role.</p>
+      </div>
+
+      <div class="turn">
+        <div class="speaker">Sam Kirk <span class="time">12:49 PM</span></div>
+        <p>Currently, I'm working as Chief Consulting Engineer at SAK Consulting, which I started in March 2022. My focus is on AI-assisted software development and applying generative AI to testing and documentation. I consider this a self-study, graduate-level course on genAI applied to software development, with emphasis on testing and up-to-date documentation.</p>
+        <p>I've been building a suite of tools using Python, Next.js, Cursor, Claude Code, Vertex AI, and other technologies. Some of my projects include AI-powered tools for hiring managers like "How Do I Fit?", a custom resume generator, and an interactive Q&amp;A chatbot called "Interview Me NOW". I've also created a photo transformation app using Google Gemini and built websites for clients.</p>
+      </div>
+
+      <div class="sources">
+        <strong>Sources Referenced:</strong>
+        <ol>
+          <li>Employment History &gt; Sr. Software Engineer &mdash; LTX-Credence (2012-2014)</li>
+          <li>Aggregated Skills Summary</li>
+          <li>Sam Kirk &gt; Summary &gt; Experience &gt; Education &gt; MS in CS</li>
+          <li>Employment History &gt; Chief Consulting Engineer &mdash; SAK Consulting (2022-present)</li>
+          <li>Sam Kirk &gt; Summary</li>
+        </ol>
+      </div>
+
+      <div class="file-links">
+        <a href="interview-chat/e2e-real-llm-transcript.md">e2e-real-llm-transcript.md</a>
+        <a href="interview-chat/conversation-transcript.md">conversation-transcript.md</a>
+        <a href="interview-chat/smoke-test-output.txt">smoke-test-output.txt</a>
+        <a href="interview-chat/e2e-test-output.txt">e2e-test-output.txt</a>
+        <a href="interview-chat/e2e-downloaded-bundle.zip">e2e-downloaded-bundle.zip</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+</body>
+</html>
