@@ -296,6 +296,48 @@ function parseFixtureUpdates(content: string): FixtureUpdate[] {
 }
 
 // ============================================================================
+// Test Index Parsing
+// ============================================================================
+
+/** A row from the Test Index section */
+interface TestIndexRow {
+  path: string;
+  describes: string;
+}
+
+/**
+ * Parse the ## Test Index section from summary.md content.
+ * Returns an empty array if the section doesn't exist.
+ */
+function parseTestIndex(content: string): TestIndexRow[] {
+  const rows: TestIndexRow[] = [];
+
+  const section = content.match(
+    /## Test Index\s*\n([\s\S]*?)(?=\n## |\n*$)/,
+  );
+  if (!section) return rows;
+
+  const lines = section[1].split("\n");
+
+  for (const line of lines) {
+    if (!line.startsWith("|")) continue;
+    if (line.includes("---")) continue;
+    if (line.includes("File") && line.includes("Describe")) continue;
+
+    const cells = line
+      .split("|")
+      .map((c) => c.trim())
+      .filter(Boolean);
+
+    if (cells.length >= 2) {
+      rows.push({ path: cells[0], describes: cells[1] });
+    }
+  }
+
+  return rows;
+}
+
+// ============================================================================
 // Timestamp Formatting
 // ============================================================================
 
@@ -391,6 +433,32 @@ function printDefaultView(
     `  Archive: do-work/archive/test-runs/${archiveDirName}/`,
   );
   console.log(SEPARATOR);
+}
+
+/** Print the test index section (used with --full) */
+function printTestIndex(testIndex: TestIndexRow[]): void {
+  console.log("");
+  console.log(
+    colorize("  TEST INDEX", ANSI.cyan + ANSI.bold),
+  );
+  console.log(`  ${THIN_SEP}`);
+
+  if (testIndex.length === 0) {
+    console.log("    No test files found.");
+  } else {
+    const COL_PATH = 45;
+    console.log(
+      "  " + padRight("File", COL_PATH) + "Describe Blocks",
+    );
+    console.log(`  ${THIN_SEP}`);
+    for (const row of testIndex) {
+      console.log(
+        "  " + padRight(row.path, COL_PATH) + row.describes,
+      );
+    }
+  }
+
+  console.log("");
 }
 
 // ============================================================================
@@ -494,10 +562,7 @@ function main(): void {
     log("--log flag not implemented yet");
     process.exit(0);
   }
-  if (args.full) {
-    log("--full flag not implemented yet");
-    process.exit(0);
-  }
+  // --full is handled below alongside default view
   if (args.fixtures) {
     log("--fixtures flag not implemented yet");
     process.exit(0);
@@ -553,6 +618,13 @@ function main(): void {
   // Print formatted output
   console.log("");
   printDefaultView(frontmatter, suiteRows, fixtureUpdates, archiveDirName);
+
+  // --full: append test index section
+  if (args.full) {
+    const testIndex = parseTestIndex(content);
+    printTestIndex(testIndex);
+  }
+
   console.log("");
 }
 
