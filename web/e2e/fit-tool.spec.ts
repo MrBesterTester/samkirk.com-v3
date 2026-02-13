@@ -1,5 +1,8 @@
 import path from "path";
+import fs from "fs";
+import os from "os";
 import { test, expect } from "@playwright/test";
+import { verifyZipContents } from "./helpers/zip-verify";
 
 /**
  * E2E tests for the "How Do I Fit?" tool.
@@ -151,6 +154,34 @@ test.describe("Fit Tool Happy Path", () => {
     // Verify action buttons are present
     await expect(page.getByRole("button", { name: /download full report/i })).toBeVisible();
     await expect(page.getByRole("button", { name: /analyze another job/i })).toBeVisible();
+
+    // ---- Download verification ----
+    // Click download and capture the file
+    const downloadButton = page.getByRole("button", { name: /download full report/i });
+    const downloadPromise = page.waitForEvent("download");
+    await downloadButton.click();
+    const download = await downloadPromise;
+
+    // Save to a temp file for verification
+    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "fit-e2e-"));
+    const zipPath = path.join(tmpDir, download.suggestedFilename());
+    await download.saveAs(zipPath);
+
+    // Verify ZIP contents
+    verifyZipContents({
+      zipPath,
+      filenamePattern: /fit-report-.*\.zip/,
+      suggestedFilename: download.suggestedFilename(),
+      requiredFiles: ["metadata.json", "outputs/outputs.json"],
+      requiredPrefixes: ["outputs/", "inputs/"],
+      metadataFields: ["submissionId", "tool", "createdAt", "status"],
+      markdownPatterns: [
+        /score|fit|recommendation/i,
+      ],
+    });
+
+    // Cleanup temp files
+    fs.rmSync(tmpDir, { recursive: true, force: true });
   });
 
   test("should complete full flow via URL mode: input → follow-ups → results", async ({

@@ -1,4 +1,6 @@
+import path from "path";
 import { test, expect } from "@playwright/test";
+import { verifyZipContents } from "./helpers/zip-verify";
 
 /**
  * E2E tests for the "Interview Me Now" tool.
@@ -178,10 +180,20 @@ test.describe("Interview Tool - Conversation", () => {
     const download = await downloadPromise;
 
     // Save the downloaded file to test fixtures
-    const fixturesPath = "test-fixtures/interview-chat/e2e-downloaded-bundle.zip";
+    const fixturesPath = path.join(__dirname, "..", "test-fixtures", "interview-chat", "e2e-downloaded-bundle.zip");
     await download.saveAs(fixturesPath);
 
-    // Verify the download completed
-    expect(download.suggestedFilename()).toMatch(/interview-transcript.*\.zip/);
+    // Verify the download completed and ZIP contents
+    verifyZipContents({
+      zipPath: fixturesPath,
+      filenamePattern: /interview-transcript-.*\.zip/,
+      suggestedFilename: download.suggestedFilename(),
+      requiredFiles: ["metadata.json", "outputs/outputs.json"],
+      requiredPrefixes: ["outputs/"],
+      metadataFields: ["submissionId", "tool", "createdAt", "status"],
+      markdownPatterns: [
+        /transcript|conversation|question|answer/i,
+      ],
+    });
   });
 });
