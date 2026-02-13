@@ -701,6 +701,367 @@ function printFixturesView(): void {
 }
 
 // ============================================================================
+// Diff View
+// ============================================================================
+
+/**
+ * Find the two most recent archive directories by lexicographic sort.
+ * Returns [older, newer] or null if fewer than 2 exist.
+ */
+function findTwoLatestArchives(): [string, string] | null {
+  const archiveDir = getArchiveDir();
+
+  if (!existsSync(archiveDir)) {
+    return null;
+  }
+
+  const entries = readdirSync(archiveDir, { withFileTypes: true });
+  const dirs = entries
+    .filter((e) => e.isDirectory())
+    .map((e) => e.name)
+    .sort();
+
+  if (dirs.length < 2) {
+    return null;
+  }
+
+  return [dirs[dirs.length - 2], dirs[dirs.length - 1]];
+}
+
+/**
+ * Parse a duration string (e.g. "14s", "2s", "0ms", "1m32s") into milliseconds.
+ * Returns 0 for unparseable strings.
+ */
+function parseDurationMs(duration: string): number {
+  const trimmed = duration.trim();
+
+  // Handle "0ms" or "Nms"
+  const msMatch = trimmed.match(/^(\d+)ms$/);
+  if (msMatch) return parseInt(msMatch[1], 10);
+
+  // Handle "Ns" (seconds only)
+  const sMatch = trimmed.match(/^(\d+)s$/);
+  if (sMatch) return parseInt(sMatch[1], 10) * 1000;
+
+  // Handle "NmNs" (minutes and seconds)
+  const msecMatch = trimmed.match(/^(\d+)m(\d+)s$/);
+  if (msecMatch) {
+    return parseInt(msecMatch[1], 10) * 60000 + parseInt(msecMatch[2], 10) * 1000;
+  }
+
+  // Handle "Nm" (minutes only)
+  const mMatch = trimmed.match(/^(\d+)m$/);
+  if (mMatch) return parseInt(mMatch[1], 10) * 60000;
+
+  return 0;
+}
+
+/**
+ * Format a numeric delta with a +/- prefix and color, right-aligned to width.
+ * Positive = green (improvement for pass/skip, regression for fail).
+ * The caller decides if positive is good or bad via invertColor.
+ * Pads the raw text before colorizing so ANSI codes don't affect alignment.
+ */
+function formatDelta(delta: number, invertColor: boolean, width: number): string {
+  if (delta === 0) return colorize(padLeft("0", width), ANSI.dim);
+  const sign = delta > 0 ? "+" : "";
+  const text = `${sign}${delta}`;
+  const isPositive = delta > 0;
+  const color = invertColor
+    ? (isPositive ? ANSI.red : ANSI.green)
+    : (isPositive ? ANSI.green : ANSI.red);
+  return colorize(padLeft(text, width), color);
+}
+
+/**
+ * Format a duration delta in human-readable form with color, right-aligned to width.
+ * Negative (faster) = green, positive (slower) = red.
+ * Pads the raw text before colorizing so ANSI codes don't affect alignment.
+ */
+function formatDurationDelta(deltaMs: number, width: number): string {
+  if (deltaMs === 0) return colorize(padLeft("0s", width), ANSI.dim);
+
+  const sign = deltaMs > 0 ? "+" : "-";
+  const absMs = Math.abs(deltaMs);
+  let display: string;
+
+  if (absMs < 1000) {
+    display = `${sign}${absMs}ms`;
+  } else if (absMs < 60000) {
+    display = `${sign}${Math.round(absMs / 1000)}s`;
+  } else {
+    const mins = Math.floor(absMs / 60000);
+    const secs = Math.round((absMs % 60000) / 1000);
+    display = secs > 0 ? `${sign}${mins}m${secs}s` : `${sign}${mins}m`;
+  }
+
+  const color = deltaMs > 0 ? ANSI.red : ANSI.green;
+  return colorize(padLeft(display, width), color);
+}
+
+/** Loaded run data for diff comparison */
+interface DiffRunData {
+  dirName: string;
+  frontmatter: SummaryFrontmatter;
+  suites: SuiteRow[];
+}
+
+/**
+ * Load and parse a run's summary.md. Exits with error if missing/unparseable.
+ */
+function loadRunData(dirName: string): DiffRunData {
+  const archiveDir = getArchiveDir();
+  const summaryPath = resolve(archiveDir, dirName, "summary.md");
+
+  if (!existsSync(summaryPath)) {
+    log(`summary.md not found in archive: ${dirName}`, false);
+    process.exit(1);
+  }
+
+  const content = readFileSync(summaryPath, "utf-8");
+
+  const frontmatter = parseSummaryFrontmatter(content);
+  if (!frontmatter) {
+    log(`Failed to parse frontmatter in ${dirName}/summary.md`, false);
+    process.exit(1);
+  }
+
+  const suites = parseSummaryTable(content);
+  return { dirName, frontmatter, suites };
+}
+
+/**
+ * Print the diff comparison view between two test runs.
+ * If explicitArgs is provided, uses those two run prefixes.
+ * Otherwise, auto-detects the two most recent archives.
+ */
+function printDiffView(explicitArgs: [string, string] | null): void {
+  let dir1: string;
+  let dir2: string;
+
+  if (explicitArgs) {
+    dir1 = findArchiveByPrefix(explicitArgs[0]);
+    dir2 = findArchiveByPrefix(explicitArgs[1]);
+  } else {
+    // Auto-detect two most recent
+    const pair = findTwoLatestArchives();
+    if (!pair) {
+      log("Need at least 2 archived test runs to diff", false);
+      process.exit(1);
+    }
+    dir1 = pair[0];
+    dir2 = pair[1];
+  }
+
+  const runA = loadRunData(dir1);
+  const runB = loadRunData(dir2);
+
+  const tsA = formatTimestamp(runA.frontmatter.timestamp);
+  const tsB = formatTimestamp(runB.frontmatter.timestamp);
+  const overallA = runA.frontmatter.overall.toUpperCase();
+  const overallB = runB.frontmatter.overall.toUpperCase();
+  const overallColorA = runA.frontmatter.overall === "pass" ? ANSI.green : ANSI.red;
+  const overallColorB = runB.frontmatter.overall === "pass" ? ANSI.green : ANSI.red;
+
+  // Header
+  console.log("");
+  console.log(SEPARATOR);
+  console.log(
+    colorize("  DIFF: ", ANSI.cyan + ANSI.bold) +
+      `${dir1} vs ${dir2}`,
+  );
+  console.log(SEPARATOR);
+  console.log("");
+
+  // Run metadata comparison
+  console.log(`  ${colorize("Run A:", ANSI.dim)} ${tsA}  Overall: ${colorize(overallA, overallColorA + ANSI.bold)}`);
+  console.log(`  ${colorize("Run B:", ANSI.dim)} ${tsB}  Overall: ${colorize(overallB, overallColorB + ANSI.bold)}`);
+
+  // Overall status change
+  if (overallA !== overallB) {
+    const arrow = `${colorize(overallA, overallColorA)} \u2192 ${colorize(overallB, overallColorB)}`;
+    console.log(`  ${colorize("Change:", ANSI.bold)} ${arrow}`);
+  } else {
+    console.log(`  ${colorize("Change:", ANSI.bold)} ${colorize("(no change)", ANSI.dim)}`);
+  }
+
+  console.log("");
+
+  // Build suite maps for lookup
+  const suitesA = new Map<string, SuiteRow>();
+  for (const row of runA.suites) {
+    suitesA.set(row.name, row);
+  }
+  const suitesB = new Map<string, SuiteRow>();
+  for (const row of runB.suites) {
+    suitesB.set(row.name, row);
+  }
+
+  // Collect all suite names (preserve order from run B, then add any only in A)
+  const allSuites: string[] = [];
+  for (const row of runB.suites) {
+    allSuites.push(row.name);
+  }
+  for (const row of runA.suites) {
+    if (!suitesB.has(row.name)) {
+      allSuites.push(row.name);
+    }
+  }
+
+  // Diff column widths
+  const COL_DIFF_DELTA = 10;
+
+  // Table header
+  console.log(
+    "  " +
+      padRight("Suite", COL_NAME) +
+      padRight("Status", COL_STATUS + 6) + // extra for arrow + spaces
+      padLeft("\u0394Pass", COL_DIFF_DELTA) +
+      padLeft("\u0394Fail", COL_DIFF_DELTA) +
+      padLeft("\u0394Skip", COL_DIFF_DELTA) +
+      padLeft("\u0394Time", COL_DIFF_DELTA + 2),
+  );
+  console.log(`  ${THIN_SEP}`);
+
+  // Aggregate totals
+  let totalPassA = 0;
+  let totalPassB = 0;
+  let totalFailA = 0;
+  let totalFailB = 0;
+  let totalSkipA = 0;
+  let totalSkipB = 0;
+  let totalDurA = 0;
+  let totalDurB = 0;
+
+  for (const suiteName of allSuites) {
+    const a = suitesA.get(suiteName);
+    const b = suitesB.get(suiteName);
+
+    if (!a && b) {
+      // Suite only in run B (new suite)
+      totalPassB += b.passed;
+      totalFailB += b.failed;
+      totalSkipB += b.skipped;
+      totalDurB += parseDurationMs(b.duration);
+
+      const statusStr = colorize(padRight(`(new) ${b.status}`, COL_STATUS + 6), ANSI.cyan);
+      console.log(
+        "  " +
+          padRight(suiteName, COL_NAME) +
+          statusStr +
+          padLeft(`+${b.passed}`, COL_DIFF_DELTA) +
+          padLeft(`+${b.failed}`, COL_DIFF_DELTA) +
+          padLeft(`+${b.skipped}`, COL_DIFF_DELTA) +
+          padLeft(`+${b.duration}`, COL_DIFF_DELTA + 2),
+      );
+      continue;
+    }
+
+    if (a && !b) {
+      // Suite only in run A (removed suite)
+      totalPassA += a.passed;
+      totalFailA += a.failed;
+      totalSkipA += a.skipped;
+      totalDurA += parseDurationMs(a.duration);
+
+      const statusStr = colorize(padRight(`${a.status} (gone)`, COL_STATUS + 6), ANSI.yellow);
+      console.log(
+        "  " +
+          padRight(suiteName, COL_NAME) +
+          statusStr +
+          padLeft(`-${a.passed}`, COL_DIFF_DELTA) +
+          padLeft(`-${a.failed}`, COL_DIFF_DELTA) +
+          padLeft(`-${a.skipped}`, COL_DIFF_DELTA) +
+          padLeft(`-${a.duration}`, COL_DIFF_DELTA + 2),
+      );
+      continue;
+    }
+
+    // Both runs have this suite
+    const rowA = a!;
+    const rowB = b!;
+
+    totalPassA += rowA.passed;
+    totalPassB += rowB.passed;
+    totalFailA += rowA.failed;
+    totalFailB += rowB.failed;
+    totalSkipA += rowA.skipped;
+    totalSkipB += rowB.skipped;
+    totalDurA += parseDurationMs(rowA.duration);
+    totalDurB += parseDurationMs(rowB.duration);
+
+    // Status display: "PASSED -> FAILED" or just "PASSED" if unchanged
+    let statusDisplay: string;
+    if (rowA.status === rowB.status) {
+      const statusColor =
+        rowB.status === "PASSED"
+          ? ANSI.green
+          : rowB.status === "FAILED"
+            ? ANSI.red
+            : ANSI.yellow;
+      statusDisplay = colorize(padRight(rowB.status, COL_STATUS + 6), statusColor);
+    } else {
+      const colorA =
+        rowA.status === "PASSED"
+          ? ANSI.green
+          : rowA.status === "FAILED"
+            ? ANSI.red
+            : ANSI.yellow;
+      const colorB =
+        rowB.status === "PASSED"
+          ? ANSI.green
+          : rowB.status === "FAILED"
+            ? ANSI.red
+            : ANSI.yellow;
+      // Compact: "FAIL->PASS" to fit in column
+      const shortA = rowA.status.substring(0, 4);
+      const shortB = rowB.status.substring(0, 4);
+      statusDisplay =
+        colorize(shortA, colorA) +
+        "\u2192" +
+        colorize(padRight(shortB, COL_STATUS + 6 - shortA.length - 1), colorB);
+    }
+
+    const passDelta = rowB.passed - rowA.passed;
+    const failDelta = rowB.failed - rowA.failed;
+    const skipDelta = rowB.skipped - rowA.skipped;
+    const durDelta = parseDurationMs(rowB.duration) - parseDurationMs(rowA.duration);
+
+    console.log(
+      "  " +
+        padRight(suiteName, COL_NAME) +
+        statusDisplay +
+        formatDelta(passDelta, false, COL_DIFF_DELTA) +
+        formatDelta(failDelta, true, COL_DIFF_DELTA) +
+        formatDelta(skipDelta, true, COL_DIFF_DELTA) +
+        formatDurationDelta(durDelta, COL_DIFF_DELTA + 2),
+    );
+  }
+
+  // Totals row
+  console.log(`  ${THIN_SEP}`);
+  const totalPassDelta = totalPassB - totalPassA;
+  const totalFailDelta = totalFailB - totalFailA;
+  const totalSkipDelta = totalSkipB - totalSkipA;
+  const totalDurDelta = totalDurB - totalDurA;
+
+  console.log(
+    "  " +
+      colorize(padRight("Total", COL_NAME), ANSI.bold) +
+      padRight("", COL_STATUS + 6) +
+      formatDelta(totalPassDelta, false, COL_DIFF_DELTA) +
+      formatDelta(totalFailDelta, true, COL_DIFF_DELTA) +
+      formatDelta(totalSkipDelta, true, COL_DIFF_DELTA) +
+      formatDurationDelta(totalDurDelta, COL_DIFF_DELTA + 2),
+  );
+
+  console.log("");
+  console.log(`  ${colorize("A:", ANSI.dim)} do-work/archive/test-runs/${dir1}/`);
+  console.log(`  ${colorize("B:", ANSI.dim)} do-work/archive/test-runs/${dir2}/`);
+  console.log(SEPARATOR);
+}
+
+// ============================================================================
 // Main
 // ============================================================================
 
@@ -751,12 +1112,45 @@ function main(): void {
     console.log("");
     process.exit(0);
   }
-  if (args.diff !== null) {
-    log("--diff flag not implemented yet");
+  if (args.diff !== null || process.argv.includes("--diff")) {
+    printDiffView(args.diff);
+    console.log("");
     process.exit(0);
   }
   if (args.json) {
-    log("--json flag not implemented yet");
+    // Determine which archive to use (respect --run flag)
+    const dirName =
+      args.run !== null ? findArchiveByPrefix(args.run) : findLatestArchive();
+
+    if (!dirName) {
+      console.error("No test run archives found");
+      process.exit(1);
+    }
+
+    const archiveRoot = getArchiveDir();
+    const summaryPath = resolve(archiveRoot, dirName, "summary.md");
+
+    if (!existsSync(summaryPath)) {
+      console.error(`summary.md not found in archive: ${dirName}`);
+      process.exit(1);
+    }
+
+    const content = readFileSync(summaryPath, "utf-8");
+    const frontmatter = parseSummaryFrontmatter(content);
+    const suites = parseSummaryTable(content);
+    const fixture_updates = parseFixtureUpdates(content);
+
+    const output = {
+      frontmatter,
+      suites,
+      fixture_updates,
+      archive: {
+        directory: dirName,
+        path: resolve(archiveRoot, dirName),
+      },
+    };
+
+    console.log(JSON.stringify(output, null, 2));
     process.exit(0);
   }
 
