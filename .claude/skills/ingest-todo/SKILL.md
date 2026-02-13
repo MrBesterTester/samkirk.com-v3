@@ -108,6 +108,7 @@ title: "{Step title}"
 status: pending
 created_at: {ISO 8601 timestamp}
 user_request: UR-NNN
+# work-action fields (claimed_at, route, completed_at, commit, error) go here
 source_step: "{step number}"
 source_doc: "{TODO file path}"
 blueprint_ref: "{BLUEPRINT file path}"
