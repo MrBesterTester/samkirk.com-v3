@@ -15,12 +15,12 @@ import { test, expect } from "@playwright/test";
 
 test.describe("Interview Tool - UI", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto("/tools/interview");
+    await page.goto("/hire-me/interview");
   });
 
   test("loads the interview page with correct heading", async ({ page }) => {
     await expect(
-      page.getByRole("heading", { name: "Interview Me Now" })
+      page.getByRole("heading", { name: "Interview Me NOW" })
     ).toBeVisible();
 
     // Description text
@@ -74,7 +74,7 @@ test.describe("Interview Tool - UI", () => {
 
 test.describe("Interview Tool - Input Behavior", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto("/tools/interview");
+    await page.goto("/hire-me/interview");
     // Wait for chat interface to be ready
     await expect(
       page.getByText(/I'm here to answer questions/i)
@@ -152,7 +152,7 @@ test.describe("Interview Tool - Conversation", () => {
     // This test makes an actual LLM call - use reasonable timeout
     test.setTimeout(90000); // 90 seconds max
 
-    await page.goto("/tools/interview");
+    await page.goto("/hire-me/interview");
 
     // Wait for chat to be ready
     await expect(

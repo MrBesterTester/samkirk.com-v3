@@ -36,11 +36,11 @@ test.describe("Public Pages - Render Correctly", () => {
     await expect(page.getByRole("navigation")).toBeVisible();
 
     // Should have links to main sections
-    await expect(page.getByRole("link", { name: /tools/i })).toBeVisible();
+    await expect(page.getByRole("link", { name: /hire me/i })).toBeVisible();
   });
 
   test("tools hub page loads", async ({ page }) => {
-    await page.goto("/tools");
+    await page.goto("/hire-me");
 
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
 
@@ -172,33 +172,33 @@ test.describe("Navigation - Links Work", () => {
   test("can navigate from home to tools", async ({ page }) => {
     await page.goto("/");
 
-    await page.getByRole("link", { name: /tools/i }).first().click();
+    await page.getByRole("link", { name: /hire me/i }).first().click();
 
-    await expect(page).toHaveURL(/\/tools/);
+    await expect(page).toHaveURL(/\/hire-me/);
   });
 
   test("can navigate from tools to fit tool", async ({ page }) => {
-    await page.goto("/tools");
+    await page.goto("/hire-me");
 
     await page.getByRole("link", { name: /fit/i }).first().click();
 
-    await expect(page).toHaveURL(/\/tools\/fit/);
+    await expect(page).toHaveURL(/\/hire-me\/fit/);
   });
 
   test("can navigate from tools to resume tool", async ({ page }) => {
-    await page.goto("/tools");
+    await page.goto("/hire-me");
 
     await page.getByRole("link", { name: /resume/i }).first().click();
 
-    await expect(page).toHaveURL(/\/tools\/resume/);
+    await expect(page).toHaveURL(/\/hire-me\/resume/);
   });
 
   test("can navigate from tools to interview tool", async ({ page }) => {
-    await page.goto("/tools");
+    await page.goto("/hire-me");
 
     await page.getByRole("link", { name: /interview/i }).first().click();
 
-    await expect(page).toHaveURL(/\/tools\/interview/);
+    await expect(page).toHaveURL(/\/hire-me\/interview/);
   });
 
   test("can navigate to explorations", async ({ page }) => {
@@ -269,7 +269,7 @@ test.describe("Accessibility - Basic Checks", () => {
   });
 
   test("tool pages have proper heading structure", async ({ page }) => {
-    await page.goto("/tools/fit");
+    await page.goto("/hire-me/fit");
 
     const h1Count = await page.locator("h1").count();
     expect(h1Count).toBe(1);

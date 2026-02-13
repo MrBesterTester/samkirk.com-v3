@@ -19,8 +19,8 @@ describe("Header", () => {
     const homeLinks = screen.getAllByRole("link", { name: /^home$/i });
     expect(homeLinks.length).toBeGreaterThanOrEqual(1);
 
-    const toolsLinks = screen.getAllByRole("link", { name: /^tools$/i });
-    expect(toolsLinks.length).toBeGreaterThanOrEqual(1);
+    const hireMeLinks = screen.getAllByRole("link", { name: /^hire me$/i });
+    expect(hireMeLinks.length).toBeGreaterThanOrEqual(1);
 
     const danceMenuLinks = screen.getAllByRole("link", {
       name: /^dance menu$/i,

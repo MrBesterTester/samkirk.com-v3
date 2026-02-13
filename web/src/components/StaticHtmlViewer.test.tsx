@@ -15,7 +15,7 @@ describe("StaticHtmlViewer", () => {
     render(<StaticHtmlViewer src="test.html" title="Test" />);
 
     const iframe = screen.getByTitle("Test");
-    expect(iframe).toHaveAttribute("sandbox", "allow-same-origin");
+    expect(iframe).toHaveAttribute("sandbox", "allow-same-origin allow-scripts");
   });
 
   it("uses the provided minHeight", () => {

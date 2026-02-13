@@ -23,7 +23,7 @@ describe("Explorations hub page", () => {
     );
 
     const pocketFlowLink = screen.getByRole("link", { name: /pocket flow/i });
-    expect(pocketFlowLink).toHaveAttribute("href", "/explorations/pocket-flow");
+    expect(pocketFlowLink).toHaveAttribute("href", "https://mrbestertester.github.io/pf-understand/");
 
     const danceInstructionLink = screen.getByRole("link", {
       name: /dance instruction/i,
@@ -40,17 +40,25 @@ describe("Explorations hub page", () => {
       "href",
       "/explorations/uber-level-ai-skills"
     );
+
+    const tensorLogicLink = screen.getByRole("link", {
+      name: /tensor logic/i,
+    });
+    expect(tensorLogicLink).toHaveAttribute(
+      "href",
+      "/explorations/tensor-logic"
+    );
   });
 
   it("renders descriptions for each exploration topic", () => {
     render(<ExplorationsPage />);
 
     expect(
-      screen.getByText(/mathematical foundations of abstraction/i)
+      screen.getByText(/examples of category theory using common, everyday/i)
     ).toBeInTheDocument();
 
     expect(
-      screen.getByText(/lightweight framework for building ai workflows/i)
+      screen.getByText(/tutorials using pocket flow for understanding/i)
     ).toBeInTheDocument();
 
     expect(
@@ -59,6 +67,10 @@ describe("Explorations hub page", () => {
 
     expect(
       screen.getByText(/advanced techniques for getting the most out of ai tools/i)
+    ).toBeInTheDocument();
+
+    expect(
+      screen.getByText(/educational interactive demo illustrating/i)
     ).toBeInTheDocument();
   });
 });

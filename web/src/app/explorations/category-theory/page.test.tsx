@@ -15,7 +15,7 @@ describe("Category Theory page", () => {
     render(<CategoryTheoryPage />);
 
     expect(
-      screen.getByText(/mathematical foundations of abstraction/i)
+      screen.getByText(/examples of category theory using common, everyday/i)
     ).toBeInTheDocument();
   });
 

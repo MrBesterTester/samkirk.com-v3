@@ -7,7 +7,7 @@ describe("Song Dedication page", () => {
     render(<SongDedicationPage />);
 
     expect(
-      screen.getByRole("heading", { name: /song dedication/i })
+      screen.getByRole("heading", { name: /resilience in the storm/i })
     ).toBeInTheDocument();
   });
 
@@ -15,10 +15,7 @@ describe("Song Dedication page", () => {
     render(<SongDedicationPage />);
 
     expect(
-      screen.getByRole("heading", { name: /about this dedication/i })
-    ).toBeInTheDocument();
-    expect(
-      screen.getByText(/this song holds a special meaning/i)
+      screen.getByText(/a song created for my mother/i)
     ).toBeInTheDocument();
   });
 
@@ -29,15 +26,16 @@ describe("Song Dedication page", () => {
       screen.getByRole("heading", { name: /listen/i })
     ).toBeInTheDocument();
     expect(
-      screen.getByText(/audio player will be embedded here/i)
+      screen.getByText(/your browser does not support the audio element/i)
     ).toBeInTheDocument();
   });
 
   it("renders external listening links", () => {
     render(<SongDedicationPage />);
 
-    expect(screen.getByRole("link", { name: /spotify/i })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /youtube/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: /view chatgpt thread/i })
+    ).toBeInTheDocument();
   });
 
   it("renders the lyrics section with verse and chorus", () => {
@@ -49,14 +47,14 @@ describe("Song Dedication page", () => {
 
     // Check for verse and chorus labels (exact match to avoid matching lyrics content)
     expect(screen.getByText("Verse 1")).toBeInTheDocument();
-    expect(screen.getByText("Chorus")).toBeInTheDocument();
+    expect(screen.getAllByText("Chorus").length).toBeGreaterThanOrEqual(1);
     expect(screen.getByText("Verse 2")).toBeInTheDocument();
   });
 
   it("renders song info footer", () => {
     render(<SongDedicationPage />);
 
-    expect(screen.getByText(/song title/i)).toBeInTheDocument();
-    expect(screen.getByText(/artist name/i)).toBeInTheDocument();
+    expect(screen.getByText("ChatGPT")).toBeInTheDocument();
+    expect(screen.getByText("Udio.com")).toBeInTheDocument();
   });
 });

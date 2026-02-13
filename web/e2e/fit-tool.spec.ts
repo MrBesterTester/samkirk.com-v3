@@ -45,7 +45,7 @@ This is a senior-level IC position with opportunities for technical leadership.
 test.describe("Fit Tool Happy Path", () => {
   test.beforeEach(async ({ page }) => {
     // Navigate to the Fit tool page
-    await page.goto("/tools/fit");
+    await page.goto("/hire-me/fit");
   });
 
   test("should complete full flow: input → follow-ups → results", async ({
@@ -206,7 +206,7 @@ test.describe("Fit Tool Happy Path", () => {
 test.describe("Fit Tool Error Handling", () => {
   test("should handle error states gracefully", async ({ page }) => {
     // Navigate to the Fit tool page
-    await page.goto("/tools/fit");
+    await page.goto("/hire-me/fit");
 
     // Wait for the form
     await expect(page.getByRole("textbox", { name: /job posting text/i })).toBeVisible({

@@ -79,11 +79,14 @@ describe("Home page", () => {
     ).toHaveAttribute("href", "/explorations");
   });
 
-  it("renders contact email link", () => {
+  it("renders the Villa Madu Bali section", () => {
     render(<Home />);
 
-    const emailLinks = screen.getAllByRole("link", { name: /sam@samkirk\.com/i });
-    expect(emailLinks.length).toBeGreaterThanOrEqual(1);
-    expect(emailLinks[0]).toHaveAttribute("href", "mailto:sam@samkirk.com");
+    expect(
+      screen.getByRole("heading", { name: /villa madu bali/i })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: /visit villamadubali\.com/i })
+    ).toHaveAttribute("href", "https://www.villamadubali.com");
   });
 });

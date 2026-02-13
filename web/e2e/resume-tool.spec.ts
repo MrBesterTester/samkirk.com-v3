@@ -45,7 +45,7 @@ This is a senior-level IC position with opportunities for technical leadership.
 test.describe("Resume Tool Happy Path", () => {
   test.beforeEach(async ({ page }) => {
     // Navigate to the Resume tool page
-    await page.goto("/tools/resume");
+    await page.goto("/hire-me/resume");
   });
 
   test("should complete full flow: input → generating → results", async ({
@@ -154,7 +154,7 @@ test.describe("Resume Tool Happy Path", () => {
 test.describe("Resume Tool Error Handling", () => {
   test("should handle error states gracefully", async ({ page }) => {
     // Navigate to the Resume tool page
-    await page.goto("/tools/resume");
+    await page.goto("/hire-me/resume");
 
     // Wait for the form
     await expect(page.getByRole("textbox", { name: /job posting text/i })).toBeVisible({
