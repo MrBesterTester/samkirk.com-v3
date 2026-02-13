@@ -1,3 +1,4 @@
+import path from "path";
 import { test, expect } from "@playwright/test";
 
 /**
@@ -173,6 +174,111 @@ test.describe("Fit Tool Happy Path", () => {
     // Enter a test URL — use the dev server's own page as a reliable, always-available URL.
     // The backend will fetch this HTML and extract text from it to use as "job posting" content.
     await urlInput.fill("http://localhost:3000/hire-me/fit");
+
+    // Click the analyze button
+    const analyzeButton = page.getByRole("button", { name: /analyze job fit/i });
+    await expect(analyzeButton).toBeEnabled();
+    await analyzeButton.click();
+
+    // Wait for processing - could show follow-up questions or go straight to results
+    // The loading state shows "Analyzing job posting..."
+    await expect(page.getByText(/analyzing/i)).toBeVisible({ timeout: 5000 });
+
+    // Wait for either:
+    // 1. Follow-up question to appear (status: "question")
+    // 2. Report generation to start (status: "generating")
+    // 3. Results to appear (status: "complete")
+    await page.waitForFunction(
+      () => {
+        const body = document.body.textContent || "";
+        return (
+          body.includes("Follow-up Question") ||
+          body.includes("Generating fit analysis") ||
+          body.includes("Fit Analysis Complete")
+        );
+      },
+      { timeout: 30000 }
+    );
+
+    // If there's a follow-up question, answer it
+    const followUpHeader = page.getByText(/follow-up question/i);
+    if (await followUpHeader.isVisible({ timeout: 1000 }).catch(() => false)) {
+      // There's a follow-up question - answer it
+      const radioOptions = page.locator('input[type="radio"]');
+      const radioCount = await radioOptions.count();
+
+      if (radioCount > 0) {
+        // Select the first option
+        await radioOptions.first().click();
+      } else {
+        // Free text input - provide a generic answer
+        const answerInput = page.getByPlaceholder(/type your answer/i);
+        if (await answerInput.isVisible().catch(() => false)) {
+          await answerInput.fill("Senior level position, fully remote");
+        }
+      }
+
+      // Click continue
+      const continueButton = page.getByRole("button", { name: /continue/i });
+      await continueButton.click();
+
+      // Wait for processing again
+      await page.waitForFunction(
+        () => {
+          const body = document.body.textContent || "";
+          return (
+            body.includes("Follow-up Question") ||
+            body.includes("Generating fit analysis") ||
+            body.includes("Fit Analysis Complete")
+          );
+        },
+        { timeout: 30000 }
+      );
+    }
+
+    // If we're generating, wait for completion
+    const generatingText = page.getByText(/generating fit analysis/i);
+    if (await generatingText.isVisible({ timeout: 1000 }).catch(() => false)) {
+      // Wait for the report to complete (this can take time due to LLM call)
+      await expect(page.getByText(/fit analysis complete/i)).toBeVisible({
+        timeout: 240000, // 4 minutes for LLM generation
+      });
+    }
+
+    // Verify the results page is displayed
+    await expect(page.getByText(/fit analysis complete/i)).toBeVisible();
+
+    // Verify key elements of the results
+    await expect(page.getByText(/overall fit score/i)).toBeVisible();
+    await expect(page.getByText(/recommendation/i)).toBeVisible();
+    await expect(page.getByText(/category breakdown/i)).toBeVisible();
+
+    // Verify action buttons are present
+    await expect(page.getByRole("button", { name: /download full report/i })).toBeVisible();
+    await expect(page.getByRole("button", { name: /analyze another job/i })).toBeVisible();
+  });
+
+  test("should complete full flow via file upload mode: input → follow-ups → results", async ({
+    page,
+  }) => {
+    // Wait for initialization and captcha bypass
+    await expect(page.getByRole("heading", { name: "How Do I Fit?" })).toBeVisible();
+
+    // Wait for the job input form to appear (after captcha passes)
+    await expect(page.getByRole("textbox", { name: /job posting text/i })).toBeVisible({
+      timeout: 10000,
+    });
+
+    // Switch to file upload mode
+    await page.getByRole("button", { name: /upload file/i }).click();
+
+    // Upload the test fixture file via the hidden file input
+    const fixtureFilePath = path.join(__dirname, "fixtures", "sample-job.txt");
+    const fileInput = page.locator('input[type="file"]');
+    await fileInput.setInputFiles(fixtureFilePath);
+
+    // Verify the filename is displayed in the upload zone
+    await expect(page.getByText("sample-job.txt")).toBeVisible();
 
     // Click the analyze button
     const analyzeButton = page.getByRole("button", { name: /analyze job fit/i });

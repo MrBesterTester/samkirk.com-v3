@@ -1,0 +1,27 @@
+Senior Software Engineer - AI/ML Platform
+
+Company: TechCorp Inc.
+Location: Remote (US-based)
+
+About the Role:
+We're looking for a Senior Software Engineer to join our AI/ML Platform team.
+This is a fully remote position for candidates based in the United States.
+
+Requirements:
+- 5+ years of software engineering experience
+- Strong experience with Python and TypeScript
+- Experience with cloud platforms (GCP, AWS, or Azure)
+- Experience with machine learning frameworks (TensorFlow, PyTorch)
+- Experience building and deploying ML models in production
+
+Nice to have:
+- Experience with Kubernetes and containerization
+- Experience with data pipelines and ETL
+- Experience with LLMs and generative AI
+
+Compensation:
+- Competitive salary based on experience
+- Equity package
+- Comprehensive benefits
+
+This is a senior-level IC position with opportunities for technical leadership.

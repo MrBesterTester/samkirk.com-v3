@@ -492,24 +492,38 @@ function ResumeToolContent() {
       setFlowState((prev) => ({ ...prev, status: "generating", error: null }));
 
       try {
-        // For file mode, redirect to paste for now
-        if (mode === "file") {
-          setFlowState((prev) => ({
-            ...prev,
-            status: "error",
-            error: "File upload is not yet implemented. Please paste the job text instead.",
-          }));
-          return;
-        }
+        let response: Response;
 
-        const response = await fetch("/api/tools/resume", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            mode,
-            ...(mode === "paste" ? { text: data.text } : { url: data.url }),
-          }),
-        });
+        if (mode === "file") {
+          // File upload mode — send as FormData (multipart/form-data)
+          if (!data.file) {
+            setFlowState((prev) => ({
+              ...prev,
+              status: "error",
+              error: "Please select a file to upload.",
+            }));
+            return;
+          }
+
+          const formData = new FormData();
+          formData.append("mode", "file");
+          formData.append("file", data.file);
+
+          response = await fetch("/api/tools/resume", {
+            method: "POST",
+            body: formData,
+          });
+        } else {
+          // Paste or URL mode — send as JSON
+          response = await fetch("/api/tools/resume", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              mode,
+              ...(mode === "paste" ? { text: data.text } : { url: data.url }),
+            }),
+          });
+        }
 
         const result = await response.json();
 

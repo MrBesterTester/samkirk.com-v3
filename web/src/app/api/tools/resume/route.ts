@@ -3,8 +3,10 @@ import { z } from "zod";
 import {
   ingestFromPaste,
   ingestFromUrl,
+  ingestFromFile,
   JobIngestionError,
   type JobIngestionResult,
+  type JobFileMetadata,
 } from "@/lib/job-ingestion";
 import {
   generateAndStoreResume,
@@ -40,6 +42,9 @@ const ResumeRequestSchema = z.object({
   },
   { message: "Invalid input for the selected mode" }
 );
+
+// File upload is validated separately via FormData parsing (no Zod schema needed
+// since the file comes as a multipart form field, not JSON).
 
 interface ResumeSuccessResponse {
   success: true;
@@ -93,10 +98,14 @@ async function hasCaptchaPassed(sessionId: string): Promise<boolean> {
  * - Within rate limits
  * - Within spend cap
  *
- * Request body:
+ * Request body (JSON for paste/url):
  * - mode: "paste" | "url"
  * - text?: string (required if mode === "paste")
  * - url?: string (required if mode === "url")
+ *
+ * Request body (FormData for file):
+ * - mode: "file"
+ * - file: File (the uploaded file)
  *
  * Response:
  * - submissionId: string - Submission ID for artifacts/download
@@ -181,63 +190,113 @@ export async function POST(
       throw error;
     }
 
-    // 5. Parse request body
-    let body: z.infer<typeof ResumeRequestSchema>;
-    try {
-      const rawBody = await request.json();
-      const parseResult = ResumeRequestSchema.safeParse(rawBody);
-      if (!parseResult.success) {
-        return NextResponse.json(
-          {
-            success: false,
-            error: parseResult.error.issues[0]?.message || "Invalid request",
-            code: "INVALID_REQUEST",
-          },
-          { status: 400 }
-        );
-      }
-      body = parseResult.data;
-    } catch {
-      return NextResponse.json(
-        {
-          success: false,
-          error: "Invalid request body",
-          code: "INVALID_REQUEST",
-        },
-        { status: 400 }
-      );
-    }
-
-    // 6. Ingest job input
+    // 5. Parse request body (JSON for paste/url, FormData for file)
     let jobIngestion: JobIngestionResult;
-    try {
-      if (body.mode === "paste" && body.text) {
-        jobIngestion = ingestFromPaste(body.text);
-      } else if (body.mode === "url" && body.url) {
-        jobIngestion = await ingestFromUrl(body.url);
-      } else {
+    let inputMode: "paste" | "url" | "file";
+
+    const contentType = request.headers.get("content-type") || "";
+    const isFormData = contentType.includes("multipart/form-data");
+
+    if (isFormData) {
+      // File upload mode — parse FormData
+      try {
+        const formData = await request.formData();
+        const mode = formData.get("mode");
+        const file = formData.get("file");
+
+        if (mode !== "file" || !(file instanceof File)) {
+          return NextResponse.json(
+            {
+              success: false,
+              error: "Invalid file upload request",
+              code: "INVALID_REQUEST",
+            },
+            { status: 400 }
+          );
+        }
+
+        inputMode = "file";
+        const buffer = Buffer.from(await file.arrayBuffer());
+        const metadata: JobFileMetadata = {
+          filename: file.name,
+          size: file.size,
+          contentType: file.type || undefined,
+        };
+
+        jobIngestion = await ingestFromFile(buffer, metadata);
+      } catch (error) {
+        if (error instanceof JobIngestionError) {
+          return NextResponse.json(
+            {
+              success: false,
+              error: error.message,
+              code: error.code,
+              shouldPromptPaste: error.shouldPromptPaste,
+            },
+            { status: 400 }
+          );
+        }
+        throw error;
+      }
+    } else {
+      // JSON mode — paste or url
+      let body: z.infer<typeof ResumeRequestSchema>;
+      try {
+        const rawBody = await request.json();
+        const parseResult = ResumeRequestSchema.safeParse(rawBody);
+        if (!parseResult.success) {
+          return NextResponse.json(
+            {
+              success: false,
+              error: parseResult.error.issues[0]?.message || "Invalid request",
+              code: "INVALID_REQUEST",
+            },
+            { status: 400 }
+          );
+        }
+        body = parseResult.data;
+      } catch {
         return NextResponse.json(
           {
             success: false,
-            error: "Invalid input mode",
+            error: "Invalid request body",
             code: "INVALID_REQUEST",
           },
           { status: 400 }
         );
       }
-    } catch (error) {
-      if (error instanceof JobIngestionError) {
-        return NextResponse.json(
-          {
-            success: false,
-            error: error.message,
-            code: error.code,
-            shouldPromptPaste: error.shouldPromptPaste,
-          },
-          { status: 400 }
-        );
+
+      // 6. Ingest job input
+      inputMode = body.mode;
+      try {
+        if (body.mode === "paste" && body.text) {
+          jobIngestion = ingestFromPaste(body.text);
+        } else if (body.mode === "url" && body.url) {
+          jobIngestion = await ingestFromUrl(body.url);
+        } else {
+          return NextResponse.json(
+            {
+              success: false,
+              error: "Invalid input mode",
+              code: "INVALID_REQUEST",
+            },
+            { status: 400 }
+          );
+        }
+      } catch (error) {
+        if (error instanceof JobIngestionError) {
+          return NextResponse.json(
+            {
+              success: false,
+              error: error.message,
+              code: error.code,
+              shouldPromptPaste: error.shouldPromptPaste,
+            },
+            { status: 400 }
+          );
+        }
+        throw error;
       }
-      throw error;
     }
 
     // 7. Create submission record
@@ -245,7 +304,7 @@ export async function POST(
       tool: "resume",
       sessionId,
       inputs: {
-        mode: body.mode,
+        mode: inputMode,
         sourceIdentifier: jobIngestion.sourceIdentifier,
         characterCount: jobIngestion.characterCount,
         wordCount: jobIngestion.wordCount,
