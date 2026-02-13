@@ -4,6 +4,8 @@ title: "Create Tensor Logic link page"
 status: completed
 created_at: 2026-02-05T15:30:00-08:00
 user_request: UR-001
+related: [REQ-011, REQ-013]
+batch: "v2-upgrade-phase-3"
 claimed_at: 2026-02-05T16:07:00-08:00
 route: B
 completed_at: 2026-02-05T16:12:00-08:00
@@ -12,8 +14,6 @@ source_step: "3.2"
 source_doc: "docs/v2-upgrade-TODO.md"
 blueprint_ref: "docs/v2-upgrade-BLUEPRINT.md"
 model_hint: "Opus 4.5"
-batch: "v2-upgrade-phase-3"
-related: [REQ-011, REQ-013]
 ---
 
 # Create Tensor Logic link page (Step 3.2)

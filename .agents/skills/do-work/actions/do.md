@@ -340,6 +340,16 @@ The work action adds additional fields (`claimed_at`, `route`, `completed_at`) a
 
 **Note:** Legacy REQ files may have `context_ref` instead of `user_request`. The work action handles both.
 
+### Field Ordering Rule
+
+When creating REQ files, write frontmatter fields in this order:
+
+1. Core do-action fields: `id`, `title`, `status`, `created_at`, `user_request`
+2. Optional do-action fields (if present): `related`, `batch`, `addendum_to`
+3. Custom fields from ingestion (if present): `source_step`, `source_doc`, `blueprint_ref`, `model_hint`, etc.
+
+The work action later inserts its own fields (`claimed_at`, `route`, `completed_at`, `commit`, `error`) between groups 2 and 3. Keeping this order at creation time ensures work-action field insertion lands in the right place without reordering.
+
 ## Workflow
 
 ### Step 1: Parse the Request

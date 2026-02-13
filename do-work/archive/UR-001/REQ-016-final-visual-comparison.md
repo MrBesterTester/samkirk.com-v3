@@ -4,6 +4,8 @@ title: "Final visual comparison"
 status: completed
 created_at: 2026-02-05T15:30:00-08:00
 user_request: UR-001
+related: [REQ-017]
+batch: "v2-upgrade-phase-5"
 claimed_at: 2026-02-05T17:12:00-08:00
 route: B
 completed_at: 2026-02-05T17:20:00-08:00
@@ -12,8 +14,6 @@ source_step: "5.2"
 source_doc: "docs/v2-upgrade-TODO.md"
 blueprint_ref: "docs/v2-upgrade-BLUEPRINT.md"
 model_hint: "Gemini 3 Pro"
-batch: "v2-upgrade-phase-5"
-related: [REQ-017]
 ---
 
 # Final visual comparison (Step 5.2)

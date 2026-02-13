@@ -4,6 +4,8 @@ title: "Add Photo Fun link section"
 status: completed
 created_at: 2026-02-05T15:30:00-08:00
 user_request: UR-001
+related: [REQ-005, REQ-006, REQ-007, REQ-008, REQ-010]
+batch: "v2-upgrade-phase-2"
 claimed_at: 2026-02-05T16:24:00-08:00
 route: A
 completed_at: 2026-02-05T16:28:00-08:00
@@ -12,8 +14,6 @@ source_step: "2.5"
 source_doc: "docs/v2-upgrade-TODO.md"
 blueprint_ref: "docs/v2-upgrade-BLUEPRINT.md"
 model_hint: "Opus 4.5"
-batch: "v2-upgrade-phase-2"
-related: [REQ-005, REQ-006, REQ-007, REQ-008, REQ-010]
 ---
 
 # Add Photo Fun link section (Step 2.5)

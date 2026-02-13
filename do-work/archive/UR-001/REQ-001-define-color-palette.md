@@ -4,6 +4,8 @@ title: "Define new color palette"
 status: completed
 created_at: 2026-02-05T15:30:00-08:00
 user_request: UR-001
+related: [REQ-002]
+batch: "v2-upgrade-phase-0"
 claimed_at: 2026-02-05T15:40:00-08:00
 route: B
 completed_at: 2026-02-05T15:50:00-08:00
@@ -12,8 +14,6 @@ source_step: "0.1"
 source_doc: "docs/v2-upgrade-TODO.md"
 blueprint_ref: "docs/v2-upgrade-BLUEPRINT.md"
 model_hint: "Opus 4.5"
-batch: "v2-upgrade-phase-0"
-related: [REQ-002]
 ---
 
 # Define new color palette (Step 0.1)

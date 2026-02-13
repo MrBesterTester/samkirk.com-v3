@@ -4,6 +4,8 @@ title: "Copy profile photo asset"
 status: completed
 created_at: 2026-02-05T15:30:00-08:00
 user_request: UR-001
+related: [REQ-001]
+batch: "v2-upgrade-phase-0"
 claimed_at: 2026-02-05T15:51:00-08:00
 route: A
 completed_at: 2026-02-05T15:52:00-08:00
@@ -12,8 +14,6 @@ source_step: "0.2"
 source_doc: "docs/v2-upgrade-TODO.md"
 blueprint_ref: "docs/v2-upgrade-BLUEPRINT.md"
 model_hint: "Codex/Opus"
-batch: "v2-upgrade-phase-0"
-related: [REQ-001]
 ---
 
 # Copy profile photo asset (Step 0.2)

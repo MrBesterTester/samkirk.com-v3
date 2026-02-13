@@ -4,6 +4,8 @@ title: "Create Tool Preview component"
 status: completed
 created_at: 2026-02-05T15:30:00-08:00
 user_request: UR-001
+related: [REQ-005, REQ-007, REQ-008, REQ-009, REQ-010]
+batch: "v2-upgrade-phase-2"
 claimed_at: 2026-02-05T16:00:00-08:00
 route: B
 completed_at: 2026-02-05T16:05:00-08:00
@@ -12,8 +14,6 @@ source_step: "2.2"
 source_doc: "docs/v2-upgrade-TODO.md"
 blueprint_ref: "docs/v2-upgrade-BLUEPRINT.md"
 model_hint: "Opus 4.5"
-batch: "v2-upgrade-phase-2"
-related: [REQ-005, REQ-007, REQ-008, REQ-009, REQ-010]
 ---
 
 # Create Tool Preview component (Step 2.2)

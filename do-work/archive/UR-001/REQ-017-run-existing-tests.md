@@ -4,6 +4,8 @@ title: "Run existing tests"
 status: completed
 created_at: 2026-02-05T15:30:00-08:00
 user_request: UR-001
+related: [REQ-016]
+batch: "v2-upgrade-phase-5"
 claimed_at: 2026-02-05T17:22:00-08:00
 route: A
 completed_at: 2026-02-05T17:30:00-08:00
@@ -12,8 +14,6 @@ source_step: "5.3"
 source_doc: "docs/v2-upgrade-TODO.md"
 blueprint_ref: "docs/v2-upgrade-BLUEPRINT.md"
 model_hint: "Codex/Opus"
-batch: "v2-upgrade-phase-5"
-related: [REQ-016]
 ---
 
 # Run existing tests (Step 5.3)

@@ -4,6 +4,8 @@ title: "Add descriptions to Exploration pages"
 status: completed
 created_at: 2026-02-05T15:30:00-08:00
 user_request: UR-001
+related: [REQ-011, REQ-012]
+batch: "v2-upgrade-phase-3"
 claimed_at: 2026-02-05T16:13:00-08:00
 route: B
 completed_at: 2026-02-05T16:15:00-08:00
@@ -12,8 +14,6 @@ source_step: "3.3"
 source_doc: "docs/v2-upgrade-TODO.md"
 blueprint_ref: "docs/v2-upgrade-BLUEPRINT.md"
 model_hint: "Opus 4.5"
-batch: "v2-upgrade-phase-3"
-related: [REQ-011, REQ-012]
 ---
 
 # Add descriptions to Exploration pages (Step 3.3)

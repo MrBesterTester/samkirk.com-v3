@@ -4,6 +4,8 @@ title: "Apply new color palette globally"
 status: completed
 created_at: 2026-02-05T15:30:00-08:00
 user_request: UR-001
+related: [REQ-015]
+batch: "v2-upgrade-phase-4"
 claimed_at: 2026-02-05T16:16:00-08:00
 route: C
 completed_at: 2026-02-05T16:29:00-08:00
@@ -12,8 +14,6 @@ source_step: "4.1"
 source_doc: "docs/v2-upgrade-TODO.md"
 blueprint_ref: "docs/v2-upgrade-BLUEPRINT.md"
 model_hint: "Opus 4.5"
-batch: "v2-upgrade-phase-4"
-related: [REQ-015]
 ---
 
 # Apply new color palette globally (Step 4.1)

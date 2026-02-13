@@ -4,6 +4,8 @@ title: "Create Hero section with photo"
 status: completed
 created_at: 2026-02-05T15:30:00-08:00
 user_request: UR-001
+related: [REQ-006, REQ-007, REQ-008, REQ-009, REQ-010]
+batch: "v2-upgrade-phase-2"
 claimed_at: 2026-02-05T15:59:00-08:00
 route: B
 completed_at: 2026-02-05T16:02:00-08:00
@@ -12,8 +14,6 @@ source_step: "2.1"
 source_doc: "docs/v2-upgrade-TODO.md"
 blueprint_ref: "docs/v2-upgrade-BLUEPRINT.md"
 model_hint: "Opus 4.5"
-batch: "v2-upgrade-phase-2"
-related: [REQ-006, REQ-007, REQ-008, REQ-009, REQ-010]
 ---
 
 # Create Hero section with photo (Step 2.1)

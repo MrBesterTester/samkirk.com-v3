@@ -4,6 +4,14 @@ What's new, what's better, what's different. Most recent stuff on top.
 
 ---
 
+## 0.11.1 — The Order of Things (2026-02-12)
+
+Added a Field Ordering Rule to do.md so agents creating REQ files produce frontmatter in the same order work.md expects. Previously only work.md had the rule (for updates), so creation-time tools like ingest-todo had no guidance and placed custom fields before optional do-action fields.
+
+- Added Field Ordering Rule section to do.md with canonical 3-group creation order
+- Fixed field ordering in all 17 archived UR-001 REQ files to match the rule
+- Fixed ingest-todo REQ template to place `related`/`batch` before custom fields
+
 ## 0.11.0 — The Consistency Pass (2026-02-12)
 
 Comprehensive review and fix of 15 issues across all do-work action files, bridge skills, and CLAUDE.md. Failed REQs no longer silently block UR archival forever, screenshot handling no longer references folders that don't exist yet, and the schema now matches what agents actually write.

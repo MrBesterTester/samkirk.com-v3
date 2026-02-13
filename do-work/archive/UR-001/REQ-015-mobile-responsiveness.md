@@ -4,6 +4,8 @@ title: "Mobile responsiveness audit"
 status: completed
 created_at: 2026-02-05T15:30:00-08:00
 user_request: UR-001
+related: [REQ-014]
+batch: "v2-upgrade-phase-4"
 claimed_at: 2026-02-05T17:00:00-08:00
 route: B
 completed_at: 2026-02-05T17:10:00-08:00
@@ -12,8 +14,6 @@ source_step: "4.2"
 source_doc: "docs/v2-upgrade-TODO.md"
 blueprint_ref: "docs/v2-upgrade-BLUEPRINT.md"
 model_hint: "Gemini 3 Pro"
-batch: "v2-upgrade-phase-4"
-related: [REQ-014]
 ---
 
 # Mobile responsiveness audit (Step 4.2)
