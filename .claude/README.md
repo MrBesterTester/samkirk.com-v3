@@ -6,14 +6,21 @@ This directory contains Claude Code configurations that mirror your Cursor setup
 
 ```
 .claude/
-├── README.md           # This file
-├── RULES.md            # Project rules (mirrors .cursor/rules/)
-└── skills/             # Workflow skills (mirrors .cursor/commands/)
+├── README.md                   # This file
+├── QUICKSTART.md               # Getting started guide
+├── CURSOR-COMPATIBILITY.md     # Command mapping between Cursor and Claude Code
+├── RULES.md                    # Project rules (mirrors .cursor/rules/)
+├── settings.local.json         # Local Claude Code settings
+└── skills/                     # Workflow skills (mirrors .cursor/commands/)
     ├── create-spec.md
     ├── create-blueprint.md
     ├── create-todo.md
     ├── start-step.md
-    └── continue-step.md
+    ├── continue-step.md
+    ├── do-work -> ../../.agents/skills/do-work  # Autonomous task processing
+    ├── do-work-finish-then-stop/                # Stop queue after current REQ
+    ├── ingest-todo/                             # Convert TODO.md steps to REQ files
+    └── sync-todo/                               # Sync archived REQs back to TODO.md
 ```
 
 ## Usage in Claude Code

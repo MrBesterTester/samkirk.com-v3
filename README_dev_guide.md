@@ -172,6 +172,8 @@ npm run test:results -- --diff               # Compare last two runs
 npm run test:results -- --json               # Machine-readable JSON output
 ```
 
+The most useful of these is `npm run test:results -- --fixtures show`, which serves the fixture gallery at `localhost:8123` and opens it in your browser — a side-by-side view of real inputs and outputs for every tool.
+
 **Common workflows:**
 
 | Task | Command |

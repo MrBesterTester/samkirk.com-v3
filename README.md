@@ -15,6 +15,7 @@ Personal website + genAI demo tools for `samkirk.com`.
 - [Scripts](#scripts)
 - [Development Methodology](#development-methodology)
 - [Notes](#notes)
+- [Project Structure](#project-structure)
 
 ### Punch Down List
 
@@ -129,3 +130,31 @@ Both tools can be used interchangeably. Workflow commands (create-spec, create-b
 
 - Secrets must never be committed (use env vars / GCP Secret Manager).
 - Phone numbers for future SMS alerting must be treated as secrets and not logged/exposed.
+
+### Project Structure
+
+```
+samkirk-v3/
+├── .claude/                 # Claude Code integration
+├── .cursor/                 # Cursor IDE commands and rules
+├── do-work/                 # Autonomous work queue
+│   ├── archive/             # Completed and on-hold REQs
+│   ├── user-requests/       # Incoming REQ files
+│   └── working/             # Currently processing
+├── docs/                    # Project documentation (30+ files)
+├── web/                     # Next.js application
+│   ├── data/                # Resume data
+│   ├── e2e/                 # Playwright E2E tests
+│   ├── scripts/             # Build & test scripts
+│   ├── src/
+│   │   ├── app/             # Pages & API routes
+│   │   ├── components/      # Shared React components
+│   │   ├── lib/             # Core business logic (40+ modules)
+│   │   └── test/            # Test utilities
+│   └── test-fixtures/       # Saved tool outputs (fit, resume, interview)
+├── CLAUDE.md                # AI assistant project instructions
+├── README.md                # This file
+└── README_dev_guide.md      # Developer guide for testing workflows
+```
+
+Directories with their own READMEs: [`.claude/`](.claude/README.md) | [`docs/`](docs/README.md) | [`web/`](web/README.md) | [`web/test-fixtures/fit-report/`](web/test-fixtures/fit-report/README.md) | [`web/test-fixtures/interview-chat/`](web/test-fixtures/interview-chat/README.md) | [`web/test-fixtures/resume-generator/`](web/test-fixtures/resume-generator/README.md)

@@ -1,36 +1,48 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# web/
 
-## Getting Started
+Next.js application for [samkirk.com](https://samkirk.com) — personal website with genAI-powered hiring tools.
 
-First, run the development server:
+## Local Development
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open `http://localhost:3000`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Key Directories
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+web/
+├── data/               # Resume data (baseline-resume.md)
+├── e2e/                # Playwright E2E tests
+├── scripts/            # Build, test, and deployment scripts
+├── src/
+│   ├── app/            # Next.js App Router pages and API routes
+│   │   ├── admin/      # Resume management admin panel (dev-only nav link)
+│   │   ├── api/        # API routes (fit-report, interview, resume, dance-menu)
+│   │   ├── dance-menu/ # Weekly dance event listings
+│   │   ├── hire-me/    # Interactive hiring toolkit
+│   │   └── ...         # Other pages (explorations, photo-fun, song-dedication)
+│   ├── components/     # Shared React components with co-located tests
+│   ├── lib/            # Core business logic (40+ modules — LLM, storage, resume processing)
+│   └── test/           # Test utilities and helpers
+└── test-fixtures/      # Saved tool outputs for testing (fit-report, interview-chat, resume-generator)
+```
 
-## Learn More
+## Hire Me Tools
 
-To learn more about Next.js, take a look at the following resources:
+The main interactive feature. Visitors upload a job description and the system uses the stored resume + Vertex AI to generate:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **Fit Report** — Skills match analysis against the job posting
+- **Resume Generator** — Tailored resume for the specific role
+- **Interview Chat** — AI-powered interview prep conversation
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+API routes under `src/app/api/` handle LLM orchestration, with artifacts persisted to GCP Cloud Storage.
 
-## Deploy on Vercel
+## Further Reading
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- [**Developer Guide**](../README_dev_guide.md) — Testing workflows, E2E setup, deployment
+- [**Project Docs**](../docs/) — Specification, blueprint, architecture decisions
+- [**Top-level README**](../README.md) — SOPs, scripts, resume management
