@@ -24,13 +24,14 @@ For each UR folder in `do-work/user-requests/`:
    - `do-work/user-requests/UR-NNN/` itself (moved here by a partial archival attempt)
    - `do-work/archive/UR-NNN/` (already consolidated)
    - `do-work/archive/` root (loose in archive)
+   - **Important:** REQs with `status: failed` do NOT count as completed — they must be retried and succeed, or the user must explicitly archive the UR. Only `status: completed` satisfies this check.
 3. If **ALL** REQs are completed:
    - Gather any loose completed REQ files from `do-work/archive/` root into the UR folder
    - Move the entire UR folder to `do-work/archive/UR-NNN/`
    - Report: `Archived UR-NNN (all N REQs complete)`
 4. If **NOT all** REQs are completed:
    - Leave the UR folder in `user-requests/` — it's not ready yet
-   - Report: `UR-NNN still open (X/Y REQs complete)`
+   - Report: `UR-NNN still open (X/Y REQs complete, Z failed)`
 
 ### Pass 2: Consolidate Loose REQ Files in Archive
 

@@ -4,6 +4,13 @@ What's new, what's better, what's different. Most recent stuff on top.
 
 ---
 
+## 0.11.3 — The Safety Net (2026-02-13)
+
+Cleanup Pass 1 now explicitly states that failed REQs don't count toward UR completion, matching work.md's semantics. Previously the check only looked for `status: completed` without calling out what happens with `status: failed`, leaving room for misinterpretation.
+
+- Added explicit failed-REQ exclusion note to cleanup.md Pass 1 step 2
+- Updated "still open" report format to include failed REQ count
+
 ## 0.11.2 — The Ghost Hunt (2026-02-12)
 
 Fixed UR consolidation scan checking `working/` for completed REQs. Completed REQs are never in `working/` — they're moved to `archive/` immediately. The scan now checks only `archive/` root, `archive/UR-NNN/`, and `user-requests/UR-NNN/`, with the current REQ counted as resolved implicitly.
