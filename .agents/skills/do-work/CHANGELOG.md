@@ -4,6 +4,21 @@ What's new, what's better, what's different. Most recent stuff on top.
 
 ---
 
+## 0.12.0 — The Dashboard (2026-02-14)
+
+Quick queue status at a glance. `do work list` (or `status`, `queue`) shows pending, in-progress, held, and archived request counts in a compact table — no scrolling through files to see where things stand.
+
+- Added list action: `do work list`, `do work status`, `do work queue`
+- New routing priority 5 for list keywords
+- Shows pending REQs first, then in-progress, then held, with archived count
+
+## 0.11.5 — The Honest Count (2026-02-14)
+
+Step 6 (Report Back) now requires checking the actual queue directory for pending REQ count instead of relying on memory. Prevents stale counts when REQs are processed between do-action invocations.
+
+- Added live queue count rule to do.md Step 6
+- Prevents reporting archived REQs as still pending
+
 ## 0.11.4 — The Gitignore Fix (2026-02-14)
 
 REQ discovery was invisible to file-search tools because `do-work/` is gitignored. Step 1 now explicitly instructs agents to use a shell command (`ls`) instead of file-search tools that respect `.gitignore`.

@@ -664,6 +664,7 @@ After creating files, give a brief summary:
 - What files were created
 - Any existing requests that were updated
 - Any requests that were skipped (duplicates)
+- **Pending queue count**: Always list the actual `REQ-*.md` files in `do-work/` (the queue root) to get the real pending count. **Never report counts from memory or by accumulating what you created across turns** — REQs may have been processed and archived between invocations. The only source of truth is what's currently in the `do-work/` directory.
 
 Keep it concise. Don't explain your reasoning unless asked.
 

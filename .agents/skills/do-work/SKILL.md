@@ -1,7 +1,7 @@
 ---
 name: do-work
 description: Task queue - add requests or process pending work
-argument-hint: run | (task to capture) | verify | cleanup | version | changelog
+argument-hint: run | list | (task to capture) | verify | cleanup | version | changelog
 upstream: https://raw.githubusercontent.com/bladnman/do-work/main/SKILL.md
 ---
 
@@ -14,6 +14,7 @@ A unified entry point for task capture and processing.
 - **do**: Capture new tasks/requests → creates UR folder (verbatim input) + REQ files (queue items), always paired
 - **work**: Process pending requests → executes the queue
 - **verify**: Evaluate captured REQs against original input → quality check
+- **list**: Show queue status → pending, in-progress, held, and archived counts
 - **cleanup**: Consolidate archive → moves loose REQs into UR folders, closes completed URs
 
 > **Core concept:** The do action always produces both a UR folder (preserving the original input) and REQ files (the queue items). Each REQ links back to its UR via `user_request` frontmatter. This pairing is mandatory for all requests — simple or complex.
@@ -33,9 +34,10 @@ Check these patterns **in order** — first match wins:
 | 2        | Action verbs only        | `do work run`, `do work go`, `do work start`                                                                                       | → work                        |
 | 3        | Verify keywords          | `do work verify`, `do work check`, `do work evaluate`                                                                              | → verify                      |
 | 4        | Cleanup keywords         | `do work cleanup`, `do work tidy`, `do work consolidate`                                                                           | → cleanup                     |
-| 5        | Version keywords         | `do work version`, `do work update`, `do work check for updates`                                                                   | → version                     |
-| 6        | Changelog keywords       | `do work changelog`, `do work release notes`, `do work what's new`, `do work what's changed`, `do work updates`, `do work history` | → version                     |
-| 7        | Descriptive content      | `do work add dark mode`, `do work [meeting notes]`                                                                                 | → do                          |
+| 5        | List keywords            | `do work list`, `do work status`, `do work queue`                                                                                  | → list                        |
+| 6        | Version keywords         | `do work version`, `do work update`, `do work check for updates`                                                                   | → version                     |
+| 7        | Changelog keywords       | `do work changelog`, `do work release notes`, `do work what's new`, `do work what's changed`, `do work updates`, `do work history` | → version                     |
+| 8        | Descriptive content      | `do work add dark mode`, `do work [meeting notes]`                                                                                 | → do                          |
 
 
 ### Step 2: Preserve Payload
@@ -74,6 +76,11 @@ Note: "check" routes to verify ONLY when used alone or with a target (e.g., "do 
 
 These signal "consolidate the archive":
 cleanup, clean up, tidy, consolidate, organize archive, fix archive
+
+### List Verbs (→ List)
+
+These signal "show queue status":
+list, status, queue
 
 ### Changelog Verbs (→ Version)
 
@@ -115,6 +122,12 @@ These signal "add a new task":
 - `do work tidy` → Same as cleanup
 - `do work consolidate` → Same as cleanup
 
+### Routes to List
+
+- `do work list` → Shows pending, held, and archived counts
+- `do work status` → Same as list
+- `do work queue` → Same as list
+
 ### Routes to Changelog (via Version)
 
 - `do work changelog` → Displays changelog (newest at bottom)
@@ -152,5 +165,6 @@ Follow the detailed instructions in:
 - [work action](./actions/work.md) - Queue processing
 - [verify action](./actions/verify.md) - Quality evaluation of captured requests
 - [cleanup action](./actions/cleanup.md) - Archive consolidation and UR closure
+- [list action](./actions/list.md) - Queue status overview
 - [version action](./actions/version.md) - Version, updates & changelog
 
