@@ -812,14 +812,19 @@ export function useHireMe(): UseHireMeReturn {
           };
 
           if (result.downloadReady) {
-            next.downloads = [
-              ...prev.downloads,
-              {
-                label: "Interview Summary",
-                submissionId: result.submissionId,
-                type: "interview" as const,
-              },
-            ];
+            const alreadyExists = prev.downloads.some(
+              (d) => d.submissionId === result.submissionId
+            );
+            if (!alreadyExists) {
+              next.downloads = [
+                ...prev.downloads,
+                {
+                  label: "Interview Summary",
+                  submissionId: result.submissionId,
+                  type: "interview" as const,
+                },
+              ];
+            }
           }
 
           return next;
