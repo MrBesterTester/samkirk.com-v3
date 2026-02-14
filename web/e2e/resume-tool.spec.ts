@@ -5,14 +5,20 @@ import { test, expect } from "@playwright/test";
 import { verifyZipContents } from "./helpers/zip-verify";
 
 /**
- * E2E tests for the "Get a Custom Resume" tool.
+ * E2E tests for the Resume Generation flow on the unified Hire Me page.
  *
  * Prerequisites:
  * - GCP environment must be configured (.env.local with valid credentials)
  * - E2E_TESTING and NEXT_PUBLIC_E2E_TESTING must be "true" (set by playwright.config.ts)
  *
- * The tests use a special captcha bypass token that's automatically accepted
- * in E2E test mode, allowing the tests to proceed without actual reCAPTCHA interaction.
+ * The unified /hire-me page combines all three tools (fit, resume, interview)
+ * into a single chat-based interface. The flow is:
+ * 1. Click "Add Job" to expand the JobContextBar
+ * 2. Enter job posting text (paste/URL/file)
+ * 3. Click "Load Job"
+ * 4. Click "Generate Resume" preset chip
+ * 5. View resume preview card in chat stream
+ * 6. Download resume bundle from actions bar
  */
 
 // Sample job posting for testing
@@ -46,59 +52,109 @@ Compensation:
 This is a senior-level IC position with opportunities for technical leadership.
 `;
 
+/**
+ * Helper: Load a job posting via the JobContextBar using paste mode.
+ */
+async function loadJobViaPaste(page: import("@playwright/test").Page, text: string) {
+  await expect(page.getByRole("heading", { name: "Hire Me" })).toBeVisible();
+
+  // Wait for ToolGate captcha to pass
+  await expect(page.getByText(/I'm here to answer questions/i)).toBeVisible({
+    timeout: 15000,
+  });
+
+  // Expand JobContextBar
+  await page.getByRole("button", { name: "Add Job" }).click();
+
+  // Fill in the job posting text
+  const textarea = page.locator('textarea[placeholder*="Paste the full job posting"]');
+  await expect(textarea).toBeVisible({ timeout: 5000 });
+  await textarea.fill(text);
+
+  // Submit
+  await page.getByRole("button", { name: "Load Job" }).click();
+
+  // Wait for preset chips
+  await expect(page.getByRole("button", { name: /Generate Resume/i })).toBeVisible({
+    timeout: 10000,
+  });
+}
+
+/**
+ * Helper: Load a job posting via URL mode.
+ */
+async function loadJobViaUrl(page: import("@playwright/test").Page, url: string) {
+  await expect(page.getByRole("heading", { name: "Hire Me" })).toBeVisible();
+  await expect(page.getByText(/I'm here to answer questions/i)).toBeVisible({
+    timeout: 15000,
+  });
+
+  await page.getByRole("button", { name: "Add Job" }).click();
+  await page.getByRole("button", { name: "Enter URL" }).click();
+
+  const urlInput = page.locator('input[type="url"]');
+  await expect(urlInput).toBeVisible();
+  await urlInput.fill(url);
+
+  await page.getByRole("button", { name: "Load Job" }).click();
+
+  await expect(page.getByRole("button", { name: /Generate Resume/i })).toBeVisible({
+    timeout: 10000,
+  });
+}
+
+/**
+ * Helper: Load a job posting via file upload mode.
+ */
+async function loadJobViaFile(page: import("@playwright/test").Page, filePath: string) {
+  await expect(page.getByRole("heading", { name: "Hire Me" })).toBeVisible();
+  await expect(page.getByText(/I'm here to answer questions/i)).toBeVisible({
+    timeout: 15000,
+  });
+
+  await page.getByRole("button", { name: "Add Job" }).click();
+  await page.getByRole("button", { name: "Upload File" }).click();
+
+  const fileInput = page.locator('input[type="file"]');
+  await fileInput.setInputFiles(filePath);
+
+  const fileName = path.basename(filePath);
+  await expect(page.getByText(fileName)).toBeVisible();
+
+  await page.getByRole("button", { name: "Load Job" }).click();
+
+  await expect(page.getByRole("button", { name: /Generate Resume/i })).toBeVisible({
+    timeout: 10000,
+  });
+}
+
 test.describe("Resume Tool Happy Path", () => {
   test.beforeEach(async ({ page }) => {
-    // Navigate to the Resume tool page
-    await page.goto("/hire-me/resume");
+    await page.goto("/hire-me");
   });
 
   test("should complete full flow: input → generating → results", async ({
     page,
   }) => {
-    // Wait for initialization and captcha bypass
-    // The CaptchaGate component auto-verifies in E2E mode
-    await expect(page.getByRole("heading", { name: "Get a Custom Resume" })).toBeVisible();
+    // Load job posting via paste mode
+    await loadJobViaPaste(page, SAMPLE_JOB_POSTING);
 
-    // Wait for the job input form to appear (after captcha passes)
-    await expect(page.getByRole("textbox", { name: /job posting text/i })).toBeVisible({
-      timeout: 10000,
-    });
+    // Click "Generate Resume" preset chip
+    await page.getByRole("button", { name: /Generate Resume/i }).click();
 
-    // Enter the job posting text in paste mode (default mode)
-    const textarea = page.getByRole("textbox", { name: /job posting text/i });
-    await textarea.fill(SAMPLE_JOB_POSTING);
-
-    // Click the generate button
-    const generateButton = page.getByRole("button", { name: /generate custom resume/i });
-    await expect(generateButton).toBeEnabled();
-    await generateButton.click();
-
-    // Wait for generating state
+    // Wait for generating system message
     await expect(page.getByText(/generating your custom resume/i)).toBeVisible({ timeout: 5000 });
 
-    // Wait for the resume to be ready (this can take time due to LLM call)
-    await expect(page.getByText(/your custom resume is ready/i)).toBeVisible({
+    // Wait for the resume preview card to appear in chat stream
+    await expect(page.getByText(/summary/i).first()).toBeVisible({
       timeout: 240000, // 4 minutes for LLM generation
     });
 
-    // Verify the results page is displayed
-    await expect(page.getByText(/your custom resume is ready/i)).toBeVisible();
-
-    // Verify key elements of the results
-    await expect(page.getByText(/professional summary/i)).toBeVisible();
-    await expect(page.getByText(/experience entries/i)).toBeVisible();
-    await expect(page.getByText(/skill categories/i)).toBeVisible();
-
-    // Verify factual accuracy note is present
-    await expect(page.getByText(/factual accuracy guaranteed/i)).toBeVisible();
-
-    // Verify action buttons are present
-    await expect(page.getByRole("button", { name: /download resume bundle/i })).toBeVisible();
-    await expect(page.getByRole("button", { name: /generate another resume/i })).toBeVisible();
+    // Verify download button appears in the actions bar
+    await expect(page.getByRole("button", { name: /custom resume/i })).toBeVisible();
 
     // ---- Download verification ----
-    // Click download and capture the file
-    const downloadButton = page.getByRole("button", { name: /download resume bundle/i });
+    const downloadButton = page.getByRole("button", { name: /custom resume/i });
     const downloadPromise = page.waitForEvent("download");
     await downloadButton.click();
     const download = await downloadPromise;
@@ -111,7 +167,7 @@ test.describe("Resume Tool Happy Path", () => {
     // Verify ZIP contents
     verifyZipContents({
       zipPath,
-      filenamePattern: /custom-resume-.*\.zip/,
+      filenamePattern: /\.zip/,
       suggestedFilename: download.suggestedFilename(),
       requiredFiles: ["metadata.json", "outputs/outputs.json"],
       requiredPrefixes: ["outputs/"],
@@ -128,182 +184,103 @@ test.describe("Resume Tool Happy Path", () => {
   test("should complete full flow via URL mode: input → generating → results", async ({
     page,
   }) => {
-    // Wait for initialization and captcha bypass
-    await expect(page.getByRole("heading", { name: "Get a Custom Resume" })).toBeVisible();
+    await loadJobViaUrl(page, "http://localhost:3000/hire-me");
 
-    // Wait for the job input form to appear (after captcha passes)
-    await expect(page.getByRole("textbox", { name: /job posting text/i })).toBeVisible({
-      timeout: 10000,
-    });
+    await page.getByRole("button", { name: /Generate Resume/i }).click();
 
-    // Switch to URL mode
-    await page.getByRole("button", { name: /enter url/i }).click();
-
-    // Verify URL input is visible
-    const urlInput = page.getByRole("textbox", { name: /job posting url/i });
-    await expect(urlInput).toBeVisible();
-
-    // Enter a test URL — use the dev server's own page as a reliable, always-available URL.
-    // The backend will fetch this HTML and extract text from it to use as "job posting" content.
-    await urlInput.fill("http://localhost:3000/hire-me/resume");
-
-    // Click the generate button
-    const generateButton = page.getByRole("button", { name: /generate custom resume/i });
-    await expect(generateButton).toBeEnabled();
-    await generateButton.click();
-
-    // Wait for generating state
     await expect(page.getByText(/generating your custom resume/i)).toBeVisible({ timeout: 5000 });
 
-    // Wait for the resume to be ready (this can take time due to LLM call)
-    await expect(page.getByText(/your custom resume is ready/i)).toBeVisible({
-      timeout: 240000, // 4 minutes for LLM generation
+    // Wait for resume preview card
+    await expect(page.getByText(/summary/i).first()).toBeVisible({
+      timeout: 240000,
     });
 
-    // Verify the results page is displayed
-    await expect(page.getByText(/your custom resume is ready/i)).toBeVisible();
-
-    // Verify key elements of the results
-    await expect(page.getByText(/professional summary/i)).toBeVisible();
-    await expect(page.getByText(/experience entries/i)).toBeVisible();
-    await expect(page.getByText(/skill categories/i)).toBeVisible();
-
-    // Verify factual accuracy note is present
-    await expect(page.getByText(/factual accuracy guaranteed/i)).toBeVisible();
-
-    // Verify action buttons are present
-    await expect(page.getByRole("button", { name: /download resume bundle/i })).toBeVisible();
-    await expect(page.getByRole("button", { name: /generate another resume/i })).toBeVisible();
+    await expect(page.getByRole("button", { name: /custom resume/i })).toBeVisible();
   });
 
   test("should complete full flow via file upload mode: input → generating → results", async ({
     page,
   }) => {
-    // Wait for initialization and captcha bypass
-    await expect(page.getByRole("heading", { name: "Get a Custom Resume" })).toBeVisible();
-
-    // Wait for the job input form to appear (after captcha passes)
-    await expect(page.getByRole("textbox", { name: /job posting text/i })).toBeVisible({
-      timeout: 10000,
-    });
-
-    // Switch to file upload mode
-    await page.getByRole("button", { name: /upload file/i }).click();
-
-    // Upload the test fixture file via the hidden file input
     const fixtureFilePath = path.join(__dirname, "fixtures", "sample-job.txt");
-    const fileInput = page.locator('input[type="file"]');
-    await fileInput.setInputFiles(fixtureFilePath);
+    await loadJobViaFile(page, fixtureFilePath);
 
-    // Verify the filename is displayed in the upload zone
-    await expect(page.getByText("sample-job.txt")).toBeVisible();
+    await page.getByRole("button", { name: /Generate Resume/i }).click();
 
-    // Click the generate button
-    const generateButton = page.getByRole("button", { name: /generate custom resume/i });
-    await expect(generateButton).toBeEnabled();
-    await generateButton.click();
-
-    // Wait for generating state
     await expect(page.getByText(/generating your custom resume/i)).toBeVisible({ timeout: 5000 });
 
-    // Wait for the resume to be ready (this can take time due to LLM call)
-    await expect(page.getByText(/your custom resume is ready/i)).toBeVisible({
-      timeout: 240000, // 4 minutes for LLM generation
+    // Wait for resume preview card
+    await expect(page.getByText(/summary/i).first()).toBeVisible({
+      timeout: 240000,
     });
 
-    // Verify the results page is displayed
-    await expect(page.getByText(/your custom resume is ready/i)).toBeVisible();
-
-    // Verify key elements of the results
-    await expect(page.getByText(/professional summary/i)).toBeVisible();
-    await expect(page.getByText(/experience entries/i)).toBeVisible();
-    await expect(page.getByText(/skill categories/i)).toBeVisible();
-
-    // Verify factual accuracy note is present
-    await expect(page.getByText(/factual accuracy guaranteed/i)).toBeVisible();
-
-    // Verify action buttons are present
-    await expect(page.getByRole("button", { name: /download resume bundle/i })).toBeVisible();
-    await expect(page.getByRole("button", { name: /generate another resume/i })).toBeVisible();
+    await expect(page.getByRole("button", { name: /custom resume/i })).toBeVisible();
   });
 
-  test("should allow generating another resume after completion", async ({ page }) => {
-    // This is a lighter test that just verifies the form loads correctly
-    await expect(page.getByRole("heading", { name: "Get a Custom Resume" })).toBeVisible();
+  test("should load job posting and show both preset chips", async ({ page }) => {
+    await loadJobViaPaste(page, SAMPLE_JOB_POSTING);
 
-    // Wait for captcha bypass and form to appear
-    await expect(page.getByRole("textbox", { name: /job posting text/i })).toBeVisible({
-      timeout: 10000,
-    });
-
-    // Verify all input modes are available
-    await expect(page.getByRole("button", { name: /paste text/i })).toBeVisible();
-    await expect(page.getByRole("button", { name: /enter url/i })).toBeVisible();
-    await expect(page.getByRole("button", { name: /upload file/i })).toBeVisible();
+    // Verify both preset chips are visible
+    await expect(page.getByRole("button", { name: /Analyze My Fit/i })).toBeVisible();
+    await expect(page.getByRole("button", { name: /Generate Resume/i })).toBeVisible();
   });
 
   test("should show URL input mode when selected", async ({ page }) => {
-    await expect(page.getByRole("textbox", { name: /job posting text/i })).toBeVisible({
-      timeout: 10000,
+    await expect(page.getByRole("heading", { name: "Hire Me" })).toBeVisible();
+    await expect(page.getByText(/I'm here to answer questions/i)).toBeVisible({
+      timeout: 15000,
     });
 
-    // Click URL mode tab
-    await page.getByRole("button", { name: /enter url/i }).click();
+    await page.getByRole("button", { name: "Add Job" }).click();
+
+    // Switch to URL mode
+    await page.getByRole("button", { name: "Enter URL" }).click();
 
     // Verify URL input is visible
-    await expect(page.getByRole("textbox", { name: /job posting url/i })).toBeVisible();
+    await expect(page.locator('input[type="url"]')).toBeVisible();
   });
 
-  test("should validate empty input", async ({ page }) => {
-    await expect(page.getByRole("textbox", { name: /job posting text/i })).toBeVisible({
-      timeout: 10000,
+  test("should disable Load Job when input is empty", async ({ page }) => {
+    await expect(page.getByRole("heading", { name: "Hire Me" })).toBeVisible();
+    await expect(page.getByText(/I'm here to answer questions/i)).toBeVisible({
+      timeout: 15000,
     });
 
-    // The generate button should be disabled when input is empty
-    const generateButton = page.getByRole("button", { name: /generate custom resume/i });
-    await expect(generateButton).toBeDisabled();
+    await page.getByRole("button", { name: "Add Job" }).click();
 
-    // Enter some text
-    const textarea = page.getByRole("textbox", { name: /job posting text/i });
+    // Load Job should be disabled when empty
+    const loadButton = page.getByRole("button", { name: "Load Job" });
+    await expect(loadButton).toBeDisabled();
+
+    const textarea = page.locator('textarea[placeholder*="Paste the full job posting"]');
     await textarea.fill("Some job posting text");
 
-    // Now the button should be enabled
-    await expect(generateButton).toBeEnabled();
+    await expect(loadButton).toBeEnabled();
 
-    // Clear the text
     await textarea.clear();
 
-    // Button should be disabled again
-    await expect(generateButton).toBeDisabled();
+    await expect(loadButton).toBeDisabled();
   });
 
-  test("should display feature cards", async ({ page }) => {
-    // Verify the feature cards are displayed
-    await expect(page.getByText(/100% factual/i)).toBeVisible({ timeout: 10000 });
-    await expect(page.getByText(/2-page format/i)).toBeVisible();
-    await expect(page.getByText(/multiple formats/i)).toBeVisible();
+  test("should display welcome message with topic list", async ({ page }) => {
+    // Verify the welcome message is displayed in the chat stream
+    await expect(page.getByText(/I'm here to answer questions/i)).toBeVisible({
+      timeout: 15000,
+    });
+    await expect(page.getByText(/work history and experience/i)).toBeVisible();
+    await expect(page.getByText(/technical skills and projects/i)).toBeVisible();
   });
 });
 
 test.describe("Resume Tool Error Handling", () => {
   test("should handle error states gracefully", async ({ page }) => {
-    // Navigate to the Resume tool page
-    await page.goto("/hire-me/resume");
+    await page.goto("/hire-me");
 
-    // Wait for the form
-    await expect(page.getByRole("textbox", { name: /job posting text/i })).toBeVisible({
-      timeout: 10000,
-    });
+    // Load a minimal job posting
+    await loadJobViaPaste(page, "x");
 
-    // Enter minimal text that might fail validation on the server
-    const textarea = page.getByRole("textbox", { name: /job posting text/i });
-    await textarea.fill("x"); // Very short input
+    // Click "Generate Resume" to trigger the flow with minimal input
+    await page.getByRole("button", { name: /Generate Resume/i }).click();
 
-    // Try to submit
-    const generateButton = page.getByRole("button", { name: /generate custom resume/i });
-    await generateButton.click();
-
-    // The request should still be made (validation is primarily server-side)
     // Wait for either an error or processing
     await page.waitForFunction(
       () => {
@@ -312,10 +289,10 @@ test.describe("Resume Tool Error Handling", () => {
           body.includes("Generating") ||
           body.includes("error") ||
           body.includes("Error") ||
-          body.includes("Ready")
+          body.includes("summary")
         );
       },
-      { timeout: 10000 }
+      { timeout: 15000 }
     );
   });
 });

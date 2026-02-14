@@ -21,8 +21,9 @@ const gcpAvailable = Boolean(process.env.GCP_PROJECT_ID);
  * - E2E_TESTING and NEXT_PUBLIC_E2E_TESTING must be "true" (set by playwright.config.ts)
  * - For admin auth tests, OAuth is not automated (manual verification required)
  *
- * Note: Full tool flows (Fit, Resume, Interview) are tested in their respective
- * spec files. This suite focuses on page accessibility and navigation.
+ * Note: The /hire-me page is now a unified chat-based interface.
+ * Sub-routes (/hire-me/fit, /hire-me/resume, /hire-me/interview) redirect to /hire-me.
+ * Full tool flows are tested in their respective spec files.
  */
 
 test.describe("Public Pages - Render Correctly", () => {
@@ -39,15 +40,21 @@ test.describe("Public Pages - Render Correctly", () => {
     await expect(page.getByRole("link", { name: /hire me/i })).toBeVisible();
   });
 
-  test("tools hub page loads", async ({ page }) => {
+  test("hire-me page loads with unified interface", async ({ page }) => {
     await page.goto("/hire-me");
 
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
 
-    // Should have links to all three tools
-    await expect(page.getByRole("link", { name: /fit/i })).toBeVisible();
-    await expect(page.getByRole("link", { name: /resume/i })).toBeVisible();
-    await expect(page.getByRole("link", { name: /interview/i })).toBeVisible();
+    // Should show the unified "Hire Me" heading
+    await expect(page.getByRole("heading", { name: "Hire Me" })).toBeVisible();
+
+    // Should have the "Add Job" button for job context
+    await expect(page.getByRole("button", { name: "Add Job" })).toBeVisible();
+
+    // Description text should be visible
+    await expect(
+      page.getByText(/help hiring managers quickly evaluate/i)
+    ).toBeVisible();
   });
 
   test("dance menu page loads", async ({ page }) => {
@@ -169,7 +176,7 @@ test.describe("Admin Pages - Authentication Required", () => {
 });
 
 test.describe("Navigation - Links Work", () => {
-  test("can navigate from home to tools", async ({ page }) => {
+  test("can navigate from home to hire-me", async ({ page }) => {
     await page.goto("/");
 
     await page.getByRole("link", { name: /hire me/i }).first().click();
@@ -177,28 +184,18 @@ test.describe("Navigation - Links Work", () => {
     await expect(page).toHaveURL(/\/hire-me/);
   });
 
-  test("can navigate from tools to fit tool", async ({ page }) => {
-    await page.goto("/hire-me");
+  test("sub-routes redirect to unified hire-me page", async ({ page }) => {
+    // /hire-me/fit should redirect to /hire-me
+    await page.goto("/hire-me/fit");
+    await expect(page).toHaveURL(/\/hire-me$/);
 
-    await page.getByRole("link", { name: /fit/i }).first().click();
+    // /hire-me/resume should redirect to /hire-me
+    await page.goto("/hire-me/resume");
+    await expect(page).toHaveURL(/\/hire-me$/);
 
-    await expect(page).toHaveURL(/\/hire-me\/fit/);
-  });
-
-  test("can navigate from tools to resume tool", async ({ page }) => {
-    await page.goto("/hire-me");
-
-    await page.getByRole("link", { name: /resume/i }).first().click();
-
-    await expect(page).toHaveURL(/\/hire-me\/resume/);
-  });
-
-  test("can navigate from tools to interview tool", async ({ page }) => {
-    await page.goto("/hire-me");
-
-    await page.getByRole("link", { name: /interview/i }).first().click();
-
-    await expect(page).toHaveURL(/\/hire-me\/interview/);
+    // /hire-me/interview should redirect to /hire-me
+    await page.goto("/hire-me/interview");
+    await expect(page).toHaveURL(/\/hire-me$/);
   });
 
   test("can navigate to explorations", async ({ page }) => {
@@ -268,8 +265,8 @@ test.describe("Accessibility - Basic Checks", () => {
     expect(h1Count).toBe(1);
   });
 
-  test("tool pages have proper heading structure", async ({ page }) => {
-    await page.goto("/hire-me/fit");
+  test("hire-me page has proper heading structure", async ({ page }) => {
+    await page.goto("/hire-me");
 
     const h1Count = await page.locator("h1").count();
     expect(h1Count).toBe(1);

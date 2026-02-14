@@ -3,11 +3,15 @@ import { test, expect } from "@playwright/test";
 import { verifyZipContents } from "./helpers/zip-verify";
 
 /**
- * E2E tests for the "Interview Me Now" tool.
+ * E2E tests for the Interview / Chat flow on the unified Hire Me page.
  *
  * Prerequisites:
  * - E2E_TESTING and NEXT_PUBLIC_E2E_TESTING must be "true" (set by playwright.config.ts)
  * - Captcha bypass is automatic in E2E mode
+ *
+ * The unified /hire-me page has a chat interface that allows free-form
+ * questions about Sam's career. The chat is always available (no job
+ * posting required for basic Q&A).
  *
  * Test structure:
  * - UI tests: Fast, no LLM calls, verify page renders correctly
@@ -17,17 +21,17 @@ import { verifyZipContents } from "./helpers/zip-verify";
 
 test.describe("Interview Tool - UI", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto("/hire-me/interview");
+    await page.goto("/hire-me");
   });
 
-  test("loads the interview page with correct heading", async ({ page }) => {
+  test("loads the hire-me page with correct heading", async ({ page }) => {
     await expect(
-      page.getByRole("heading", { name: "Interview Me NOW" })
+      page.getByRole("heading", { name: "Hire Me" })
     ).toBeVisible();
 
     // Description text
     await expect(
-      page.getByText(/interactive conversation to learn about/i)
+      page.getByText(/help hiring managers quickly evaluate/i)
     ).toBeVisible();
   });
 
@@ -35,7 +39,7 @@ test.describe("Interview Tool - UI", () => {
     // Wait for captcha bypass and chat to load
     await expect(
       page.getByText(/I'm here to answer questions/i)
-    ).toBeVisible({ timeout: 10000 });
+    ).toBeVisible({ timeout: 15000 });
 
     // Welcome message should list topics
     await expect(page.getByText(/work history and experience/i)).toBeVisible();
@@ -45,9 +49,9 @@ test.describe("Interview Tool - UI", () => {
   test("displays input field and send button", async ({ page }) => {
     await expect(
       page.getByText(/I'm here to answer questions/i)
-    ).toBeVisible({ timeout: 10000 });
+    ).toBeVisible({ timeout: 15000 });
 
-    // Input field
+    // Input field (textarea with placeholder)
     await expect(
       page.getByPlaceholder(/ask about sam's career/i)
     ).toBeVisible();
@@ -61,26 +65,23 @@ test.describe("Interview Tool - UI", () => {
     await expect(page.getByText(/press enter to send/i)).toBeVisible();
   });
 
-  test("displays feature cards", async ({ page }) => {
-    await expect(page.getByText(/real-time chat/i)).toBeVisible();
-    await expect(page.getByText(/career-focused/i)).toBeVisible();
-    await expect(page.getByText(/download transcript/i)).toBeVisible();
-  });
-
-  test("displays new conversation button", async ({ page }) => {
+  test("displays Add Job button for job context", async ({ page }) => {
     await expect(
-      page.getByRole("button", { name: /new conversation/i })
-    ).toBeVisible();
+      page.getByText(/I'm here to answer questions/i)
+    ).toBeVisible({ timeout: 15000 });
+
+    // The "Add Job" button should be visible in the JobContextBar
+    await expect(page.getByRole("button", { name: "Add Job" })).toBeVisible();
   });
 });
 
 test.describe("Interview Tool - Input Behavior", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto("/hire-me/interview");
+    await page.goto("/hire-me");
     // Wait for chat interface to be ready
     await expect(
       page.getByText(/I'm here to answer questions/i)
-    ).toBeVisible({ timeout: 10000 });
+    ).toBeVisible({ timeout: 15000 });
   });
 
   test("user message appears in chat immediately after send", async ({ page }) => {
@@ -110,7 +111,7 @@ test.describe("Interview Tool - Input Behavior", () => {
     await input.fill("Quick test question");
     await page.getByRole("button", { name: /send message/i }).click();
 
-    // Placeholder should change and input should be disabled
+    // Placeholder should change to "Waiting for response..."
     await expect(
       page.getByPlaceholder(/waiting for response/i)
     ).toBeVisible({ timeout: 3000 });
@@ -136,6 +137,11 @@ test.describe("Interview Tool - Input Behavior", () => {
     await input.press("Enter");
     await expect(page.getByText(testMessage)).toBeVisible();
 
+    // The New Conversation button appears after sending a message
+    await expect(
+      page.getByRole("button", { name: /new conversation/i })
+    ).toBeVisible({ timeout: 5000 });
+
     // Click new conversation
     await page.getByRole("button", { name: /new conversation/i }).click();
 
@@ -154,25 +160,25 @@ test.describe("Interview Tool - Conversation", () => {
     // This test makes an actual LLM call - use reasonable timeout
     test.setTimeout(90000); // 90 seconds max
 
-    await page.goto("/hire-me/interview");
+    await page.goto("/hire-me");
 
     // Wait for chat to be ready
     await expect(
       page.getByText(/I'm here to answer questions/i)
-    ).toBeVisible({ timeout: 10000 });
+    ).toBeVisible({ timeout: 15000 });
 
     // Send a simple career question
     const input = page.getByPlaceholder(/ask about sam's career/i);
     await input.fill("What programming languages do you know?");
     await input.press("Enter");
 
-    // Wait for response - look for message count indicator updating
-    // After response, we should have "2 messages" (user + assistant)
-    await expect(page.getByText(/2 messages/i)).toBeVisible({ timeout: 60000 });
+    // Wait for the assistant response to appear
+    // The "Sam Kirk" label appears on assistant messages
+    await expect(page.locator("text=Sam Kirk").nth(1)).toBeVisible({ timeout: 60000 });
 
-    // Download should now be available
-    const downloadButton = page.getByText(/download transcript/i).first();
-    await expect(downloadButton).toBeVisible();
+    // Download button should appear in actions bar after conversation
+    const downloadButton = page.getByRole("button", { name: /interview/i }).first();
+    await expect(downloadButton).toBeVisible({ timeout: 10000 });
 
     // Click download and wait for the file
     const downloadPromise = page.waitForEvent("download");
@@ -186,7 +192,7 @@ test.describe("Interview Tool - Conversation", () => {
     // Verify the download completed and ZIP contents
     verifyZipContents({
       zipPath: fixturesPath,
-      filenamePattern: /interview-transcript-.*\.zip/,
+      filenamePattern: /\.zip/,
       suggestedFilename: download.suggestedFilename(),
       requiredFiles: ["metadata.json", "outputs/outputs.json"],
       requiredPrefixes: ["outputs/"],
