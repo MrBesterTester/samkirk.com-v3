@@ -56,25 +56,15 @@ export default function HireMePage() {
         <ToolGate toolName="Hire Me Tools">
           {/* Chat container with fixed height for scrollable stream */}
           <div className="flex flex-col overflow-hidden rounded-xl border border-border bg-primary">
-            {/* ChatStream — scrollable area */}
-            <div className="h-[28rem] sm:h-[32rem]">
-              <ChatStream
-                messages={state.messages}
-                isLoading={state.isLoading}
-                onAnswer={answerFitQuestion}
-                answeredQuestions={state.answeredQuestions}
-              />
-            </div>
-
-            {/* Actions bar — downloads + new conversation */}
+            {/* Actions bar — downloads + new conversation (top strip) */}
             {(state.downloads.length > 0 || state.messages.length > 0) && (
-              <div className="flex flex-wrap items-center gap-2 border-t border-border px-4 py-3">
+              <div className="flex flex-wrap items-center gap-2 border-b border-border px-3 py-2">
                 {state.downloads.map((entry) => (
                   <button
                     key={entry.submissionId}
                     type="button"
                     onClick={() => download(entry.submissionId)}
-                    className="inline-flex items-center gap-1.5 rounded-lg border border-zinc-300 bg-white px-3 py-1.5 text-xs font-medium text-zinc-700 transition-colors hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
+                    className="inline-flex items-center gap-1.5 rounded-lg border border-zinc-300 bg-white px-2 py-1 text-xs font-medium text-zinc-700 transition-colors hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
                   >
                     <svg
                       className="h-3.5 w-3.5"
@@ -97,7 +87,7 @@ export default function HireMePage() {
                   <button
                     type="button"
                     onClick={newConversation}
-                    className="ml-auto inline-flex items-center gap-1.5 rounded-lg border border-zinc-300 bg-white px-3 py-1.5 text-xs font-medium text-zinc-700 transition-colors hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
+                    className="ml-auto inline-flex items-center gap-1.5 rounded-lg border border-zinc-300 bg-white px-2 py-1 text-xs font-medium text-zinc-700 transition-colors hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
                   >
                     <svg
                       className="h-3.5 w-3.5"
@@ -118,13 +108,23 @@ export default function HireMePage() {
               </div>
             )}
 
-            {/* ChatInput — textarea + send + preset chips */}
+            {/* ChatStream — scrollable area */}
+            <div className="h-[32rem] sm:h-[36rem]">
+              <ChatStream
+                messages={state.messages}
+                isLoading={state.isLoading}
+                onAnswer={answerFitQuestion}
+                answeredQuestions={state.answeredQuestions}
+                onPreset={handlePreset}
+                jobLoaded={jobLoaded}
+                flowActive={flowActive}
+              />
+            </div>
+
+            {/* ChatInput — textarea + send */}
             <ChatInput
               onSend={sendMessage}
-              onPreset={handlePreset}
               isLoading={state.isLoading}
-              jobLoaded={jobLoaded}
-              flowActive={flowActive}
             />
           </div>
         </ToolGate>
