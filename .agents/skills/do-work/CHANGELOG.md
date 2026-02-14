@@ -4,6 +4,12 @@ What's new, what's better, what's different. Most recent stuff on top.
 
 ---
 
+## 0.12.1 — The Missing Search (2026-02-14)
+
+Fixed a bug where the UR completion check in Step 7 didn't search `do-work/working/` for the just-completed REQ. An orchestrator following the instructions literally would miss it and fail to consolidate the UR.
+
+- Added `do-work/working/` as a search location in the UR completion check (work.md line 756)
+
 ## 0.12.0 — The Dashboard (2026-02-14)
 
 Quick queue status at a glance. `do work list` (or `status`, `queue`) shows pending, in-progress, held, and archived request counts in a compact table — no scrolling through files to see where things stand.
