@@ -12,6 +12,20 @@ interface DownloadErrorResponse {
   message: string;
 }
 
+/** Map submission tool type to a descriptive download filename. */
+function downloadFilename(tool: string, submissionId: string): string {
+  switch (tool) {
+    case "fit":
+      return `fit-report-${submissionId}.zip`;
+    case "resume":
+      return `custom-resume-${submissionId}.zip`;
+    case "interview":
+      return `interview-transcript-${submissionId}.zip`;
+    default:
+      return `submission-${submissionId}.zip`;
+  }
+}
+
 /**
  * GET /api/submissions/[id]/download
  *
@@ -94,7 +108,7 @@ export async function GET(
           status: 200,
           headers: {
             "Content-Type": "application/zip",
-            "Content-Disposition": `attachment; filename="submission-${submissionId}.zip"`,
+            "Content-Disposition": `attachment; filename="${downloadFilename(submission.tool, submissionId)}"`,
             "Content-Length": String(content.length),
             "Cache-Control": "private, max-age=300", // 5 minute cache
           },
@@ -119,7 +133,7 @@ export async function GET(
       status: 200,
       headers: {
         "Content-Type": "application/zip",
-        "Content-Disposition": `attachment; filename="submission-${submissionId}.zip"`,
+        "Content-Disposition": `attachment; filename="${downloadFilename(submission.tool, submissionId)}"`,
         "Content-Length": String(bundle.size),
         "Cache-Control": "private, no-cache",
         "X-File-Count": String(bundle.fileCount),

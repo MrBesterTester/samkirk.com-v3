@@ -61,7 +61,7 @@ export interface UseHireMeReturn {
   answerFitQuestion: (questionId: string, answer: string) => Promise<void>;
   sendMessage: (text: string) => Promise<void>;
   newConversation: () => void;
-  download: (submissionId: string) => Promise<void>;
+  download: (submissionId: string, type: DownloadEntry["type"]) => Promise<void>;
   jobLoaded: boolean;
   flowActive: boolean;
   jobTitle: string | undefined;
@@ -876,16 +876,31 @@ export function useHireMe(): UseHireMeReturn {
   // ------------------------------------------------------------------
   // download
   // ------------------------------------------------------------------
-  const download = useCallback(async (submissionId: string) => {
+  const download = useCallback(async (submissionId: string, type: DownloadEntry["type"]) => {
+    // Client-side fallback filenames by type
+    const fallbackNames: Record<DownloadEntry["type"], string> = {
+      fit: `fit-report-${submissionId}.zip`,
+      resume: `custom-resume-${submissionId}.zip`,
+      interview: `interview-transcript-${submissionId}.zip`,
+    };
+
     try {
       const res = await fetch(`/api/submissions/${submissionId}/download`);
       if (!res.ok) throw new Error("Download failed");
+
+      // Prefer the filename from the server's Content-Disposition header
+      let filename = fallbackNames[type];
+      const disposition = res.headers.get("Content-Disposition");
+      if (disposition) {
+        const match = disposition.match(/filename="?([^";\s]+)"?/);
+        if (match?.[1]) filename = match[1];
+      }
 
       const blob = await res.blob();
       const url = URL.createObjectURL(blob);
       const anchor = document.createElement("a");
       anchor.href = url;
-      anchor.download = `submission-${submissionId}.zip`;
+      anchor.download = filename;
       document.body.appendChild(anchor);
       anchor.click();
       document.body.removeChild(anchor);
