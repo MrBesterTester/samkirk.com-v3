@@ -258,7 +258,7 @@ async function answerFitQuestions(page: import("@playwright/test").Page) {
 
 test.describe("Fit Tool Happy Path", () => {
   test.beforeEach(async ({ page }) => {
-    // Navigate to the unified Hire Me page (or /hire-me/fit which redirects)
+    // Navigate to the unified Hire Me page
     await page.goto("/hire-me");
   });
 

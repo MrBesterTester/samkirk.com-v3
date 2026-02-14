@@ -22,7 +22,6 @@ const gcpAvailable = Boolean(process.env.GCP_PROJECT_ID);
  * - For admin auth tests, OAuth is not automated (manual verification required)
  *
  * Note: The /hire-me page is now a unified chat-based interface.
- * Sub-routes (/hire-me/fit, /hire-me/resume, /hire-me/interview) redirect to /hire-me.
  * Full tool flows are tested in their respective spec files.
  */
 
@@ -184,18 +183,16 @@ test.describe("Navigation - Links Work", () => {
     await expect(page).toHaveURL(/\/hire-me/);
   });
 
-  test("sub-routes redirect to unified hire-me page", async ({ page }) => {
-    // /hire-me/fit should redirect to /hire-me
-    await page.goto("/hire-me/fit");
-    await expect(page).toHaveURL(/\/hire-me$/);
+  test("old sub-routes return 404", async ({ page }) => {
+    // /hire-me/fit, /hire-me/resume, /hire-me/interview were removed
+    const response1 = await page.goto("/hire-me/fit");
+    expect(response1?.status()).toBe(404);
 
-    // /hire-me/resume should redirect to /hire-me
-    await page.goto("/hire-me/resume");
-    await expect(page).toHaveURL(/\/hire-me$/);
+    const response2 = await page.goto("/hire-me/resume");
+    expect(response2?.status()).toBe(404);
 
-    // /hire-me/interview should redirect to /hire-me
-    await page.goto("/hire-me/interview");
-    await expect(page).toHaveURL(/\/hire-me$/);
+    const response3 = await page.goto("/hire-me/interview");
+    expect(response3?.status()).toBe(404);
   });
 
   test("can navigate to explorations", async ({ page }) => {
