@@ -1,6 +1,5 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ToolPreview } from "@/components";
 
 export default function Home() {
   return (
@@ -45,40 +44,16 @@ export default function Home() {
           Hiring Manager?
         </h2>
         <p className="mt-2 text-center text-text-secondary">
-          Use these AI-powered tools to quickly evaluate my fit for your role.
+          Use my AI-powered hiring tools to evaluate fit, generate a tailored resume,
+          and interview me — all in one place.
         </p>
-
-        <div className="mt-8 grid gap-6 sm:grid-cols-3">
-          <ToolPreview
-            title="How Do I Fit?"
-            description="Get a detailed fit analysis with scoring and rationale."
-            ctaText="Analyze Fit"
-            ctaLink="/hire-me/fit"
-          />
-          <ToolPreview
-            title="Custom Resume"
-            description="Generate a tailored resume for your specific role."
-            ctaText="Generate Resume"
-            ctaLink="/hire-me/resume"
-          />
-          <ToolPreview
-            title="Interview Me NOW"
-            description="Ask questions about my experience and background."
-            ctaText="Start Interview"
-            ctaLink="/hire-me/interview"
-            previewContent={
-              <div className="space-y-2 text-sm">
-                <p className="font-medium text-text-secondary">
-                  Q: What&apos;s your experience with AI?
-                </p>
-                <p className="text-text-secondary">
-                  A: I&apos;ve built LLM-powered tools including this site&apos;s
-                  interview and fit-analysis features using Vertex AI and
-                  prompt engineering.
-                </p>
-              </div>
-            }
-          />
+        <div className="mt-6 text-center">
+          <Link
+            href="/hire-me"
+            className="inline-block rounded-lg bg-accent px-6 py-3 text-base font-semibold text-white shadow-sm transition-colors hover:bg-accent-hover"
+          >
+            Try Hire Me Tools &rarr;
+          </Link>
         </div>
       </section>
 

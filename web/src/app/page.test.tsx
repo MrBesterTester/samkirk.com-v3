@@ -19,32 +19,11 @@ describe("Home page", () => {
     expect(headings.length).toBeGreaterThanOrEqual(1);
   });
 
-  it("renders all three AI tool cards with correct headings and links", () => {
+  it("renders hire-me CTA link", () => {
     render(<Home />);
 
-    // Verify tool card headings are rendered
-    expect(
-      screen.getByRole("heading", { name: /how do i fit\?/i })
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole("heading", { name: /custom resume/i })
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole("heading", { name: /interview me/i })
-    ).toBeInTheDocument();
-
-    // Verify CTA links point to correct tool routes
-    const fitLinks = screen.getAllByRole("link", { name: /analyze fit/i });
-    expect(fitLinks.length).toBeGreaterThanOrEqual(1);
-    expect(fitLinks[0]).toHaveAttribute("href", "/hire-me/fit");
-
-    const resumeLinks = screen.getAllByRole("link", { name: /generate resume/i });
-    expect(resumeLinks.length).toBeGreaterThanOrEqual(1);
-    expect(resumeLinks[0]).toHaveAttribute("href", "/hire-me/resume");
-
-    const interviewLinks = screen.getAllByRole("link", { name: /start interview/i });
-    expect(interviewLinks.length).toBeGreaterThanOrEqual(1);
-    expect(interviewLinks[0]).toHaveAttribute("href", "/hire-me/interview");
+    const ctaLink = screen.getByRole("link", { name: /try hire me tools/i });
+    expect(ctaLink).toHaveAttribute("href", "/hire-me");
   });
 
   it("renders TOC sections with links to each page", () => {
