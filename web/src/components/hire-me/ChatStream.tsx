@@ -91,12 +91,6 @@ export interface ChatStreamProps {
   onAnswer?: (questionId: string, answer: string) => void;
   /** Map of questionId -> selected answer for answered questions */
   answeredQuestions?: Record<string, string>;
-  /** Callback for preset suggestion chips */
-  onPreset?: (preset: "fit" | "resume") => void;
-  /** Whether a job posting has been loaded */
-  jobLoaded?: boolean;
-  /** Whether a flow (fit or resume) is currently active */
-  flowActive?: boolean;
 }
 
 // ============================================================================
@@ -315,9 +309,6 @@ export function ChatStream({
   onRetry,
   onAnswer,
   answeredQuestions,
-  onPreset,
-  jobLoaded = false,
-  flowActive = false,
 }: ChatStreamProps) {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
@@ -336,31 +327,6 @@ export function ChatStream({
       <div className="space-y-4">
         {/* Welcome message when empty */}
         {messages.length === 0 && <WelcomeMessage />}
-
-        {/* Suggestion chips — visible in empty state when job loaded */}
-        {messages.length === 0 && jobLoaded && !flowActive && onPreset && (
-          <div className="mt-2 pl-1">
-            <p className="text-xs text-zinc-400 dark:text-zinc-500 mb-2">
-              Quick actions
-            </p>
-            <div className="flex gap-2">
-              <button
-                type="button"
-                onClick={() => onPreset("fit")}
-                className="rounded-full border border-zinc-200 dark:border-zinc-700 px-3 py-1.5 text-xs font-medium text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
-              >
-                Analyze My Fit
-              </button>
-              <button
-                type="button"
-                onClick={() => onPreset("resume")}
-                className="rounded-full border border-zinc-200 dark:border-zinc-700 px-3 py-1.5 text-xs font-medium text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
-              >
-                Generate Resume
-              </button>
-            </div>
-          </div>
-        )}
 
         {/* Message list */}
         {messages.map((message) => (
