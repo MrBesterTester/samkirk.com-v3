@@ -1,6 +1,9 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { FitReportCard } from "./FitReportCard";
+import { ResumePreviewCard } from "./ResumePreviewCard";
+import { FitQuestionCard } from "./FitQuestionCard";
 
 // ============================================================================
 // Message Types (discriminated union)
@@ -34,22 +37,38 @@ export interface ErrorMessage extends BaseMessage {
 
 export interface FitQuestionMessage extends BaseMessage {
   type: "fit-question";
+  submissionId: string;
   questionId: string;
+  questionNumber: number;
+  maxQuestions: number;
+  required: boolean;
   question: string;
   options?: string[];
 }
 
 export interface FitReportMessage extends BaseMessage {
   type: "fit-report";
-  reportId: string;
-  summary: string;
-  score?: number;
+  submissionId: string;
+  overallScore: "Well" | "Average" | "Poorly";
+  recommendation: string;
+  categories: Array<{ name: string; score: string; rationale: string }>;
+  unknowns: string[];
+  extracted?: { title: string | null; company: string | null };
 }
 
 export interface ResumePreviewMessage extends BaseMessage {
   type: "resume-preview";
-  resumeId: string;
-  title: string;
+  submissionId: string;
+  header: {
+    name: string;
+    title: string;
+    email?: string;
+    location?: string;
+  };
+  summary: string;
+  wordCount: number;
+  experienceCount: number;
+  skillsCount: number;
 }
 
 export type ChatMessage =
@@ -69,6 +88,9 @@ export interface ChatStreamProps {
   messages: ChatMessage[];
   isLoading?: boolean;
   onRetry?: (messageId: string) => void;
+  onAnswer?: (questionId: string, answer: string) => void;
+  /** Map of questionId -> selected answer for answered questions */
+  answeredQuestions?: Record<string, string>;
 }
 
 // ============================================================================
@@ -170,59 +192,7 @@ function ErrorCard({
   );
 }
 
-function FitQuestionPlaceholder({ message }: { message: FitQuestionMessage }) {
-  return (
-    <div className="flex justify-start">
-      <div className="max-w-[85%] rounded-xl border border-blue-200 bg-blue-50 px-4 py-3 dark:border-blue-800/50 dark:bg-blue-900/20">
-        <p className="mb-1 text-xs font-medium text-blue-600 dark:text-blue-400">
-          Fit Question
-        </p>
-        <p className="text-sm text-zinc-900 dark:text-zinc-50">
-          {message.question}
-        </p>
-      </div>
-    </div>
-  );
-}
-
-function FitReportPlaceholder({ message }: { message: FitReportMessage }) {
-  return (
-    <div className="flex justify-start">
-      <div className="max-w-[85%] rounded-xl border border-green-200 bg-green-50 px-4 py-3 dark:border-green-800/50 dark:bg-green-900/20">
-        <p className="mb-1 text-xs font-medium text-green-600 dark:text-green-400">
-          Fit Report
-        </p>
-        <p className="text-sm text-zinc-900 dark:text-zinc-50">
-          {message.summary}
-        </p>
-        {message.score !== undefined && (
-          <p className="mt-1 text-xs text-green-600 dark:text-green-400">
-            Score: {message.score}%
-          </p>
-        )}
-      </div>
-    </div>
-  );
-}
-
-function ResumePreviewPlaceholder({
-  message,
-}: {
-  message: ResumePreviewMessage;
-}) {
-  return (
-    <div className="flex justify-start">
-      <div className="max-w-[85%] rounded-xl border border-purple-200 bg-purple-50 px-4 py-3 dark:border-purple-800/50 dark:bg-purple-900/20">
-        <p className="mb-1 text-xs font-medium text-purple-600 dark:text-purple-400">
-          Resume Preview
-        </p>
-        <p className="text-sm text-zinc-900 dark:text-zinc-50">
-          {message.title}
-        </p>
-      </div>
-    </div>
-  );
-}
+// Placeholder renderers replaced by FitQuestionCard, FitReportCard, ResumePreviewCard
 
 // ============================================================================
 // Welcome Message
@@ -294,9 +264,13 @@ function TypingIndicator() {
 function MessageRenderer({
   message,
   onRetry,
+  onAnswer,
+  answeredQuestions,
 }: {
   message: ChatMessage;
   onRetry?: (messageId: string) => void;
+  onAnswer?: (questionId: string, answer: string) => void;
+  answeredQuestions?: Record<string, string>;
 }) {
   switch (message.type) {
     case "user":
@@ -307,12 +281,21 @@ function MessageRenderer({
       return <SystemText message={message} />;
     case "error":
       return <ErrorCard message={message} onRetry={onRetry} />;
-    case "fit-question":
-      return <FitQuestionPlaceholder message={message} />;
+    case "fit-question": {
+      const savedAnswer = answeredQuestions?.[message.questionId];
+      return (
+        <FitQuestionCard
+          message={message}
+          onAnswer={onAnswer}
+          answered={savedAnswer !== undefined}
+          selectedAnswer={savedAnswer}
+        />
+      );
+    }
     case "fit-report":
-      return <FitReportPlaceholder message={message} />;
+      return <FitReportCard message={message} />;
     case "resume-preview":
-      return <ResumePreviewPlaceholder message={message} />;
+      return <ResumePreviewCard message={message} />;
   }
 }
 
@@ -324,6 +307,8 @@ export function ChatStream({
   messages,
   isLoading = false,
   onRetry,
+  onAnswer,
+  answeredQuestions,
 }: ChatStreamProps) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -346,6 +331,8 @@ export function ChatStream({
             key={message.id}
             message={message}
             onRetry={onRetry}
+            onAnswer={onAnswer}
+            answeredQuestions={answeredQuestions}
           />
         ))}
 

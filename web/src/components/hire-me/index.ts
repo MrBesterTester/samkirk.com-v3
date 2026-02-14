@@ -14,3 +14,9 @@ export type {
   FitReportMessage,
   ResumePreviewMessage,
 } from "./ChatStream";
+export { FitReportCard } from "./FitReportCard";
+export type { FitReportCardProps } from "./FitReportCard";
+export { ResumePreviewCard } from "./ResumePreviewCard";
+export type { ResumePreviewCardProps } from "./ResumePreviewCard";
+export { FitQuestionCard } from "./FitQuestionCard";
+export type { FitQuestionCardProps } from "./FitQuestionCard";
