@@ -339,8 +339,7 @@ async function loadConversation(
  * Generate a markdown transcript from the conversation.
  */
 export function generateTranscript(
-  conversation: InterviewConversation,
-  citations: Citation[]
+  conversation: InterviewConversation
 ): string {
   const lines: string[] = [];
 
@@ -367,17 +366,6 @@ export function generateTranscript(
     lines.push("");
   }
 
-  // Citations section
-  if (citations.length > 0) {
-    lines.push("## Sources Referenced");
-    lines.push("");
-    for (let i = 0; i < citations.length; i++) {
-      const citation = citations[i];
-      lines.push(`${i + 1}. **${citation.title}** — ${citation.sourceRef}`);
-    }
-    lines.push("");
-  }
-
   // Footer
   lines.push("---");
   lines.push("");
@@ -391,11 +379,10 @@ export function generateTranscript(
  * Save transcript to GCS (both MD and HTML).
  */
 async function saveTranscript(
-  conversation: InterviewConversation,
-  citations: Citation[]
+  conversation: InterviewConversation
 ): Promise<void> {
   const bucket = getPrivateBucket();
-  const transcript = generateTranscript(conversation, citations);
+  const transcript = generateTranscript(conversation);
 
   // Save markdown
   await writeFile(
@@ -613,7 +600,7 @@ export async function processMessage(
       conversation.messages.push(userMsg, assistantMsg);
       conversation.updatedAt = new Date().toISOString();
       await saveConversation(conversation);
-      await saveTranscript(conversation, conversation.citations);
+      await saveTranscript(conversation);
 
       // Update submission with latest state
       await updateSubmission(conversation.submissionId, {
@@ -709,7 +696,7 @@ export async function processMessage(
 
   // Save conversation and transcript
   await saveConversation(conversation);
-  await saveTranscript(conversation, conversation.citations);
+  await saveTranscript(conversation);
 
   // Update submission with latest state
   await updateSubmission(conversation.submissionId, {
@@ -742,7 +729,7 @@ export async function endConversation(
   conversation: InterviewConversation
 ): Promise<void> {
   // Save final transcript
-  await saveTranscript(conversation, conversation.citations);
+  await saveTranscript(conversation);
 
   // Mark submission as complete
   await completeSubmission(conversation.submissionId, {

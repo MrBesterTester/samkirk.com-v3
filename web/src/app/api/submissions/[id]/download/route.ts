@@ -107,7 +107,7 @@ export async function GET(
       includeInputs: true,
       includeExtracted: true,
       includeOutputs: true,
-      includeCitations: true,
+      includeCitations: false,
       renderHtml: true,
     };
 

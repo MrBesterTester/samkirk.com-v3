@@ -156,6 +156,41 @@ test.describe("Interview Tool - Input Behavior", () => {
 });
 
 test.describe("Interview Tool - Conversation", () => {
+  test("shows only one Interview Summary button after multiple messages", async ({ page }) => {
+    // This test sends two questions and verifies no duplicate download buttons
+    test.setTimeout(120000); // 120 seconds - two LLM round-trips
+
+    await page.goto("/hire-me");
+
+    // Wait for chat to be ready
+    await expect(
+      page.getByText(/I'm here to answer questions/i)
+    ).toBeVisible({ timeout: 15000 });
+
+    const input = page.getByPlaceholder(/ask about sam's career/i);
+
+    // --- First question ---
+    await input.fill("Does Sam do his work well");
+    await input.press("Enter");
+
+    // Wait for the first assistant response
+    await expect(page.locator("text=Sam Kirk").nth(1)).toBeVisible({ timeout: 60000 });
+
+    // After the first response, exactly one Interview Summary button should exist
+    const downloadButtons = page.getByRole("button", { name: /interview summary/i });
+    await expect(downloadButtons).toHaveCount(1, { timeout: 10000 });
+
+    // --- Second question ---
+    await input.fill("Does Sam know TypeScript");
+    await input.press("Enter");
+
+    // Wait for the second assistant response (nth(2) = third "Sam Kirk" label)
+    await expect(page.locator("text=Sam Kirk").nth(2)).toBeVisible({ timeout: 60000 });
+
+    // After the second response, there should STILL be exactly one Interview Summary button
+    await expect(downloadButtons).toHaveCount(1, { timeout: 5000 });
+  });
+
   test("completes a single career-related exchange and downloads transcript", async ({ page }) => {
     // This test makes an actual LLM call - use reasonable timeout
     test.setTimeout(90000); // 90 seconds max

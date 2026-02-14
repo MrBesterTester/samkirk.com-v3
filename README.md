@@ -4,18 +4,20 @@ Personal website + genAI demo tools for `samkirk.com`.
 
 ### Table of Contents
 
-- [Punch Down List](#punch-down-list)
-- [Principles of Operation (POO)](#principles-of-operation-poo)
-- [Standard Operating Procedures (SOP)](#standard-operating-procedures-sop)
-  - [Resume Management](#resume-management)
-  - [Testing](#testing)
-- [Key docs](#key-docs)
-- [Tech stack (V1 target)](#tech-stack-v1-target)
-- [Local development](#local-development)
-- [Scripts](#scripts)
-- [Development Methodology](#development-methodology)
-- [Notes](#notes)
-- [Project Structure](#project-structure)
+- [samkirk.com v3](#samkirkcom-v3)
+  - [Table of Contents](#table-of-contents)
+  - [Punch Down List](#punch-down-list)
+  - [Principles of Operation (POO)](#principles-of-operation-poo)
+  - [Standard Operating Procedures (SOP)](#standard-operating-procedures-sop)
+    - [Resume Management](#resume-management)
+    - [Testing](#testing)
+  - [Key docs](#key-docs)
+  - [Tech stack (V1 target)](#tech-stack-v1-target)
+  - [Local development](#local-development)
+  - [Scripts](#scripts)
+  - [Development Methodology](#development-methodology)
+  - [Notes](#notes)
+  - [Project Structure](#project-structure)
 
 ### Punch Down List
 
@@ -38,14 +40,16 @@ Most of the website content is fixed — static pages that rarely change. Two se
 
 #### Resume Management
 
+The following requires GCP login (`/login-gcloud`).
+
 **Initial setup (new environment):**
 1. Edit `web/data/baseline-resume.md` with your resume content
 2. Validate chunking: `npm run validate:resume -- data/baseline-resume.md`
-3. Seed to GCP: `npm run seed:resume`
+3. Seed to GCP: `npm run seed:resume` (purges all existing chunks and resets to version 1)
 
 **Updating your resume:**
-- Use the admin page at `/admin/resume` (requires Google OAuth login)
-- Or edit `web/data/baseline-resume.md` and re-run `npm run seed:resume`
+- **Via admin page:** `/admin/resume` (requires Google OAuth login)
+- **Via CLI:** Edit `web/data/baseline-resume.md` and run `npm run seed:resume`
 
 **Resume format requirements:**
 - Markdown with headings (##, ###) for logical sections

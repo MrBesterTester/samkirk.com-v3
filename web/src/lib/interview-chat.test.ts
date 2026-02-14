@@ -325,14 +325,14 @@ describe("generateTranscript", () => {
       messages: [],
     };
 
-    const transcript = generateTranscript(conversation, []);
+    const transcript = generateTranscript(conversation);
 
     expect(transcript).toContain("# Interview Transcript");
     expect(transcript).toContain("**Total Messages:** 0");
   });
 
   it("includes candidate name", () => {
-    const transcript = generateTranscript(mockConversation, []);
+    const transcript = generateTranscript(mockConversation);
     expect(transcript).toContain(`**Candidate:** ${INTERVIEW_SUBJECT_NAME}`);
   });
 
@@ -348,7 +348,7 @@ describe("generateTranscript", () => {
       ],
     };
 
-    const transcript = generateTranscript(conversation, []);
+    const transcript = generateTranscript(conversation);
     expect(transcript).toContain("**Interviewer:**");
     expect(transcript).toContain("What is your experience?");
   });
@@ -365,36 +365,28 @@ describe("generateTranscript", () => {
       ],
     };
 
-    const transcript = generateTranscript(conversation, []);
+    const transcript = generateTranscript(conversation);
     expect(transcript).toContain(`**${INTERVIEW_SUBJECT_NAME}:**`);
     expect(transcript).toContain("I have 10+ years of experience.");
   });
 
-  it("includes citations section when citations exist", () => {
-    const citations = [
-      { chunkId: "c1", title: "Work Experience", sourceRef: "h2:Experience" },
-      { chunkId: "c2", title: "Skills", sourceRef: "h2:Skills" },
-    ];
+  it("does not include citations in transcript", () => {
+    const conversation: InterviewConversation = {
+      ...mockConversation,
+      citations: [
+        { chunkId: "c1", title: "Work Experience", sourceRef: "h2:Experience" },
+        { chunkId: "c2", title: "Skills", sourceRef: "h2:Skills" },
+      ],
+    };
 
-    const transcript = generateTranscript(mockConversation, citations);
-    expect(transcript).toContain("## Sources Referenced");
-    expect(transcript).toContain("**Work Experience** — h2:Experience");
-    expect(transcript).toContain("**Skills** — h2:Skills");
-  });
-
-  it("numbers citations", () => {
-    const citations = [
-      { chunkId: "c1", title: "Work Experience", sourceRef: "h2:Experience" },
-      { chunkId: "c2", title: "Skills", sourceRef: "h2:Skills" },
-    ];
-
-    const transcript = generateTranscript(mockConversation, citations);
-    expect(transcript).toContain("1. **Work Experience**");
-    expect(transcript).toContain("2. **Skills**");
+    const transcript = generateTranscript(conversation);
+    expect(transcript).not.toContain("Sources Referenced");
+    expect(transcript).not.toContain("Work Experience");
+    expect(transcript).not.toContain("h2:Experience");
   });
 
   it("includes footer with contact email", () => {
-    const transcript = generateTranscript(mockConversation, []);
+    const transcript = generateTranscript(mockConversation);
     expect(transcript).toContain(`*Contact: ${CONTACT_EMAIL}*`);
   });
 
@@ -407,7 +399,7 @@ describe("generateTranscript", () => {
       ],
     };
 
-    const transcript = generateTranscript(conversation, []);
+    const transcript = generateTranscript(conversation);
     const dividerCount = (transcript.match(/---/g) || []).length;
     expect(dividerCount).toBeGreaterThanOrEqual(3); // Header + after each message
   });

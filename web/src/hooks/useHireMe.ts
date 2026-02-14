@@ -785,6 +785,7 @@ export function useHireMe(): UseHireMeReturn {
             submissionId:
               state.fitFlow.submissionId ??
               state.resumeFlow.submissionId ??
+              state.downloads.find((d) => d.type === "interview")?.submissionId ??
               null,
           }),
         });
@@ -812,10 +813,10 @@ export function useHireMe(): UseHireMeReturn {
           };
 
           if (result.downloadReady) {
-            const alreadyExists = prev.downloads.some(
-              (d) => d.submissionId === result.submissionId
+            const existingIdx = prev.downloads.findIndex(
+              (d) => d.type === "interview"
             );
-            if (!alreadyExists) {
+            if (existingIdx === -1) {
               next.downloads = [
                 ...prev.downloads,
                 {
@@ -824,6 +825,11 @@ export function useHireMe(): UseHireMeReturn {
                   type: "interview" as const,
                 },
               ];
+            } else if (prev.downloads[existingIdx].submissionId !== result.submissionId) {
+              // Update the existing entry to point to the latest submissionId
+              next.downloads = prev.downloads.map((d, i) =>
+                i === existingIdx ? { ...d, submissionId: result.submissionId } : d
+              );
             }
           }
 
@@ -839,7 +845,7 @@ export function useHireMe(): UseHireMeReturn {
         }));
       }
     },
-    [state.conversationId, state.fitFlow.submissionId, state.resumeFlow.submissionId, addMessage],
+    [state.conversationId, state.fitFlow.submissionId, state.resumeFlow.submissionId, state.downloads, addMessage],
   );
 
   // ------------------------------------------------------------------
