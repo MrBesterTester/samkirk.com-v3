@@ -191,6 +191,73 @@ describe("stripChunkReferences", () => {
     const input = "Deployed to production (chunk_my_project_1)";
     expect(stripChunkReferences(input)).toBe("Deployed to production");
   });
+
+  // --- New patterns: plural "chunks" with bare numbers ---
+
+  it("strips plural chunks with bare numbers", () => {
+    const input =
+      "I have extensive experience in React (chunks 1, 8, 12, 23, 33)";
+    expect(stripChunkReferences(input)).toBe(
+      "I have extensive experience in React"
+    );
+  });
+
+  it("strips single bare number after chunks", () => {
+    const input = "Led a team of engineers (chunks 5)";
+    expect(stripChunkReferences(input)).toBe("Led a team of engineers");
+  });
+
+  // --- New patterns: singular "chunk" with bare numbers (no underscore) ---
+
+  it("strips singular chunk with bare number", () => {
+    const input = "Built scalable APIs (chunk 1)";
+    expect(stripChunkReferences(input)).toBe("Built scalable APIs");
+  });
+
+  it("strips multiple singular chunk bare-number refs", () => {
+    const input = "Worked on cloud infra (chunk 1, chunk 2, chunk 3)";
+    expect(stripChunkReferences(input)).toBe("Worked on cloud infra");
+  });
+
+  // --- Capitalised variants ---
+
+  it("strips capitalised Chunk with bare number", () => {
+    const input = "Managed deployments (Chunk 5)";
+    expect(stripChunkReferences(input)).toBe("Managed deployments");
+  });
+
+  it("strips capitalised Chunks with bare numbers", () => {
+    const input = "Designed systems (Chunks 1, 2, 3)";
+    expect(stripChunkReferences(input)).toBe("Designed systems");
+  });
+
+  // --- Mixed formats in one string ---
+
+  it("strips mixed underscore and bare-number formats in same text", () => {
+    const input =
+      "React skills (chunk_42) and Node.js experience (chunks 1, 8, 12).";
+    expect(stripChunkReferences(input)).toBe(
+      "React skills and Node.js experience."
+    );
+  });
+
+  // --- Ensure legitimate parentheticals are NOT stripped ---
+
+  it("does not strip parenthetical tech stacks", () => {
+    const input =
+      "I worked with modern technologies (React, Node.js, PostgreSQL).";
+    expect(stripChunkReferences(input)).toBe(input);
+  });
+
+  it("does not strip parenthetical date ranges", () => {
+    const input = "At Google (2019-2022) I led the platform team.";
+    expect(stripChunkReferences(input)).toBe(input);
+  });
+
+  it("does not strip parenthetical team sizes", () => {
+    const input = "Managed a growing team (5 to 12 engineers).";
+    expect(stripChunkReferences(input)).toBe(input);
+  });
 });
 
 // ============================================================================

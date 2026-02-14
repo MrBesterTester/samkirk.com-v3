@@ -104,10 +104,30 @@ export function generateE2EMockResponse(userMessage: string): string {
  * The LLM receives chunk IDs in the system prompt for citation tracking,
  * but they should never appear in user-facing responses.
  *
- * Handles single refs like (chunk_42) and multiple refs like (chunk_42, chunk_14, chunk_5).
+ * Handles formats:
+ *   (chunk_42), (chunk_abc123, chunk_def456) — underscore format
+ *   (chunk 1, chunk 2)                       — singular + bare numbers
+ *   (chunks 1, 8, 12, 23, 33)               — plural  + bare numbers
+ *   (Chunk 5), (Chunks 1, 2)                 — capitalized variants
  */
 export function stripChunkReferences(text: string): string {
-  return text.replace(/\s*\(chunk_[\w]+(?:,\s*chunk_[\w]+)*\)/g, "").trim();
+  // Pattern 1: chunk_ prefix with underscore (original format)
+  //   e.g. (chunk_42)  (chunk_abc123, chunk_def456)
+  const underscoreFmt = /\s*\(chunk_[\w]+(?:,\s*chunk_[\w]+)*\)/gi;
+
+  // Pattern 2: "chunks" (plural) followed by bare numbers
+  //   e.g. (chunks 1, 8, 12, 23, 33)
+  const pluralBareNum = /\s*\(chunks\s+\d+(?:,\s*\d+)*\)/gi;
+
+  // Pattern 3: "chunk" (singular, no underscore) followed by number, repeated
+  //   e.g. (chunk 1)  (chunk 1, chunk 2, chunk 3)
+  const singularBareNum = /\s*\(chunk\s+\d+(?:,\s*chunk\s+\d+)*\)/gi;
+
+  return text
+    .replace(underscoreFmt, "")
+    .replace(pluralBareNum, "")
+    .replace(singularBareNum, "")
+    .trim();
 }
 
 // ============================================================================
@@ -240,7 +260,7 @@ ${resumeContext}
 
 8. **First-Person Perspective**: When discussing ${INTERVIEW_SUBJECT_NAME}'s experience, speak as if you ARE ${INTERVIEW_SUBJECT_NAME} (use "I", "my", etc.).
 
-9. **No Internal Identifiers**: Never include internal chunk identifiers (e.g., "chunk_abc123") in your responses. These are for internal tracking only and must not appear in user-facing output.
+9. **No Internal Identifiers**: Never include internal chunk identifiers in your responses. This includes any form such as "chunk_abc123", "chunk 5", "chunks 1, 8, 12", or bare chunk numbers. These are for internal tracking only and must not appear in user-facing output.
 
 ## EXAMPLE RESPONSES
 
