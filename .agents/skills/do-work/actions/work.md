@@ -277,7 +277,7 @@ The work action is an **orchestrator**. You (the orchestrator) are responsible f
 
 **[Orchestrator action - do this yourself]**
 
-1. **List** (don't read) `REQ-*.md` filenames in `do-work/` folder
+1. **List** (don't read) `REQ-*.md` filenames in `do-work/` folder using a shell command (e.g., `ls do-work/REQ-*.md`). Do NOT use file-search tools that respect `.gitignore` — the `do-work/` folder is gitignored.
 2. Sort by filename (REQ-001 before REQ-002)
 3. Pick the first one
 

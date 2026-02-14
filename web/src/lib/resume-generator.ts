@@ -8,7 +8,6 @@ import {
 } from "./resume-context";
 import {
   renderMarkdown,
-  appendCitationsToMarkdown,
   type Citation,
 } from "./markdown-renderer";
 import { getPrivateBucket, PrivatePaths, writeFile } from "./storage";
@@ -733,14 +732,11 @@ export async function generateResume(
   // 6. Generate markdown resume
   const baseMarkdown = generateMarkdownResume(content);
 
-  // 7. Generate citations
+  // 7. Generate citations (stored separately, not appended to resume output)
   const citations = generateCitationsFromChunks(context.usedChunks);
 
-  // 8. Append citations to markdown
-  const markdownWithCitations = appendCitationsToMarkdown(baseMarkdown, citations);
-
-  // 9. Render HTML
-  const html = renderMarkdown(markdownWithCitations, {
+  // 8. Render HTML from clean markdown (citations live in citations/ folder only)
+  const html = renderMarkdown(baseMarkdown, {
     fullDocument: true,
     title: `Resume - ${content.header.name}`,
     sanitize: true,
@@ -748,7 +744,7 @@ export async function generateResume(
 
   return {
     content,
-    markdown: markdownWithCitations,
+    markdown: baseMarkdown,
     html,
     citations,
     usage: llmResult.usage,

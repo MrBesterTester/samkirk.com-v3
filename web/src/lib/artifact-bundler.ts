@@ -6,7 +6,7 @@ import type { Bucket } from "@google-cloud/storage";
 import { getPrivateBucket, PrivatePaths, writeBuffer } from "./storage";
 import { getSubmission } from "./submission";
 import type { SubmissionDoc } from "./firestore";
-import { renderMarkdown, renderCitationsMarkdown, type Citation } from "./markdown-renderer";
+import { renderMarkdown, renderCitationsMarkdown, renderCitationsHtml, wrapInDocument, type Citation } from "./markdown-renderer";
 
 // ============================================================================
 // Types
@@ -260,6 +260,18 @@ export async function buildSubmissionFileList(
         contentType: "text/markdown",
       });
     }
+
+    // Also add an HTML version
+    const citationsHtmlContent = renderCitationsHtml(
+      submission.citations as Citation[]
+    );
+    if (citationsHtmlContent) {
+      files.push({
+        path: "citations/citations.html",
+        content: wrapInDocument(citationsHtmlContent, "Citations"),
+        contentType: "text/html",
+      });
+    }
   }
 
   return files;
@@ -442,6 +454,7 @@ export function getExpectedBundleFiles(
   if (includeCitations && submission.citations.length > 0) {
     files.push("citations/citations.json");
     files.push("citations/citations.md");
+    files.push("citations/citations.html");
   }
 
   return files;

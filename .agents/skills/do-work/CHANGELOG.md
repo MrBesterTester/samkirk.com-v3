@@ -4,6 +4,13 @@ What's new, what's better, what's different. Most recent stuff on top.
 
 ---
 
+## 0.11.4 — The Gitignore Fix (2026-02-14)
+
+REQ discovery was invisible to file-search tools because `do-work/` is gitignored. Step 1 now explicitly instructs agents to use a shell command (`ls`) instead of file-search tools that respect `.gitignore`.
+
+- Updated work.md Step 1 to use shell listing instead of file-search tools
+- Prevents agents from silently finding zero pending REQs
+
 ## 0.11.3 — The Safety Net (2026-02-13)
 
 Cleanup Pass 1 now explicitly states that failed REQs don't count toward UR completion, matching work.md's semantics. Previously the check only looked for `status: completed` without calling out what happens with `status: failed`, leaving room for misinterpretation.

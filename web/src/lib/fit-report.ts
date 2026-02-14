@@ -8,7 +8,7 @@ import {
 } from "./fit-flow";
 import { generateContent, type GenerateResult } from "./vertex-ai";
 import { getCurrentChunks, type ResumeChunk } from "./resume-chunker";
-import { renderMarkdown, appendCitationsToMarkdown, type Citation } from "./markdown-renderer";
+import { renderMarkdown, type Citation } from "./markdown-renderer";
 import { getPrivateBucket, PrivatePaths, writeFile } from "./storage";
 import { updateSubmission, completeSubmission } from "./submission";
 
@@ -546,14 +546,11 @@ export async function generateFitReport(state: FitFlowState): Promise<FitReport>
   // 5. Generate markdown report
   const baseMarkdown = generateMarkdownReport(analysis, state.extracted);
 
-  // 6. Generate citations
+  // 6. Generate citations (stored separately, not appended to report output)
   const citations = generateCitations(resumeChunks);
 
-  // 7. Append citations to markdown
-  const markdownWithCitations = appendCitationsToMarkdown(baseMarkdown, citations);
-
-  // 8. Render HTML
-  const html = renderMarkdown(markdownWithCitations, {
+  // 7. Render HTML from clean markdown (citations live in citations/ folder only)
+  const html = renderMarkdown(baseMarkdown, {
     fullDocument: true,
     title: `Fit Analysis: ${state.extracted.title || "Job Position"}`,
     sanitize: true,
@@ -561,7 +558,7 @@ export async function generateFitReport(state: FitFlowState): Promise<FitReport>
 
   return {
     analysis,
-    markdown: markdownWithCitations,
+    markdown: baseMarkdown,
     html,
     citations,
     usage: llmResult.usage,

@@ -262,6 +262,7 @@ describe("artifact-bundler", () => {
 
       expect(files).toContain("citations/citations.json");
       expect(files).toContain("citations/citations.md");
+      expect(files).toContain("citations/citations.html");
     });
 
     it("excludes citations when empty", () => {
@@ -276,6 +277,7 @@ describe("artifact-bundler", () => {
 
       expect(files).not.toContain("citations/citations.json");
       expect(files).not.toContain("citations/citations.md");
+      expect(files).not.toContain("citations/citations.html");
     });
 
     it("respects includeInputs: false option", () => {
@@ -339,6 +341,7 @@ describe("artifact-bundler", () => {
 
       expect(files).not.toContain("citations/citations.json");
       expect(files).not.toContain("citations/citations.md");
+      expect(files).not.toContain("citations/citations.html");
     });
 
     it("indicates placeholder for GCS input files", () => {
@@ -388,6 +391,7 @@ describe("artifact-bundler", () => {
       expect(files).toContain("outputs/...");
       expect(files).toContain("citations/citations.json");
       expect(files).toContain("citations/citations.md");
+      expect(files).toContain("citations/citations.html");
     });
   });
 

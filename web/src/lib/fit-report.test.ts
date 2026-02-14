@@ -16,9 +16,6 @@ vi.mock("./resume-chunker", () => ({
 
 vi.mock("./markdown-renderer", () => ({
   renderMarkdown: vi.fn((md) => `<html>${md}</html>`),
-  appendCitationsToMarkdown: vi.fn((md, citations) =>
-    citations.length > 0 ? `${md}\n\n## Citations\n${citations.map((c: { title: string }) => c.title).join("\n")}` : md
-  ),
 }));
 
 vi.mock("./storage", () => ({
