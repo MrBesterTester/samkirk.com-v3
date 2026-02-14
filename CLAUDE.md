@@ -88,3 +88,8 @@ Remind the user which model is recommended for the current step:
 - Never push working branch directly
 - Use clean-main workflow with squash
 - See `~/.cursor/commands/git-*.md` for patterns
+
+## Troubleshooting
+
+- **E2E `net::ERR_ABORTED` on `page.goto()`**: Corrupted `.next` Turbopack cache. Fix: `rm -rf web/.next` and rebuild.
+- **Fit-tool URL-mode E2E flaky**: `should complete full flow via URL mode` occasionally times out waiting for LLM — retry usually passes.
