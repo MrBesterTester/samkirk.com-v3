@@ -43,6 +43,14 @@ All four suites are orchestrated by the master test runner (`npm run test:all`),
 
 ### Commands
 
+**Dev server** (rebuild and start on localhost:3000):
+
+```
+/restart-dev-server
+```
+
+Use this whenever you need a fresh dev server — it cleans the `.next` cache, rebuilds, and starts Next.js. Handy after pulling changes, switching branches, or when the dev server gets into a bad state.
+
 **Full run** (auto-detects GCP):
 
 ```bash
