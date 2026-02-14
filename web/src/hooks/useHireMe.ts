@@ -61,7 +61,7 @@ export interface UseHireMeReturn {
   answerFitQuestion: (questionId: string, answer: string) => Promise<void>;
   sendMessage: (text: string) => Promise<void>;
   newConversation: () => void;
-  download: (submissionId: string, type: DownloadEntry["type"]) => Promise<void>;
+  download: (submissionId: string) => Promise<void>;
   jobLoaded: boolean;
   flowActive: boolean;
   jobTitle: string | undefined;
@@ -876,27 +876,16 @@ export function useHireMe(): UseHireMeReturn {
   // ------------------------------------------------------------------
   // download
   // ------------------------------------------------------------------
-  const download = useCallback(async (submissionId: string, type: DownloadEntry["type"]) => {
+  const download = useCallback(async (submissionId: string) => {
     try {
-      const params = new URLSearchParams({ type });
-      const res = await fetch(`/api/submissions/${submissionId}/download?${params}`);
+      const res = await fetch(`/api/submissions/${submissionId}/download`);
       if (!res.ok) throw new Error("Download failed");
-
-      // Use filename from Content-Disposition header if provided
-      const disposition = res.headers.get("Content-Disposition");
-      let filename = `submission-${submissionId}.zip`;
-      if (disposition) {
-        const match = disposition.match(/filename="(.+)"/);
-        if (match?.[1]) {
-          filename = match[1];
-        }
-      }
 
       const blob = await res.blob();
       const url = URL.createObjectURL(blob);
       const anchor = document.createElement("a");
       anchor.href = url;
-      anchor.download = filename;
+      anchor.download = `submission-${submissionId}.zip`;
       document.body.appendChild(anchor);
       anchor.click();
       document.body.removeChild(anchor);

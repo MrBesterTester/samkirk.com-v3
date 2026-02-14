@@ -3,7 +3,6 @@ import { getSessionIdFromCookies, isSessionValid } from "@/lib/session";
 import { isValidSubmissionId, getSubmission } from "@/lib/submission";
 import { buildSubmissionBundle, type BuildSubmissionBundleOptions } from "@/lib/artifact-bundler";
 import { getPrivateBucket, PrivatePaths, fileExists } from "@/lib/storage";
-import type { SubmissionTool, SubmissionDoc } from "@/lib/firestore";
 
 /**
  * Response type for download errors.
@@ -13,43 +12,12 @@ interface DownloadErrorResponse {
   message: string;
 }
 
-/** Map tool type to a human-readable filename prefix. */
-const TOOL_FILENAME_PREFIX: Record<SubmissionTool, string> = {
-  fit: "fit-report",
-  resume: "custom-resume",
-  interview: "interview-summary",
-};
-
-/**
- * Build a descriptive filename for the download bundle.
- *
- * Uses the submission's tool type and extracted company name to produce
- * names like "fit-report-acme-corp.zip" instead of "submission-{id}.zip".
- */
-function buildDownloadFilename(submission: SubmissionDoc, submissionId: string): string {
-  const prefix = TOOL_FILENAME_PREFIX[submission.tool] ?? "submission";
-  const extracted = submission.extracted as Record<string, unknown> | undefined;
-  const company = typeof extracted?.company === "string" ? extracted.company : "";
-
-  if (company) {
-    // Slugify company name: lowercase, replace non-alphanumeric runs with hyphens, trim hyphens
-    const slug = company
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/^-+|-+$/g, "");
-    return `${prefix}-${slug}.zip`;
-  }
-
-  return `${prefix}-${submissionId.slice(0, 8)}.zip`;
-}
-
 /**
  * GET /api/submissions/[id]/download
  *
  * Download the artifact bundle for a submission.
  *
  * Query parameters:
- * - type: The artifact type ("fit" | "resume" | "interview") — used for filename generation
  * - cached: If "true", try to return a pre-built bundle from GCS (default: false)
  * - format: "zip" (only zip is supported in V1)
  *
@@ -112,9 +80,6 @@ export async function GET(
     const searchParams = request.nextUrl.searchParams;
     const useCached = searchParams.get("cached") === "true";
 
-    // Build a descriptive filename from submission metadata
-    const filename = buildDownloadFilename(submission, submissionId);
-
     // Try to return cached bundle if requested
     if (useCached) {
       const bucket = getPrivateBucket();
@@ -129,7 +94,7 @@ export async function GET(
           status: 200,
           headers: {
             "Content-Type": "application/zip",
-            "Content-Disposition": `attachment; filename="${filename}"`,
+            "Content-Disposition": `attachment; filename="submission-${submissionId}.zip"`,
             "Content-Length": String(content.length),
             "Cache-Control": "private, max-age=300", // 5 minute cache
           },
@@ -154,7 +119,7 @@ export async function GET(
       status: 200,
       headers: {
         "Content-Type": "application/zip",
-        "Content-Disposition": `attachment; filename="${filename}"`,
+        "Content-Disposition": `attachment; filename="submission-${submissionId}.zip"`,
         "Content-Length": String(bundle.size),
         "Cache-Control": "private, no-cache",
         "X-File-Count": String(bundle.fileCount),
