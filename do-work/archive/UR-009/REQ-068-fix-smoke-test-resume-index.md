@@ -1,9 +1,12 @@
 ---
 id: REQ-068
 title: Fix smoke test clobbering resumeIndex/current doc
-status: pending
+status: completed
 created_at: 2026-02-14T09:40:00Z
 user_request: UR-009
+claimed_at: 2026-02-14T13:30:00Z
+route: A
+completed_at: 2026-02-14T13:30:00Z
 ---
 
 # Fix smoke test clobbering resumeIndex/current doc
@@ -20,3 +23,34 @@ The `npm run smoke:gcp` test deletes the `resumeIndex/current` Firestore doc dur
 
 ---
 *Source: Fix the problem with the smoke test clobbering the resumeIndex/current doc.*
+
+---
+
+## Triage
+
+**Route: A** - Simple
+
+**Reasoning:** Already resolved by REQ-078 which fixed the same save/restore issue across all smoke test sections.
+
+**Planning:** Not required
+
+## Plan
+
+**Planning not required** - Route A: Direct implementation
+
+Rationale: Already implemented as part of REQ-078.
+
+*Skipped by work action*
+
+## Implementation Summary
+
+Superseded by REQ-078 (commit `5bca485`), which fixed save/restore of `resumeIndex/current` in smoke-gcp.ts sections 5, 11, and 12.
+
+*Completed by work action (Route A)*
+
+## Testing
+
+**Tests run:** Covered by REQ-078 testing
+**Result:** All passing
+
+*Verified by work action*

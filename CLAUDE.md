@@ -80,6 +80,7 @@ Remind the user which model is recommended for the current step:
 
 ## Browser Automation
 
+- **Chrome vs Chromium**: These are different browsers. Playwright uses **Chromium** (bundled with Playwright). The **Claude in Chrome extension** runs in the user's actual **Chrome** browser. Never confuse the two — Playwright cannot control Chrome, and the Chrome extension cannot control Chromium. When running E2E tests in headed mode, Playwright opens Chromium, not Chrome.
 - **Playwright MCP server** (`--browser chrome`): Use for test automation, generally in headless mode
 - **Claude in Chrome extension**: Use for UI debugging, visual inspection, and making code changes
 

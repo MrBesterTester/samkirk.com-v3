@@ -103,6 +103,8 @@ npm run dev
 
 Open `http://localhost:3000`.
 
+**Using Claude in Chrome (ongoing):** Once the [Chrome extension is set up](README_dev_guide.md#chrome-extension-setup-claude-in-chrome), ask Claude to bring up the app on Chrome at `localhost:3000`. Claude will open a new tab (replacing any stale one) and navigate to the dev server. If the dev server needs a full rebuild, ask Claude to restart it first (`rm -rf web/.next && cd web && npm run dev`).
+
 ### Scripts
 
 From `web/`:

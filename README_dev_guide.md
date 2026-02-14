@@ -21,6 +21,7 @@ This is the day-to-day reference for running, writing, and managing tests in sam
 - [Planned Test Work](#planned-test-work)
 - [Manual Fallback](#manual-fallback)
 - [Conventions](#conventions)
+- [Chrome Extension Setup (Claude in Chrome)](#chrome-extension-setup-claude-in-chrome)
 - [Reference Documents](#reference-documents)
 
 ---
@@ -421,6 +422,76 @@ These commands read the SPECIFICATION, BLUEPRINT, and TODO for context, then wal
 - **Skip guards**: GCP-dependent tests use skip guards so they pass cleanly without credentials
 - **Strict TypeScript**: No `any` types
 - **Archive structure**: Test run archives go to `do-work/archive/test-runs/YYYY-MM-DD_HH-MM-SS/` with `summary.md` (committed) and `*.log` (gitignored)
+
+---
+
+## Chrome Extension Setup (Claude in Chrome)
+
+The Claude in Chrome extension lets Claude Code control a real Chrome browser — navigating pages, clicking elements, filling forms, reading console logs, and taking screenshots. This is used for UI debugging, visual inspection, and browser-based development tasks (not for running E2E tests, which use Playwright directly).
+
+### Prerequisites
+
+| Prerequisite | Details |
+|---|---|
+| Google Chrome | Must be installed and running |
+| Claude Code CLI | Version 2.0.73+ (`claude --version`) |
+| Anthropic plan | Direct Anthropic paid plan (Pro, Max, Teams, or Enterprise). Not available via AWS Bedrock or Google Vertex AI |
+
+### Step 1: Install the Extension
+
+1. Open Chrome
+2. Go to the [Claude in Chrome extension](https://chromewebstore.google.com/detail/claude/fcoeoabgfenejglbffodgkkbkcdhcgfn) on the Chrome Web Store
+3. Click **"Add to Chrome"** and grant the requested permissions
+4. Sign in with your Claude account when prompted
+5. Pin the extension: click the puzzle piece icon in Chrome's toolbar, then click the thumbtack next to "Claude"
+
+Extension version 1.0.36 or higher is required.
+
+### Step 2: Connect Claude Code to Chrome
+
+**Option A — Launch with the flag:**
+
+```bash
+claude --chrome
+```
+
+**Option B — Enable from an existing session:**
+
+```
+/chrome
+```
+
+### Step 3: Verify the Connection
+
+1. Run `/chrome` inside Claude Code to check connection status
+2. Run `/mcp` and select `claude-in-chrome` to see available browser tools
+3. Test it: ask Claude to navigate to `localhost:3000` and report any console errors
+
+### Step 4: Enable by Default (Optional)
+
+To skip passing `--chrome` every time:
+
+1. Inside a Claude Code session, run `/chrome`
+2. Select **"Enabled by default"**
+
+Note: Enabling by default increases context usage since browser tools are always loaded. Use `--chrome` on demand if context is a concern.
+
+### Troubleshooting
+
+| Problem | Fix |
+|---|---|
+| Extension not detected | Verify it's enabled at `chrome://extensions`. Restart Chrome so it picks up the native messaging host config |
+| Connection drops mid-session | The extension's service worker went idle. Run `/chrome` → "Reconnect extension" |
+| Browser not responding | A JS dialog (alert/confirm) may be blocking. Dismiss it manually in Chrome, then continue |
+| "No tab available" error | Ask Claude to create a new tab (`tabs_create_mcp`) and retry |
+
+The native messaging host config lives at:
+
+```
+~/Library/Application Support/Google/Chrome/NativeMessagingHosts/com.anthropic.claude_code_browser_extension.json
+```
+
+If this file is missing, reinstall or update Claude Code (`claude update`), then restart Chrome.
 
 ---
 

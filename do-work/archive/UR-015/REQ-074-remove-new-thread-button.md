@@ -1,9 +1,11 @@
 ---
 id: REQ-074
 title: Remove up-arrow button that creates new chat threads
-status: pending
+status: closed
 created_at: 2026-02-14T10:55:00Z
 user_request: UR-015
+closed_at: 2026-02-14
+closed_reason: moot
 ---
 
 # Remove up-arrow button that creates new chat threads
