@@ -581,7 +581,7 @@ export async function processMessage(
   // Load resume context
   let resumeContext: ResumeContextResult;
   try {
-    resumeContext = await getResumeContext({ format: "detailed", includeChunkIds: true });
+    resumeContext = await getResumeContext({ format: "detailed", includeChunkIds: false });
   } catch (error) {
     console.error("Failed to load resume context:", error);
     return {
