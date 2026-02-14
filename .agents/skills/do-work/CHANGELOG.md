@@ -4,6 +4,13 @@ What's new, what's better, what's different. Most recent stuff on top.
 
 ---
 
+## 0.12.2 — The Ghost Hunt II (2026-02-14)
+
+Reverted 0.12.1's re-addition of `do-work/working/` to the UR completion check. The 0.11.2 removal was correct — completed REQs are never in `working/` by invariant. The current REQ counts as resolved implicitly (you just set its status in Step 7.1). Searching `working/` was inconsistent with cleanup.md, which correctly omits it.
+
+- Removed `do-work/working/` from UR completion check search locations (work.md line 756)
+- Added explicit note that the current REQ counts as resolved implicitly
+
 ## 0.12.1 — The Missing Search (2026-02-14)
 
 Fixed a bug where the UR completion check in Step 7 didn't search `do-work/working/` for the just-completed REQ. An orchestrator following the instructions literally would miss it and fail to consolidate the UR.

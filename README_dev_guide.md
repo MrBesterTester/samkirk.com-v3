@@ -6,6 +6,10 @@ This is the day-to-day reference for running, writing, and managing tests in sam
 
 ## Table of Contents
 
+- [Cheat Sheet — Slash Commands](#cheat-sheet--slash-commands)
+  - [do-work (task queue)](#do-work-task-queue)
+  - [Dylan Davis methodology](#dylan-davis-methodology)
+  - [Utilities](#utilities)
 - [Test Suites at a Glance](#test-suites-at-a-glance)
 - [Running Tests](#running-tests)
   - [Commands](#commands)
@@ -23,6 +27,52 @@ This is the day-to-day reference for running, writing, and managing tests in sam
 - [Conventions](#conventions)
 - [Chrome Extension Setup (Claude in Chrome)](#chrome-extension-setup-claude-in-chrome)
 - [Reference Documents](#reference-documents)
+
+---
+
+## Cheat Sheet — Slash Commands
+
+All custom slash commands available in this project.
+
+### do-work (task queue)
+
+| Command | What it does |
+|---------|-------------|
+| `do work <description>` | Capture a new request (bug, feature, idea) |
+| `do work run` | Process the pending queue |
+| `do work run --limit N` | Process at most N requests, then stop |
+| `do work list` | Show pending, in-progress, held, and archived counts |
+| `do work verify` | Evaluate captured REQs against original input |
+| `do work cleanup` | Consolidate archive, close completed URs |
+| `do work changelog` | Show release notes (newest first) |
+| `do work version` | Check for updates |
+
+Aliases: `run`/`go`/`start`, `list`/`status`/`queue`, `verify`/`check`/`evaluate`, `cleanup`/`tidy`/`consolidate`.
+
+### do-work companions
+
+| Command | What it does |
+|---------|-------------|
+| `/do-work-finish-then-stop` | Finish the current REQ and stop the queue |
+| `/ingest-todo` | Parse a Dylan Davis TODO.md into do-work REQ files |
+| `/sync-todo` | Sync archived do-work results back to TODO.md checkboxes |
+
+### Dylan Davis methodology
+
+| Command | What it does |
+|---------|-------------|
+| `/create-spec` | Create a SPECIFICATION.md |
+| `/create-blueprint` | Create a BLUEPRINT.md |
+| `/create-todo` | Create a TODO.md |
+| `/start-step` | Begin a TODO step manually (human-in-the-loop) |
+| `/continue-step` | Resume a TODO step where you left off |
+
+### Utilities
+
+| Command | What it does |
+|---------|-------------|
+| `/restart-dev-server` | Rebuild and start the Next.js dev server on localhost:3000 |
+| `/login-gcloud` | Set up GCP Application Default Credentials |
 
 ---
 

@@ -753,7 +753,7 @@ mkdir -p do-work/archive
 **If REQ has `user_request: UR-NNN` (new system):**
    - Read the UR's `input.md` from `do-work/user-requests/UR-NNN/`
    - Check its `requests` array (e.g., `[REQ-018, REQ-019, REQ-020]`)
-   - Check if ALL listed REQs are now resolved — meaning they have `status: completed` (not `failed`) in any of: `do-work/working/` (the current REQ just completed), `do-work/archive/` root, `do-work/archive/UR-NNN/`, or `do-work/user-requests/UR-NNN/`.
+   - Check if ALL listed REQs are now resolved — meaning they have `status: completed` (not `failed`) in any of: `do-work/archive/` root, `do-work/archive/UR-NNN/`, or `do-work/user-requests/UR-NNN/`. The current REQ counts as resolved implicitly (you just completed it in Step 7.1) — do not search `do-work/working/` for it.
    - REQs with `status: failed` in `do-work/archive/` do NOT count — the UR stays open until the failed REQ is retried and succeeds, or the user explicitly archives the UR
    - If **all REQs resolved**:
      - Move the completed REQ file into the UR folder: `mv do-work/working/REQ-XXX.md do-work/user-requests/UR-NNN/`

@@ -783,10 +783,8 @@ export function useHireMe(): UseHireMeReturn {
             message: text,
             conversationId: state.conversationId,
             submissionId:
-              state.fitFlow.submissionId ??
-              state.resumeFlow.submissionId ??
-              state.downloads.find((d) => d.type === "interview")?.submissionId ??
-              null,
+              state.downloads.find((d) => d.type === "interview")
+                ?.submissionId ?? null,
           }),
         });
 
@@ -845,7 +843,7 @@ export function useHireMe(): UseHireMeReturn {
         }));
       }
     },
-    [state.conversationId, state.fitFlow.submissionId, state.resumeFlow.submissionId, state.downloads, addMessage],
+    [state.conversationId, state.downloads, addMessage],
   );
 
   // ------------------------------------------------------------------
