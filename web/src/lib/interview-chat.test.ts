@@ -62,6 +62,7 @@ import {
   generateTranscript,
   processMessage,
   getOrCreateConversation,
+  stripChunkReferences,
   MAX_CONVERSATION_TURNS,
   MAX_MESSAGE_LENGTH,
   INTERVIEW_SUBJECT_NAME,
@@ -131,6 +132,68 @@ describe("Constants", () => {
 });
 
 // ============================================================================
+// stripChunkReferences Tests
+// ============================================================================
+
+describe("stripChunkReferences", () => {
+  it("strips a single chunk reference", () => {
+    const input = "I have experience in React (chunk_42)";
+    expect(stripChunkReferences(input)).toBe("I have experience in React");
+  });
+
+  it("strips multiple chunk references in parentheses", () => {
+    const input = "I worked on several projects (chunk_42, chunk_14, chunk_5)";
+    expect(stripChunkReferences(input)).toBe("I worked on several projects");
+  });
+
+  it("strips two chunk references", () => {
+    const input = "Built scalable systems (chunk_abc, chunk_def)";
+    expect(stripChunkReferences(input)).toBe("Built scalable systems");
+  });
+
+  it("strips chunk references from multiple locations in text", () => {
+    const input =
+      "I have React skills (chunk_1) and Node.js experience (chunk_2, chunk_3).";
+    expect(stripChunkReferences(input)).toBe(
+      "I have React skills and Node.js experience."
+    );
+  });
+
+  it("returns text unchanged when no chunk references present", () => {
+    const input = "I have 10 years of experience in software engineering.";
+    expect(stripChunkReferences(input)).toBe(input);
+  });
+
+  it("handles chunk IDs with mixed alphanumeric characters", () => {
+    const input = "Led team of 5 engineers (chunk_abc123def)";
+    expect(stripChunkReferences(input)).toBe("Led team of 5 engineers");
+  });
+
+  it("handles empty string", () => {
+    expect(stripChunkReferences("")).toBe("");
+  });
+
+  it("handles text that is only a chunk reference", () => {
+    expect(stripChunkReferences("(chunk_42)")).toBe("");
+  });
+
+  it("does not strip non-chunk parenthetical content", () => {
+    const input = "I worked at Google (2019-2022) on cloud infrastructure.";
+    expect(stripChunkReferences(input)).toBe(input);
+  });
+
+  it("preserves leading whitespace but trims trailing", () => {
+    const input = "Experience in ML (chunk_99) ";
+    expect(stripChunkReferences(input)).toBe("Experience in ML");
+  });
+
+  it("handles chunk reference with underscore in ID", () => {
+    const input = "Deployed to production (chunk_my_project_1)";
+    expect(stripChunkReferences(input)).toBe("Deployed to production");
+  });
+});
+
+// ============================================================================
 // buildInterviewSystemPrompt Tests
 // ============================================================================
 
@@ -175,6 +238,12 @@ describe("buildInterviewSystemPrompt", () => {
   it("includes first-person perspective instruction", () => {
     const prompt = buildInterviewSystemPrompt("content");
     expect(prompt).toContain("First-Person Perspective");
+  });
+
+  it("includes instruction to exclude internal chunk identifiers", () => {
+    const prompt = buildInterviewSystemPrompt("content");
+    expect(prompt).toContain("No Internal Identifiers");
+    expect(prompt).toContain("chunk");
   });
 });
 
@@ -508,6 +577,28 @@ describe("processMessage", () => {
           }),
         })
       );
+    });
+
+    it("strips chunk references from LLM response", async () => {
+      vi.mocked(generateContentWithHistory).mockResolvedValue({
+        text: "I have experience in React (chunk_42) and Node.js (chunk_14, chunk_5).",
+        usage: { inputTokens: 100, outputTokens: 50, totalTokens: 150 },
+        estimatedCostUsd: 0.001,
+      });
+
+      const result = await processMessage(
+        mockConversation,
+        "What are your skills?"
+      );
+
+      expect(result.success).toBe(true);
+      if (result.success) {
+        const chatResult = result as ChatResponse;
+        expect(chatResult.message.content).not.toContain("chunk_");
+        expect(chatResult.message.content).toBe(
+          "I have experience in React and Node.js."
+        );
+      }
     });
 
     it("returns downloadReady as true", async () => {

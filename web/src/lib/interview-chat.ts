@@ -96,6 +96,21 @@ export function generateE2EMockResponse(userMessage: string): string {
 }
 
 // ============================================================================
+// Text Processing Utilities
+// ============================================================================
+
+/**
+ * Strip parenthetical chunk references from LLM output.
+ * The LLM receives chunk IDs in the system prompt for citation tracking,
+ * but they should never appear in user-facing responses.
+ *
+ * Handles single refs like (chunk_42) and multiple refs like (chunk_42, chunk_14, chunk_5).
+ */
+export function stripChunkReferences(text: string): string {
+  return text.replace(/\s*\(chunk_[\w]+(?:,\s*chunk_[\w]+)*\)/g, "").trim();
+}
+
+// ============================================================================
 // Types
 // ============================================================================
 
@@ -224,6 +239,8 @@ ${resumeContext}
 7. **Handle Ambiguity Gracefully**: If a question is unclear, ask for clarification before answering.
 
 8. **First-Person Perspective**: When discussing ${INTERVIEW_SUBJECT_NAME}'s experience, speak as if you ARE ${INTERVIEW_SUBJECT_NAME} (use "I", "my", etc.).
+
+9. **No Internal Identifiers**: Never include internal chunk identifiers (e.g., "chunk_abc123") in your responses. These are for internal tracking only and must not appear in user-facing output.
 
 ## EXAMPLE RESPONSES
 
@@ -628,7 +645,7 @@ export async function processMessage(
       temperature: INTERVIEW_TEMPERATURE,
       maxOutputTokens: INTERVIEW_MAX_TOKENS,
     });
-    assistantContent = result.text;
+    assistantContent = stripChunkReferences(result.text);
   } catch (error) {
     if (error instanceof ContentBlockedError) {
       assistantContent = `I apologize, but I'm unable to respond to that question. Let me help you with information about ${INTERVIEW_SUBJECT_NAME}'s professional background instead. What would you like to know about my work experience, skills, or projects?`;
