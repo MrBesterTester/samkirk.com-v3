@@ -437,20 +437,16 @@ async function main(): Promise<void> {
   // Step 4: Chunk the resume
   log("Chunking resume content...");
   
-  // Get current version from Firestore (or start at 1)
+  // Initialize Firestore
   const firestore = new Firestore({ projectId: env.GCP_PROJECT_ID });
   const resumeIndexRef = firestore
     .collection(RESUME_INDEX_COLLECTION)
     .doc(RESUME_INDEX_DOC);
-  
-  const existingIndex = await resumeIndexRef.get();
-  const previousVersion = existingIndex.exists 
-    ? (existingIndex.data()?.version ?? 0) 
-    : 0;
-  const newVersion = previousVersion + 1;
-  
-  log(`Version: ${previousVersion} -> ${newVersion}`);
-  
+
+  // Always start from version 1 for a clean index
+  const newVersion = 1;
+  log(`Version: ${newVersion} (full reset)`);
+
   const chunks = chunkMarkdown(resumeContent, newVersion);
   log(`Generated ${chunks.length} chunks`, true);
 
@@ -461,26 +457,25 @@ async function main(): Promise<void> {
     log(`    Preview: "${contentPreview}..."`);
   }
 
-  // Step 5: Delete old chunks and write new ones
-  log("Deleting old chunks...");
+  // Step 5: Delete ALL existing chunks (full reset)
+  log("Purging all existing chunks...");
   const chunksCollection = firestore.collection(RESUME_CHUNKS_COLLECTION);
-  
-  // Delete chunks from previous version
-  if (previousVersion > 0) {
-    const oldChunks = await chunksCollection
-      .where("version", "==", previousVersion)
-      .get();
-    
-    if (!oldChunks.empty) {
-      const deleteBatch = firestore.batch();
-      oldChunks.docs.forEach((doc) => deleteBatch.delete(doc.ref));
-      await deleteBatch.commit();
-      log(`Deleted ${oldChunks.size} old chunks`, true);
-    } else {
-      log("No old chunks to delete", true);
+
+  const allChunks = await chunksCollection.get();
+  if (!allChunks.empty) {
+    // Delete in batches (Firestore limit is 500 per batch)
+    const docs = allChunks.docs;
+    for (let i = 0; i < docs.length; i += 500) {
+      const batch = firestore.batch();
+      const batchDocs = docs.slice(i, i + 500);
+      for (const doc of batchDocs) {
+        batch.delete(doc.ref);
+      }
+      await batch.commit();
     }
+    log(`Purged ${allChunks.size} existing chunks (all versions)`, true);
   } else {
-    log("No previous version", true);
+    log("No existing chunks to purge", true);
   }
 
   // Write new chunks

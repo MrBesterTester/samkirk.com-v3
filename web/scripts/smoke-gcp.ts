@@ -1717,6 +1717,11 @@ AI/ML: TensorFlow, LangChain, RAG systems`,
     },
   ];
 
+  // Save original resume index for restoration
+  const resumeIndexRef11 = firestore.doc("resumeIndex/current");
+  const originalIndexSnapshot11 = await resumeIndexRef11.get();
+  const originalIndexData11 = originalIndexSnapshot11.exists ? originalIndexSnapshot11.data() : null;
+
   try {
     // Step 11.1: Write test chunks to Firestore
     log("Writing test resume chunks to Firestore...");
@@ -1729,14 +1734,13 @@ AI/ML: TensorFlow, LangChain, RAG systems`,
     log(`Wrote ${testChunks.length} test chunks`, true);
 
     // Update resume index
-    const resumeIndexRef = firestore.doc("resumeIndex/current");
     const testIndexData = {
       resumeGcsPath: "resume/master.md",
       indexedAt: Timestamp.now(),
       chunkCount: testChunks.length,
       version: 9997,
     };
-    await resumeIndexRef.set(testIndexData);
+    await resumeIndexRef11.set(testIndexData);
     log("Resume index updated", true);
 
     // Step 11.2: Test resume generation with Vertex AI
@@ -1945,9 +1949,14 @@ ${markdown.replace(/^# (.+)$/gm, '<h1>$1</h1>')
     }
     log(`Deleted ${artifactFiles.length} artifact files`, true);
 
-    // Restore original resume index if it was modified
-    await resumeIndexRef.delete();
-    log("Test resume index deleted", true);
+    // Restore original resume index
+    if (originalIndexData11) {
+      await resumeIndexRef11.set(originalIndexData11);
+      log("Resume index restored", true);
+    } else {
+      await resumeIndexRef11.delete();
+      log("Resume index removed (none existed before)", true);
+    }
 
     log("Resume generation test complete", true);
     sectionsPassed++;
@@ -1976,6 +1985,14 @@ ${markdown.replace(/^# (.+)$/gm, '<h1>$1</h1>')
       for (const file of files) {
         await file.delete();
       }
+      // Restore resume index
+      try {
+        if (originalIndexData11) {
+          await resumeIndexRef11.set(originalIndexData11);
+        } else {
+          await resumeIndexRef11.delete();
+        }
+      } catch { /* ignore */ }
     } catch {
       log("Warning: Failed to cleanup test data during error handling", false);
     }
@@ -2046,6 +2063,11 @@ Location: Open to remote work, based in San Francisco Bay Area`,
     },
   ];
 
+  // Save original resume index for restoration
+  const resumeIndexRef12 = firestore.doc("resumeIndex/current");
+  const originalIndexSnapshot12 = await resumeIndexRef12.get();
+  const originalIndexData12 = originalIndexSnapshot12.exists ? originalIndexSnapshot12.data() : null;
+
   try {
     // Step 12.1: Write test chunks to Firestore
     log("Writing test resume chunks to Firestore...");
@@ -2058,14 +2080,13 @@ Location: Open to remote work, based in San Francisco Bay Area`,
     log(`Wrote ${testChunks.length} test chunks`, true);
 
     // Update resume index
-    const resumeIndexRef = firestore.doc("resumeIndex/current");
     const testIndexData = {
       resumeGcsPath: "resume/master.md",
       indexedAt: Timestamp.now(),
       chunkCount: testChunks.length,
       version: 9996,
     };
-    await resumeIndexRef.set(testIndexData);
+    await resumeIndexRef12.set(testIndexData);
     log("Resume index updated", true);
 
     // Step 12.2: Initialize Vertex AI for chat
@@ -2331,9 +2352,14 @@ ${transcript
     }
     log(`Deleted ${artifactFiles.length} artifact files`, true);
 
-    // Clean up resume index
-    await resumeIndexRef.delete();
-    log("Test resume index deleted", true);
+    // Restore original resume index
+    if (originalIndexData12) {
+      await resumeIndexRef12.set(originalIndexData12);
+      log("Resume index restored", true);
+    } else {
+      await resumeIndexRef12.delete();
+      log("Resume index removed (none existed before)", true);
+    }
 
     log("Interview chat test complete", true);
     sectionsPassed++;
@@ -2362,6 +2388,14 @@ ${transcript
       for (const file of files) {
         await file.delete();
       }
+      // Restore resume index
+      try {
+        if (originalIndexData12) {
+          await resumeIndexRef12.set(originalIndexData12);
+        } else {
+          await resumeIndexRef12.delete();
+        }
+      } catch { /* ignore */ }
     } catch {
       log("Warning: Failed to cleanup test data during error handling", false);
     }
