@@ -36,8 +36,8 @@ export default function HireMePage() {
         Hire Me
       </h1>
       <p className="mt-4 text-lg text-text-secondary">
-        These tools help hiring managers quickly evaluate whether Sam Kirk is a
-        good fit for their role.
+        These tools help you, the hiring manager, quickly evaluate whether I am
+        good fit for your job opportunity.
       </p>
 
       {/* Job Context Bar — outside ToolGate */}
