@@ -319,17 +319,20 @@ export function ChatStream({
   jobLoaded = false,
   flowActive = false,
 }: ChatStreamProps) {
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   // Auto-scroll to bottom on new messages or when loading state changes
   useEffect(() => {
-    if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    const el = scrollContainerRef.current;
+    if (el) {
+      requestAnimationFrame(() => {
+        el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
+      });
     }
   }, [messages, isLoading]);
 
   return (
-    <div className="flex-1 overflow-y-auto p-4">
+    <div ref={scrollContainerRef} className="flex-1 overflow-y-auto p-4">
       <div className="space-y-4">
         {/* Welcome message when empty */}
         {messages.length === 0 && <WelcomeMessage />}
@@ -373,8 +376,6 @@ export function ChatStream({
         {/* Typing indicator when loading */}
         {isLoading && <TypingIndicator />}
 
-        {/* Scroll anchor */}
-        <div ref={messagesEndRef} />
       </div>
     </div>
   );

@@ -109,7 +109,7 @@ export default function HireMePage() {
             )}
 
             {/* ChatStream — scrollable area */}
-            <div className="h-[32rem] sm:h-[36rem]">
+            <div className="flex flex-col h-[32rem] sm:h-[36rem]">
               <ChatStream
                 messages={state.messages}
                 isLoading={state.isLoading}
