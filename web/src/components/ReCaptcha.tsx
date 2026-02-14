@@ -202,7 +202,7 @@ export interface CaptchaGateProps {
  * Check if E2E testing mode is enabled (client-side).
  */
 function isE2ETestingEnabled(): boolean {
-  return process.env.NEXT_PUBLIC_E2E_TESTING === "true";
+  return process.env.NEXT_PUBLIC_E2E_TESTING === "true" || process.env.NODE_ENV === "development";
 }
 
 /**
