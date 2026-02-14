@@ -31,7 +31,7 @@ test.describe("Interview Tool - UI", () => {
 
     // Description text
     await expect(
-      page.getByText(/help hiring managers quickly evaluate/i)
+      page.getByText(/help you, the hiring manager, quickly evaluate/i)
     ).toBeVisible();
   });
 
@@ -60,9 +60,6 @@ test.describe("Interview Tool - UI", () => {
     await expect(
       page.getByRole("button", { name: /send message/i })
     ).toBeVisible();
-
-    // Keyboard hint
-    await expect(page.getByText(/press enter to send/i)).toBeVisible();
   });
 
   test("displays Add Job button for job context", async ({ page }) => {

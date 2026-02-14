@@ -35,8 +35,8 @@ test.describe("Public Pages - Render Correctly", () => {
     // Navigation should be present
     await expect(page.getByRole("navigation")).toBeVisible();
 
-    // Should have links to main sections
-    await expect(page.getByRole("link", { name: /hire me/i })).toBeVisible();
+    // Should have links to main sections (use .first() — nav link + CTA both match)
+    await expect(page.getByRole("link", { name: /hire me/i }).first()).toBeVisible();
   });
 
   test("hire-me page loads with unified interface", async ({ page }) => {
@@ -52,7 +52,7 @@ test.describe("Public Pages - Render Correctly", () => {
 
     // Description text should be visible
     await expect(
-      page.getByText(/help hiring managers quickly evaluate/i)
+      page.getByText(/help you, the hiring manager, quickly evaluate/i)
     ).toBeVisible();
   });
 
