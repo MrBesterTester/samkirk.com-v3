@@ -5,15 +5,7 @@ import { useState } from "react";
 
 const baseNavLinks = [
   { href: "/", label: "Home" },
-  {
-    href: "/hire-me",
-    label: "Hire Me",
-    children: [
-      { href: "/hire-me/fit", label: "How Do I Fit?" },
-      { href: "/hire-me/resume", label: "Custom Resume" },
-      { href: "/hire-me/interview", label: "Interview Me" },
-    ],
-  },
+  { href: "/hire-me", label: "Hire Me" },
   { href: "/dance-menu", label: "Dance Menu" },
   { href: "/song-dedication", label: "Song Dedication" },
   { href: "/photo-fun", label: "Photo Fun" },
