@@ -2,7 +2,7 @@
 
 This folder contains all planning, specification, and reference documents for **samkirk.com v3**, a personal website showcasing Sam Kirk's genAI capabilities. The project follows the **Dylan Davis 50+ method** — a three-document system (Specification, Blueprint, TODO) that structures AI-assisted development from idea through implementation.
 
-The documents accumulated over roughly two weeks of intensive development (Jan 30 -- Feb 13, 2026), beginning with a hand-written proposal and evolving through multiple Dylan Davis document sets as the project grew in scope. What follows is a guided tour through the folder, grouped by purpose and presented in roughly chronological order.
+The documents accumulated over roughly two and a half weeks of intensive development (Jan 30 -- Feb 14, 2026), beginning with a hand-written proposal and evolving through multiple Dylan Davis document sets as the project grew in scope. What follows is a guided tour through the folder, grouped by purpose and presented in roughly chronological order.
 
 ---
 
@@ -45,7 +45,16 @@ The documents accumulated over roughly two weeks of intensive development (Jan 3
   - [hire-me-tests.md](#hire-me-testsmd)
   - [hire-me-ux-fix-plan.md](#hire-me-ux-fix-planmd)
   - [online-test-cases.md](#online-test-casesmd)
-- [10. Miscellaneous](#10-miscellaneous)
+- [10. Hire Me Unified Trilogy](#10-hire-me-unified-trilogy)
+  - [hire-me-unified-SPECIFICATION.md](#hire-me-unified-specificationmd)
+  - [hire-me-unified-BLUEPRINT.md](#hire-me-unified-blueprintmd)
+  - [hire-me-unified-TODO.md](#hire-me-unified-todomd)
+- [11. Hire Me Streamline Quartet](#11-hire-me-streamline-quartet)
+  - [hire-me-streamline-PROPOSAL.md](#hire-me-streamline-proposalmd)
+  - [hire-me-streamline-SPECIFICATION.md](#hire-me-streamline-specificationmd)
+  - [hire-me-streamline-BLUEPRINT.md](#hire-me-streamline-blueprintmd)
+  - [hire-me-streamline-TODO.md](#hire-me-streamline-todomd)
+- [12. Miscellaneous](#12-miscellaneous)
   - [cursor-markdown-preview-issue.md](#cursor-markdown-preview-issuemd)
 
 ---
@@ -245,7 +254,51 @@ A living document of real job postings that Sam Kirk may qualify for, used as te
 
 ---
 
-## 10. Miscellaneous
+## 10. Hire Me Unified Trilogy
+
+After the V1 hire-me tools shipped as three separate pages (`/hire-me/fit`, `/hire-me/resume`, `/hire-me/interview`), it became clear they should be a single chat-first experience. This Dylan Davis document set planned the consolidation into one unified `/hire-me` page with a collapsible job context bar, typed chat messages (user bubbles, assistant bubbles, rich cards for fit reports and resume previews), and preset action chips.
+
+### [hire-me-unified-SPECIFICATION.md](hire-me-unified-SPECIFICATION.md)
+
+Specifies the unified page layout, chat message type system (user, assistant, system, fit-question, fit-report, resume-preview, error), the `useHireMe` custom hook state interface, and how preset actions (Analyze My Fit, Generate Resume) trigger flows within the chat stream. Explicitly scoped to reuse all existing API endpoints with no backend changes.
+
+### [hire-me-unified-BLUEPRINT.md](hire-me-unified-BLUEPRINT.md)
+
+The implementation plan organized into 5 phases: Extract Shared Components (JobContextBar, ChatInput, ChatStream, rich card components), Build the Hook (`useHireMe.ts`), Assemble the Page, Redirects + Cleanup, and Test. Lists 11 files to create or modify with exact component responsibilities.
+
+### [hire-me-unified-TODO.md](hire-me-unified-TODO.md)
+
+The implementation checklist (54 items across 5 phases). The unification work was completed via do-work REQs, though the TODO checkboxes were not synced back — the streamline specification (below) references the unified page as already operational.
+
+All three files were created on **February 13** (`e6e607b`).
+
+---
+
+## 11. Hire Me Streamline Quartet
+
+A follow-on to the Hire Me Unified trilogy. With the `/hire-me` page now functioning as a single chat-first experience, the home page and header navigation still presented three separate entry points as if they were distinct products. This document set — uniquely including a Proposal alongside the standard trilogy — plans the collapse of all remaining multi-entry-point navigation into a single link.
+
+### [hire-me-streamline-PROPOSAL.md](hire-me-streamline-PROPOSAL.md)
+
+The original request from Sam, filed as-is. Describes the problem: the home page still shows three separate modes and the Hire Me tab still has three subpages, even though the underlying page is unified. Requests a single link under "Hiring Manager?" on the home page and no subpages in the Hire Me tab.
+
+### [hire-me-streamline-SPECIFICATION.md](hire-me-streamline-SPECIFICATION.md)
+
+Formalizes the proposal into five requirements: replace three `ToolPreview` cards on the home page with a single CTA (R1), flatten the header nav to a direct link with no dropdown (R2), delete the three redirect stub routes (R3), make no backend changes (R4), and preserve the existing content tone (R5). Old bookmarks to sub-routes will 404, deemed acceptable given their recent introduction.
+
+### [hire-me-streamline-BLUEPRINT.md](hire-me-streamline-BLUEPRINT.md)
+
+A four-step implementation plan: simplify the home page section (`page.tsx`), flatten the header navigation (`Header.tsx`), delete redirect stubs (three route files and directories), and update tests. Includes a risk assessment (low — UI/navigation only, no backend changes).
+
+### [hire-me-streamline-TODO.md](hire-me-streamline-TODO.md)
+
+The implementation checklist (16 items across 4 steps). All items are unchecked — this work is pending.
+
+All four files were created on **February 14** (`3799d09`).
+
+---
+
+## 12. Miscellaneous
 
 ### [cursor-markdown-preview-issue.md](cursor-markdown-preview-issue.md)
 
@@ -255,7 +308,7 @@ A bug report (139 lines) documenting a Cursor IDE issue where markdown preview f
 
 ## Document Sets at a Glance
 
-The Dylan Davis three-document pattern appears three times in this folder, plus one superseded monolith:
+The Dylan Davis three-document pattern appears five times in this folder, plus one superseded monolith:
 
 | Set | Spec | Blueprint | TODO | Status |
 |-----|------|-----------|------|--------|
@@ -263,8 +316,10 @@ The Dylan Davis three-document pattern appears three times in this folder, plus 
 | **V2 Visual Upgrade** | [v2-upgrade-SPECIFICATION.md](v2-upgrade-SPECIFICATION.md) | [v2-upgrade-BLUEPRINT.md](v2-upgrade-BLUEPRINT.md) | [v2-upgrade-TODO.md](v2-upgrade-TODO.md) | Complete |
 | **Master Test Suite** | [master-test-SPECIFICATION.md](master-test-SPECIFICATION.md) | [master-test-BLUEPRINT.md](master-test-BLUEPRINT.md) | [master-test-TODO.md](master-test-TODO.md) | In progress |
 | **Test Results Viewer** | *(no spec)* | [test-results-BLUEPRINT.md](test-results-BLUEPRINT.md) | [test-results-TODO.md](test-results-TODO.md) | Complete |
+| **Hire Me Unified** | [hire-me-unified-SPECIFICATION.md](hire-me-unified-SPECIFICATION.md) | [hire-me-unified-BLUEPRINT.md](hire-me-unified-BLUEPRINT.md) | [hire-me-unified-TODO.md](hire-me-unified-TODO.md) | Complete |
+| **Hire Me Streamline** | [hire-me-streamline-SPECIFICATION.md](hire-me-streamline-SPECIFICATION.md) | [hire-me-streamline-BLUEPRINT.md](hire-me-streamline-BLUEPRINT.md) | [hire-me-streamline-TODO.md](hire-me-streamline-TODO.md) | Pending |
 
-The original [master-test-plan.md](master-test-plan.md) predates its restructuring into the three-document format and is retained as historical reference.
+The original [master-test-plan.md](master-test-plan.md) predates its restructuring into the three-document format and is retained as historical reference. The Hire Me Streamline set also includes a [hire-me-streamline-PROPOSAL.md](hire-me-streamline-PROPOSAL.md) — the only set with a separate proposal document.
 
 ---
 
@@ -279,4 +334,5 @@ The original [master-test-plan.md](master-test-plan.md) predates its restructuri
 | Feb 5 | [master-test-plan.md](master-test-plan.md), [Matts-integration-with-Dylan-plan-samkirk-v3.md](Matts-integration-with-Dylan-plan-samkirk-v3.md) | Testing formalized, do-work integrated |
 | Feb 6 | [master-test-SPECIFICATION.md](master-test-SPECIFICATION.md), [master-test-BLUEPRINT.md](master-test-BLUEPRINT.md), [master-test-TODO.md](master-test-TODO.md), [master-test-START-DEV.md](master-test-START-DEV.md), [test-catalog.md](test-catalog.md), [feature-test-matrix.md](feature-test-matrix.md), [verification-registry.md](verification-registry.md), [Prompts.md](Prompts.md), [cursor-markdown-preview-issue.md](cursor-markdown-preview-issue.md) | Master test suite restructured, traceability artifacts created |
 | Feb 12 | [do-work-review-plan.md](do-work-review-plan.md), [hire-me-ux-fix-plan.md](hire-me-ux-fix-plan.md), [hire-me-tests.md](hire-me-tests.md) | Automation review, UX fixes, test documentation |
-| Feb 13 | [test-results-BLUEPRINT.md](test-results-BLUEPRINT.md), [test-results-TODO.md](test-results-TODO.md), [online-test-cases.md](online-test-cases.md) | Test results viewer, real job test cases |
+| Feb 13 | [test-results-BLUEPRINT.md](test-results-BLUEPRINT.md), [test-results-TODO.md](test-results-TODO.md), [online-test-cases.md](online-test-cases.md), [hire-me-unified-\*](hire-me-unified-SPECIFICATION.md) (x3) | Test results viewer, real job test cases, hire-me unification planned |
+| Feb 14 | [hire-me-streamline-\*](hire-me-streamline-PROPOSAL.md) (x4) | Hire-me navigation streamlined |
