@@ -248,7 +248,7 @@ export function JobContextBar({
               disabled={isLoading}
               className="rounded-lg border border-zinc-300 px-3 py-1.5 text-xs font-medium text-zinc-700 transition-colors hover:bg-zinc-50 disabled:cursor-not-allowed disabled:opacity-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
             >
-              Swap
+              Load New Job
             </button>
             <button
               type="button"
@@ -256,7 +256,7 @@ export function JobContextBar({
               disabled={isLoading}
               className="rounded-lg border border-zinc-300 px-3 py-1.5 text-xs font-medium text-red-600 transition-colors hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50 dark:border-zinc-700 dark:text-red-400 dark:hover:bg-red-900/20"
             >
-              Remove
+              Remove Current Job
             </button>
           </div>
         </div>
