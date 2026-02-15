@@ -59,7 +59,7 @@ This is a senior-level IC position with opportunities for technical leadership.
  */
 async function loadJobViaPaste(page: import("@playwright/test").Page, text: string) {
   // Wait for the page heading
-  await expect(page.getByRole("heading", { name: "Hire Me" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Interview me NOW" })).toBeVisible();
 
   // Wait for ToolGate to finish (captcha auto-passes in E2E mode)
   // The chat area should become visible (welcome message)
@@ -91,7 +91,7 @@ async function loadJobViaPaste(page: import("@playwright/test").Page, text: stri
  */
 async function loadJobViaUrl(page: import("@playwright/test").Page, url: string) {
   // Wait for the page heading
-  await expect(page.getByRole("heading", { name: "Hire Me" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Interview me NOW" })).toBeVisible();
 
   // Wait for ToolGate captcha to pass
   await expect(page.getByText(/I'm here to answer questions/i)).toBeVisible({
@@ -123,7 +123,7 @@ async function loadJobViaUrl(page: import("@playwright/test").Page, url: string)
  */
 async function loadJobViaFile(page: import("@playwright/test").Page, filePath: string) {
   // Wait for the page heading
-  await expect(page.getByRole("heading", { name: "Hire Me" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Interview me NOW" })).toBeVisible();
 
   // Wait for ToolGate captcha to pass
   await expect(page.getByText(/I'm here to answer questions/i)).toBeVisible({
@@ -419,7 +419,7 @@ test.describe("Fit Tool Happy Path", () => {
 
   test("should show all three input modes in job bar", async ({ page }) => {
     // Wait for page
-    await expect(page.getByRole("heading", { name: "Hire Me" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Interview me NOW" })).toBeVisible();
     await expect(page.getByText(/I'm here to answer questions/i)).toBeVisible({
       timeout: 15000,
     });
@@ -434,7 +434,7 @@ test.describe("Fit Tool Happy Path", () => {
   });
 
   test("should show URL input when URL mode selected", async ({ page }) => {
-    await expect(page.getByRole("heading", { name: "Hire Me" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Interview me NOW" })).toBeVisible();
     await expect(page.getByText(/I'm here to answer questions/i)).toBeVisible({
       timeout: 15000,
     });
@@ -450,7 +450,7 @@ test.describe("Fit Tool Happy Path", () => {
   });
 
   test("should disable Load Job when input is empty", async ({ page }) => {
-    await expect(page.getByRole("heading", { name: "Hire Me" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Interview me NOW" })).toBeVisible();
     await expect(page.getByText(/I'm here to answer questions/i)).toBeVisible({
       timeout: 15000,
     });

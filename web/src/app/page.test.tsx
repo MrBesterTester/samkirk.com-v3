@@ -22,7 +22,7 @@ describe("Home page", () => {
   it("renders hire-me CTA link", () => {
     render(<Home />);
 
-    const ctaLink = screen.getByRole("link", { name: /try hire me tools/i });
+    const ctaLink = screen.getByRole("link", { name: /interview me now/i });
     expect(ctaLink).toHaveAttribute("href", "/hire-me");
   });
 

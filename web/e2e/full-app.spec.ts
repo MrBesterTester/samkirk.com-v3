@@ -44,8 +44,8 @@ test.describe("Public Pages - Render Correctly", () => {
 
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
 
-    // Should show the unified "Hire Me" heading
-    await expect(page.getByRole("heading", { name: "Hire Me" })).toBeVisible();
+    // Should show the unified "Interview me NOW" heading
+    await expect(page.getByRole("heading", { name: "Interview me NOW" })).toBeVisible();
 
     // Should have the "Add Job" button for job context
     await expect(page.getByRole("button", { name: "Add Job" })).toBeVisible();

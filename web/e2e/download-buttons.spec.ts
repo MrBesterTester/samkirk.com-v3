@@ -53,7 +53,7 @@ This is a senior-level IC position with opportunities for technical leadership.
  * Helper: Load a job posting via the JobContextBar using paste mode.
  */
 async function loadJobViaPaste(page: Page, text: string) {
-  await expect(page.getByRole("heading", { name: "Hire Me" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Interview me NOW" })).toBeVisible();
   await expect(page.getByText(/I'm here to answer questions/i)).toBeVisible({
     timeout: 15000,
   });

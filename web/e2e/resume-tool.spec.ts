@@ -56,7 +56,7 @@ This is a senior-level IC position with opportunities for technical leadership.
  * Helper: Load a job posting via the JobContextBar using paste mode.
  */
 async function loadJobViaPaste(page: import("@playwright/test").Page, text: string) {
-  await expect(page.getByRole("heading", { name: "Hire Me" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Interview me NOW" })).toBeVisible();
 
   // Wait for ToolGate captcha to pass
   await expect(page.getByText(/I'm here to answer questions/i)).toBeVisible({
@@ -84,7 +84,7 @@ async function loadJobViaPaste(page: import("@playwright/test").Page, text: stri
  * Helper: Load a job posting via URL mode.
  */
 async function loadJobViaUrl(page: import("@playwright/test").Page, url: string) {
-  await expect(page.getByRole("heading", { name: "Hire Me" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Interview me NOW" })).toBeVisible();
   await expect(page.getByText(/I'm here to answer questions/i)).toBeVisible({
     timeout: 15000,
   });
@@ -107,7 +107,7 @@ async function loadJobViaUrl(page: import("@playwright/test").Page, url: string)
  * Helper: Load a job posting via file upload mode.
  */
 async function loadJobViaFile(page: import("@playwright/test").Page, filePath: string) {
-  await expect(page.getByRole("heading", { name: "Hire Me" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Interview me NOW" })).toBeVisible();
   await expect(page.getByText(/I'm here to answer questions/i)).toBeVisible({
     timeout: 15000,
   });
@@ -225,7 +225,7 @@ test.describe("Resume Tool Happy Path", () => {
   });
 
   test("should show URL input mode when selected", async ({ page }) => {
-    await expect(page.getByRole("heading", { name: "Hire Me" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Interview me NOW" })).toBeVisible();
     await expect(page.getByText(/I'm here to answer questions/i)).toBeVisible({
       timeout: 15000,
     });
@@ -240,7 +240,7 @@ test.describe("Resume Tool Happy Path", () => {
   });
 
   test("should disable Load Job when input is empty", async ({ page }) => {
-    await expect(page.getByRole("heading", { name: "Hire Me" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Interview me NOW" })).toBeVisible();
     await expect(page.getByText(/I'm here to answer questions/i)).toBeVisible({
       timeout: 15000,
     });

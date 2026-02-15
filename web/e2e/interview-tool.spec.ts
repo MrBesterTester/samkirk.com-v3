@@ -26,7 +26,7 @@ test.describe("Interview Tool - UI", () => {
 
   test("loads the hire-me page with correct heading", async ({ page }) => {
     await expect(
-      page.getByRole("heading", { name: "Hire Me" })
+      page.getByRole("heading", { name: "Interview me NOW" })
     ).toBeVisible();
 
     // Description text
