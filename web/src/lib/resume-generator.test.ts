@@ -35,6 +35,11 @@ vi.mock("./storage", () => ({
       `submissions/${id}/input/${file}`,
   },
   writeFile: vi.fn(),
+  writeBuffer: vi.fn(),
+}));
+
+vi.mock("./pdf-renderer", () => ({
+  renderResumePdf: vi.fn(() => Promise.resolve(Buffer.from("mock-pdf"))),
 }));
 
 vi.mock("./submission", () => ({

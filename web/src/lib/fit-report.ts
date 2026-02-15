@@ -9,7 +9,7 @@ import {
 import { generateContent, type GenerateResult } from "./vertex-ai";
 import { getCurrentChunks, type ResumeChunk } from "./resume-chunker";
 import { renderMarkdown, type Citation } from "./markdown-renderer";
-import { getPrivateBucket, PrivatePaths, writeFile } from "./storage";
+import { getPrivateBucket, PrivatePaths, writeFile, writeBuffer } from "./storage";
 import { updateSubmission, completeSubmission } from "./submission";
 
 // ============================================================================
@@ -591,6 +591,12 @@ export async function storeFitReportArtifacts(
   // Store the HTML report
   const htmlPath = PrivatePaths.submissionOutput(submissionId, "report.html");
   await writeFile(bucket, htmlPath, report.html, "text/html; charset=utf-8");
+
+  // Store the PDF report
+  const { renderFitReportPdf } = await import("./pdf-renderer");
+  const pdfBuffer = await renderFitReportPdf(report.analysis, state.extracted, report.citations);
+  const pdfPath = PrivatePaths.submissionOutput(submissionId, "report.pdf");
+  await writeBuffer(bucket, pdfPath, pdfBuffer, "application/pdf");
 
   // Store the extracted data
   const extractedPath = PrivatePaths.submissionExtracted(submissionId);

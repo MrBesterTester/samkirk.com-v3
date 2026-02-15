@@ -24,6 +24,7 @@ import {
   getPrivateBucket,
   PrivatePaths,
   writeFile,
+  writeBuffer,
   readFile,
   fileExists,
 } from "./storage";
@@ -400,6 +401,12 @@ async function saveTranscript(
     html,
     "text/html; charset=utf-8"
   );
+
+  // Save PDF
+  const { renderTranscriptPdf } = await import("./pdf-renderer");
+  const pdfBuffer = await renderTranscriptPdf(conversation);
+  const pdfPath = PrivatePaths.submissionOutput(conversation.submissionId, "transcript.pdf");
+  await writeBuffer(bucket, pdfPath, pdfBuffer, "application/pdf");
 }
 
 // ============================================================================

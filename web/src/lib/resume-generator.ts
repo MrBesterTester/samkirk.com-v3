@@ -10,7 +10,7 @@ import {
   renderMarkdown,
   type Citation,
 } from "./markdown-renderer";
-import { getPrivateBucket, PrivatePaths, writeFile } from "./storage";
+import { getPrivateBucket, PrivatePaths, writeFile, writeBuffer } from "./storage";
 import { updateSubmission, completeSubmission } from "./submission";
 import type { JobIngestionResult } from "./job-ingestion";
 
@@ -777,6 +777,12 @@ export async function storeResumeArtifacts(
   // Store the HTML resume
   const htmlPath = PrivatePaths.submissionOutput(submissionId, "resume.html");
   await writeFile(bucket, htmlPath, resume.html, "text/html; charset=utf-8");
+
+  // Store the PDF resume
+  const { renderResumePdf } = await import("./pdf-renderer");
+  const pdfBuffer = await renderResumePdf(resume.content, resume.citations);
+  const pdfPath = PrivatePaths.submissionOutput(submissionId, "resume.pdf");
+  await writeBuffer(bucket, pdfPath, pdfBuffer, "application/pdf");
 
   // Store the job input
   const inputPath = PrivatePaths.submissionInput(submissionId, "job-text.txt");

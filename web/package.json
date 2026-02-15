@@ -21,6 +21,7 @@
     "@google-cloud/firestore": "^8.2.0",
     "@google-cloud/storage": "^7.18.0",
     "@google-cloud/vertexai": "^1.10.0",
+    "@react-pdf/renderer": "^4.3.2",
     "archiver": "^7.0.1",
     "mammoth": "^1.11.0",
     "marked": "^17.0.1",

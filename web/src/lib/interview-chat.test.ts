@@ -46,8 +46,14 @@ vi.mock("./storage", () => ({
       `submissions/${id}/output/${filename}`,
   },
   writeFile: vi.fn(),
+  writeBuffer: vi.fn(),
   readFile: vi.fn(),
   fileExists: vi.fn(),
+}));
+
+// Mock pdf-renderer (dynamically imported by saveTranscript)
+vi.mock("./pdf-renderer", () => ({
+  renderTranscriptPdf: vi.fn(() => Promise.resolve(Buffer.from("mock-pdf"))),
 }));
 
 // Mock markdown-renderer
