@@ -76,7 +76,7 @@ See [`docs/TEST-RESULTS.md`](docs/TEST-RESULTS.md) for detailed test results and
 - [`docs/BLUEPRINT.md`](docs/BLUEPRINT.md) — Technical architecture and implementation plan
 - [`docs/TODO.md`](docs/TODO.md) — Implementation checklist with progress tracking
 - [`docs/TEST-RESULTS.md`](docs/TEST-RESULTS.md) — Test results and verification evidence
-- [`README_dev_guide.md`](README_dev_guide.md) — Developer guide for testing workflows and conventions
+- [`README_dev_guide.md`](README_dev_guide.md) — Developer guide: methodology, testing, and conventions
 
 ### Tech stack (V1 target)
 
@@ -117,13 +117,21 @@ npm run start
 
 ### Development Methodology
 
-This project follows the **Dylan Davis 50+ method** (three-document system):
+This project was built entirely with AI, blending two methodologies: **Dylan Davis's three-document system** (Specification, Blueprint, TODO) for structured planning, and **Matt Maher's do-work pattern** for autonomous execution. A custom `/ingest-todo` bridge connects the two — TODO steps become do-work queue items that process autonomously with fresh AI context per task.
 
-**Key Documents:**
-- [`docs/Dylan-Davis-50plus-method.md`](docs/Dylan-Davis-50plus-method.md) — Complete methodology guide
-- [`docs/SPECIFICATION.md`](docs/SPECIFICATION.md) — What we're building
-- [`docs/BLUEPRINT.md`](docs/BLUEPRINT.md) — How to build it (step-by-step)
-- [`docs/TODO.md`](docs/TODO.md) — Roadmap and progress tracking
+**For the full write-up** (how both methods work, the bridge, workflow diagrams, and links to original source videos): **[Development Methodology in the Developer Guide](README_dev_guide.md#development-methodology)**
+
+**Three-document sets** (Dylan Davis pattern — used five times in this project):
+
+| Set | Spec | Blueprint | TODO | Status |
+|-----|------|-----------|------|--------|
+| V1 Core | [SPECIFICATION.md](docs/SPECIFICATION.md) | [BLUEPRINT.md](docs/BLUEPRINT.md) | [TODO.md](docs/TODO.md) | Complete |
+| V2 Visual | [v2-upgrade-SPEC](docs/v2-upgrade-SPECIFICATION.md) | [v2-upgrade-BP](docs/v2-upgrade-BLUEPRINT.md) | [v2-upgrade-TODO](docs/v2-upgrade-TODO.md) | Complete |
+| Master Tests | [master-test-SPEC](docs/master-test-SPECIFICATION.md) | [master-test-BP](docs/master-test-BLUEPRINT.md) | [master-test-TODO](docs/master-test-TODO.md) | Complete |
+| Hire Me Unified | [unified-SPEC](docs/hire-me-unified-SPECIFICATION.md) | [unified-BP](docs/hire-me-unified-BLUEPRINT.md) | [unified-TODO](docs/hire-me-unified-TODO.md) | Complete |
+| Hire Me Streamline | [streamline-SPEC](docs/hire-me-streamline-SPECIFICATION.md) | [streamline-BP](docs/hire-me-streamline-BLUEPRINT.md) | [streamline-TODO](docs/hire-me-streamline-TODO.md) | Pending |
+
+The Master Tests set also has two companion documents: [`master-test-plan.md`](docs/master-test-plan.md) (the original monolithic plan, superseded when it was restructured into the three-document format) and [`master-test-START-DEV.md`](docs/master-test-START-DEV.md) (a temporary quick-reference card for kicking off the do-work build process).
 
 **Tool Support:**
 - **Cursor IDE**: Project commands in `.cursor/commands/`, rules in `.cursor/rules/`

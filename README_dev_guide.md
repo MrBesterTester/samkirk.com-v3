@@ -1,11 +1,16 @@
-# Developer Guide — Testing Workflows
+# Developer Guide
 
-This is the day-to-day reference for running, writing, and managing tests in samkirk-v3. It covers the test suites, CLI commands, automated workflows via do-work, manual verifications, and release qualification.
+This is the day-to-day reference for samkirk-v3 development. It covers the AI-assisted development methodology, test suites, CLI commands, automated workflows via do-work, manual verifications, and release qualification.
 
 ---
 
 ## Table of Contents
 
+- [Development Methodology](#development-methodology)
+  - [Dylan Davis: The Three-Document System](#dylan-davis-the-three-document-system)
+  - [Matt Maher: Claude Code Meta-Programming](#matt-maher-claude-code-meta-programming)
+  - [The Bridge: /ingest-todo](#the-bridge-ingest-todo)
+  - [Source Materials](#source-materials)
 - [Cheat Sheet — Slash Commands](#cheat-sheet--slash-commands)
   - [do-work (task queue)](#do-work-task-queue)
   - [Dylan Davis methodology](#dylan-davis-methodology)
@@ -27,6 +32,108 @@ This is the day-to-day reference for running, writing, and managing tests in sam
 - [Conventions](#conventions)
 - [Chrome Extension Setup (Claude in Chrome)](#chrome-extension-setup-claude-in-chrome)
 - [Reference Documents](#reference-documents)
+
+---
+
+## Development Methodology
+
+This project was built entirely with AI-assisted development, blending two complementary methodologies into a single workflow. Understanding these techniques is useful both for contributing to this codebase and for applying the same patterns to your own projects.
+
+### Dylan Davis: The Three-Document System
+
+Dylan Davis's method (from his video ["I've Built 50+ Apps with AI"](https://youtu.be/99FI5uZJ8tU)) structures every project around three documents that serve as an extended memory system for AI:
+
+| Document | Question it answers | How it's created |
+|----------|-------------------|-----------------|
+| **SPECIFICATION.md** | *What* are we building? | AI-led interview — one question at a time, 15-20 rounds |
+| **BLUEPRINT.md** | *How* do we build it? | High-end model generates phased plan with embedded prompts |
+| **TODO.md** | *Where* are we now? | Checklist extracted from the blueprint, with model labels |
+
+The core insight is that AI memory decays over long conversations. By externalizing the plan into three files, each new conversation starts fresh but retains full context — the spec grounds it in requirements, the blueprint provides architecture, and the TODO shows progress. Steps are worked through one at a time (`/start-step 2.1`, `/continue-step 2.2`), with a fresh AI context per step to avoid instruction drift.
+
+This project used the three-document pattern five times for different scopes (V1 core, V2 visual upgrade, master test suite, hire-me unification, and more). See the [Document Sets at a Glance](docs/README.md#document-sets-at-a-glance) table for the full inventory.
+
+### Matt Maher: Claude Code Meta-Programming
+
+Matt Maher's techniques (from his videos ["6 Techniques"](https://www.youtube.com/watch?v=kf6h6DOPjpI) and ["Most Powerful Pattern"](https://www.youtube.com/watch?v=I9-tdhxiH7w)) distill thousands of hours of real AI-assisted work into six practices:
+
+1. **Voice, Not Text** — Talk instead of typing; raw transcripts preserve intent that self-editing strips out
+2. **Folder Workspace** — Treat folders as durable workspaces, not ephemeral chat threads
+3. **Verify Plans** — Force AI to grade its own plans against requirements (catches ~40% of silently dropped items)
+4. **Clear Context** — Fresh context per feature prevents instruction decay
+5. **Walk Away (Autonomous)** — Build workflows that run for hours unattended with full traceability
+6. **Build Your Tools** — Create custom skills and scripts through conversation
+
+The culmination is the **do-work** pattern ([GitHub](https://github.com/bladnman/do-work)), which implements practices #2, #4, and #5 as an autonomous work queue. A two-terminal setup lets you capture requests on one side (`do work fix the header overflow`) while Claude builds on the other (`do work run`), processing each request in a fresh sub-agent context with automatic git commits.
+
+### The Bridge: /ingest-todo
+
+The two methodologies are naturally compatible — Dylan Davis provides planning structure, Matt Maher provides autonomous execution. The bridge between them is the `/ingest-todo` skill:
+
+```
+┌─────────────────────────────────────────────────────┐
+│  Dylan Davis (Planning Layer)                       │
+│                                                     │
+│  SPECIFICATION.md → BLUEPRINT.md → TODO.md          │
+│       (what)           (how)        (checklist)     │
+└──────────────────────────┬──────────────────────────┘
+                           │
+                 /ingest-todo (bridge)
+                           │
+                           ▼
+┌─────────────────────────────────────────────────────┐
+│  do-work (Execution Layer)                          │
+│                                                     │
+│  REQ-001 → REQ-002 → REQ-003 → ... → REQ-018      │
+│   (0.1)     (0.2)     (1.1)           (5.3)        │
+│                                                     │
+│  do work run → triage → explore → build → commit   │
+│       │                                    │        │
+│       └──── loop until queue empty ────────┘        │
+└──────────────────────────┬──────────────────────────┘
+                           │
+                 /sync-todo (checkbox sync)
+                           │
+                           ▼
+                TODO.md checkboxes updated
+```
+
+Each numbered step in a Dylan Davis TODO becomes one do-work REQ file, with frontmatter linking back to the source step, blueprint reference, and model hint. After the queue is processed, `/sync-todo` checks off the corresponding TODO items.
+
+**The combined workflow:**
+
+```bash
+# 1. Plan (Dylan Davis)
+/create-spec          # AI-led specification interview
+/create-blueprint     # Generate phased implementation plan
+/create-todo          # Extract checklist with model labels
+
+# 2. Ingest (bridge)
+/ingest-todo docs/TODO.md
+do work verify        # Confirm REQ files match intent
+
+# 3. Execute (do-work)
+do work run           # Autonomous processing — walk away
+
+# 4. Sync back
+/sync-todo docs/TODO.md
+```
+
+Ad-hoc work (bugs, ideas, small features) goes directly into do-work without a spec/blueprint/todo cycle: `do work add dark mode toggle`.
+
+### Source Materials
+
+The original methodology documents are available in two forms:
+
+**HTML study guides** (closer to the original authors' presentations — good starting points):
+- Dylan Davis: [`REFERENCES/Dylan-Davis-50plus-method.html`](REFERENCES/Dylan-Davis-50plus-method.html) — interactive transcription of the 16-minute video
+- Matt Maher: [`REFERENCES/Matt-Maher_Claude-Code.html`](REFERENCES/Matt-Maher_Claude-Code.html) — six practices + do-work pattern with diagrams
+
+**Extended project versions** (adapted for this codebase with Cursor/Claude Code commands and project-specific conventions):
+- [`docs/Dylan-Davis-50plus-method.md`](docs/Dylan-Davis-50plus-method.md) — full methodology with slash commands, git workflow, and a complete Phase 0-6 meta-checklist
+- [`docs/Matts-integration-with-Dylan-plan-samkirk-v3.md`](docs/Matts-integration-with-Dylan-plan-samkirk-v3.md) — the integration plan that designed the bridge
+
+For a narrative walkthrough of all project documentation, see [`docs/README.md`](docs/README.md).
 
 ---
 

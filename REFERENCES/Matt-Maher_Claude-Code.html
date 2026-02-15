@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matt Maher's Claude Code Meta-Programming Techniques</title>
+    <style>
+        :root {
+            --primary: #2c5282;
+            --secondary: #4299e1;
+            --accent: #ed8936;
+            --success: #48bb78;
+            --bg-light: #f7fafc;
+            --bg-white: #ffffff;
+            --text-dark: #2d3748;
+            --text-medium: #4a5568;
+            --text-light: #718096;
+            --border: #e2e8f0;
+            --shadow: rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background: linear-gradient(135deg, var(--bg-light) 0%, #e6f2ff 100%);
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: var(--bg-white);
+            border-radius: 16px;
+            box-shadow: 0 20px 60px var(--shadow);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 60px 40px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        header p {
+            font-size: 1.2em;
+            opacity: 0.95;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .youtube-links {
+            margin-top: 25px;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .youtube-link {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            color: white;
+            font-weight: 500;
+            transition: all 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+        }
+
+        .youtube-link:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .youtube-link:active {
+            transform: translateY(0);
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .intro-section {
+            background: linear-gradient(135deg, #fff5f5 0%, #ffe9e9 100%);
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 40px;
+            border-left: 4px solid var(--accent);
+        }
+
+        .intro-section h2 {
+            color: var(--accent);
+            margin-bottom: 15px;
+        }
+
+        .intro-section p {
+            font-size: 1.1em;
+            line-height: 1.8;
+        }
+
+        .relationship-section {
+            background: linear-gradient(135deg, #f0fff4 0%, #e6fffa 100%);
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 40px;
+            border-left: 4px solid var(--success);
+        }
+
+        .relationship-section h2 {
+            color: var(--success);
+            margin-bottom: 15px;
+        }
+
+        .technique-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .technique-card {
+            background: var(--bg-white);
+            border-radius: 12px;
+            padding: 30px;
+            border: 2px solid var(--border);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .technique-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--secondary), var(--accent));
+        }
+
+        .technique-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px var(--shadow);
+            border-color: var(--secondary);
+        }
+
+        .technique-number {
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 50px;
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .technique-card h3 {
+            color: var(--primary);
+            font-size: 1.5em;
+            margin-bottom: 15px;
+        }
+
+        .technique-card h4 {
+            color: var(--secondary);
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .technique-card p, .technique-card li {
+            color: var(--text-medium);
+            margin-bottom: 10px;
+        }
+
+        .technique-card ul {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+
+        .svg-container {
+            margin: 25px 0;
+            padding: 20px;
+            background: var(--bg-light);
+            border-radius: 8px;
+        }
+
+        .powerful-pattern {
+            background: linear-gradient(135deg, #fef5e7 0%, #fdebd0 100%);
+            border: 3px solid var(--accent);
+            padding: 40px;
+            border-radius: 16px;
+            margin: 40px 0;
+        }
+
+        .powerful-pattern h2 {
+            color: var(--accent);
+            font-size: 2em;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .key-benefits {
+            background: linear-gradient(135deg, #ebf8ff 0%, #e0f2fe 100%);
+            padding: 30px;
+            border-radius: 12px;
+            margin-top: 30px;
+        }
+
+        .key-benefits h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .key-benefits ul {
+            list-style: none;
+        }
+
+        .key-benefits li {
+            padding: 10px 0 10px 30px;
+            position: relative;
+        }
+
+        .key-benefits li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: var(--success);
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .code-snippet {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+
+        .workflow-diagram {
+            margin: 40px 0;
+            padding: 30px;
+            background: var(--bg-light);
+            border-radius: 12px;
+        }
+
+        footer {
+            background: var(--primary);
+            color: white;
+            padding: 30px 40px;
+            text-align: center;
+        }
+
+        footer a {
+            color: var(--secondary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        .highlight {
+            background: linear-gradient(120deg, #fef5e7 0%, transparent 100%);
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-weight: 500;
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8em;
+            }
+            
+            .technique-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚀 Matt Maher's Claude Code Meta-Programming Techniques</h1>
+            <p>Distilled from thousands of hours of real work: 6 practices that survived + the most powerful pattern</p>
+            <div class="youtube-links">
+                <a href="https://www.youtube.com/watch?v=kf6h6DOPjpI" target="_blank" rel="noopener noreferrer" class="youtube-link">📺 6 Techniques Video</a>
+                <a href="https://www.youtube.com/watch?v=I9-tdhxiH7w" target="_blank" rel="noopener noreferrer" class="youtube-link">📺 Most Powerful Pattern</a>
+                <a href="https://github.com/bladnman/do-work" target="_blank" rel="noopener noreferrer" class="youtube-link">💻 GitHub Repo</a>
+            </div>
+        </header>
+
+        <div class="content">
+            <div class="intro-section">
+                <h2>The Core Problem</h2>
+                <p><strong>AI silently drops 40% of what you ask for.</strong> Even with the best models and best prompts, core requirements vanish without warning. This is the failure mode nobody talks about. After thousands of hours building with AI across coding, writing, video production, and planning, these six practices are what survived everything else.</p>
+            </div>
+
+            <div class="relationship-section">
+                <h2>🔗 How The Techniques Connect</h2>
+                <p><strong>The "Most Powerful Pattern" (do-work) implements Techniques #2, #4, and #5 from the six practices:</strong></p>
+                <ul style="margin-left: 20px; margin-top: 15px;">
+                    <li><strong>Technique #2 (Folder Workspace):</strong> do-work uses a folder structure to organize requests, working items, and archives</li>
+                    <li><strong>Technique #4 (Clear Context):</strong> Each work item runs in a fresh sub-agent context, preventing context decay</li>
+                    <li><strong>Technique #5 (Walk Away):</strong> The autonomous work loop allows you to capture tasks on one side while Claude builds on the other, running for hours unattended</li>
+                </ul>
+                <p style="margin-top: 15px;"><em>The do-work pattern is the culmination of these principles working together in a single workflow.</em></p>
+            </div>
+
+            <h2 style="text-align: center; color: var(--primary); margin: 40px 0; font-size: 2em;">The 6 Practices That Survived</h2>
+
+            <div class="technique-grid">
+                <!-- Technique 1 -->
+                <div class="technique-card">
+                    <div class="technique-number">1</div>
+                    <h3>Voice, Not Text</h3>
+                    <p><strong>The Problem:</strong> When you type, you edit as you go. You strip out tangents, uncertainties, and messiness—but that's where the intent lives.</p>
+                    
+                    <h4>The Solution:</h4>
+                    <p>Talk instead of typing. Record your thoughts while walking or thinking. Transcribe it raw.</p>
+                    
+                    <div class="svg-container">
+                        <svg viewBox="0 0 400 200" style="width: 100%; height: auto;">
+                            <defs>
+                                <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0%">
+                                    <stop offset="0%" style="stop-color:#4299e1;stop-opacity:1" />
+                                    <stop offset="100%" style="stop-color:#2c5282;stop-opacity:1" />
+                                </linearGradient>
+                            </defs>
+                            <!-- Typing -->
+                            <rect x="20" y="30" width="150" height="60" rx="8" fill="#fef5e7" stroke="#ed8936" stroke-width="2"/>
+                            <text x="95" y="55" text-anchor="middle" font-size="14" font-weight="bold" fill="#2d3748">Typing</text>
+                            <text x="95" y="75" text-anchor="middle" font-size="11" fill="#ed8936">Self-censored</text>
+                            <!-- Voice -->
+                            <rect x="230" y="30" width="150" height="60" rx="8" fill="#f0fff4" stroke="#48bb78" stroke-width="2"/>
+                            <text x="305" y="55" text-anchor="middle" font-size="14" font-weight="bold" fill="#2d3748">Voice</text>
+                            <text x="305" y="75" text-anchor="middle" font-size="11" fill="#48bb78">Raw intent captured</text>
+                            <!-- Arrow -->
+                            <path d="M 180 60 L 220 60" stroke="#4299e1" stroke-width="3" fill="none" marker-end="url(#arrowhead)"/>
+                            <defs>
+                                <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                                    <polygon points="0 0, 10 3, 0 6" fill="#4299e1" />
+                                </marker>
+                            </defs>
+                            <!-- Benefits -->
+                            <text x="200" y="130" text-anchor="middle" font-size="12" font-weight="bold" fill="#2c5282">Benefits:</text>
+                            <text x="200" y="150" text-anchor="middle" font-size="10" fill="#4a5568">• Thousands of words of raw thinking</text>
+                            <text x="200" y="170" text-anchor="middle" font-size="10" fill="#4a5568">• Captures uncertainties &amp; tangents</text>
+                            <text x="200" y="190" text-anchor="middle" font-size="10" fill="#4a5568">• AI gets the full context</text>
+                        </svg>
+                    </div>
+
+                    <h4>Key Benefits:</h4>
+                    <ul>
+                        <li>Captures thousands of words of raw thinking</li>
+                        <li>Preserves the messiness that contains real intent</li>
+                        <li>Faster than typing elaborate prompts</li>
+                        <li>Works for any AI work (not just coding)</li>
+                    </ul>
+
+                    <h4>Example Usage:</h4>
+                    <p>Matt records "walks" while walking around, talking through everything he wants to cover. The transcript becomes the raw material for AI to work with.</p>
+                </div>
+
+                <!-- Technique 2 -->
+                <div class="technique-card">
+                    <div class="technique-number">2</div>
+                    <h3>Give Your Work a Home</h3>
+                    <p><strong>The Problem:</strong> Chat is ephemeral. Long threads create vibes and half-decisions, but no reusable artifacts.</p>
+                    
+                    <h4>The Solution:</h4>
+                    <p>Treat the folder as the workspace, not the conversation. Use a project folder with structured directories.</p>
+                    
+                    <div class="svg-container">
+                        <svg viewBox="0 0 400 280" style="width: 100%; height: auto;">
+                            <!-- Folder Structure -->
+                            <rect x="50" y="20" width="300" height="240" rx="8" fill="#f7fafc" stroke="#4299e1" stroke-width="2"/>
+                            <text x="200" y="45" text-anchor="middle" font-size="14" font-weight="bold" fill="#2c5282">Project Folder Structure</text>
+                            
+                            <!-- content-in -->
+                            <rect x="70" y="60" width="120" height="40" rx="5" fill="#e6fffa" stroke="#48bb78" stroke-width="2"/>
+                            <text x="130" y="85" text-anchor="middle" font-size="11" font-weight="bold" fill="#2d3748">content-in/</text>
+                            
+                            <!-- content-out -->
+                            <rect x="210" y="60" width="120" height="40" rx="5" fill="#fef5e7" stroke="#ed8936" stroke-width="2"/>
+                            <text x="270" y="85" text-anchor="middle" font-size="11" font-weight="bold" fill="#2d3748">content-out/</text>
+                            
+                            <!-- User input -->
+                            <text x="130" y="125" text-anchor="middle" font-size="10" fill="#4a5568">• walks (transcripts)</text>
+                            <text x="130" y="145" text-anchor="middle" font-size="10" fill="#4a5568">• questions</text>
+                            <text x="130" y="165" text-anchor="middle" font-size="10" fill="#4a5568">• answers</text>
+                            
+                            <!-- AI output -->
+                            <text x="270" y="125" text-anchor="middle" font-size="10" fill="#4a5568">• outlines</text>
+                            <text x="270" y="145" text-anchor="middle" font-size="10" fill="#4a5568">• scripts</text>
+                            <text x="270" y="165" text-anchor="middle" font-size="10" fill="#4a5568">• artifacts</text>
+                            
+                            <!-- claude.md -->
+                            <rect x="150" y="185" width="100" height="35" rx="5" fill="#ebf8ff" stroke="#4299e1" stroke-width="2"/>
+                            <text x="200" y="207" text-anchor="middle" font-size="11" font-weight="bold" fill="#2d3748">claude.md</text>
+                            
+                            <text x="200" y="245" text-anchor="middle" font-size="10" fill="#718096" font-style="italic">Guidance: Read from content-in, write to content-out</text>
+                        </svg>
+                    </div>
+
+                    <h4>Key Benefits:</h4>
+                    <ul>
+                        <li>Files are durable, not ephemeral</li>
+                        <li>Work is reusable across contexts</li>
+                        <li>Can hand off to different agents or future you</li>
+                        <li>Creates a graph of ideas, not just a linear thread</li>
+                    </ul>
+
+                    <h4>Folder Structure:</h4>
+                    <div class="code-snippet">
+project-folder/
+├── content-in/      # Your input: walks, questions, ideas
+├── content-out/     # AI output: scripts, outlines, artifacts
+├── supporting/      # Reference materials
+└── claude.md        # Guidance file for AI behavior
+                    </div>
+
+                    <p><em>This technique is implemented by the do-work pattern's folder structure.</em></p>
+                </div>
+
+                <!-- Technique 3 -->
+                <div class="technique-card">
+                    <div class="technique-number">3</div>
+                    <h3>Verify Your Plans</h3>
+                    <p><strong>The Problem:</strong> AI planning is confident but silently drops ~40% of requirements. Not edge cases—core features.</p>
+                    
+                    <h4>The Solution:</h4>
+                    <p>After AI generates a plan, force it to verify itself. One extra prompt that compares the plan against your requirements.</p>
+                    
+                    <div class="svg-container">
+                        <svg viewBox="0 0 400 220" style="width: 100%; height: auto;">
+                            <!-- Step 1: Request -->
+                            <rect x="20" y="20" width="100" height="50" rx="5" fill="#ebf8ff" stroke="#4299e1" stroke-width="2"/>
+                            <text x="70" y="50" text-anchor="middle" font-size="11" font-weight="bold" fill="#2d3748">Your Request</text>
+                            
+                            <!-- Arrow 1 -->
+                            <path d="M 130 45 L 160 45" stroke="#4299e1" stroke-width="2" fill="none" marker-end="url(#arrow2)"/>
+                            <defs>
+                                <marker id="arrow2" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                                    <polygon points="0 0, 10 3, 0 6" fill="#4299e1" />
+                                </marker>
+                            </defs>
+                            
+                            <!-- Step 2: Initial Plan -->
+                            <rect x="170" y="20" width="100" height="50" rx="5" fill="#fef5e7" stroke="#ed8936" stroke-width="2"/>
+                            <text x="220" y="45" text-anchor="middle" font-size="11" font-weight="bold" fill="#2d3748">Initial Plan</text>
+                            <text x="220" y="60" text-anchor="middle" font-size="9" fill="#ed8936">~40% missing</text>
+                            
+                            <!-- Arrow 2 -->
+                            <path d="M 220 80 L 220 110" stroke="#ed8936" stroke-width="2" fill="none" marker-end="url(#arrow3)"/>
+                            <defs>
+                                <marker id="arrow3" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                                    <polygon points="0 0, 10 3, 0 6" fill="#ed8936" />
+                                </marker>
+                            </defs>
+                            
+                            <!-- Step 3: Verification -->
+                            <rect x="170" y="120" width="100" height="50" rx="5" fill="#fff5f5" stroke="#f56565" stroke-width="2"/>
+                            <text x="220" y="140" text-anchor="middle" font-size="11" font-weight="bold" fill="#2d3748">Verify Plan</text>
+                            <text x="220" y="155" text-anchor="middle" font-size="9" fill="#f56565">Compare vs request</text>
+                            
+                            <!-- Arrow 3 -->
+                            <path d="M 130 145 L 160 145" stroke="#48bb78" stroke-width="2" fill="none" marker-end="url(#arrow4)"/>
+                            <defs>
+                                <marker id="arrow4" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                                    <polygon points="0 0, 10 3, 0 6" fill="#48bb78" />
+                                </marker>
+                            </defs>
+                            
+                            <!-- Step 4: Fixed Plan -->
+                            <rect x="20" y="120" width="100" height="50" rx="5" fill="#f0fff4" stroke="#48bb78" stroke-width="2"/>
+                            <text x="70" y="140" text-anchor="middle" font-size="11" font-weight="bold" fill="#2d3748">Fixed Plan</text>
+                            <text x="70" y="155" text-anchor="middle" font-size="9" fill="#48bb78">95%+ coverage</text>
+                            
+                            <!-- Label -->
+                            <text x="200" y="210" text-anchor="middle" font-size="10" font-style="italic" fill="#718096">One extra prompt catches 40% of missing requirements</text>
+                        </svg>
+                    </div>
+
+                    <h4>Verification Prompt:</h4>
+                    <div class="code-snippet">
+Review the plan you just created against the original request.
+For each major requirement:
+- Mark as: covered / partial / missing
+- Score the overall coverage
+- List top gaps by impact
+- Create a patched plan that addresses all gaps
+                    </div>
+
+                    <h4>Results:</h4>
+                    <ul>
+                        <li>Typical first plan: 60-78% coverage</li>
+                        <li>After verification: 95%+ coverage</li>
+                        <li>Forces second pass with coverage mindset</li>
+                        <li>Catches silently dropped core features</li>
+                    </ul>
+                </div>
+
+                <!-- Technique 4 -->
+                <div class="technique-card">
+                    <div class="technique-number">4</div>
+                    <h3>Clear Your Context</h3>
+                    <p><strong>The Problem:</strong> Long conversations cause instruction decay. "Run tests before you're done" becomes "I'm done!" two hours later.</p>
+                    
+                    <h4>The Solution:</h4>
+                    <p>Clear context at feature request level. Each new unit of work gets a fresh context.</p>
+                    
+                    <div class="svg-container">
+                        <svg viewBox="0 0 400 180" style="width: 100%; height: auto;">
+                            <!-- Long Context (Bad) -->
+                            <g>
+                                <rect x="20" y="20" width="160" height="60" rx="5" fill="#fff5f5" stroke="#f56565" stroke-width="2"/>
+                                <text x="100" y="40" text-anchor="middle" font-size="12" font-weight="bold" fill="#2d3748">Long Context</text>
+                                <text x="100" y="57" text-anchor="middle" font-size="9" fill="#f56565">Feature 1 → 2 → 3 → 4 → 5</text>
+                                <text x="100" y="72" text-anchor="middle" font-size="9" fill="#f56565">Instructions fade...</text>
+                            </g>
+                            
+                            <!-- Fresh Context (Good) -->
+                            <g>
+                                <rect x="220" y="20" width="160" height="60" rx="5" fill="#f0fff4" stroke="#48bb78" stroke-width="2"/>
+                                <text x="300" y="40" text-anchor="middle" font-size="12" font-weight="bold" fill="#2d3748">Fresh Contexts</text>
+                                <text x="300" y="57" text-anchor="middle" font-size="9" fill="#48bb78">F1→clear F2→clear F3→clear</text>
+                                <text x="300" y="72" text-anchor="middle" font-size="9" fill="#48bb78">Always sharp!</text>
+                            </g>
+                            
+                            <!-- Memory Strategy -->
+                            <rect x="50" y="110" width="300" height="50" rx="5" fill="#ebf8ff" stroke="#4299e1" stroke-width="2"/>
+                            <text x="200" y="130" text-anchor="middle" font-size="11" font-weight="bold" fill="#2d3748">Memory Strategy: External Documents</text>
+                            <text x="200" y="148" text-anchor="middle" font-size="10" fill="#4a5568">Don't rely on AI memory—write it to a file!</text>
+                        </svg>
+                    </div>
+
+                    <h4>The Rule:</h4>
+                    <p><span class="highlight">If something needs to survive across contexts, write it to a document.</span> Don't hope the model remembers it.</p>
+
+                    <h4>Key Benefits:</h4>
+                    <ul>
+                        <li>Prevents context decay over long sessions</li>
+                        <li>Each feature starts with fresh instructions</li>
+                        <li>Works with folder technique for external memory</li>
+                        <li>Maintains quality across hours of work</li>
+                    </ul>
+
+                    <h4>Implementation:</h4>
+                    <p>Use sub-agents (in Claude Code) to spin up fresh contexts for each work item. The do-work pattern does this automatically.</p>
+
+                    <p><em>This is core to the do-work pattern's sub-agent approach.</em></p>
+                </div>
+
+                <!-- Technique 5 -->
+                <div class="technique-card">
+                    <div class="technique-number">5</div>
+                    <h3>Walk Away (Autonomous + Traceable)</h3>
+                    <p><strong>The Problem:</strong> You become a babysitter, not a builder. Approving, switching tabs, checking progress—exhausting.</p>
+                    
+                    <h4>The Solution:</h4>
+                    <p>Build autonomous workflows that run for hours with full traceability. The do-work system is Matt's implementation.</p>
+                    
+                    <div class="svg-container">
+                        <svg viewBox="0 0 400 240" style="width: 100%; height: auto;">
+                            <!-- Two Terminal Setup -->
+                            <rect x="20" y="20" width="160" height="180" rx="8" fill="#f0fff4" stroke="#48bb78" stroke-width="2"/>
+                            <text x="100" y="45" text-anchor="middle" font-size="12" font-weight="bold" fill="#2d3748">Terminal 1: CAPTURE</text>
+                            <text x="100" y="70" text-anchor="middle" font-size="10" fill="#4a5568">💬 Talk to Claude</text>
+                            <text x="100" y="90" text-anchor="middle" font-size="10" fill="#4a5568">📝 Drop ideas</text>
+                            <text x="100" y="110" text-anchor="middle" font-size="10" fill="#4a5568">⚡ Instant capture</text>
+                            <rect x="35" y="125" width="130" height="60" rx="5" fill="#e6fffa"/>
+                            <text x="100" y="145" text-anchor="middle" font-size="9" fill="#2d3748">do-work skill creates</text>
+                            <text x="100" y="160" text-anchor="middle" font-size="9" fill="#2d3748">request files in</text>
+                            <text x="100" y="175" text-anchor="middle" font-size="9" font-weight="bold" fill="#48bb78">do-work/requests/</text>
+                            
+                            <rect x="220" y="20" width="160" height="180" rx="8" fill="#ebf8ff" stroke="#4299e1" stroke-width="2"/>
+                            <text x="300" y="45" text-anchor="middle" font-size="12" font-weight="bold" fill="#2d3748">Terminal 2: BUILD</text>
+                            <text x="300" y="70" text-anchor="middle" font-size="10" fill="#4a5568">🔄 Work loop runs</text>
+                            <text x="300" y="90" text-anchor="middle" font-size="10" fill="#4a5568">🏗️ Builds features</text>
+                            <text x="300" y="110" text-anchor="middle" font-size="10" fill="#4a5568">✅ Commits with trace</text>
+                            <rect x="235" y="125" width="130" height="60" rx="5" fill="#dbeafe"/>
+                            <text x="300" y="145" text-anchor="middle" font-size="9" fill="#2d3748">Picks requests</text>
+                            <text x="300" y="160" text-anchor="middle" font-size="9" fill="#2d3748">Fresh context/item</text>
+                            <text x="300" y="175" text-anchor="middle" font-size="9" font-weight="bold" fill="#4299e1">Runs for hours</text>
+                            
+                            <text x="200" y="225" text-anchor="middle" font-size="11" font-weight="bold" fill="#2c5282">Capture ← → Build (simultaneously)</text>
+                        </svg>
+                    </div>
+
+                    <h4>Key Requirements:</h4>
+                    <ul>
+                        <li><strong>Autonomous:</strong> Runs without supervision</li>
+                        <li><strong>Traceable:</strong> Every change tracked with full context</li>
+                        <li><strong>Commits:</strong> Automatic git commits per request</li>
+                        <li><strong>Two terminals:</strong> Capture on one, build on other</li>
+                    </ul>
+
+                    <h4>Results:</h4>
+                    <ul>
+                        <li>Works for multiple hours unattended</li>
+                        <li>25+ changes in a single run</li>
+                        <li>Full git history with context</li>
+                        <li>Can debug regressions by reviewing commits</li>
+                    </ul>
+
+                    <p><em>This is exactly what the do-work pattern implements.</em></p>
+                </div>
+
+                <!-- Technique 6 -->
+                <div class="technique-card">
+                    <div class="technique-number">6</div>
+                    <h3>Build Your Own Tools</h3>
+                    <p><strong>The Problem:</strong> Off-the-shelf tools are generic, built for everyone—perfectly for nobody.</p>
+                    
+                    <h4>The Solution:</h4>
+                    <p>The bar for building custom tools with AI is on the floor. Build slash commands, scripts, skills, and hooks for your workflow.</p>
+                    
+                    <div class="svg-container">
+                        <svg viewBox="0 0 400 200" style="width: 100%; height: auto;">
+                            <!-- Build Tools with Conversation -->
+                            <rect x="50" y="20" width="300" height="80" rx="8" fill="url(#toolGrad)" stroke="#2c5282" stroke-width="2"/>
+                            <defs>
+                                <linearGradient id="toolGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                                    <stop offset="0%" style="stop-color:#ebf8ff;stop-opacity:1" />
+                                    <stop offset="100%" style="stop-color:#fef5e7;stop-opacity:1" />
+                                </linearGradient>
+                            </defs>
+                            <text x="200" y="45" text-anchor="middle" font-size="13" font-weight="bold" fill="#2d3748">Just Have a Conversation with Claude</text>
+                            <text x="200" y="65" text-anchor="middle" font-size="10" fill="#4a5568">"Hey Claude, we keep doing X. Can you build a skill?"</text>
+                            <text x="200" y="85" text-anchor="middle" font-size="10" fill="#ed8936" font-weight="bold">No code written by hand!</text>
+                            
+                            <!-- Tool Examples -->
+                            <rect x="20" y="120" width="90" height="60" rx="5" fill="#f0fff4" stroke="#48bb78" stroke-width="1"/>
+                            <text x="65" y="140" text-anchor="middle" font-size="10" font-weight="bold" fill="#2d3748">Skills</text>
+                            <text x="65" y="157" text-anchor="middle" font-size="8" fill="#4a5568">Custom slash</text>
+                            <text x="65" y="170" text-anchor="middle" font-size="8" fill="#4a5568">commands</text>
+                            
+                            <rect x="125" y="120" width="90" height="60" rx="5" fill="#fef5e7" stroke="#ed8936" stroke-width="1"/>
+                            <text x="170" y="140" text-anchor="middle" font-size="10" font-weight="bold" fill="#2d3748">Scripts</text>
+                            <text x="170" y="157" text-anchor="middle" font-size="8" fill="#4a5568">Automation</text>
+                            <text x="170" y="170" text-anchor="middle" font-size="8" fill="#4a5568">workflows</text>
+                            
+                            <rect x="230" y="120" width="90" height="60" rx="5" fill="#fff5f5" stroke="#f56565" stroke-width="1"/>
+                            <text x="275" y="140" text-anchor="middle" font-size="10" font-weight="bold" fill="#2d3748">Hooks</text>
+                            <text x="275" y="157" text-anchor="middle" font-size="8" fill="#4a5568">Event-driven</text>
+                            <text x="275" y="170" text-anchor="middle" font-size="8" fill="#4a5568">actions</text>
+                            
+                            <rect x="335" y="120" width="45" height="60" rx="5" fill="#ebf8ff" stroke="#4299e1" stroke-width="1"/>
+                            <text x="357" y="140" text-anchor="middle" font-size="10" font-weight="bold" fill="#2d3748">...</text>
+                            <text x="357" y="157" text-anchor="middle" font-size="8" fill="#4a5568">Any</text>
+                            <text x="357" y="170" text-anchor="middle" font-size="8" fill="#4a5568">tool!</text>
+                        </svg>
+                    </div>
+
+                    <h4>Examples:</h4>
+                    <ul>
+                        <li><strong>Completion sound:</strong> Custom notification when build finishes</li>
+                        <li><strong>do-work skill:</strong> The entire autonomous workflow system</li>
+                        <li><strong>vid-skills:</strong> Matt's video production workflow</li>
+                        <li><strong>Project-specific skills:</strong> Whatever pattern you repeat</li>
+                    </ul>
+
+                    <h4>The Meta Point:</h4>
+                    <p class="highlight">Every practice in this guide was built by having conversations with Claude. The workflow itself is a product—iterate on it like any product.</p>
+
+                    <h4>How Skills Work:</h4>
+                    <div class="code-snippet">
+# Skills are just markdown files with actions
+# Claude writes them through conversation
+# They integrate as slash commands in Claude Code
+
+Example: /do-work capture
+         /do-work run
+         /do-work verify
+                    </div>
+                </div>
+            </div>
+
+            <!-- The Most Powerful Pattern -->
+            <div class="powerful-pattern">
+                <h2>⚡ The Most Powerful Pattern: do-work</h2>
+                
+                <p style="font-size: 1.15em; margin-bottom: 25px;">The do-work pattern is Matt's implementation of Techniques #2, #4, and #5 working together. It's a full development workflow built entirely by talking to Claude—no code written by hand.</p>
+
+                <div class="workflow-diagram">
+                    <h3 style="text-align: center; margin-bottom: 25px; color: var(--primary);">The do-work Workflow</h3>
+                    <svg viewBox="0 0 500 400" style="width: 100%; height: auto;">
+                        <!-- Background layers -->
+                        <rect x="10" y="10" width="480" height="380" rx="10" fill="#f7fafc" stroke="#e2e8f0" stroke-width="2"/>
+                        
+                        <!-- Capture Side -->
+                        <rect x="30" y="40" width="200" height="330" rx="8" fill="#f0fff4" stroke="#48bb78" stroke-width="3"/>
+                        <text x="130" y="65" text-anchor="middle" font-size="14" font-weight="bold" fill="#2d3748">CAPTURE TERMINAL</text>
+                        
+                        <circle cx="130" cy="100" r="30" fill="#48bb78" opacity="0.2"/>
+                        <text x="130" y="105" text-anchor="middle" font-size="20">💬</text>
+                        
+                        <text x="130" y="145" text-anchor="middle" font-size="11" fill="#2d3748">You: Talk to Claude</text>
+                        <text x="130" y="165" text-anchor="middle" font-size="11" fill="#2d3748">"Move description to mobile only"</text>
+                        
+                        <rect x="50" y="185" width="160" height="40" rx="5" fill="#e6fffa" stroke="#48bb78" stroke-width="2"/>
+                        <text x="130" y="200" text-anchor="middle" font-size="10" font-weight="bold" fill="#2d3748">/do-work capture</text>
+                        <text x="130" y="215" text-anchor="middle" font-size="9" fill="#4a5568">Creates request file</text>
+                        
+                        <path d="M 130 235 L 130 260" stroke="#48bb78" stroke-width="2" marker-end="url(#arrowCapture)"/>
+                        <defs>
+                            <marker id="arrowCapture" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                                <polygon points="0 0, 10 3, 0 6" fill="#48bb78" />
+                            </marker>
+                        </defs>
+                        
+                        <rect x="50" y="270" width="160" height="80" rx="5" fill="white" stroke="#48bb78" stroke-width="2"/>
+                        <text x="130" y="290" text-anchor="middle" font-size="10" font-weight="bold" fill="#2d3748">do-work/</text>
+                        <text x="130" y="307" text-anchor="middle" font-size="9" fill="#4a5568">📁 requests/</text>
+                        <text x="130" y="322" text-anchor="middle" font-size="9" fill="#4a5568">📄 request-001.md</text>
+                        <text x="130" y="337" text-anchor="middle" font-size="9" fill="#4a5568">📄 request-002.md</text>
+                        
+                        <!-- Build Side -->
+                        <rect x="270" y="40" width="200" height="330" rx="8" fill="#ebf8ff" stroke="#4299e1" stroke-width="3"/>
+                        <text x="370" y="65" text-anchor="middle" font-size="14" font-weight="bold" fill="#2d3748">BUILD TERMINAL</text>
+                        
+                        <circle cx="370" cy="100" r="30" fill="#4299e1" opacity="0.2"/>
+                        <text x="370" y="105" text-anchor="middle" font-size="20">🔄</text>
+                        
+                        <rect x="290" y="125" width="160" height="40" rx="5" fill="#dbeafe" stroke="#4299e1" stroke-width="2"/>
+                        <text x="370" y="140" text-anchor="middle" font-size="10" font-weight="bold" fill="#2d3748">/do-work run</text>
+                        <text x="370" y="155" text-anchor="middle" font-size="9" fill="#4a5568">Starts work loop</text>
+                        
+                        <path d="M 370 175 L 370 195" stroke="#4299e1" stroke-width="2" marker-end="url(#arrowBuild)"/>
+                        <defs>
+                            <marker id="arrowBuild" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                                <polygon points="0 0, 10 3, 0 6" fill="#4299e1" />
+                            </marker>
+                        </defs>
+                        
+                        <rect x="290" y="205" width="160" height="145" rx="5" fill="white" stroke="#4299e1" stroke-width="2"/>
+                        <text x="370" y="225" text-anchor="middle" font-size="10" font-weight="bold" fill="#2d3748">For each request:</text>
+                        <text x="370" y="245" text-anchor="middle" font-size="9" fill="#4a5568">1. Move to /working</text>
+                        <text x="370" y="262" text-anchor="middle" font-size="9" fill="#4a5568">2. Plan in sub-agent</text>
+                        <text x="370" y="279" text-anchor="middle" font-size="9" fill="#4a5568">3. Build in fresh context</text>
+                        <text x="370" y="296" text-anchor="middle" font-size="9" fill="#4a5568">4. Test &amp; commit</text>
+                        <text x="370" y="313" text-anchor="middle" font-size="9" fill="#4a5568">5. Move to /archive</text>
+                        <text x="370" y="330" text-anchor="middle" font-size="9" fill="#48bb78" font-weight="bold">6. Loop to next ↻</text>
+                        
+                        <!-- Connection between sides -->
+                        <path d="M 240 285 L 260 285" stroke="#ed8936" stroke-width="3" stroke-dasharray="5,5"/>
+                        <text x="250" y="278" text-anchor="middle" font-size="10" fill="#ed8936" font-weight="bold">Shared Folder</text>
+                    </svg>
+                </div>
+
+                <h3 style="color: var(--primary); margin-top: 30px; margin-bottom: 15px;">How It Works</h3>
+                
+                <div style="background: white; padding: 25px; border-radius: 8px; margin-bottom: 20px;">
+                    <h4 style="color: var(--secondary); margin-bottom: 10px;">Two Skills, Two Terminals</h4>
+                    
+                    <p><strong>Terminal 1 - Capture:</strong></p>
+                    <ul style="margin-left: 25px; margin-bottom: 15px;">
+                        <li>Have normal conversations with Claude</li>
+                        <li>When you have an idea: <code style="background: #fef5e7; padding: 2px 6px; border-radius: 3px;">/do-work capture [your idea]</code></li>
+                        <li>Claude analyzes if it's one or multiple requests</li>
+                        <li>Creates separate request files for unrelated items</li>
+                        <li>Keeps related items together</li>
+                    </ul>
+
+                    <p><strong>Terminal 2 - Build:</strong></p>
+                    <ul style="margin-left: 25px;">
+                        <li>Run: <code style="background: #ebf8ff; padding: 2px 6px; border-radius: 3px;">/do-work run</code></li>
+                        <li>Picks first pending request from queue</li>
+                        <li>Moves it to "working" folder</li>
+                        <li>Spins up sub-agent with fresh context</li>
+                        <li>Plans if needed (or skips for simple changes)</li>
+                        <li>Executes the work</li>
+                        <li>Commits with full traceability</li>
+                        <li>Moves to "archive"</li>
+                        <li>Loops back for next request</li>
+                    </ul>
+                </div>
+
+                <h3 style="color: var(--primary); margin-bottom: 15px;">Folder Structure</h3>
+                <div class="code-snippet">
+do-work/
+├── requests/        # Pending work items
+├── working/         # Currently being built
+├── archive/         # Completed with full context
+└── screenshots/     # Visual references saved
+                </div>
+
+                <div class="key-benefits">
+                    <h3>Why This Pattern Is Powerful</h3>
+                    <ul>
+                        <li><strong>Implements Multiple Techniques:</strong> Folder workspace (#2), clear context (#4), autonomous workflow (#5)</li>
+                        <li><strong>True Autonomy:</strong> Works for hours without supervision—Matt has run it through 25+ changes</li>
+                        <li><strong>Full Traceability:</strong> Every change committed with complete context—can debug regressions</li>
+                        <li><strong>Smart Task Decomposition:</strong> Automatically determines if items should be together or separate</li>
+                        <li><strong>Context Management:</strong> Each request gets fresh sub-agent—no context pollution</li>
+                        <li><strong>Flexible Planning:</strong> Plans when needed, skips for simple changes</li>
+                        <li><strong>Built by Conversation:</strong> No manual coding—just talk to Claude about what you want</li>
+                        <li><strong>Two-Terminal Workflow:</strong> Capture ideas instantly while build runs independently</li>
+                        <li><strong>Orchestrator Pattern:</strong> Flat architecture prevents token runaway from nested sub-agents</li>
+                    </ul>
+                </div>
+
+                <h3 style="color: var(--primary); margin-top: 30px; margin-bottom: 15px;">Installation</h3>
+                <div class="code-snippet">
+# Install the do-work skills
+npx add-skill https://github.com/bladnman/do-work
+
+# Choose "global" to use across all projects
+# Skills install as markdown files with actions
+# Accessible via /do-work command in Claude Code
+                </div>
+
+                <h3 style="color: var(--primary); margin-top: 25px; margin-bottom: 15px;">Real-World Results</h3>
+                <ul style="margin-left: 25px;">
+                    <li>✅ Runs for multiple hours continuously</li>
+                    <li>✅ 25+ successful changes in one session</li>
+                    <li>✅ Full git history with context for debugging</li>
+                    <li>✅ Can walk away and return to completed work</li>
+                    <li>✅ Custom notifications (completion sounds) when done</li>
+                    <li>✅ Handles both simple tweaks and complex features</li>
+                </ul>
+            </div>
+
+            <!-- Implementation Philosophy -->
+            <div style="background: linear-gradient(135deg, #fef5e7 0%, #fdebd0 100%); padding: 30px; border-radius: 12px; margin: 40px 0;">
+                <h2 style="color: var(--accent); margin-bottom: 20px;">🎯 The Meta Point</h2>
+                <p style="font-size: 1.1em; line-height: 1.8;">
+                    These aren't tips—they're things Matt built, tested, threw away, and rebuilt until they survived. 
+                    <strong>The workflow itself is a product</strong>, and it gets better the same way products get better: through iteration.
+                </p>
+                <p style="font-size: 1.1em; line-height: 1.8; margin-top: 15px;">
+                    You don't need to adopt all six practices at once. <span class="highlight">Pick one lever and pull.</span> 
+                    Start with voice-to-text (#1) or folder workspaces (#2). Build from there based on what friction you encounter.
+                </p>
+                <p style="font-size: 1.1em; line-height: 1.8; margin-top: 15px; font-style: italic;">
+                    "If you've ever thought 'I wish Claude could just handle this for me'—it probably can. You just have to ask."
+                    <br><strong>— Matt Maher</strong>
+                </p>
+            </div>
+
+            <!-- Quick Reference -->
+            <div style="background: var(--bg-light); padding: 30px; border-radius: 12px; margin: 40px 0;">
+                <h2 style="color: var(--primary); margin-bottom: 20px;">📋 Quick Reference</h2>
+                
+                <h3 style="color: var(--secondary); margin-bottom: 10px;">The 6 Techniques Summary</h3>
+                <ol style="margin-left: 25px; line-height: 2;">
+                    <li><strong>Voice, Not Text:</strong> Talk instead of typing to capture raw intent</li>
+                    <li><strong>Folder Workspace:</strong> Treat folders as durable workspaces, not chat</li>
+                    <li><strong>Verify Plans:</strong> Force AI to grade its own plan against requirements</li>
+                    <li><strong>Clear Context:</strong> Fresh context per feature prevents instruction decay</li>
+                    <li><strong>Walk Away:</strong> Build autonomous + traceable workflows</li>
+                    <li><strong>Build Tools:</strong> The bar is low—create custom skills through conversation</li>
+                </ol>
+
+                <h3 style="color: var(--secondary); margin-top: 25px; margin-bottom: 10px;">do-work Commands</h3>
+                <div class="code-snippet">
+/do-work capture     # Capture new ideas/requests
+/do-work run         # Start the autonomous work loop
+/do-work verify      # Verify latest request coverage
+/do-work cleanup     # Clean up completed items
+                </div>
+
+                <h3 style="color: var(--secondary); margin-top: 25px; margin-bottom: 10px;">Key Stats</h3>
+                <ul style="list-style: none; margin-left: 0;">
+                    <li>📉 <strong>40%</strong> of requirements silently dropped in initial plans</li>
+                    <li>📈 <strong>95%+</strong> coverage after verification step</li>
+                    <li>⏱️ <strong>Multiple hours</strong> of autonomous work possible</li>
+                    <li>✅ <strong>25+</strong> successful changes in one session</li>
+                    <li>🧠 <strong>0</strong> lines of code written by hand for do-work</li>
+                </ul>
+            </div>
+
+        </div>
+
+        <footer>
+            <p><strong>Resources</strong></p>
+            <p style="margin: 15px 0;">
+                <a href="https://www.youtube.com/watch?v=kf6h6DOPjpI" target="_blank" rel="noopener noreferrer">AI Techniques Distilled (6 Practices)</a> | 
+                <a href="https://www.youtube.com/watch?v=I9-tdhxiH7w" target="_blank" rel="noopener noreferrer">Most Powerful Claude Code Pattern</a> | 
+                <a href="https://github.com/bladnman/do-work" target="_blank" rel="noopener noreferrer">do-work GitHub Repository</a>
+            </p>
+            <p style="margin-top: 20px; font-size: 0.9em; opacity: 0.9;">
+                Content distilled from Matt Maher's YouTube videos (February 2026)<br>
+                Created as an educational guide for Claude Code meta-programming
+            </p>
+        </footer>
+    </div>
+</body>
+</html>
+
