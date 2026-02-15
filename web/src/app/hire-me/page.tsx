@@ -29,8 +29,29 @@ export default function HireMePage() {
       </h1>
       <p className="mt-4 text-lg text-text-secondary">
         These tools help you, the hiring manager, quickly evaluate whether I am
-        good fit for your job opportunity.
+        a good fit for your job opportunity:
       </p>
+      <ul className="mt-3 ml-6 space-y-2 list-disc text-lg text-text-secondary">
+        <li>Evaluate my fitness: strong, average and weak aspects</li>
+        <li>Generate a tailored resume</li>
+      </ul>
+      <p className="mt-2 text-lg text-text-secondary">
+        Or just have a casual chat about my professional experience.
+      </p>
+      <ul className="mt-3 ml-6 space-y-2 list-disc text-lg text-text-secondary">
+        <li>
+          File inputs can be in .docx, .html, .txt, or .md format.
+          <ul className="mt-1 ml-5 space-y-1 list-[circle]">
+            <li>You can also paste or link in your job description. (Sorry, no .pdf inputs.)</li>
+          </ul>
+        </li>
+        <li>
+          Downloads are a complete .zip package with both inputs and outputs of
+          your session for traceability. Typically, you'll select the output
+          folder after it's unzipped and choose your file in the formats of .txt,
+          .md and .html.
+        </li>
+      </ul>
 
       {/* Job Context Bar — outside ToolGate */}
       <div className="mt-8">
