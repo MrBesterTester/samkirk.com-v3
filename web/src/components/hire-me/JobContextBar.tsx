@@ -352,7 +352,7 @@ export function JobContextBar({
               ) : (
                 <div>
                   <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                    Click to select or drag and drop
+                    Click to select a file
                   </p>
                   <p className="mt-1 text-xs text-zinc-500">
                     DOCX, TXT, MD (max 10MB)
