@@ -780,7 +780,7 @@ export async function storeResumeArtifacts(
 
   // Store the PDF resume
   const { renderResumePdf } = await import("./pdf-renderer");
-  const pdfBuffer = await renderResumePdf(resume.content, resume.citations);
+  const pdfBuffer = await renderResumePdf(resume.content);
   const pdfPath = PrivatePaths.submissionOutput(submissionId, "resume.pdf");
   await writeBuffer(bucket, pdfPath, pdfBuffer, "application/pdf");
 

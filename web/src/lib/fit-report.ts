@@ -594,7 +594,7 @@ export async function storeFitReportArtifacts(
 
   // Store the PDF report
   const { renderFitReportPdf } = await import("./pdf-renderer");
-  const pdfBuffer = await renderFitReportPdf(report.analysis, state.extracted, report.citations);
+  const pdfBuffer = await renderFitReportPdf(report.analysis, state.extracted);
   const pdfPath = PrivatePaths.submissionOutput(submissionId, "report.pdf");
   await writeBuffer(bucket, pdfPath, pdfBuffer, "application/pdf");
 
