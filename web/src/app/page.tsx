@@ -46,7 +46,7 @@ export default function Home() {
         <div className="mx-auto mt-2 max-w-md text-text-secondary">
           <p>Regarding your job opportunity:</p>
           <ul className="mt-1 list-disc space-y-1 pl-6">
-            <li>Evaluate my fitness: strong, average, weak aspects</li>
+            <li>Evaluate my fitness: strong, average and weak aspects</li>
             <li>Generate a tailored resume</li>
           </ul>
           <p className="mt-1">
