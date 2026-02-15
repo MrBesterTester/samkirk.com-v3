@@ -13,8 +13,10 @@ import { z } from "zod";
 export const MAX_JOB_FILE_SIZE = 10 * 1024 * 1024;
 
 /** Allowed file extensions for job uploads */
+// NOTE: PDF support is disabled for now due to complexity — code is preserved
+// in extractTextFromPdf() for future use. Re-add ".pdf" here to re-enable.
 export const ALLOWED_JOB_EXTENSIONS = [
-  ".pdf",
+  // ".pdf",
   ".docx",
   ".txt",
   ".md",
@@ -23,7 +25,7 @@ export type AllowedJobExtension = (typeof ALLOWED_JOB_EXTENSIONS)[number];
 
 /** MIME types for each extension */
 export const JOB_MIME_TYPES: Record<AllowedJobExtension, string[]> = {
-  ".pdf": ["application/pdf"],
+  // ".pdf": ["application/pdf"],
   ".docx": [
     "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
   ],
@@ -526,8 +528,8 @@ export async function extractTextFromFile(
       case ".txt":
       case ".md":
         return extractTextFromTextFile(buffer, filename);
-      case ".pdf":
-        return await extractTextFromPdf(buffer, filename);
+      // case ".pdf":
+      //   return await extractTextFromPdf(buffer, filename);
       case ".docx":
         return await extractTextFromDocx(buffer, filename);
       default:
