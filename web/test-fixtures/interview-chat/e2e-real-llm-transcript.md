@@ -1,44 +1,44 @@
 # Interview Transcript
 
 **Candidate:** Sam Kirk
-**Date:** 2/13/2026
+**Date:** 2/14/2026
 **Total Messages:** 4
 
 ---
 
-**Interviewer:** *(10:19:35 PM)*
+**Interviewer:** *(5:58:48 PM)*
 
 What programming languages do you know?
 
 ---
 
-**Sam Kirk:** *(10:19:35 PM)*
+**Sam Kirk:** *(5:58:48 PM)*
 
-I have experience with a variety of programming languages. I'm proficient in TypeScript, JavaScript, Python, and Go. I've used these languages extensively in building web applications, microservices, and AI systems.
+I have experience with a variety of programming languages throughout my career. I have over 15 years of experience with C, using it at companies like TRW/Vidar, ROLM/IBM, Frox, Media Vision, ESS, Teradyne, Sun, and AOptix. I've also been working with Python for over 8 years, from LTX-Credence to my current consulting work at SAK Consulting. Additionally, I have some experience with C++, primarily during my time at LTX-Credence. I also have experience with assembly languages, including 68K and 8080 assembly from my time at Motorola, ROLM/IBM, Frox, and TRW/Vidar.
 
 
 ---
 
-**Interviewer:** *(10:19:35 PM)*
+**Interviewer:** *(5:58:48 PM)*
 
 Tell me about your most recent role.
 
 ---
 
-**Sam Kirk:** *(10:19:35 PM)*
+**Sam Kirk:** *(5:58:48 PM)*
 
-In my most recent role as a Senior Engineer at TechCorp (2019-2024), I led the development of an AI-powered analytics dashboard that served over 50,000 users. This involved a lot of work with large datasets and real-time data processing.
-
-I also built a microservices architecture using Node.js and GCP Cloud Run to ensure the application was scalable and reliable. I enjoyed mentoring a team of 5 engineers, helping them grow their skills and contribute effectively to the project. It was a challenging but rewarding experience.
+Most recently, I've been working as Chief Consulting Engineer at SAK Consulting since March 2022. My focus is on AI-assisted software development, applying generative AI to testing and documentation. I'm essentially taking a graduate-level approach to studying how AI can improve software development, especially in testing and creating documentation that's useful for both humans and AI chatbots. I've become proficient at prompt engineering, using tools like Perplexity.ai for research, Claude Code for development, and ChatGPT for various tasks. I'm using tools like Next.js, Cursor, and Vertex AI to build full-stack applications. You can see examples of my work at samkirk.com.
 
 
 ---
 
 ## Sources Referenced
 
-1. **Summary** — h2:Summary
-2. **Experience** — h2:Experience
-3. **Skills** — h2:Skills
+1. **Employment History > Sr. Software Engineer — LTX-Credence (2012-2014)** — h1:Employment History > h2:Sr. Software Engineer — LTX-Credence (2012-2014)
+2. **Aggregated Skills Summary** — h1:Aggregated Skills Summary
+3. **Employment History > Chief Consulting Engineer — SAK Consulting (Current, 2022-present) > Projects — Creative & Explorations** — h1:Employment History > h2:Chief Consulting Engineer — SAK Consulting (Current, 2022-present) > h3:Projects — Creative & Explorations
+4. **Samuel A. Kirk > Contact Information** — h1:Samuel A. Kirk > h2:Contact Information
+5. **Employment History > Field Applications Engineer — Motorola Semiconductor (1984-1985)** — h1:Employment History > h2:Field Applications Engineer — Motorola Semiconductor (1984-1985)
 
 ---
 
