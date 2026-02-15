@@ -37,7 +37,7 @@ describe("job-ingestion constants", () => {
   });
 
   it("should have correct allowed extensions", () => {
-    expect(ALLOWED_JOB_EXTENSIONS).toEqual([".pdf", ".docx", ".txt", ".md"]);
+    expect(ALLOWED_JOB_EXTENSIONS).toEqual([".docx", ".html", ".htm", ".txt", ".md"]);
   });
 
   it("should have URL_FETCH_TIMEOUT set to 15 seconds", () => {
@@ -118,8 +118,9 @@ describe("getFileExtension", () => {
 
 describe("isAllowedExtension", () => {
   it("should return true for allowed extensions", () => {
-    expect(isAllowedExtension(".pdf")).toBe(true);
     expect(isAllowedExtension(".docx")).toBe(true);
+    expect(isAllowedExtension(".html")).toBe(true);
+    expect(isAllowedExtension(".htm")).toBe(true);
     expect(isAllowedExtension(".txt")).toBe(true);
     expect(isAllowedExtension(".md")).toBe(true);
   });
@@ -127,6 +128,7 @@ describe("isAllowedExtension", () => {
   it("should return false for disallowed extensions", () => {
     expect(isAllowedExtension(".exe")).toBe(false);
     expect(isAllowedExtension(".doc")).toBe(false);
+    expect(isAllowedExtension(".pdf")).toBe(false);
     expect(isAllowedExtension(".rtf")).toBe(false);
     expect(isAllowedExtension("")).toBe(false);
   });
@@ -386,12 +388,20 @@ describe("ingestFromUrl", () => {
 // ============================================================================
 
 describe("validateJobFileMetadata", () => {
-  it("should validate correct PDF metadata", () => {
+  it("should validate correct HTML metadata", () => {
     const ext = validateJobFileMetadata({
-      filename: "job.pdf",
+      filename: "job.html",
       size: 1024,
     });
-    expect(ext).toBe(".pdf");
+    expect(ext).toBe(".html");
+  });
+
+  it("should validate correct HTM metadata", () => {
+    const ext = validateJobFileMetadata({
+      filename: "job.htm",
+      size: 1024,
+    });
+    expect(ext).toBe(".htm");
   });
 
   it("should validate correct DOCX metadata", () => {
@@ -439,7 +449,7 @@ describe("validateJobFileMetadata", () => {
   it("should throw for file too large", () => {
     expect(() =>
       validateJobFileMetadata({
-        filename: "job.pdf",
+        filename: "job.docx",
         size: MAX_JOB_FILE_SIZE + 1,
       })
     ).toThrow(/10MB/);
@@ -448,7 +458,7 @@ describe("validateJobFileMetadata", () => {
   it("should throw FILE_TOO_LARGE code for oversized file", () => {
     try {
       validateJobFileMetadata({
-        filename: "job.pdf",
+        filename: "job.docx",
         size: MAX_JOB_FILE_SIZE + 1,
       });
     } catch (error) {
@@ -469,7 +479,7 @@ describe("validateJobFileMetadata", () => {
   it("should throw for zero size", () => {
     expect(() =>
       validateJobFileMetadata({
-        filename: "job.pdf",
+        filename: "job.docx",
         size: 0,
       })
     ).toThrow();
@@ -478,7 +488,7 @@ describe("validateJobFileMetadata", () => {
   it("should throw for negative size", () => {
     expect(() =>
       validateJobFileMetadata({
-        filename: "job.pdf",
+        filename: "job.docx",
         size: -100,
       })
     ).toThrow();
@@ -641,10 +651,10 @@ describe("edge cases", () => {
 
   it("should preserve case sensitivity in file extensions validation", () => {
     const upperExt = validateJobFileMetadata({
-      filename: "JOB.PDF",
+      filename: "JOB.HTML",
       size: 100,
     });
-    expect(upperExt).toBe(".pdf");
+    expect(upperExt).toBe(".html");
 
     const mixedExt = validateJobFileMetadata({
       filename: "Document.DOCX",

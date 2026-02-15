@@ -333,7 +333,7 @@ export function JobContextBar({
               <input
                 ref={fileInputRef}
                 type="file"
-                accept=".docx,.txt,.md"
+                accept=".docx,.html,.htm,.txt,.md"
                 onChange={(e) =>
                   setSelectedFile(e.target.files?.[0] || null)
                 }
@@ -355,7 +355,7 @@ export function JobContextBar({
                     Click to select a file
                   </p>
                   <p className="mt-1 text-xs text-zinc-500">
-                    DOCX, TXT, MD (max 10MB)
+                    DOCX, HTML, TXT, MD (max 10MB)
                   </p>
                 </div>
               )}

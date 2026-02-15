@@ -18,6 +18,8 @@ export const MAX_JOB_FILE_SIZE = 10 * 1024 * 1024;
 export const ALLOWED_JOB_EXTENSIONS = [
   // ".pdf",
   ".docx",
+  ".html",
+  ".htm",
   ".txt",
   ".md",
 ] as const;
@@ -29,6 +31,8 @@ export const JOB_MIME_TYPES: Record<AllowedJobExtension, string[]> = {
   ".docx": [
     "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
   ],
+  ".html": ["text/html"],
+  ".htm": ["text/html"],
   ".txt": ["text/plain"],
   ".md": ["text/markdown", "text/plain"],
 };
@@ -530,6 +534,9 @@ export async function extractTextFromFile(
         return extractTextFromTextFile(buffer, filename);
       // case ".pdf":
       //   return await extractTextFromPdf(buffer, filename);
+      case ".html":
+      case ".htm":
+        return extractTextFromHtml(buffer.toString("utf-8"));
       case ".docx":
         return await extractTextFromDocx(buffer, filename);
       default:
