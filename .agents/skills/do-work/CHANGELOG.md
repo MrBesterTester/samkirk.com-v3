@@ -4,6 +4,13 @@ What's new, what's better, what's different. Most recent stuff on top.
 
 ---
 
+## 0.12.3 — The Explicit Loop (2026-02-14)
+
+Made the UR completion check algorithm explicit so agents can follow it mechanically. The previous prose said the current REQ "counts as resolved implicitly," but agents iterating the `requests` array and searching archive locations would miss the current REQ (still in `working/`) and wrongly conclude the UR isn't ready. Now it's a clear pseudocode loop: skip the current REQ ID, search the three archive locations for everything else.
+
+- Rewrote UR completion check (work.md ~line 756) as step-by-step pseudocode algorithm
+- Current REQ is now an explicit skip condition, not a buried parenthetical
+
 ## 0.12.2 — The Ghost Hunt II (2026-02-14)
 
 Reverted 0.12.1's re-addition of `do-work/working/` to the UR completion check. The 0.11.2 removal was correct — completed REQs are never in `working/` by invariant. The current REQ counts as resolved implicitly (you just set its status in Step 7.1). Searching `working/` was inconsistent with cleanup.md, which correctly omits it.

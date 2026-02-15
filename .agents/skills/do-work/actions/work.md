@@ -753,8 +753,24 @@ mkdir -p do-work/archive
 **If REQ has `user_request: UR-NNN` (new system):**
    - Read the UR's `input.md` from `do-work/user-requests/UR-NNN/`
    - Check its `requests` array (e.g., `[REQ-018, REQ-019, REQ-020]`)
-   - Check if ALL listed REQs are now resolved — meaning they have `status: completed` (not `failed`) in any of: `do-work/archive/` root, `do-work/archive/UR-NNN/`, or `do-work/user-requests/UR-NNN/`. The current REQ counts as resolved implicitly (you just completed it in Step 7.1) — do not search `do-work/working/` for it.
-   - REQs with `status: failed` in `do-work/archive/` do NOT count — the UR stays open until the failed REQ is retried and succeeds, or the user explicitly archives the UR
+   - Determine if ALL listed REQs are resolved using this algorithm:
+     ```
+     Let current_req = the REQ ID you just completed (still in do-work/working/)
+     Let all_resolved = true
+
+     For each req_id in the UR's requests array:
+       If req_id == current_req:
+         → Skip — this one is resolved (you just completed it in Step 7.1).
+           It is still in working/ and will NOT appear in any archive location yet.
+       Else:
+         → Search for req_id with status: completed (not failed) in:
+           1. do-work/archive/          (root — previously archived standalone)
+           2. do-work/archive/UR-NNN/   (already bundled into an archived UR)
+           3. do-work/user-requests/UR-NNN/  (completed but UR not yet archived)
+         → If not found with status: completed in any of those three locations:
+           Set all_resolved = false
+     ```
+   - REQs with `status: failed` in `do-work/archive/` do NOT count as resolved — the UR stays open until the failed REQ is retried and succeeds, or the user explicitly archives the UR
    - If **all REQs resolved**:
      - Move the completed REQ file into the UR folder: `mv do-work/working/REQ-XXX.md do-work/user-requests/UR-NNN/`
      - Move any other completed REQs from `do-work/archive/` that belong to this UR into the UR folder (scan each `REQ-*.md` file directly in `do-work/archive/`, read its frontmatter, and move it if `user_request: UR-NNN` matches the current UR)
