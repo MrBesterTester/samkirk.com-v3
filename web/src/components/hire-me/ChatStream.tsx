@@ -228,7 +228,7 @@ function WelcomeMessage() {
           </li>
         </ul>
         <p className="mt-3 text-sm text-zinc-700 dark:text-zinc-300">
-          Add a job posting above to unlock fit analysis and custom resume
+          Add a job posting above to enable fit analysis and custom resume
           generation!
         </p>
       </div>

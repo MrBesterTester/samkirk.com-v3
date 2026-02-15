@@ -25,7 +25,7 @@ export default function HireMePage() {
     <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
       {/* Page header */}
       <h1 className="text-3xl font-bold tracking-tight text-text-primary">
-        Hire Me
+        Interview me NOW
       </h1>
       <p className="mt-4 text-lg text-text-secondary">
         These tools help you, the hiring manager, quickly evaluate whether I am

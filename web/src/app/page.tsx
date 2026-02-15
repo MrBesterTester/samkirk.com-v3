@@ -43,16 +43,25 @@ export default function Home() {
         <h2 className="text-center text-2xl font-semibold text-text-primary">
           Hiring Manager?
         </h2>
-        <p className="mt-2 text-center text-text-secondary">
-          Use my AI-powered hiring tools to evaluate fit, generate a tailored resume,
-          and interview me — all in one place.
-        </p>
+        <div className="mx-auto mt-2 max-w-md text-text-secondary">
+          <p>Regarding your job opportunity:</p>
+          <ul className="mt-1 list-disc space-y-1 pl-6">
+            <li>Evaluate my fitness: strong, average, weak aspects</li>
+            <li>Generate a tailored resume</li>
+          </ul>
+          <p className="mt-1">
+            Or just have a casual chat about my professional experience.
+          </p>
+          <ul className="mt-1 list-disc space-y-1 pl-6">
+            <li>All output including a chat transcript are downloadable</li>
+          </ul>
+        </div>
         <div className="mt-6 text-center">
           <Link
             href="/hire-me"
             className="inline-block rounded-lg bg-accent px-6 py-3 text-base font-semibold text-white shadow-sm transition-colors hover:bg-accent-hover"
           >
-            Try Hire Me Tools &rarr;
+            Interview me NOW &rarr;
           </Link>
         </div>
       </section>

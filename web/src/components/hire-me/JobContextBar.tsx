@@ -199,7 +199,7 @@ export function JobContextBar({
       <div className="rounded-xl border border-zinc-200 bg-white p-4 dark:border-zinc-700 dark:bg-zinc-800/50">
         <div className="flex items-center justify-between gap-4">
           <p className="text-sm text-zinc-600 dark:text-zinc-400">
-            Add a job posting to unlock fit analysis and custom resume
+            Add a job posting to enable fit analysis and custom resume
           </p>
           <button
             type="button"
