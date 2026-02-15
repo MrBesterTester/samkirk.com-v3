@@ -166,7 +166,7 @@ The Playwright E2E tests (`--e2e`) use system Chrome directly — they do **not*
 | Prerequisite | Check if done | Setup (if needed) |
 |---|---|---|
 | Google Chrome | `open -Ra "Google Chrome" && echo OK` | [Install Chrome](https://www.google.com/chrome/) |
-| Node dependencies | `ls web/node_modules/.package-lock.json` | `cd web && npm install` |
+| Node dependencies | `ls web/package-lock.json` | `cd web && npm install` |
 | `.env.local` exists | `test -f web/.env.local && echo OK` | `cp web/.env.local.example web/.env.local` and fill in values |
 | GCP credentials (ADC) | `gcloud auth application-default print-access-token > /dev/null && echo OK` | `gcloud auth application-default login` |
 
