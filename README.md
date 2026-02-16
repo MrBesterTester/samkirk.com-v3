@@ -153,6 +153,8 @@ Both tools can be used interchangeably. Workflow commands (create-spec, create-b
 
 ### Project Structure
 
+Linked `README.md` files and other documents throughout the tree provide detailed context for each area of the project. Follow them to get a clear, readable understanding of how everything fits together. In particular, [`README_dev_guide.md`](README_dev_guide.md) is essential reading for day-to-day development, and for a deeper understanding of the methodology, study the two HTML guides in [`REFERENCES/`](REFERENCES/).
+
 <pre>
 samkirk-v3/
 ├── .claude/                 # Claude Code integration
@@ -171,6 +173,8 @@ samkirk-v3/
 │   ├── <a href="web/README.md">README.md</a>            # Application structure and conventions
 │   ├── data/                # Resume data
 │   ├── e2e/                 # Playwright E2E tests
+│   │   └── fixtures/        # Upload test inputs
+│   │       └── <a href="web/e2e/fixtures/README.md">README.md</a>    # Fixture inventory (sample + Zscaler JDs)
 │   ├── scripts/             # Build & test scripts
 │   ├── src/
 │   │   ├── app/             # Pages & API routes
@@ -178,6 +182,7 @@ samkirk-v3/
 │   │   ├── lib/             # Core business logic (40+ modules)
 │   │   └── test/            # Test utilities
 │   └── test-fixtures/       # Saved tool outputs
+│       ├── <a href="web/test-fixtures/README.md">README.md</a>        # Fixture overview, gallery, and special-case JDs
 │       ├── fit-report/
 │       │   └── <a href="web/test-fixtures/fit-report/README.md">README.md</a>    # Fit report data flow
 │       ├── interview-chat/
