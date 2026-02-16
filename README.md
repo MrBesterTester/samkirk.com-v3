@@ -153,42 +153,34 @@ Both tools can be used interchangeably. Workflow commands (create-spec, create-b
 
 ### Project Structure
 
-Linked `README.md` files and other documents throughout the tree provide detailed context for each area of the project. Follow them to get a clear, readable understanding of how everything fits together. In particular, [`README_dev_guide.md`](README_dev_guide.md) is essential reading for day-to-day development, and for a deeper understanding of the methodology, study the two HTML guides in [`REFERENCES/`](REFERENCES/).
+Nearly every folder has a `README.md` — linked below via the folder name — providing detailed context for that area. Follow them to get a clear, readable understanding of how everything fits together. In particular, [`README_dev_guide.md`](README_dev_guide.md) is essential reading for day-to-day development, and for a deeper understanding of the methodology, study the two HTML guides in [`REFERENCES/`](REFERENCES/).
 
 <pre>
 samkirk-v3/
-├── .claude/                 # Claude Code integration
-│   └── <a href=".claude/README.md">README.md</a>            # Integration setup
-├── .cursor/                 # Cursor IDE commands and rules
-├── REFERENCES/              # Methodology study guides
+├── <a href=".claude/README.md">.claude/</a>                 # Claude Code integration
+├── <a href=".cursor/README.md">.cursor/</a>                 # Cursor IDE commands and rules
+├── <a href="REFERENCES/README.md">REFERENCES/</a>              # Methodology study guides
 │   ├── <a href="REFERENCES/Dylan-Davis-50plus-method.html">Dylan-Davis-50plus-method.html</a>   # Three-document system (Spec → Blueprint → TODO)
 │   └── <a href="REFERENCES/Matt-Maher_Claude-Code.html">Matt-Maher_Claude-Code.html</a>      # Six practices + do-work autonomous queue
-├── do-work/                 # Autonomous work queue
-│   ├── archive/             # Completed and on-hold REQs
-│   ├── user-requests/       # Incoming REQ files
-│   └── working/             # Currently processing
-├── docs/                    # Project documentation (30+ files)
-│   └── <a href="docs/README.md">README.md</a>            # Narrative walkthrough of all documentation
-├── web/                     # Next.js application
-│   ├── <a href="web/README.md">README.md</a>            # Application structure and conventions
-│   ├── data/                # Resume data
-│   ├── e2e/                 # Playwright E2E tests
-│   │   └── fixtures/        # Upload test inputs
-│   │       └── <a href="web/e2e/fixtures/README.md">README.md</a>    # Fixture inventory (sample + Zscaler JDs)
-│   ├── scripts/             # Build & test scripts
-│   ├── src/
-│   │   ├── app/             # Pages & API routes
-│   │   ├── components/      # Shared React components
-│   │   ├── lib/             # Core business logic (40+ modules)
-│   │   └── test/            # Test utilities
-│   └── test-fixtures/       # Saved tool outputs
-│       ├── <a href="web/test-fixtures/README.md">README.md</a>        # Fixture overview, gallery, and special-case JDs
-│       ├── fit-report/
-│       │   └── <a href="web/test-fixtures/fit-report/README.md">README.md</a>    # Fit report data flow
-│       ├── interview-chat/
-│       │   └── <a href="web/test-fixtures/interview-chat/README.md">README.md</a>    # Interview chat data flow
-│       └── resume-generator/
-│           └── <a href="web/test-fixtures/resume-generator/README.md">README.md</a>    # Resume generator data flow
+├── <a href="do-work/README.md">do-work/</a>                 # Autonomous work queue
+│   ├── <a href="do-work/archive/README.md">archive/</a>             # Completed and on-hold REQs
+│   ├── <a href="do-work/user-requests/README.md">user-requests/</a>       # Incoming REQ files
+│   └── <a href="do-work/working/README.md">working/</a>             # Currently processing
+├── <a href="docs/README.md">docs/</a>                    # Project documentation (30+ files)
+├── <a href="web/README.md">web/</a>                     # Next.js application
+│   ├── <a href="web/data/README.md">data/</a>                # Resume data
+│   ├── <a href="web/e2e/README.md">e2e/</a>                 # Playwright E2E tests
+│   │   └── <a href="web/e2e/fixtures/README.md">fixtures/</a>        # Upload test inputs
+│   ├── <a href="web/scripts/README.md">scripts/</a>             # Build & test scripts
+│   ├── <a href="web/src/README.md">src/</a>
+│   │   ├── <a href="web/src/app/README.md">app/</a>             # Pages & API routes
+│   │   ├── <a href="web/src/components/README.md">components/</a>      # Shared React components
+│   │   ├── <a href="web/src/lib/README.md">lib/</a>             # Core business logic (40+ modules)
+│   │   └── <a href="web/src/test/README.md">test/</a>            # Test utilities
+│   └── <a href="web/test-fixtures/README.md">test-fixtures/</a>       # Saved tool outputs
+│       ├── <a href="web/test-fixtures/fit-report/README.md">fit-report/</a>      # Fit report data flow
+│       ├── <a href="web/test-fixtures/interview-chat/README.md">interview-chat/</a>  # Interview chat data flow
+│       └── <a href="web/test-fixtures/resume-generator/README.md">resume-generator/</a>    # Resume generator data flow
 ├── CLAUDE.md                # AI assistant project instructions
 ├── <a href="README.md">README.md</a>                # This file
 └── <a href="README_dev_guide.md">README_dev_guide.md</a>      # Developer guide: methodology, testing, conventions
