@@ -38,8 +38,10 @@ LinkedIn: https://www.linkedin.com/in/samuelkirk/
 | Embedded firmware / POST | 8+ | TRW/Vidar, ROLM/IBM, Frox, SAK (1998), Sun |
 | Audio/DSP testing | 6+ | Frox, Media Vision, ESS Technology |
 | ATE instrument development | 6+ | Teradyne, LTX-Credence |
+| TypeScript/React full-stack web development | 4+ | SAK Consulting (2022-present) |
 | AI-assisted software development | 4+ | SAK Consulting (2022-present) |
 | Data visualization | 3+ | Cadence, SAK Consulting (2022-present) |
+| Rust backend development | 1+ | SAK Consulting (2022-present) |
 
 ## Professional Goals
 
@@ -65,7 +67,9 @@ Samuel A. Kirk's technical skills span languages, platforms, processors, and pro
 | Technology | Approx. Years | Companies |
 |---|---|---|
 | Python | 8+ | SAK Consulting (2022-present), Talis BioMedical (2020-2022), Excelfore (2018-2019), Cadence (2015-2017), LTX-Credence (2012-2014) |
+| TypeScript | 4+ | SAK Consulting (2022-present): samkirk.com, Hire Me tools, Photo Fun, Tensor Logic, Dance Menu, and all exploration pages |
 | C | 15+ | AOptix, Sun Microsystems, Teradyne, ESS Technology, Media Vision, Frox, ROLM/IBM, SAK Consulting (1998-2000), TRW/Vidar |
+| Rust | 1+ | SAK Consulting (2022-present): Tensor Logic backend (Axum/Shuttle.rs) |
 | C++ | 2 | LTX-Credence (2012-2014) |
 | Linux/Unix | Continuous since 1980 | All positions from TRW/Vidar onward |
 | Git | 5+ | Talis, Excelfore, Cadence, SAK Consulting |
@@ -98,6 +102,11 @@ Medical point-of-care test instruments, Automotive Over the Air (OTA) firmware u
 | Online Diagnostics | Sun Microsystems, TRW/Vidar | C, 8080 asm |
 | Manufacturing Test | Media Vision, ESS Technology, Frox | C, DSP asm |
 | Logic & Protocol Analyzers | ESS Technology, Media Vision, Sun Microsystems, OCZ Technology | Tektronix PRISM 3000, SATA analyzers |
+| Full-Stack Web Development | SAK Consulting (2022-present) | TypeScript, React, Next.js, Tailwind CSS, Vite |
+| Cloud AI & API Integration | SAK Consulting (2022-present) | Vertex AI, Google Gemini, Google Cloud Firestore, Firebase |
+| Rust Backend Development | SAK Consulting (2022-present) | Rust, Axum, Shuttle.rs |
+| GenAI-Assisted Development | SAK Consulting (2022-present) | Cursor, Claude Code, Claude Cowork, ChatGPT, GitHub Copilot, Perplexity.ai |
+| Automated Testing (Web) | SAK Consulting (2022-present) | Vitest, Playwright, TypeScript |
 
 ## Typical Job Titles
 Most frequent first:
@@ -125,7 +134,7 @@ In doing software diagnostics, test program development and automatic calibratio
 - Location: Fremont, CA
 - Dates: 3/2022 - present
 - Employment Type: FTE
-- Technologies: Python, Next.js, Cursor, Claude Code, Vertex AI, Google Gemini, ChatGPT, Perplexity.ai, GitHub Copilot, Replit, Vercel, GitHub Pages
+- Technologies: TypeScript, Python, Rust, React, Next.js, Vite, Tailwind CSS, Firebase, Vertex AI, Google Cloud Firestore, Google Gemini, Vitest, Playwright, Cursor, Claude Code, Claude Cowork, ChatGPT, Perplexity.ai, GitHub Copilot, Replit, Shuttle.rs, Vercel, GitHub Pages
 - Domain: AI-assisted software development, genAI applied to testing and documentation
 
 Samuel A. Kirk has been working at his own consultancy, Samuel A. Kirk Consulting, in Fremont, CA since 3/2022 as Chief Consulting Engineer, focusing on AI-assisted software development and genAI applied to testing and documentation.
@@ -134,29 +143,31 @@ Software engineer with expertise in genAI mainly with Cursor and Claude Code for
 
 - A self-study, graduate-level course on genAI applied to software development, with emphasis on testing and up-to-date documentation readable by both the chatbot and the developer. See below for a complete listing and  [www.samkirk.com](https://www.samkirk.com) for the showcase of details.
 - Have become a journeyman "ChatBot Boss." Quite able to practice the craft of prompt engineering but not ready to teach it as the master. Primarily use:
-  - Perplexity.ai - research and planning; Pro plan
+  - Perplexity.ai - daily driver for research, planning, and technical due diligence; Pro plan
   - Claude Code w/ Sonnet 4.5 - software dev, test and documentation; 5x Plan
   - ChatGPT-5 - odds and ends and second opinions; Plus plan
 
 ### Projects — Software & Web Development
 
-- **samkirk.com** — Personal portfolio website built with Next.js, Cursor, and Claude Code. Full-stack development including AI-powered hiring manager tools, content pages, and interactive explorations.
-- **"Hire Me" AI Tools Suite** — Three Vertex AI-powered tools for hiring managers:
+- **samkirk.com** — Personal portfolio website (TypeScript, React, Next.js, Tailwind CSS) with Google Cloud backend (Vertex AI, Firestore, Cloud Storage). Full-stack development including AI-powered hiring manager tools, content pages, and interactive explorations. Built with Cursor and Claude Code.
+- **"Hire Me" AI Tools Suite** — Three Vertex AI-powered tools for hiring managers (TypeScript, React, Next.js). Built with Cursor and Claude Code:
   - **How Do I Fit?** — Submit a job posting, get a detailed fit analysis with scoring and rationale.
   - **Custom Resume Generator** — Generates tailored 2-page resumes (Markdown/HTML) optimized for specific job postings. 100% factual, verified information only.
   - **Interview Me NOW** — Interactive Q&A chatbot about career and experience with downloadable transcripts and source citations.
-- **Photo Fun** — AI-powered photo transformation app using Google Gemini. 4 preset styles (Professional, Claymation, Cyberpunk, Pencil Sketch) plus custom prompts. Prototyped on aistudio.google.com, built with Cursor, hosted on Vercel with Vertex AI for production.
+- **Photo Fun** — AI-powered photo transformation app using Google Gemini (TypeScript, React, Vite, Firebase). 4 preset styles (Professional, Claymation, Cyberpunk, Pencil Sketch) plus custom prompts. Prototyped on aistudio.google.com, built with Cursor and GitHub Copilot, hosted on Vercel with Vertex AI for production.
 - **Villa Madu Bali** — Website for an Indonesian resort in Bali. Built on Replit after trying two other non-coding AI website builders to replace an older WordPress version.
 
 ### Projects — Creative & Explorations
 
-- **Dance Menu** — Weekly curated playlists for social dancers (Swing, Waltz, Two Step, and more). Curated with Claude Cowork.
+> Unless otherwise noted, all exploration pages below are TypeScript/React pages within the samkirk.com Next.js application, built with Cursor and Claude Code.
+
+- **Dance Menu** — Weekly curated playlists for social dancers (Swing, Waltz, Two Step, and more) with admin interface and API routes. Content curated with Claude Cowork.
 - **Song Dedication** — "Resilience in the Storm" — a song for Mom celebrating her strength through hurricanes Ian and Milton. Lyrics created in ChatGPT, soundtrack produced on Udio.com.
 - **Category Theory** — Examples of Category Theory using common, everyday (non-mathematical) objects.
-- **Pocket Flow** — Tutorials using Pocket Flow framework for understanding Crawl4AI, Modular's Max, and the Mojo programming language. Hosted as a GitHub Pages website.
+- **Pocket Flow** — Tutorials using Pocket Flow framework (Python) for understanding Crawl4AI, Modular's Max, and the Mojo programming language. Hosted as a GitHub Pages website.
 - **Dance Instruction** — Thoughts and resources on teaching and learning dance.
 - **Uber Level AI Skills** — Advanced techniques for getting the most out of AI tools. Taken from Nate B. Jones.
-- **Tensor Logic** — Educational interactive demo of Pedro Domingos' Tensor Logic — a unified programming paradigm bridging neural and symbolic AI. 8 interactive examples spanning 5 AI paradigms (Bayesian, Logical, Instance, Neurosymbolic, Neural).
+- **Tensor Logic** — Educational interactive demo of Pedro Domingos' Tensor Logic — a unified programming paradigm bridging neural and symbolic AI (TypeScript, Vite frontend; Rust/Axum backend deployed on Shuttle.rs). 8 interactive examples spanning 5 AI paradigms (Bayesian, Logical, Instance, Neurosymbolic, Neural).
 
 ## Test Engineer III - Embedded Software — Talis BioMedical (2020-2022)
 - Company: Talis BioMedical

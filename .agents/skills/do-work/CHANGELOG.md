@@ -4,6 +4,13 @@ What's new, what's better, what's different. Most recent stuff on top.
 
 ---
 
+## 0.12.4 — The Deep Scan (2026-02-16)
+
+REQ numbering instructions in the do action now check inside `archive/UR-*/` folders, matching the canonical rule at line 121. Previously, agents following the simple or complex request flows literally would miss REQs bundled into UR archive folders and could assign duplicate numbers.
+
+- Fixed Step 2a (simple flow, ~line 551) to include `do-work/archive/UR-*/`
+- Fixed Step 3.1 (complex flow, ~line 598) to include `do-work/archive/UR-*/`
+
 ## 0.12.3 — The Explicit Loop (2026-02-14)
 
 Made the UR completion check algorithm explicit so agents can follow it mechanically. The previous prose said the current REQ "counts as resolved implicitly," but agents iterating the `requests` array and searching archive locations would miss the current REQ (still in `working/`) and wrongly conclude the UR isn't ready. Now it's a clear pseudocode loop: skip the current REQ ID, search the three archive locations for everything else.

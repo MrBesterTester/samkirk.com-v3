@@ -548,7 +548,7 @@ Screenshot of settings with a dropdown.
    e. Leave the `requests` array empty initially — you will fill it in step 3
 
 **2. Create REQ files** (one per distinct request):
-   a. Determine the next REQ number (check `do-work/`, `working/`, and `archive/` for highest existing number)
+   a. Determine the next REQ number (check `do-work/`, `do-work/working/`, `do-work/archive/`, and inside `do-work/archive/UR-*/` for highest existing number)
    b. Create a slug from the request (lowercase, hyphens, 3-4 words max)
    c. Generate the current ISO 8601 timestamp for `created_at`
    d. Write the file using the **simple request format**
@@ -595,7 +595,7 @@ word_count: [count words in original input]
 **3. Create individual request files:**
 
 For EACH identified feature:
-1. Determine the next REQ number
+1. Determine the next REQ number (check `do-work/`, `do-work/working/`, `do-work/archive/`, and inside `do-work/archive/UR-*/` for highest existing number)
 2. Create using the **complex request format**
 3. Set `user_request` to the UR identifier (e.g., `UR-001`)
 4. Set `related` to other REQ IDs in this batch
