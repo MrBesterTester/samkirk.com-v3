@@ -13,6 +13,7 @@ This is the day-to-day reference for samkirk-v3 development. It covers the AI-as
   - [Source Materials](#source-materials)
 - [Cheat Sheet — Slash Commands](#cheat-sheet--slash-commands)
   - [do-work (task queue)](#do-work-task-queue)
+  - [do-work companions](#do-work-companions)
   - [Dylan Davis methodology](#dylan-davis-methodology)
   - [Utilities](#utilities)
 - [Test Suites at a Glance](#test-suites-at-a-glance)
@@ -357,7 +358,7 @@ The most useful of these is `npm run test:results -- --fixtures show`, which ser
 npx playwright show-report web/playwright-report
 
 # Playwright last-run status (E2E only):
-cat web/test-results/.last-run.json
+# File: web/test-results/.last-run.json
 ```
 
 Each `test:all` run archives a `summary.md` with pass/fail counts, durations, and a test index, plus per-suite `.log` files with full output. The summary is committed; logs are gitignored.
@@ -498,14 +499,7 @@ do work triage route.test.ts tests 1-3: test 1 may duplicate smoke-gcp Section 1
   test 2 could be mock-based, test 3 should be a pure unit test.
 ```
 
-**Formalized triage** (full traceability through a TODO cycle):
-
-```bash
-/ingest-todo docs/master-test-TODO.md
-do work verify
-do work run
-/sync-todo docs/master-test-TODO.md
-```
+**Formalized triage** (full traceability through a TODO cycle): use the [Planned Test Work](#planned-test-work) workflow with `docs/master-test-TODO.md`.
 
 After triage decisions are applied, confirm no regressions:
 
