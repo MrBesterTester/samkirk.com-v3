@@ -1,6 +1,6 @@
 # Developer Guide
 
-This is the day-to-day reference for samkirk-v3 development. It covers the AI-assisted development methodology, test suites, CLI commands, automated workflows via do-work, manual verifications, and release qualification.
+This is the day-to-day reference for samkirk-v3 development. It covers the AI-assisted development methodology, test suites, CLI commands, automated workflows via `/do-work`, manual verifications, and release qualification.
 
 ---
 
@@ -40,6 +40,10 @@ This is the day-to-day reference for samkirk-v3 development. It covers the AI-as
 
 This project was built entirely with AI-assisted development, blending two complementary methodologies into a single workflow. Understanding these techniques is useful both for contributing to this codebase and for applying the same patterns to your own projects.
 
+**How the agents were actually used:** All AI work was single-threaded — one agent call at a time, with Claude often spawning isolated subagents (e.g., `/do-work` processing a REQ in a fresh sub-agent context). No full team or multi-agent workflows were used; agents never communicated directly with each other. The only exception was Cursor's Review agent, which spent most of its time complaining about `/do-work`.
+
+**Practical parallelism with `/do-work`:** Despite the single-threaded approach, `/do-work` made parallel work easy. Each REQ is a clearly identified task with its own separate commit, so running multiple Claude Code sessions on different REQs was straightforward. When `/ingest-todo` processes a large Dylan Davis TODO, it creates a series of REQs (one per TODO step) grouped under a single UR (user request), keeping the work well organized. In practice, processing about 3 REQs per session comfortably stayed near the 40% context remaining limit.
+
 ### Dylan Davis: The Three-Document System
 
 Dylan Davis's method (from his video ["I've Built 50+ Apps with AI"](https://youtu.be/99FI5uZJ8tU)) structures every project around three documents that serve as an extended memory system for AI:
@@ -53,6 +57,8 @@ Dylan Davis's method (from his video ["I've Built 50+ Apps with AI"](https://you
 The core insight is that AI memory decays over long conversations. By externalizing the plan into three files, each new conversation starts fresh but retains full context — the spec grounds it in requirements, the blueprint provides architecture, and the TODO shows progress. Steps are worked through one at a time (`/start-step 2.1`, `/continue-step 2.2`), with a fresh AI context per step to avoid instruction drift.
 
 This project used the three-document pattern five times for different scopes (V1 core, V2 visual upgrade, master test suite, hire-me unification, and more). See the [Document Sets at a Glance](docs/README.md#document-sets-at-a-glance) table for the full inventory.
+
+Although I have yet to use the almighty ChatGPT-5.3 Codex which goes off by itself for a very long time, I can't imagine not using Dylan Davis's method for such long excursions by a chatbot on my dime. ChatGPT Codex tells me: "I'll do it right the first time, but you better be sure about what you're asking for the very first time!"
 
 ### Matt Maher: Claude Code Meta-Programming
 
@@ -120,7 +126,7 @@ do work run           # Autonomous processing — walk away
 /sync-todo docs/TODO.md
 ```
 
-Ad-hoc work (bugs, ideas, small features) goes directly into do-work without a spec/blueprint/todo cycle: `do work add dark mode toggle`.
+Ad-hoc work (bugs, ideas, small features) goes directly into `/do-work` without a spec/blueprint/todo cycle: `do work add dark mode toggle`.
 
 ### Source Materials
 
@@ -406,7 +412,7 @@ For full verification procedures, see `docs/verification-registry.md`.
 
 ## Writing a New Test
 
-To write a new test using do-work, describe what needs testing:
+To write a new test using `/do-work`, describe what needs testing:
 
 ```bash
 do work write tests for [feature description]
@@ -524,7 +530,7 @@ Manual Verifications Pending:
 
 For each verification, open the corresponding entry in `docs/verification-registry.md`, follow the procedure, and record the result.
 
-If a verification fails, drop it into do-work:
+If a verification fails, drop it into `/do-work`:
 
 ```bash
 do work VER-002 failed: OAuth flow redirects to a 404 after Google consent screen.
@@ -569,7 +575,7 @@ start step X.Y master-test        # Begin a step manually with full doc context
 continue step X.Y master-test     # Resume where you left off
 ```
 
-These commands read the SPECIFICATION, BLUEPRINT, and TODO for context, then walk through the step interactively. Prefer do-work for everything else.
+These commands read the SPECIFICATION, BLUEPRINT, and TODO for context, then walk through the step interactively. Prefer `/do-work` for everything else.
 
 ---
 
