@@ -11,6 +11,7 @@ This is the day-to-day reference for samkirk-v3 development. It covers the AI-as
   - [Matt Maher: Claude Code Meta-Programming](#matt-maher-claude-code-meta-programming)
   - [The Bridge: /ingest-todo](#the-bridge-ingest-todo)
   - [Source Materials](#source-materials)
+- [Local Development](#local-development)
 - [Cheat Sheet — Slash Commands](#cheat-sheet--slash-commands)
   - [do-work (task queue)](#do-work-task-queue)
   - [do-work companions](#do-work-companions)
@@ -141,6 +142,22 @@ The original methodology documents are available in two forms:
 - [`docs/Matts-integration-with-Dylan-plan-samkirk-v3.md`](docs/Matts-integration-with-Dylan-plan-samkirk-v3.md) — the integration plan that designed the bridge
 
 For a narrative walkthrough of all project documentation, see [`docs/README.md`](docs/README.md).
+
+---
+
+## Local Development
+
+Install dependencies and start the dev server:
+
+```bash
+cd web
+npm install
+npm run dev
+```
+
+Open `http://localhost:3000`. If the dev server gets into a bad state (stale cache, Turbopack errors), use `/restart-dev-server` which cleans `.next`, rebuilds, and restarts.
+
+**Using Claude in Chrome:** Once the [Chrome extension is set up](#chrome-extension-setup-claude-in-chrome), ask Claude to bring up the app on Chrome at `localhost:3000`. Claude will open a new tab (replacing any stale one) and navigate to the dev server. If the dev server needs a full rebuild, ask Claude to restart it first (`rm -rf web/.next && cd web && npm run dev`).
 
 ---
 
@@ -662,6 +679,7 @@ If this file is missing, reinstall or update Claude Code (`claude update`), then
 
 ## Reference Documents
 
+- [`docs/TEST-RESULTS.md`](docs/TEST-RESULTS.md) — Detailed test results and verification evidence
 - [`docs/test-catalog.md`](docs/test-catalog.md) — Test inventory with metadata for all tests
 - [`docs/feature-test-matrix.md`](docs/feature-test-matrix.md) — Feature-to-test mapping
 - [`docs/verification-registry.md`](docs/verification-registry.md) — Manual verification procedures

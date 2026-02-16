@@ -1,46 +1,42 @@
-## samkirk.com v3
+# samkirk.com v3
 
-Personal website + genAI demo tools for `samkirk.com`.
+Personal website and showcase of Sam Kirk's projects over the past three years in generative AI, mainly in software development.
 
-### Table of Contents
+**LLM-powered hiring tools** — Upload a job description to get a tailored fit analysis, a custom two-page resume, or an interactive interview chat, all driven by a master resume and Vertex AI.
+
+**Creative AI demos** — AI photo editing with Gemini (preset styles + custom prompts), a song dedication composed with ChatGPT and Udio, and a weekly curated dance-music menu.
+
+**Educational explorations** — Interactive pages on category theory, tensor logic (bridging neural and symbolic AI), Pocket Flow tutorials (Crawl4Ai, Modular Max, Mojo), dance instruction, and advanced AI prompting techniques.
+
+[Visit samkirk.com to see my projects and to Interview Me NOW.](https://www.samkirk.com)
+
+## Table of Contents
 
 - [samkirk.com v3](#samkirkcom-v3)
-  - [Table of Contents](#table-of-contents)
-  - [Punch Down List](#punch-down-list)
   - [Principles of Operation (POO)](#principles-of-operation-poo)
   - [Standard Operating Procedures (SOP)](#standard-operating-procedures-sop)
-    - [Resume Management](#resume-management)
-    - [Testing](#testing)
-  - [Key docs](#key-docs)
-  - [Tech stack (V1 target)](#tech-stack-v1-target)
-  - [Local development](#local-development)
-  - [Scripts](#scripts)
+    - [Updating the Resume](#updating-the-resume)
+    - [Updating the Dance Schedule](#updating-the-dance-schedule)
+  - [The README Project Structure](#the-readme-project-structure)
+  - [Tech Stack](#tech-stack)
   - [Development Methodology](#development-methodology)
   - [Notes](#notes)
-  - [Project Structure](#project-structure)
+  - [Punch Down List](#punch-down-list)
 
-### Punch Down List
-
-Requests on hold — to be picked up after current priorities:
-
-- [REQ-035: Fix DNS for tensor-logic.samkirk.com](do-work/archive/hold/REQ-035-fix-tensor-logic-dns.md)
-- [REQ-036: Add full month, extended Dance Menu](do-work/archive/hold/REQ-036-full-month-dance-menu.md)
-- [REQ-037: Add photo option on generated resume](do-work/archive/hold/REQ-037-photo-option-generated-resume.md)
-
-### Principles of Operation (POO)
+## Principles of Operation (POO)
 
 Most of the website content is fixed — static pages that rarely change. Two sections are the exceptions:
 
 - **Dance Menu** (small) — A weekly-updated listing of upcoming dance events. An admin uploads `.txt` and `.html` files (with optional `.md` and `.pdf`) via the admin panel, and they're served to visitors on the `/dance-menu` page.
 - **Hire Me** (large) — The interactive hiring toolkit. Visitors upload a job description, and the system uses the stored resume plus LLM processing to generate tailored cover letters, fit reports, and interview prep materials.
 
-### Standard Operating Procedures (SOP)
+## Standard Operating Procedures (SOP)
 
 > **Note:** The **Admin** nav link only appears in development mode (`NODE_ENV=development`). In production, `/admin` is still accessible by URL but hidden from the navigation for security.
 
-#### Resume Management
+Both procedures below require GCP login (`/login-gcloud`).
 
-The following requires GCP login (`/login-gcloud`).
+### Updating the Resume
 
 **Initial setup (new environment):**
 1. Edit `web/data/baseline-resume.md` with your resume content
@@ -56,68 +52,63 @@ The following requires GCP login (`/login-gcloud`).
 - Each section: 100-2000 characters
 - Content under headings, not just nested sub-headings
 
-#### Testing
+### Updating the Dance Schedule
 
-| Command | Description |
-|---------|-------------|
-| `npm test` | Run unit tests (Vitest) — 819 tests |
-| `npx playwright test` | Run E2E tests with Playwright — 11 tests (Fit + Resume tools) |
-| `npm run test:e2e:real` | Run E2E test with real Vertex AI (~$0.02-0.10) |
-| `npm run smoke:gcp` | Run GCP integration smoke tests — 11 sections |
-| `npm run test:all` | Run all tests (unit + E2E + smoke) with single command |
-| `npm run validate:resume -- <file>` | Validate resume chunking locally |
+Go to `/admin/dance-menu` (requires admin authentication).
 
-See [`docs/TEST-RESULTS.md`](docs/TEST-RESULTS.md) for detailed test results and verification evidence.
+**Required files:** `.txt` and `.html` versions of the menu. **Optional:** `.md` and `.pdf`.
 
-### Key docs
+**Steps:**
+1. Drag and drop (or click to browse) your files into the upload area
+2. The page shows validation status — yellow for required-but-missing, green for ready
+3. Click **"Publish Dance Menu"** (enabled once both `.txt` and `.html` are present)
+4. The menu is immediately live on the public `/dance-menu` page
 
-- [`docs/Proposal.md`](docs/Proposal.md) — Original project proposal
-- [`docs/SPECIFICATION.md`](docs/SPECIFICATION.md) — Functional specification (V1)
-- [`docs/BLUEPRINT.md`](docs/BLUEPRINT.md) — Technical architecture and implementation plan
-- [`docs/TODO.md`](docs/TODO.md) — Implementation checklist with progress tracking
-- [`docs/TEST-RESULTS.md`](docs/TEST-RESULTS.md) — Test results and verification evidence
-- [`README_dev_guide.md`](README_dev_guide.md) — Developer guide: methodology, testing, and conventions
-- [`REFERENCES/Dylan-Davis-50plus-method.html`](REFERENCES/Dylan-Davis-50plus-method.html) — Interactive study guide for the Dylan Davis 50+ method
-- [`REFERENCES/Matt-Maher_Claude-Code.html`](REFERENCES/Matt-Maher_Claude-Code.html) — Interactive study guide for Matt Maher's Claude Code meta-programming techniques
+**Constraints:** Max 10 MB per file, 50 MB total. One file per format. Files are stored in GCS as `sams-dance-menu.{ext}`, replacing the previous version.
 
-### Tech stack (V1 target)
+## The README Project Structure
+
+Nearly every folder has a `README.md` — linked below via the folder name — providing detailed context for that area. Follow them to get a clear, readable understanding of how everything fits together. The README for the [`docs/`](docs/README.md) folder is a very good practical starting point. For the methodologically minded, start with [`REFERENCES/`](REFERENCES/README.md).
+
+<pre>
+samkirk-v3/
+├── <a href=".claude/README.md">.claude/</a>                 # Claude Code integration
+├── <a href=".cursor/README.md">.cursor/</a>                 # Cursor IDE commands and rules
+├── <a href="do-work/README.md">do-work/</a>                 # Autonomous work queue
+│   ├── <a href="do-work/archive/README.md">archive/</a>             # Completed and on-hold REQs
+│   ├── <a href="do-work/user-requests/README.md">user-requests/</a>       # Incoming REQ files
+│   └── <a href="do-work/working/README.md">working/</a>             # Currently processing
+├── <a href="docs/README.md">docs/</a>                    # Project documentation (30+ files)
+├── <a href="web/README.md">web/</a>                     # Next.js application
+│   ├── <a href="web/data/README.md">data/</a>                # Resume data
+│   ├── <a href="web/e2e/README.md">e2e/</a>                 # Playwright E2E tests
+│   │   └── <a href="web/e2e/fixtures/README.md">fixtures/</a>        # Upload test inputs
+│   ├── <a href="web/scripts/README.md">scripts/</a>             # Build & test scripts
+│   ├── <a href="web/src/README.md">src/</a>
+│   │   ├── <a href="web/src/app/README.md">app/</a>             # Pages & API routes
+│   │   ├── <a href="web/src/components/README.md">components/</a>      # Shared React components
+│   │   ├── <a href="web/src/lib/README.md">lib/</a>             # Core business logic (40+ modules)
+│   │   └── <a href="web/src/test/README.md">test/</a>            # Test utilities
+│   └── <a href="web/test-fixtures/README.md">test-fixtures/</a>       # Saved tool outputs
+│       ├── <a href="web/test-fixtures/fit-report/README.md">fit-report/</a>      # Fit report data flow
+│       ├── <a href="web/test-fixtures/interview-chat/README.md">interview-chat/</a>  # Interview chat data flow
+│       └── <a href="web/test-fixtures/resume-generator/README.md">resume-generator/</a>    # Resume generator data flow
+├── CLAUDE.md                # AI assistant project instructions
+├── <a href="README.md">README.md</a>                # This file
+├── <a href="README_dev_guide.md">README_dev_guide.md</a>      # Developer guide: methodology, testing, conventions
+└── <a href="REFERENCES/README.md">REFERENCES/</a>              # Methodology study guides
+    ├── <a href="REFERENCES/Dylan-Davis-50plus-method.html">Dylan-Davis-50plus-method.html</a>   # Three-document system (Spec → Blueprint → TODO)
+    └── <a href="REFERENCES/Matt-Maher_Claude-Code.html">Matt-Maher_Claude-Code.html</a>      # Six practices + do-work autonomous queue
+</pre>
+
+## Tech Stack
 
 - **Frontend + backend**: Next.js (App Router) on Cloud Run
 - **Language**: TypeScript (strict)
 - **LLM**: Gemini via Vertex AI
 - **Storage**: Cloud Storage (files) + Firestore (metadata/counters)
 
-### Local development
-
-Install dependencies:
-
-```bash
-cd web
-npm install
-```
-
-Run the dev server:
-
-```bash
-cd web
-npm run dev
-```
-
-Open `http://localhost:3000`.
-
-**Using Claude in Chrome (ongoing):** Once the [Chrome extension is set up](README_dev_guide.md#chrome-extension-setup-claude-in-chrome), ask Claude to bring up the app on Chrome at `localhost:3000`. Claude will open a new tab (replacing any stale one) and navigate to the dev server. If the dev server needs a full rebuild, ask Claude to restart it first (`rm -rf web/.next && cd web && npm run dev`).
-
-### Scripts
-
-From `web/`:
-
-```bash
-npm run lint
-npm run build
-npm run start
-```
-
-### Development Methodology
+## Development Methodology
 
 This project was built entirely with AI, blending two methodologies: **Dylan Davis's three-document system** (Specification, Blueprint, TODO) for structured planning, and **Matt Maher's do-work pattern** for autonomous execution. A custom `/ingest-todo` bridge connects the two — TODO steps become do-work queue items that process autonomously with fresh AI context per task.
 
@@ -146,42 +137,14 @@ The Master Tests set also has two companion documents: [`master-test-plan.md`](d
 
 Both tools can be used interchangeably. Workflow commands (create-spec, create-blueprint, create-todo, start-step, continue-step) work in both environments.
 
-### Notes
+## Notes
 
 - Secrets must never be committed (use env vars / GCP Secret Manager).
 - Phone numbers for future SMS alerting must be treated as secrets and not logged/exposed.
 
-### Project Structure
+## Punch Down List
 
-Nearly every folder has a `README.md` — linked below via the folder name — providing detailed context for that area. Follow them to get a clear, readable understanding of how everything fits together. In particular, [`README_dev_guide.md`](README_dev_guide.md) is essential reading for day-to-day development, and for a deeper understanding of the methodology, study the two HTML guides in [`REFERENCES/`](REFERENCES/).
+Requests on hold — to be picked up after current priorities:
 
-<pre>
-samkirk-v3/
-├── <a href=".claude/README.md">.claude/</a>                 # Claude Code integration
-├── <a href=".cursor/README.md">.cursor/</a>                 # Cursor IDE commands and rules
-├── <a href="REFERENCES/README.md">REFERENCES/</a>              # Methodology study guides
-│   ├── <a href="REFERENCES/Dylan-Davis-50plus-method.html">Dylan-Davis-50plus-method.html</a>   # Three-document system (Spec → Blueprint → TODO)
-│   └── <a href="REFERENCES/Matt-Maher_Claude-Code.html">Matt-Maher_Claude-Code.html</a>      # Six practices + do-work autonomous queue
-├── <a href="do-work/README.md">do-work/</a>                 # Autonomous work queue
-│   ├── <a href="do-work/archive/README.md">archive/</a>             # Completed and on-hold REQs
-│   ├── <a href="do-work/user-requests/README.md">user-requests/</a>       # Incoming REQ files
-│   └── <a href="do-work/working/README.md">working/</a>             # Currently processing
-├── <a href="docs/README.md">docs/</a>                    # Project documentation (30+ files)
-├── <a href="web/README.md">web/</a>                     # Next.js application
-│   ├── <a href="web/data/README.md">data/</a>                # Resume data
-│   ├── <a href="web/e2e/README.md">e2e/</a>                 # Playwright E2E tests
-│   │   └── <a href="web/e2e/fixtures/README.md">fixtures/</a>        # Upload test inputs
-│   ├── <a href="web/scripts/README.md">scripts/</a>             # Build & test scripts
-│   ├── <a href="web/src/README.md">src/</a>
-│   │   ├── <a href="web/src/app/README.md">app/</a>             # Pages & API routes
-│   │   ├── <a href="web/src/components/README.md">components/</a>      # Shared React components
-│   │   ├── <a href="web/src/lib/README.md">lib/</a>             # Core business logic (40+ modules)
-│   │   └── <a href="web/src/test/README.md">test/</a>            # Test utilities
-│   └── <a href="web/test-fixtures/README.md">test-fixtures/</a>       # Saved tool outputs
-│       ├── <a href="web/test-fixtures/fit-report/README.md">fit-report/</a>      # Fit report data flow
-│       ├── <a href="web/test-fixtures/interview-chat/README.md">interview-chat/</a>  # Interview chat data flow
-│       └── <a href="web/test-fixtures/resume-generator/README.md">resume-generator/</a>    # Resume generator data flow
-├── CLAUDE.md                # AI assistant project instructions
-├── <a href="README.md">README.md</a>                # This file
-└── <a href="README_dev_guide.md">README_dev_guide.md</a>      # Developer guide: methodology, testing, conventions
-</pre>
+- [REQ-035: Fix DNS for tensor-logic.samkirk.com](do-work/archive/hold/REQ-035-fix-tensor-logic-dns.md)
+- [REQ-037: Add photo option on generated resume](do-work/archive/hold/REQ-037-photo-option-generated-resume.md)
