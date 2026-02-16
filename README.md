@@ -77,6 +77,8 @@ See [`docs/TEST-RESULTS.md`](docs/TEST-RESULTS.md) for detailed test results and
 - [`docs/TODO.md`](docs/TODO.md) — Implementation checklist with progress tracking
 - [`docs/TEST-RESULTS.md`](docs/TEST-RESULTS.md) — Test results and verification evidence
 - [`README_dev_guide.md`](README_dev_guide.md) — Developer guide: methodology, testing, and conventions
+- [`REFERENCES/Dylan-Davis-50plus-method.html`](REFERENCES/Dylan-Davis-50plus-method.html) — Interactive study guide for the Dylan Davis 50+ method
+- [`REFERENCES/Matt-Maher_Claude-Code.html`](REFERENCES/Matt-Maher_Claude-Code.html) — Interactive study guide for Matt Maher's Claude Code meta-programming techniques
 
 ### Tech stack (V1 target)
 
@@ -121,6 +123,10 @@ This project was built entirely with AI, blending two methodologies: **Dylan Dav
 
 **For the full write-up** (how both methods work, the bridge, workflow diagrams, and links to original source videos): **[Development Methodology in the Developer Guide](README_dev_guide.md#development-methodology)**
 
+**Study guides** — standalone HTML references for the two methodologies behind this project:
+- [Dylan Davis: I've Built 50+ Apps with AI](REFERENCES/Dylan-Davis-50plus-method.html) — three-document system (Specification → Blueprint → TODO)
+- [Matt Maher: Claude Code Meta-Programming](REFERENCES/Matt-Maher_Claude-Code.html) — six practices + the do-work autonomous queue pattern
+
 **Three-document sets** (Dylan Davis pattern — used five times in this project):
 
 | Set | Spec | Blueprint | TODO | Status |
@@ -147,16 +153,22 @@ Both tools can be used interchangeably. Workflow commands (create-spec, create-b
 
 ### Project Structure
 
-```
+<pre>
 samkirk-v3/
 ├── .claude/                 # Claude Code integration
+│   └── <a href=".claude/README.md">README.md</a>            # Integration setup
 ├── .cursor/                 # Cursor IDE commands and rules
+├── REFERENCES/              # Methodology study guides
+│   ├── <a href="REFERENCES/Dylan-Davis-50plus-method.html">Dylan-Davis-50plus-method.html</a>   # Three-document system (Spec → Blueprint → TODO)
+│   └── <a href="REFERENCES/Matt-Maher_Claude-Code.html">Matt-Maher_Claude-Code.html</a>      # Six practices + do-work autonomous queue
 ├── do-work/                 # Autonomous work queue
 │   ├── archive/             # Completed and on-hold REQs
 │   ├── user-requests/       # Incoming REQ files
 │   └── working/             # Currently processing
 ├── docs/                    # Project documentation (30+ files)
+│   └── <a href="docs/README.md">README.md</a>            # Narrative walkthrough of all documentation
 ├── web/                     # Next.js application
+│   ├── <a href="web/README.md">README.md</a>            # Application structure and conventions
 │   ├── data/                # Resume data
 │   ├── e2e/                 # Playwright E2E tests
 │   ├── scripts/             # Build & test scripts
@@ -165,10 +177,14 @@ samkirk-v3/
 │   │   ├── components/      # Shared React components
 │   │   ├── lib/             # Core business logic (40+ modules)
 │   │   └── test/            # Test utilities
-│   └── test-fixtures/       # Saved tool outputs (fit, resume, interview)
+│   └── test-fixtures/       # Saved tool outputs
+│       ├── fit-report/
+│       │   └── <a href="web/test-fixtures/fit-report/README.md">README.md</a>    # Fit report data flow
+│       ├── interview-chat/
+│       │   └── <a href="web/test-fixtures/interview-chat/README.md">README.md</a>    # Interview chat data flow
+│       └── resume-generator/
+│           └── <a href="web/test-fixtures/resume-generator/README.md">README.md</a>    # Resume generator data flow
 ├── CLAUDE.md                # AI assistant project instructions
-├── README.md                # This file
-└── README_dev_guide.md      # Developer guide for testing workflows
-```
-
-Directories with their own READMEs: [`.claude/`](.claude/README.md) | [`docs/`](docs/README.md) | [`web/`](web/README.md) | [`web/test-fixtures/fit-report/`](web/test-fixtures/fit-report/README.md) | [`web/test-fixtures/interview-chat/`](web/test-fixtures/interview-chat/README.md) | [`web/test-fixtures/resume-generator/`](web/test-fixtures/resume-generator/README.md)
+├── <a href="README.md">README.md</a>                # This file
+└── <a href="README_dev_guide.md">README_dev_guide.md</a>      # Developer guide: methodology, testing, conventions
+</pre>

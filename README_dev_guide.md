@@ -667,3 +667,5 @@ If this file is missing, reinstall or update Claude Code (`claude update`), then
 - [`docs/verification-registry.md`](docs/verification-registry.md) — Manual verification procedures
 - [`docs/master-test-SPECIFICATION.md`](docs/master-test-SPECIFICATION.md) — Full test requirements
 - [`docs/master-test-BLUEPRINT.md`](docs/master-test-BLUEPRINT.md) — Implementation details
+- [`REFERENCES/Dylan-Davis-50plus-method.html`](REFERENCES/Dylan-Davis-50plus-method.html) — Interactive study guide for the Dylan Davis 50+ method
+- [`REFERENCES/Matt-Maher_Claude-Code.html`](REFERENCES/Matt-Maher_Claude-Code.html) — Interactive study guide for Matt Maher's Claude Code meta-programming techniques
