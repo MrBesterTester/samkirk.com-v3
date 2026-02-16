@@ -388,7 +388,7 @@ Determine if this is a simple or complex request.
 
 ### Step 2: Check for Existing Requests
 
-Read all files in `do-work/` folder, **and list filenames in `do-work/working/` and `do-work/archive/`** (don't read their contents — just check for matching IDs/slugs). For each parsed request:
+Read all files in `do-work/` folder, **and list filenames in `do-work/working/` and `do-work/archive/` (including inside `archive/UR-*/`)** (don't read their contents — just check for matching IDs/slugs). For each parsed request:
 - Does a similar request already exist?
 - Is this an enhancement to an existing request?
 - Is this a duplicate?

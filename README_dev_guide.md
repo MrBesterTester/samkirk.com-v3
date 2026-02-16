@@ -346,6 +346,8 @@ npm run test:all
 
 ### Viewing Previous Results
 
+See [`docs/TEST-RESULTS.md`](docs/TEST-RESULTS.md) for detailed test results and verification evidence.
+
 Use `npm run test:results` to inspect archived test runs. This replaces manual `ls` + `cat` commands against the archive directory.
 
 **Command reference:**

@@ -4,6 +4,12 @@ What's new, what's better, what's different. Most recent stuff on top.
 
 ---
 
+## 0.12.5 — The Duplicate Blind Spot (2026-02-16)
+
+Step 2's duplicate check now looks inside `archive/UR-*/` folders. Previously it only checked `do-work/working/` and `do-work/archive/` top-level, but all archived REQs live inside UR subfolders — so the check found nothing and agents could create redundant requests for completed work.
+
+- Fixed Step 2 duplicate check (~line 391) to include `archive/UR-*/` folders, consistent with the REQ numbering rule at line 121
+
 ## 0.12.4 — The Deep Scan (2026-02-16)
 
 REQ numbering instructions in the do action now check inside `archive/UR-*/` folders, matching the canonical rule at line 121. Previously, agents following the simple or complex request flows literally would miss REQs bundled into UR archive folders and could assign duplicate numbers.
