@@ -68,9 +68,9 @@ This guide walks through pushing to GitHub and deploying the application to Goog
 
 ### Step 8: Deploy to Cloud Run
 
-- [ ] 8.1 Build and push Docker image
-- [ ] 8.2 Deploy Cloud Run service
-- [ ] 8.3 Verify health endpoint returns 200
+- [x] 8.1 Build and push Docker image
+- [x] 8.2 Deploy Cloud Run service
+- [x] 8.3 Verify health endpoint returns 200
 
 ### Step 9: Custom Domain
 
@@ -85,8 +85,8 @@ This guide walks through pushing to GitHub and deploying the application to Goog
 
 ### Step 11: Billing Budget
 
-- [ ] 11.1 Create $20/month budget for samkirk-v3
-- [ ] 11.2 Configure email alerts to sam@samkirk.com (50%, 90%, 100% thresholds)
+- [x] 11.1 Create $20/month budget for samkirk-v3
+- [x] 11.2 Configure email alerts to sam@samkirk.com (50%, 90%, 100% thresholds)
 
 ### Final Verification
 

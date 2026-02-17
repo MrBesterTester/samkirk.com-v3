@@ -12,6 +12,7 @@ This is the day-to-day reference for samkirk-v3 development. It covers the AI-as
   - [The Bridge: /ingest-todo](#the-bridge-ingest-todo)
   - [Source Materials](#source-materials)
 - [Local Development](#local-development)
+- [Deploying to Production](#deploying-to-production)
 - [Cheat Sheet — Slash Commands](#cheat-sheet--slash-commands)
   - [do-work (task queue)](#do-work-task-queue)
   - [do-work companions](#do-work-companions)
@@ -161,6 +162,73 @@ Open `http://localhost:3000`. If the dev server gets into a bad state (stale cac
 
 ---
 
+## Deploying to Production
+
+The site is deployed to Google Cloud Run. Deploys are manual — there is no auto-deploy trigger. The full workflow is:
+
+### 1. Run tests
+
+```bash
+npm run test:all
+```
+
+All suites should pass. At minimum, run unit + E2E (`npm run test:all -- --unit --e2e`).
+
+### 2. Commit and push
+
+```bash
+git add <files>
+git commit -m "description of changes"
+git push origin main
+```
+
+Wait for GitHub Actions CI to pass. Check with `gh run list --limit 1` or `gh run watch`.
+
+### 3. Deploy
+
+```bash
+/deploy-gcloud
+```
+
+Or manually:
+
+```bash
+gcloud builds submit --config=cloudbuild.yaml \
+  --substitutions=COMMIT_SHA=$(git rev-parse HEAD)
+```
+
+The `COMMIT_SHA` substitution is required because `$COMMIT_SHA` is only auto-populated by Cloud Build triggers, not by local `gcloud builds submit`.
+
+Cloud Build will: build the Docker image, push to Artifact Registry, and deploy to Cloud Run (~3-5 minutes).
+
+### 4. Verify
+
+```bash
+CLOUD_RUN_URL=$(gcloud run services describe samkirk-v3 \
+  --region=us-central1 --format='value(status.url)')
+curl "${CLOUD_RUN_URL}/api/health"
+```
+
+Expected: `{"status":"ok","timestamp":"..."}`
+
+Spot-check the live site: home page loads, photo appears, tool pages show captcha gate.
+
+### Troubleshooting
+
+```bash
+# View the latest Cloud Build log
+gcloud builds log $(gcloud builds list --limit=1 --format='value(id)')
+
+# View Cloud Run logs
+gcloud logging read \
+  "resource.type=cloud_run_revision AND resource.labels.service_name=samkirk-v3" \
+  --limit=20
+```
+
+See `docs/GCP-DEPLOY.md` for full infrastructure setup (one-time) and troubleshooting reference.
+
+---
+
 ## Cheat Sheet — Slash Commands
 
 All custom slash commands available in this project.
@@ -204,6 +272,7 @@ Aliases: `run`/`go`/`start`, `list`/`status`/`queue`, `verify`/`check`/`evaluate
 |---------|-------------|
 | `/restart-dev-server` | Rebuild and start the Next.js dev server on localhost:3000 |
 | `/login-gcloud` | Set up GCP Application Default Credentials |
+| `/deploy-gcloud` | Deploy to Google Cloud Run via Cloud Build |
 
 ---
 

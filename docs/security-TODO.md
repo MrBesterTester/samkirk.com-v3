@@ -78,11 +78,11 @@
 
 ### 4.1 Configure GCP Billing Budget (non-code, manual)
 
-- [ ] **[You]** Follow `docs/GCP-DEPLOY.md` Step 11 instructions in GCP Console
-- [ ] **[You]** Create $20/month budget named `samkirk-v3-monthly`
-- [ ] **[You]** Configure email alerts to `sam@samkirk.com` at 50%, 90%, 100% thresholds
-- [ ] **[You]** Verify budget is visible in GCP Console → Billing → Budgets
-- [ ] **[You]** Check off items 11.1 and 11.2 in `docs/GCP-DEPLOY.md`
+- [x] **[You]** Follow `docs/GCP-DEPLOY.md` Step 11 instructions in GCP Console
+- [x] **[You]** Create $20/month budget named `samkirk-v3-monthly`
+- [x] **[You]** Configure email alerts to `sam@samkirk.com` at 50%, 90%, 100% thresholds
+- [x] **[You]** Verify budget is visible in GCP Console → Billing → Budgets
+- [x] **[You]** Check off items 11.1 and 11.2 in `docs/GCP-DEPLOY.md`
 
 ---
 
