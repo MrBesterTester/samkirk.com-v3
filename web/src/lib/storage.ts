@@ -2,6 +2,7 @@ import "server-only";
 
 import { Storage, Bucket } from "@google-cloud/storage";
 import { getEnv } from "./env";
+import { getGcpCredentials } from "./gcp-credentials";
 
 // Singleton Storage client
 let storageInstance: Storage | null = null;
@@ -13,8 +14,10 @@ let storageInstance: Storage | null = null;
 export function getStorage(): Storage {
   if (!storageInstance) {
     const env = getEnv();
+    const credentials = getGcpCredentials();
     storageInstance = new Storage({
       projectId: env.GCP_PROJECT_ID,
+      ...(credentials && { credentials }),
     });
   }
   return storageInstance;

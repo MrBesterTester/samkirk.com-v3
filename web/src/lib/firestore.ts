@@ -2,6 +2,7 @@ import "server-only";
 
 import { Firestore, Timestamp } from "@google-cloud/firestore";
 import { getEnv } from "./env";
+import { getGcpCredentials } from "./gcp-credentials";
 
 // Singleton Firestore client
 let firestoreInstance: Firestore | null = null;
@@ -13,8 +14,10 @@ let firestoreInstance: Firestore | null = null;
 export function getFirestore(): Firestore {
   if (!firestoreInstance) {
     const env = getEnv();
+    const credentials = getGcpCredentials();
     firestoreInstance = new Firestore({
       projectId: env.GCP_PROJECT_ID,
+      ...(credentials && { credentials }),
     });
   }
   return firestoreInstance;

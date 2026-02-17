@@ -9,6 +9,7 @@ import {
   Part,
 } from "@google-cloud/vertexai";
 import { getEnv } from "./env";
+import { getGcpCredentials } from "./gcp-credentials";
 import {
   enforceSpendCap,
   recordSpendFromTokens,
@@ -160,9 +161,11 @@ let vertexAiInstance: VertexAI | null = null;
 export function getVertexAI(): VertexAI {
   if (!vertexAiInstance) {
     const env = getEnv();
+    const credentials = getGcpCredentials();
     vertexAiInstance = new VertexAI({
       project: env.GCP_PROJECT_ID,
       location: env.VERTEX_AI_LOCATION,
+      ...(credentials && { googleAuthOptions: { credentials } }),
     });
   }
   return vertexAiInstance;
