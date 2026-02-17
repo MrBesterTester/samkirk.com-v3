@@ -25,7 +25,7 @@ Personal website and showcase of Sam Kirk's projects over the past three years i
 
 ## Principles of Operation (POO)
 
-Most of the website content is fixed — static pages that rarely change. Two sections are the exceptions:
+Most of the website content is fixed — static pages that rarely change. Two sections are the flexible exceptions:
 
 - **Dance Menu** (small) — A weekly-updated listing of upcoming dance events. An admin uploads `.txt` and `.html` files (with optional `.md` and `.pdf`) via the admin panel, and they're served to visitors on the `/dance-menu` page.
 - **Hire Me** (large) — The interactive hiring toolkit. Visitors upload a job description, and the system uses the stored resume plus LLM processing to generate tailored cover letters, fit reports, and interview prep materials.
