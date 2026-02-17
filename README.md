@@ -17,6 +17,7 @@ Personal website and showcase of Sam Kirk's projects over the past three years i
   - [Standard Operating Procedures (SOP)](#standard-operating-procedures-sop)
     - [Updating the Resume](#updating-the-resume)
     - [Updating the Dance Schedule](#updating-the-dance-schedule)
+    - [Validating LLM Spend](#validating-llm-spend)
   - [The README Project Structure](#the-readme-project-structure)
   - [Tech Stack](#tech-stack)
   - [Development Methodology](#development-methodology)
@@ -65,6 +66,18 @@ Go to `/admin/dance-menu` (requires admin authentication).
 4. The menu is immediately live on the public `/dance-menu` page
 
 **Constraints:** Max 10 MB per file, 50 MB total. One file per format. Files are stored in GCS as `sams-dance-menu.{ext}`, replacing the previous version.
+
+### Validating LLM Spend
+
+Run monthly (or whenever you suspect pricing drift) to compare the app's estimated spend against actual GCP billing:
+
+```bash
+cd web && npm run validate:spend
+```
+
+Requires GCP credentials (`/login-gcloud`). The script reads the current month's Firestore `spendMonthly` document and prints estimated spend, budget, percentage used, and the hardcoded pricing constants. It also prints a direct link to the GCP Billing console for manual comparison.
+
+If the `LAST_PRICING_REVIEW` date in the script is older than 30 days, it warns you to re-check Vertex AI pricing. Update the date in `web/scripts/validate-spend.ts` after each review.
 
 ## The README Project Structure
 
