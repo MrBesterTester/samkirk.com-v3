@@ -1,9 +1,6 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // Enable standalone output for Docker deployment
-  output: "standalone",
-
   // Disable the dev indicator in the corner
   devIndicators: false,
 

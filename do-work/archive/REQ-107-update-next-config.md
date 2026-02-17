@@ -1,9 +1,12 @@
 ---
 id: REQ-107
 title: "Update next.config.ts"
-status: pending
+status: completed
 created_at: 2026-02-16T12:00:00-08:00
 user_request: UR-033
+claimed_at: 2026-02-16T20:01:00-08:00
+route: A
+completed_at: 2026-02-16T20:03:00-08:00
 related: [REQ-108, REQ-109]
 batch: "vercel-migration-phase-2"
 source_step: "2.1"
@@ -18,10 +21,10 @@ model_hint: "Codex/Opus"
 Remove `output: "standalone"` from `web/next.config.ts` (no longer needed for Vercel) and update the comment to remove Docker references. Verify build and dev server still work.
 
 ## Checklist
-- [ ] **[Codex/Opus] [AI]** Remove `output: "standalone"` from `web/next.config.ts`
-- [ ] **[Codex/Opus] [AI]** Update comment (remove Docker reference)
-- [ ] **[Codex/Opus] [AI]** TEST: Run `npm run build` — build succeeds
-- [ ] **[Codex/Opus] [AI]** TEST: Run `npm run dev` — dev server works
+- [x] **[Codex/Opus] [AI]** Remove `output: "standalone"` from `web/next.config.ts`
+- [x] **[Codex/Opus] [AI]** Update comment (remove Docker reference)
+- [x] **[Codex/Opus] [AI]** TEST: Run `npm run build` — build succeeds
+- [x] **[Codex/Opus] [AI]** TEST: Run `npm run dev` — dev server works
 
 ## Blueprint Guidance
 
@@ -56,6 +59,41 @@ Run: npm run dev (verify dev server still works)
 
 ## Dependencies
 Phase 1 code changes (REQ-103–105) should be complete first. Can run in parallel with REQ-108 and REQ-109.
+
+---
+
+## Triage
+
+**Route: A** - Simple
+
+**Reasoning:** Config change in an explicitly named file (`web/next.config.ts`). Remove one line and update one comment. Clear scope.
+
+**Planning:** Not required
+
+## Plan
+
+**Planning not required** - Route A: Direct implementation
+
+Rationale: Single file config change with explicit instructions. No architectural decisions needed.
+
+*Skipped by work action*
+
+## Implementation Summary
+
+- Removed `output: "standalone"` from `web/next.config.ts`
+- Removed Docker-related comment
+- Preserved `devIndicators: false` and www→apex redirect
+
+*Completed by work action (Route A)*
+
+## Testing
+
+**Tests run:** `npm run build` and `npm run dev` (from web/)
+**Result:** ✓ Build succeeded (31 static pages, 5.9s), dev server started successfully
+
+**No new tests needed** — config value removal, existing build/dev verification sufficient.
+
+*Verified by work action*
 
 ---
 *Source: docs/vercel-migration-TODO.md, Step 2.1*
