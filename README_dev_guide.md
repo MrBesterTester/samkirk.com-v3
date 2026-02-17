@@ -164,6 +164,14 @@ Open `http://localhost:3000`. If the dev server gets into a bad state (stale cac
 
 ## Deploying to Production
 
+> **Current status (2026-02-16):** The production site is **offline**. Public access was removed (IAM `allUsers` binding removed) and ingress was set to `internal`. To bring it back online:
+>
+> ```bash
+> gcloud run services update samkirk-v3 --region=us-central1 --ingress=all
+> gcloud run services add-iam-policy-binding samkirk-v3 --region=us-central1 \
+>   --member="allUsers" --role="roles/run.invoker"
+> ```
+
 The site is deployed to Google Cloud Run. Deploys are manual — there is no auto-deploy trigger. The full workflow is:
 
 ### 1. Run tests
