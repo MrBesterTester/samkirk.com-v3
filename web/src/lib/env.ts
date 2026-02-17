@@ -2,19 +2,22 @@ import "server-only";
 
 import { z } from "zod";
 
+// Vercel env vars may contain trailing newlines — trim all string values
+const trimmed = z.string().transform((s) => s.trim());
+
 const envSchema = z.object({
-  GCP_PROJECT_ID: z.string().min(1),
-  GCS_PUBLIC_BUCKET: z.string().min(1),
-  GCS_PRIVATE_BUCKET: z.string().min(1),
-  VERTEX_AI_LOCATION: z.string().min(1),
-  VERTEX_AI_MODEL: z.string().min(1),
-  RECAPTCHA_SITE_KEY: z.string().min(1),
-  RECAPTCHA_SECRET_KEY: z.string().min(1),
-  GOOGLE_OAUTH_CLIENT_ID: z.string().min(1),
-  GOOGLE_OAUTH_CLIENT_SECRET: z.string().min(1),
-  ADMIN_ALLOWED_EMAIL: z.string().email(),
-  AUTH_SECRET: z.string().min(32),
-  GOOGLE_APPLICATION_CREDENTIALS_JSON: z.string().optional(),
+  GCP_PROJECT_ID: trimmed.pipe(z.string().min(1)),
+  GCS_PUBLIC_BUCKET: trimmed.pipe(z.string().min(1)),
+  GCS_PRIVATE_BUCKET: trimmed.pipe(z.string().min(1)),
+  VERTEX_AI_LOCATION: trimmed.pipe(z.string().min(1)),
+  VERTEX_AI_MODEL: trimmed.pipe(z.string().min(1)),
+  RECAPTCHA_SITE_KEY: trimmed.pipe(z.string().min(1)),
+  RECAPTCHA_SECRET_KEY: trimmed.pipe(z.string().min(1)),
+  GOOGLE_OAUTH_CLIENT_ID: trimmed.pipe(z.string().min(1)),
+  GOOGLE_OAUTH_CLIENT_SECRET: trimmed.pipe(z.string().min(1)),
+  ADMIN_ALLOWED_EMAIL: trimmed.pipe(z.string().email()),
+  AUTH_SECRET: trimmed.pipe(z.string().min(32)),
+  GOOGLE_APPLICATION_CREDENTIALS_JSON: trimmed.optional(),
 });
 
 export type Env = z.infer<typeof envSchema>;

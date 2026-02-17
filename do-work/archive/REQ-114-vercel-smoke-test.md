@@ -1,7 +1,7 @@
 ---
 id: REQ-114
 title: "Smoke test on Vercel preview URL"
-status: failed
+status: in_progress
 created_at: 2026-02-16T12:00:00-08:00
 user_request: UR-033
 related: [REQ-113, REQ-115, REQ-116]
@@ -9,7 +9,7 @@ batch: "vercel-migration-phase-4"
 claimed_at: 2026-02-17T14:16:00-08:00
 route: A
 completed_at: 2026-02-17T14:40:00-08:00
-error: "GCP API routes return 500 — /api/session/init and /api/dance-menu fail. Likely GOOGLE_APPLICATION_CREDENTIALS_JSON issue on Vercel."
+error: ""
 source_step: "4.2"
 source_doc: "docs/vercel-migration-TODO.md"
 blueprint_ref: "docs/vercel-migration-BLUEPRINT.md"
@@ -23,12 +23,15 @@ Manually test the Vercel preview deployment: homepage, navigation, reCAPTCHA, al
 
 ## Checklist
 - [x] **[Sam]** Homepage loads correctly — PASS
-- [x] **[Sam]** All navigation pages render — PASS (Home, Hire Me, Song Dedication, Photo Fun, Explorations). Dance Menu page renders but content fails (API 500).
-- [ ] **[Sam]** reCAPTCHA widget appears on tool pages — BLOCKED (session init fails before reCAPTCHA loads)
-- [ ] **[Sam]** Complete reCAPTCHA → submit test job to "How Do I Fit?" → verify LLM response — BLOCKED
-- [ ] **[Sam]** Test "Get a Custom Resume" tool — BLOCKED
-- [ ] **[Sam]** Test "Interview Me Now" tool — BLOCKED
-- [ ] **[Sam]** Admin: Google OAuth login works — NOT TESTED (also needs REQ-115 OAuth redirect URIs)
+- [x] **[Sam]** All navigation pages render — PASS (all 6 pages render, Dance Menu now loads content)
+- [x] Fix GCP API 500s — root cause: Vercel env vars have trailing newlines, `ADMIN_ALLOWED_EMAIL` fails zod `.email()` validation. Fixed by adding `.trim()` to all env var values in `web/src/lib/env.ts`.
+- [x] `/api/session/init` — now returns 200 with valid session
+- [x] `/api/dance-menu` — now returns 200 with `available: true` and HTML content
+- [ ] **[Sam]** reCAPTCHA widget appears on tool pages — NEEDS BROWSER TEST
+- [ ] **[Sam]** Complete reCAPTCHA → submit test job to "How Do I Fit?" → verify LLM response — NEEDS BROWSER TEST
+- [ ] **[Sam]** Test "Get a Custom Resume" tool — NEEDS BROWSER TEST
+- [ ] **[Sam]** Test "Interview Me Now" tool — NEEDS BROWSER TEST
+- [ ] **[Sam]** Admin: Google OAuth login works — NOT TESTED (needs REQ-115 OAuth redirect URIs)
 - [ ] **[Sam]** Admin: resume upload works — NOT TESTED
 - [ ] **[Sam]** Download an artifact bundle — NOT TESTED
 
@@ -105,27 +108,26 @@ Rationale: Manual browser testing against a live URL. Walk through each checklis
 | Resume upload | NOT TESTED |
 | Artifact download | NOT TESTED |
 
-### Root Cause Analysis
+### Root Cause Analysis (RESOLVED)
 
-Both failing endpoints depend on GCP services:
-- `/api/session/init` → Firestore (`@google-cloud/firestore`)
-- `/api/dance-menu` → Cloud Storage (`@google-cloud/storage`)
+**Actual root cause:** Vercel env vars contain trailing newlines. When `ADMIN_ALLOWED_EMAIL` = `"sam@samkirk.com\n"`, the zod `.email()` validator rejects it. This causes `getEnv()` to throw, which crashes both `getFirestore()` and `getStorage()` before they even attempt GCP auth.
 
-Both use `getGcpCredentials()` from `web/src/lib/gcp-credentials.ts` which reads `GOOGLE_APPLICATION_CREDENTIALS_JSON`. The env var IS set on Vercel (confirmed via `vercel env ls`), but the serverless functions still return 500.
+**Fix applied:** Added `.trim()` transform to all string env vars in `web/src/lib/env.ts` using `z.string().transform((s) => s.trim()).pipe(...)`. This strips trailing newlines before validation.
 
-**Likely causes:**
-1. SA key JSON may have formatting issues (escaped newlines in private_key)
-2. The service account may lack Firestore/Storage IAM permissions
-3. The env var value may need to be re-set with proper escaping
+**Verification:**
+- Deployed temp debug endpoint to confirm: GCP credentials parse fine, Firestore and Storage both connect successfully after trim fix
+- `/api/session/init` → 200 OK, returns valid session
+- `/api/dance-menu` → 200 OK, returns dance menu HTML content
+- All 1293 unit tests pass
 
-**Console errors observed:**
-- React hydration error #418 (text content mismatch — minor, separate issue)
+**Production deployment:** https://samkirk-com-v3-g9h3agkpj-sam-kirks-projects.vercel.app
 
-### Next Steps
-- Debug the GCP credentials on Vercel (check SA permissions, JSON format)
-- Fix the 500s, then re-run this smoke test
+### Remaining items
+- Browser-based smoke test of reCAPTCHA, LLM tools (needs Sam)
+- Admin OAuth login (needs REQ-115 redirect URIs)
+- Resume upload and artifact download (needs admin access)
 
-*Failed — work action (Route A)*
+*In progress — API fix applied, browser testing remaining*
 
 ## Testing
 
