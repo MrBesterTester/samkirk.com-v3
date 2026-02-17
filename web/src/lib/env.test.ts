@@ -33,6 +33,21 @@ describe("parseEnv", () => {
     );
   });
 
+  it("accepts env with GOOGLE_APPLICATION_CREDENTIALS_JSON present", () => {
+    const env = parseEnv({
+      ...baseEnv,
+      GOOGLE_APPLICATION_CREDENTIALS_JSON: '{"client_email":"sa@test.iam.gserviceaccount.com","private_key":"key"}',
+    });
+    expect(env.GOOGLE_APPLICATION_CREDENTIALS_JSON).toBe(
+      '{"client_email":"sa@test.iam.gserviceaccount.com","private_key":"key"}'
+    );
+  });
+
+  it("accepts env without GOOGLE_APPLICATION_CREDENTIALS_JSON", () => {
+    const env = parseEnv(baseEnv);
+    expect(env.GOOGLE_APPLICATION_CREDENTIALS_JSON).toBeUndefined();
+  });
+
   it("throws when required values are empty", () => {
     expect(() =>
       parseEnv({

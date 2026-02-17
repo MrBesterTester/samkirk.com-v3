@@ -14,6 +14,7 @@ const envSchema = z.object({
   GOOGLE_OAUTH_CLIENT_SECRET: z.string().min(1),
   ADMIN_ALLOWED_EMAIL: z.string().email(),
   AUTH_SECRET: z.string().min(32),
+  GOOGLE_APPLICATION_CREDENTIALS_JSON: z.string().optional(),
 });
 
 export type Env = z.infer<typeof envSchema>;
