@@ -32,18 +32,17 @@ This guide walks through pushing to GitHub and deploying the application to Goog
 - [x] 2.2 Scan git history for secrets
 - [x] 2.3 Scan working directory for secrets
 
-### Step 3: Squashed Push to GitHub
+### Step 3: Push to GitHub
 
-- [ ] 3.1 Tag current main tip (`pre-squash`)
-- [ ] 3.2 Create orphan branch with single commit
-- [ ] 3.3 Force push to GitHub
-- [ ] 3.4 Reset local main
-- [ ] 3.5 Make repository public
-- [ ] 3.6 Verify: GitHub shows 1 commit, local `pre-squash` tag has full history
+- [x] 3.1 Scrub sensitive GCP identifiers from history (`git-filter-repo`)
+- [ ] 3.2 Re-add origin remote
+- [ ] 3.3 Force push full history to GitHub
+- [ ] 3.4 Make repository public
+- [ ] 3.5 Verify: GitHub shows full commit history, no sensitive identifiers
 
 ### Step 4: GitHub Actions CI
 
-- [ ] 4.1 Create `.github/workflows/ci.yml`
+- [x] 4.1 Create `.github/workflows/ci.yml`
 - [ ] 4.2 Push and verify both jobs pass green
 
 ### Step 5: Artifact Registry
@@ -133,67 +132,58 @@ This catches any secrets in untracked or uncommitted files.
 
 ---
 
-## Step 3: Squashed Push to GitHub
+## Step 3: Push to GitHub
 
-The local repo has 262+ commits of development history. We'll push a single squashed commit to GitHub to keep the public history clean, while preserving the full history locally via a tag.
+The local repo has 272 commits of development history. A `git-filter-repo` scrub (Step 3.1) removed sensitive GCP identifiers (billing account ID, project number) from the history, so the full commit history can be safely published.
 
-### 3.1 Tag Current Main Tip
+### 3.1 Scrub Sensitive Identifiers (Completed)
 
-```bash
-# Preserve the full history locally
-git tag pre-squash
-```
-
-### 3.2 Create Orphan Branch with Single Commit
+Sensitive GCP identifiers were removed from all commits using `git-filter-repo`:
 
 ```bash
-# Create an orphan branch (no parent commits)
-git checkout --orphan squashed-main
+# Install git-filter-repo
+brew install git-filter-repo
 
-# All files are already staged on an orphan branch
-git commit -m "Initial commit: samkirk.com v3
+# Back up before filtering
+git tag pre-filter
 
-Personal portfolio and AI tools platform built with Next.js 15,
-TypeScript, Google Cloud (Firestore, Vertex AI, Cloud Storage),
-and NextAuth.js.
+# Replace sensitive values across all history
+git filter-repo --replace-text <(printf '014330-8720B9-7BC6ED==>REDACTED\n663797195570==>REDACTED\n') --force
 
-Squashed from 262 development commits. Full history preserved
-locally via 'pre-squash' tag."
+# Verify: both should return 0 hits
+git log --all -S '014330-8720B9-7BC6ED' --oneline | wc -l
+git log --all -S '663797195570' --oneline | wc -l
 ```
 
-### 3.3 Force Push to GitHub
+> **Note:** `git-filter-repo` removes the origin remote as a safety measure. Re-add it in Step 3.2.
+
+### 3.2 Re-add Origin Remote
 
 ```bash
-# Push the single-commit branch as main
-git push origin squashed-main:main --force
+git remote add origin https://github.com/MrBesterTester/samkirk.com-v3.git
 ```
 
-### 3.4 Reset Local Main
+### 3.3 Force Push Full History to GitHub
 
 ```bash
-# Switch back to main and reset to match the squashed commit
-git checkout main
-git reset --soft squashed-main
-
-# Clean up the temporary branch
-git branch -d squashed-main
+# Force push required because filter-repo rewrote commit hashes
+git push origin main --force
 ```
 
-### 3.5 Make Repository Public
+### 3.4 Make Repository Public
 
 ```bash
 gh repo edit --visibility public
 ```
 
-### 3.6 Verify
+### 3.5 Verify
 
 ```bash
-# GitHub should show 1 commit
+# GitHub should show 272 commits
 gh api repos/MrBesterTester/samkirk.com-v3/commits --jq 'length'
 
-# Local pre-squash tag still has full history
-git log pre-squash --oneline | wc -l
-# Should show 262+
+# Verify no sensitive identifiers in remote history
+gh api repos/MrBesterTester/samkirk.com-v3/search/code?q=014330 2>&1 | head -5
 ```
 
 ---
