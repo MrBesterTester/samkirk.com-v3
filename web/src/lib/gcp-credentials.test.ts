@@ -4,7 +4,7 @@ vi.mock("server-only", () => ({}));
 
 const VALID_CREDS = JSON.stringify({
   client_email: "sa@project.iam.gserviceaccount.com",
-  private_key: "-----BEGIN RSA PRIVATE KEY-----\nfake\n-----END RSA PRIVATE KEY-----\n",
+  private_key: "-----BEGIN RSA PRIVATE KEY-----\nfake\n-----END RSA PRIVATE KEY-----\n", // gitleaks:allow
   type: "service_account",
   project_id: "my-project",
 });
@@ -44,7 +44,7 @@ describe("getGcpCredentials", () => {
 
   it("throws when JSON is valid but missing client_email", async () => {
     process.env.GOOGLE_APPLICATION_CREDENTIALS_JSON = JSON.stringify({
-      private_key: "-----BEGIN RSA PRIVATE KEY-----\nfake\n-----END RSA PRIVATE KEY-----\n",
+      private_key: "-----BEGIN RSA PRIVATE KEY-----\nfake\n-----END RSA PRIVATE KEY-----\n", // gitleaks:allow
     });
     const getGcpCredentials = await loadModule();
     expect(() => getGcpCredentials()).toThrow("missing required fields");
