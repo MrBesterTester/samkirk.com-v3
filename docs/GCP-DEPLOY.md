@@ -43,28 +43,28 @@ This guide walks through pushing to GitHub and deploying the application to Goog
 ### Step 4: GitHub Actions CI
 
 - [x] 4.1 Create `.github/workflows/ci.yml`
-- [ ] 4.2 Push and verify both jobs pass green
+- [x] 4.2 Push and verify both jobs pass green
 
 ### Step 5: Artifact Registry
 
-- [ ] 5.1 Create Artifact Registry repository
+- [x] 5.1 Create Artifact Registry repository
 
 ### Step 6: Service Account & IAM
 
-- [ ] 6.1 Create Cloud Run service account
-- [ ] 6.2 Grant roles/datastore.user (Firestore access)
-- [ ] 6.3 Grant roles/storage.objectAdmin (GCS access)
-- [ ] 6.4 Grant roles/aiplatform.user (Vertex AI access)
-- [ ] 6.5 Grant roles/secretmanager.secretAccessor (Secret Manager access)
+- [x] 6.1 Create Cloud Run service account
+- [x] 6.2 Grant roles/datastore.user (Firestore access)
+- [x] 6.3 Grant roles/storage.objectAdmin (GCS access)
+- [x] 6.4 Grant roles/aiplatform.user (Vertex AI access)
+- [x] 6.5 Grant roles/secretmanager.secretAccessor (Secret Manager access)
 
 ### Step 7: Secret Manager
 
-- [ ] 7.1 Create google-oauth-client-id secret
-- [ ] 7.2 Create google-oauth-client-secret secret
-- [ ] 7.3 Create recaptcha-site-key secret
-- [ ] 7.4 Create recaptcha-secret-key secret
-- [ ] 7.5 Create auth-secret secret
-- [ ] 7.6 Create admin-allowed-email secret
+- [x] 7.1 Create google-oauth-client-id secret
+- [x] 7.2 Create google-oauth-client-secret secret
+- [x] 7.3 Create recaptcha-site-key secret
+- [x] 7.4 Create recaptcha-secret-key secret
+- [x] 7.5 Create auth-secret secret
+- [x] 7.6 Create admin-allowed-email secret
 
 ### Step 8: Deploy to Cloud Run
 
