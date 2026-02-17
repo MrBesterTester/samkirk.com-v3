@@ -2,7 +2,7 @@
 
 Personal website and showcase of Sam Kirk's projects over the past three years in generative AI, mainly in software development.
 
-**LLM-powered hiring tools** — Upload a job description to get a tailored fit analysis, a custom two-page resume, or an interactive interview chat, all driven by a master resume and Vertex AI.
+**Interview Me NOW - LLM-powered hiring tools - The Sam Kirk chatbot** — Upload a job description to the Sam Kirk chatbot to get a tailored fit analysis, a custom two-page resume, or just have an interactive interview with my chatbot alter ego, all driven by a master resume and Vertex AI.
 
 **Creative AI demos** — AI photo editing with Gemini (preset styles + custom prompts), a song dedication composed with ChatGPT and Udio, and a weekly curated dance-music menu.
 
