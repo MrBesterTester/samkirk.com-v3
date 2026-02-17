@@ -1,7 +1,7 @@
 import path from "path";
 import fs from "fs";
 import os from "os";
-import { test, expect } from "@playwright/test";
+import { test, expect, type Page } from "@playwright/test";
 import { verifyZipContents } from "./helpers/zip-verify";
 
 /**
@@ -335,9 +335,10 @@ test.describe("Fit Tool Happy Path", () => {
 
   test("should complete full flow via URL mode: input → follow-ups → results", async ({
     page,
+    baseURL,
   }) => {
-    // Load job via URL mode
-    await loadJobViaUrl(page, "http://localhost:3000/hire-me");
+    // Load job via URL mode — use baseURL so this works against Vercel previews too
+    await loadJobViaUrl(page, `${baseURL}/hire-me`);
 
     // Click "Analyze My Fit" preset chip
     await page.getByRole("button", { name: /Analyze My Fit/i }).click();

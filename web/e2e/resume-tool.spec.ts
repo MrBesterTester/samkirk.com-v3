@@ -1,7 +1,7 @@
 import path from "path";
 import fs from "fs";
 import os from "os";
-import { test, expect } from "@playwright/test";
+import { test, expect, type Page } from "@playwright/test";
 import { verifyZipContents } from "./helpers/zip-verify";
 
 /**
@@ -183,8 +183,10 @@ test.describe("Resume Tool Happy Path", () => {
 
   test("should complete full flow via URL mode: input → generating → results", async ({
     page,
+    baseURL,
   }) => {
-    await loadJobViaUrl(page, "http://localhost:3000/hire-me");
+    // Use baseURL so this works against Vercel previews too
+    await loadJobViaUrl(page, `${baseURL}/hire-me`);
 
     await page.getByRole("button", { name: /Generate Resume/i }).click();
 
