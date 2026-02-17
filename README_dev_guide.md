@@ -273,7 +273,11 @@ This verifies CLI auth, project linking, and MCP connectivity in one step. The b
 
 ### Deploy
 
-Use the Vercel MCP `deploy_to_vercel` tool from Claude Code, or deploy manually:
+```bash
+/deploy-vercel
+```
+
+This deploys via MCP, verifies the health endpoint, and opens the site in Chrome for visual confirmation. Or deploy manually:
 
 ```bash
 cd web && vercel --prod
@@ -365,6 +369,7 @@ Aliases: `run`/`go`/`start`, `list`/`status`/`queue`, `verify`/`check`/`evaluate
 | `/login-gcloud` | Set up GCP Application Default Credentials |
 | `/deploy-gcloud` | Deploy to Google Cloud Run via Cloud Build |
 | `/login-vercel` | Authenticate Vercel CLI + verify MCP connection |
+| `/deploy-vercel` | Deploy to Vercel via MCP with health check |
 
 ---
 

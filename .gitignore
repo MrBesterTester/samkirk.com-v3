@@ -17,3 +17,4 @@ test-results/
 # do-work (transient working directory)
 do-work/working/
 do-work/archive/test-runs/*/*.log
+.vercel

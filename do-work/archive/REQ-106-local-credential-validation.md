@@ -1,13 +1,12 @@
 ---
 id: REQ-106
 title: "Local validation with explicit credentials"
-status: failed
+status: completed
 created_at: 2026-02-16T12:00:00-08:00
 user_request: UR-033
-claimed_at: 2026-02-16T20:00:00-08:00
+claimed_at: 2026-02-17T11:30:00-08:00
 route: A
-completed_at: 2026-02-16T20:00:00-08:00
-error: "Manual testing step — all checklist items require Sam to execute locally (GCP key creation, manual smoke testing, ADC fallback verification)"
+completed_at: 2026-02-17T12:00:00-08:00
 related: [REQ-103, REQ-104, REQ-105]
 batch: "vercel-migration-phase-1"
 source_step: "1.4"
@@ -22,11 +21,11 @@ model_hint: "Codex/Opus"
 Manual testing step for Sam. Create a GCP service account key, set it as `GOOGLE_APPLICATION_CREDENTIALS_JSON`, verify all GCP services work with explicit credentials, then verify ADC fallback still works without it.
 
 ## Checklist
-- [ ] **[Sam]** Create GCP service account key: `gcloud iam service-accounts keys create /tmp/sa-key.json --iam-account=samkirk-v3-cloudrun@samkirk-v3.iam.gserviceaccount.com`
-- [ ] **[Sam]** Set `GOOGLE_APPLICATION_CREDENTIALS_JSON=$(cat /tmp/sa-key.json)` and run `npm run dev`
-- [ ] **[Sam]** Smoke test: visit a tool page, verify Firestore + Vertex AI + GCS work with explicit credentials
-- [ ] **[Sam]** Unset env var, run `npm run dev` again, verify ADC fallback still works
-- [ ] **[Sam]** Delete the local key file: `rm /tmp/sa-key.json`
+- [x] **[Sam]** SA key reused from Vercel (REQ-112) — pulled via `vercel env pull`
+- [x] **[Sam]** Set `GOOGLE_APPLICATION_CREDENTIALS_JSON` in `.env.local` and ran `npm run dev`
+- [x] **[Sam]** Smoke test: uploaded resume at /hire-me, ran Analyze Fit, downloaded PDF report — Firestore + Vertex AI + GCS all working
+- [x] **[Sam]** Unset env var, restarted `npm run dev` — ADC fallback works, same flow passes
+- [x] **[Sam]** Cleaned up temp files (`/tmp/.env.vercel`, `/tmp/sa-key-oneline.json`)
 
 ## Blueprint Guidance
 
@@ -93,20 +92,18 @@ Rationale: Manual testing step that cannot be automated by an agent.
 
 ## Implementation Summary
 
-**Not implemented** — this is a manual testing step. All checklist items require Sam to:
-1. Create a GCP service account key locally
-2. Set `GOOGLE_APPLICATION_CREDENTIALS_JSON` and smoke test GCP services
-3. Verify ADC fallback works without the env var
-4. Clean up the key file
+- Pulled SA key from Vercel via `vercel env pull` (reused key from REQ-112)
+- Fixed JSON encoding issue: Vercel's `\n` escaping broke dotenv parsing — resolved by compacting to single-line JSON with `json.dumps`
+- Tested explicit credentials: uploaded resume, ran full Analyze Fit flow, downloaded PDF — Firestore, Vertex AI, GCS all confirmed working
+- Tested ADC fallback: removed env var, restarted dev server, repeated same flow — all services still working via ADC
 
-*Skipped by work action (Route A) — manual step*
+*Completed manually by Sam with agent assistance*
 
 ## Testing
 
-**Tests run:** N/A
-**Result:** Manual testing step, cannot be automated
-
-*Skipped by work action*
+**Explicit credentials test:** Upload resume → Analyze Fit → Download PDF — all GCP services working
+**ADC fallback test:** Same flow without env var — all GCP services working via ADC
+**Result:** Both credential paths confirmed working
 
 ---
 *Source: docs/vercel-migration-TODO.md, Step 1.4*
