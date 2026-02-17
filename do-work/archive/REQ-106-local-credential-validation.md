@@ -1,9 +1,13 @@
 ---
 id: REQ-106
 title: "Local validation with explicit credentials"
-status: pending
+status: failed
 created_at: 2026-02-16T12:00:00-08:00
 user_request: UR-033
+claimed_at: 2026-02-16T20:00:00-08:00
+route: A
+completed_at: 2026-02-16T20:00:00-08:00
+error: "Manual testing step — all checklist items require Sam to execute locally (GCP key creation, manual smoke testing, ADC fallback verification)"
 related: [REQ-103, REQ-104, REQ-105]
 batch: "vercel-migration-phase-1"
 source_step: "1.4"
@@ -68,6 +72,41 @@ If using an existing or new service account, ensure it has the 4 roles listed in
 
 ## Dependencies
 Depends on REQ-105 (all code changes must be complete). Blocks Phase 2 work proceeding to deployment.
+
+---
+
+## Triage
+
+**Route: A** - Simple
+
+**Reasoning:** All checklist items are tagged `[Sam]` — this is a manual local testing step requiring human execution (GCP key creation, dev server smoke testing, ADC fallback verification). Cannot be automated.
+
+**Planning:** Not required
+
+## Plan
+
+**Planning not required** - Route A: Direct implementation
+
+Rationale: Manual testing step that cannot be automated by an agent.
+
+*Skipped by work action*
+
+## Implementation Summary
+
+**Not implemented** — this is a manual testing step. All checklist items require Sam to:
+1. Create a GCP service account key locally
+2. Set `GOOGLE_APPLICATION_CREDENTIALS_JSON` and smoke test GCP services
+3. Verify ADC fallback works without the env var
+4. Clean up the key file
+
+*Skipped by work action (Route A) — manual step*
+
+## Testing
+
+**Tests run:** N/A
+**Result:** Manual testing step, cannot be automated
+
+*Skipped by work action*
 
 ---
 *Source: docs/vercel-migration-TODO.md, Step 1.4*
