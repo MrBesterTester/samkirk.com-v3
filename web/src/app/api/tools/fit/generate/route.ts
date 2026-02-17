@@ -8,13 +8,7 @@ import {
   generateAndStoreFitReport,
   type FitReport,
 } from "@/lib/fit-report";
-import {
-  getSessionIdFromCookies,
-  isSessionValid,
-  getSession,
-} from "@/lib/session";
-import { enforceRateLimit, RateLimitError } from "@/lib/rate-limit";
-import { enforceSpendCap, SpendCapError } from "@/lib/spend-cap";
+import { withToolProtection } from "@/lib/tool-protection";
 
 // ============================================================================
 // Request/Response Types
@@ -48,16 +42,6 @@ interface GenerateErrorResponse {
 }
 
 type GenerateResponse = GenerateSuccessResponse | GenerateErrorResponse;
-
-// ============================================================================
-// Helper: Check Captcha Passed
-// ============================================================================
-
-async function hasCaptchaPassed(sessionId: string): Promise<boolean> {
-  const session = await getSession(sessionId);
-  if (!session) return false;
-  return !!session.captchaPassedAt;
-}
 
 // ============================================================================
 // Helper: Parse Flow State
@@ -104,79 +88,9 @@ export async function POST(
   request: NextRequest
 ): Promise<NextResponse<GenerateResponse>> {
   try {
-    // 1. Check session
-    const sessionId = await getSessionIdFromCookies();
-    if (!sessionId) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: "No session found. Please refresh the page.",
-          code: "NO_SESSION",
-        },
-        { status: 401 }
-      );
-    }
-
-    const sessionValid = await isSessionValid(sessionId);
-    if (!sessionValid) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: "Session expired. Please refresh the page.",
-          code: "SESSION_EXPIRED",
-        },
-        { status: 401 }
-      );
-    }
-
-    // 2. Check captcha
-    const captchaPassed = await hasCaptchaPassed(sessionId);
-    if (!captchaPassed) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: "Please complete the captcha verification first.",
-          code: "CAPTCHA_REQUIRED",
-        },
-        { status: 403 }
-      );
-    }
-
-    // 3. Enforce rate limit
-    try {
-      await enforceRateLimit(request);
-    } catch (error) {
-      if (error instanceof RateLimitError) {
-        return NextResponse.json(
-          {
-            success: false,
-            error: error.message,
-            code: "RATE_LIMIT_EXCEEDED",
-            contactEmail: error.contactEmail,
-          },
-          { status: error.statusCode }
-        );
-      }
-      throw error;
-    }
-
-    // 4. Enforce spend cap
-    try {
-      await enforceSpendCap();
-    } catch (error) {
-      if (error instanceof SpendCapError) {
-        return NextResponse.json(
-          {
-            success: false,
-            error: error.message,
-            code: "SPEND_CAP_EXCEEDED",
-            contactEmail: error.contactEmail,
-          },
-          { status: error.statusCode }
-        );
-      }
-      throw error;
-    }
+    // 1–4. Session, captcha, rate limit, spend cap
+    const protection = await withToolProtection(request);
+    if (!protection.ok) return protection.response;
 
     // 5. Parse request body
     let body: z.infer<typeof GenerateRequestSchema>;
