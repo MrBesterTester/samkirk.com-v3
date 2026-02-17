@@ -35,7 +35,7 @@ This guide walks through pushing to GitHub and deploying the application to Goog
 ### Step 3: Push to GitHub
 
 - [x] 3.1 Scrub sensitive GCP identifiers from history (`git-filter-repo`)
-- [ ] 3.2 Re-add origin remote
+- [x] 3.2 Re-add origin remote
 - [ ] 3.3 Force push full history to GitHub
 - [ ] 3.4 Make repository public
 - [ ] 3.5 Verify: GitHub shows full commit history, no sensitive identifiers
