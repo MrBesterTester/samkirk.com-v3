@@ -435,6 +435,7 @@ describe("sanitizeErrorForLogging", () => {
   const originalEnv = process.env.NODE_ENV;
 
   afterEach(() => {
+    // @ts-expect-error -- reassigning readonly NODE_ENV for test teardown
     process.env.NODE_ENV = originalEnv;
   });
 
@@ -469,6 +470,7 @@ describe("sanitizeErrorForLogging", () => {
   });
 
   it("should include stack trace in development", () => {
+    // @ts-expect-error -- reassigning readonly NODE_ENV for test setup
     process.env.NODE_ENV = "development";
     const error = new Error("Test");
     const result = sanitizeErrorForLogging(error);
@@ -477,6 +479,7 @@ describe("sanitizeErrorForLogging", () => {
   });
 
   it("should exclude stack trace in production", () => {
+    // @ts-expect-error -- reassigning readonly NODE_ENV for test setup
     process.env.NODE_ENV = "production";
     const error = new Error("Test");
     const result = sanitizeErrorForLogging(error);
@@ -506,6 +509,7 @@ describe("sanitizeErrorForLogging", () => {
   });
 
   it("should redact sensitive data in stack trace", () => {
+    // @ts-expect-error -- reassigning readonly NODE_ENV for test setup
     process.env.NODE_ENV = "development";
     const error = new Error("Test");
     error.stack = "Error: password=hunter2 at Function";

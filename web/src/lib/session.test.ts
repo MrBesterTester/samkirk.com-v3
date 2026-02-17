@@ -127,6 +127,7 @@ describe("session module", () => {
 
     beforeEach(() => {
       // Reset NODE_ENV after each test
+      // @ts-expect-error -- reassigning readonly NODE_ENV for test teardown
       process.env.NODE_ENV = originalNodeEnv;
     });
 
@@ -151,18 +152,21 @@ describe("session module", () => {
     });
 
     it("sets secure: true in production", () => {
+      // @ts-expect-error -- reassigning readonly NODE_ENV for test setup
       process.env.NODE_ENV = "production";
       const options = getSessionCookieOptions();
       expect(options.secure).toBe(true);
     });
 
     it("sets secure: false in development", () => {
+      // @ts-expect-error -- reassigning readonly NODE_ENV for test setup
       process.env.NODE_ENV = "development";
       const options = getSessionCookieOptions();
       expect(options.secure).toBe(false);
     });
 
     it("sets secure: false in test", () => {
+      // @ts-expect-error -- reassigning readonly NODE_ENV for test setup
       process.env.NODE_ENV = "test";
       const options = getSessionCookieOptions();
       expect(options.secure).toBe(false);
