@@ -15,13 +15,30 @@ import { enforceSpendCap, SpendCapError } from "@/lib/spend-cap";
 
 export type ToolProtectionResult =
   | { ok: true; sessionId: string }
-  | { ok: false; response: NextResponse };
+  | { ok: false; response: NextResponse<never> };
 
 export interface ToolProtectionOptions {
   /** Skip rate limit enforcement (default: false) */
   skipRateLimit?: boolean;
   /** Skip spend cap enforcement (default: false) */
   skipSpendCap?: boolean;
+}
+
+// ============================================================================
+// Internal Helper: Typed Error Response
+// ============================================================================
+
+/**
+ * Create a protection-error NextResponse typed as `never` so it is assignable
+ * to any `NextResponse<T>` the caller expects.  The cast is safe because the
+ * Body type parameter is only stored in an internal slot and never surfaced at
+ * runtime.
+ */
+function protectionError(
+  body: { success: false; error: string; code: string; contactEmail?: string },
+  init: ResponseInit
+): NextResponse<never> {
+  return NextResponse.json(body, init) as NextResponse<never>;
 }
 
 // ============================================================================
@@ -77,7 +94,7 @@ export async function withToolProtection(
   if (!sessionId) {
     return {
       ok: false,
-      response: NextResponse.json(
+      response: protectionError(
         {
           success: false,
           error: "No session found. Please refresh the page.",
@@ -92,7 +109,7 @@ export async function withToolProtection(
   if (!sessionValid) {
     return {
       ok: false,
-      response: NextResponse.json(
+      response: protectionError(
         {
           success: false,
           error: "Session expired. Please refresh the page.",
@@ -108,7 +125,7 @@ export async function withToolProtection(
   if (!captchaPassed) {
     return {
       ok: false,
-      response: NextResponse.json(
+      response: protectionError(
         {
           success: false,
           error: "Please complete the captcha verification first.",
@@ -127,7 +144,7 @@ export async function withToolProtection(
       if (error instanceof RateLimitError) {
         return {
           ok: false,
-          response: NextResponse.json(
+          response: protectionError(
             {
               success: false,
               error: error.message,
@@ -150,7 +167,7 @@ export async function withToolProtection(
       if (error instanceof SpendCapError) {
         return {
           ok: false,
-          response: NextResponse.json(
+          response: protectionError(
             {
               success: false,
               error: error.message,
