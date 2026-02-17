@@ -1,6 +1,6 @@
 # Cloud Run Deployment Guide for samkirk.com v3
 
-This guide walks through deploying the application to Google Cloud Run. It assumes you've completed all steps in `docs/GCP-SETUP.md` (Steps 1-8).
+This guide walks through pushing to GitHub and deploying the application to Google Cloud Run. It assumes you've completed all steps in `docs/GCP-SETUP.md` (Steps 1-8).
 
 > **Related documents:**
 > - `docs/GCP-SETUP.md` — GCP resource setup (Firestore, Storage, OAuth, reCAPTCHA)
@@ -26,48 +26,68 @@ This guide walks through deploying the application to Google Cloud Run. It assum
 - [x] 1.4 next.config.ts updated (standalone output + www redirect)
 - [x] 1.5 cloudbuild.yaml created (repo root)
 
-### Step 2: Artifact Registry
+### Step 2: Pre-Push Security Scan
 
-- [ ] 2.1 Create Artifact Registry repository
+- [ ] 2.1 Install gitleaks
+- [ ] 2.2 Scan git history for secrets
+- [ ] 2.3 Scan working directory for secrets
 
-### Step 3: Service Account & IAM
+### Step 3: Squashed Push to GitHub
 
-- [ ] 3.1 Create Cloud Run service account
-- [ ] 3.2 Grant roles/datastore.user (Firestore access)
-- [ ] 3.3 Grant roles/storage.objectAdmin (GCS access)
-- [ ] 3.4 Grant roles/aiplatform.user (Vertex AI access)
-- [ ] 3.5 Grant roles/secretmanager.secretAccessor (Secret Manager access)
+- [ ] 3.1 Tag current main tip (`pre-squash`)
+- [ ] 3.2 Create orphan branch with single commit
+- [ ] 3.3 Force push to GitHub
+- [ ] 3.4 Reset local main
+- [ ] 3.5 Make repository public
+- [ ] 3.6 Verify: GitHub shows 1 commit, local `pre-squash` tag has full history
 
-### Step 4: Secret Manager
+### Step 4: GitHub Actions CI
 
-- [ ] 4.1 Create google-oauth-client-id secret
-- [ ] 4.2 Create google-oauth-client-secret secret
-- [ ] 4.3 Create recaptcha-site-key secret
-- [ ] 4.4 Create recaptcha-secret-key secret
-- [ ] 4.5 Create auth-secret secret
-- [ ] 4.6 Create admin-allowed-email secret
+- [ ] 4.1 Create `.github/workflows/ci.yml`
+- [ ] 4.2 Push and verify both jobs pass green
 
-### Step 5: Deploy to Cloud Run
+### Step 5: Artifact Registry
 
-- [ ] 5.1 Build and push Docker image
-- [ ] 5.2 Deploy Cloud Run service
-- [ ] 5.3 Verify health endpoint returns 200
+- [ ] 5.1 Create Artifact Registry repository
 
-### Step 6: Custom Domain
+### Step 6: Service Account & IAM
 
-- [ ] 6.1 Add samkirk.com as custom domain in Cloud Run
-- [ ] 6.2 Configure DNS A record in Microsoft DNS
-- [ ] 6.3 Wait for SSL certificate provisioning
-- [ ] 6.4 Verify www.samkirk.com redirects to samkirk.com
+- [ ] 6.1 Create Cloud Run service account
+- [ ] 6.2 Grant roles/datastore.user (Firestore access)
+- [ ] 6.3 Grant roles/storage.objectAdmin (GCS access)
+- [ ] 6.4 Grant roles/aiplatform.user (Vertex AI access)
+- [ ] 6.5 Grant roles/secretmanager.secretAccessor (Secret Manager access)
 
-### Step 7: Cloud Scheduler
+### Step 7: Secret Manager
 
-- [ ] 7.1 Create retention-cleanup job (daily at 3 AM UTC)
+- [ ] 7.1 Create google-oauth-client-id secret
+- [ ] 7.2 Create google-oauth-client-secret secret
+- [ ] 7.3 Create recaptcha-site-key secret
+- [ ] 7.4 Create recaptcha-secret-key secret
+- [ ] 7.5 Create auth-secret secret
+- [ ] 7.6 Create admin-allowed-email secret
 
-### Step 8: Billing Budget
+### Step 8: Deploy to Cloud Run
 
-- [ ] 8.1 Create $20/month budget for samkirk-v3
-- [ ] 8.2 Configure email alerts to sam@samkirk.com (50%, 90%, 100% thresholds)
+- [ ] 8.1 Build and push Docker image
+- [ ] 8.2 Deploy Cloud Run service
+- [ ] 8.3 Verify health endpoint returns 200
+
+### Step 9: Custom Domain
+
+- [ ] 9.1 Add samkirk.com as custom domain in Cloud Run
+- [ ] 9.2 Configure DNS A record in Microsoft DNS
+- [ ] 9.3 Wait for SSL certificate provisioning
+- [ ] 9.4 Verify www.samkirk.com redirects to samkirk.com
+
+### Step 10: Cloud Scheduler
+
+- [ ] 10.1 Create retention-cleanup job (daily at 3 AM UTC)
+
+### Step 11: Billing Budget
+
+- [ ] 11.1 Create $20/month budget for samkirk-v3
+- [ ] 11.2 Configure email alerts to sam@samkirk.com (50%, 90%, 100% thresholds)
 
 ### Final Verification
 
@@ -81,7 +101,146 @@ This guide walks through deploying the application to Google Cloud Run. It assum
 
 ---
 
-## Step 2: Create Artifact Registry Repository
+## Step 2: Pre-Push Security Scan
+
+Before pushing to GitHub (especially before making the repo public), scan for any secrets that may have been committed to the git history.
+
+### 2.1 Install gitleaks
+
+```bash
+brew install gitleaks
+```
+
+### 2.2 Scan Git History
+
+```bash
+# Scan all commits in the git history
+gitleaks detect --source . --verbose
+```
+
+This scans every commit for patterns matching API keys, tokens, passwords, etc. All findings must be resolved before proceeding.
+
+### 2.3 Scan Working Directory
+
+```bash
+# Scan the current working directory (no git history)
+gitleaks detect --source . --no-git --verbose
+```
+
+This catches any secrets in untracked or uncommitted files.
+
+> **Both scans must pass clean before proceeding to Step 3.**
+
+---
+
+## Step 3: Squashed Push to GitHub
+
+The local repo has 262+ commits of development history. We'll push a single squashed commit to GitHub to keep the public history clean, while preserving the full history locally via a tag.
+
+### 3.1 Tag Current Main Tip
+
+```bash
+# Preserve the full history locally
+git tag pre-squash
+```
+
+### 3.2 Create Orphan Branch with Single Commit
+
+```bash
+# Create an orphan branch (no parent commits)
+git checkout --orphan squashed-main
+
+# All files are already staged on an orphan branch
+git commit -m "Initial commit: samkirk.com v3
+
+Personal portfolio and AI tools platform built with Next.js 15,
+TypeScript, Google Cloud (Firestore, Vertex AI, Cloud Storage),
+and NextAuth.js.
+
+Squashed from 262 development commits. Full history preserved
+locally via 'pre-squash' tag."
+```
+
+### 3.3 Force Push to GitHub
+
+```bash
+# Push the single-commit branch as main
+git push origin squashed-main:main --force
+```
+
+### 3.4 Reset Local Main
+
+```bash
+# Switch back to main and reset to match the squashed commit
+git checkout main
+git reset --soft squashed-main
+
+# Clean up the temporary branch
+git branch -d squashed-main
+```
+
+### 3.5 Make Repository Public
+
+```bash
+gh repo edit --visibility public
+```
+
+### 3.6 Verify
+
+```bash
+# GitHub should show 1 commit
+gh api repos/MrBesterTester/samkirk.com-v3/commits --jq 'length'
+
+# Local pre-squash tag still has full history
+git log pre-squash --oneline | wc -l
+# Should show 262+
+```
+
+---
+
+## Step 4: GitHub Actions CI
+
+### 4.1 Create CI Workflow
+
+The workflow file has already been created at `.github/workflows/ci.yml`. It defines two parallel jobs:
+
+**build-and-test:**
+- Checks out code, sets up Node 20
+- `npm ci` (with `web/package-lock.json` cache)
+- `npx tsc --noEmit` (type checking)
+- `npm run lint` (ESLint)
+- `npm run build` (Next.js production build)
+- Uploads `.next/standalone/` as artifact
+
+**security-scan:**
+- gitleaks (full history scan via `fetch-depth: 0`)
+- `npm audit` (non-blocking, `continue-on-error: true`)
+- CodeQL static analysis (JavaScript)
+
+All Node commands use `working-directory: web` for the monorepo layout.
+
+> **Note:** Unit and E2E tests are not included in CI — they require GCP services (Firestore emulator, Vertex AI). The combination of type checking + linting + production build catches most issues. Tests can be added later with GCP emulator setup.
+
+### 4.2 Push and Verify
+
+```bash
+# Stage and commit the workflow file
+git add .github/workflows/ci.yml
+git commit -m "Add GitHub Actions CI workflow"
+git push origin main
+
+# Watch the CI run
+gh run watch
+
+# Or check status
+gh run list --limit 5
+```
+
+Both jobs should pass green. If gitleaks flags anything, resolve it before continuing.
+
+---
+
+## Step 5: Create Artifact Registry Repository
 
 ```bash
 # Enable Artifact Registry API (if not already enabled)
@@ -99,9 +258,9 @@ gcloud artifacts repositories list --location=us-central1
 
 ---
 
-## Step 3: Service Account & IAM
+## Step 6: Service Account & IAM
 
-### 3.1 Create Cloud Run Service Account
+### 6.1 Create Cloud Run Service Account
 
 ```bash
 # Create the service account
@@ -113,7 +272,7 @@ gcloud iam service-accounts create samkirk-v3-cloudrun \
 gcloud iam service-accounts list --filter="email:samkirk-v3-cloudrun"
 ```
 
-### 3.2-3.5 Grant IAM Roles
+### 6.2-6.5 Grant IAM Roles
 
 ```bash
 # Define the service account email
@@ -148,7 +307,7 @@ gcloud projects get-iam-policy samkirk-v3 \
 
 ---
 
-## Step 4: Secret Manager
+## Step 7: Secret Manager
 
 ### Enable Secret Manager API
 
@@ -164,27 +323,27 @@ gcloud services enable secretmanager.googleapis.com
 # Get values from your .env.local file and create secrets
 # DO NOT commit these values to git!
 
-# 4.1 Google OAuth Client ID
+# 7.1 Google OAuth Client ID
 echo -n "YOUR_GOOGLE_OAUTH_CLIENT_ID" | \
   gcloud secrets create google-oauth-client-id --data-file=-
 
-# 4.2 Google OAuth Client Secret
+# 7.2 Google OAuth Client Secret
 echo -n "YOUR_GOOGLE_OAUTH_CLIENT_SECRET" | \
   gcloud secrets create google-oauth-client-secret --data-file=-
 
-# 4.3 reCAPTCHA Site Key
+# 7.3 reCAPTCHA Site Key
 echo -n "YOUR_RECAPTCHA_SITE_KEY" | \
   gcloud secrets create recaptcha-site-key --data-file=-
 
-# 4.4 reCAPTCHA Secret Key
+# 7.4 reCAPTCHA Secret Key
 echo -n "YOUR_RECAPTCHA_SECRET_KEY" | \
   gcloud secrets create recaptcha-secret-key --data-file=-
 
-# 4.5 Auth Secret (NextAuth.js)
+# 7.5 Auth Secret (NextAuth.js)
 echo -n "YOUR_AUTH_SECRET" | \
   gcloud secrets create auth-secret --data-file=-
 
-# 4.6 Admin Allowed Email
+# 7.6 Admin Allowed Email
 echo -n "sam@samkirk.com" | \
   gcloud secrets create admin-allowed-email --data-file=-
 ```
@@ -197,7 +356,7 @@ gcloud secrets list
 
 ---
 
-## Step 5: Deploy to Cloud Run
+## Step 8: Deploy to Cloud Run
 
 ### Option A: Using Cloud Build (Recommended)
 
@@ -216,7 +375,7 @@ This will:
 If you prefer manual control:
 
 ```bash
-# 5.1 Build the Docker image locally
+# 8.1 Build the Docker image locally
 cd web
 docker build -t us-central1-docker.pkg.dev/samkirk-v3/samkirk-v3/web:latest .
 
@@ -226,7 +385,7 @@ gcloud auth configure-docker us-central1-docker.pkg.dev
 # Push the image
 docker push us-central1-docker.pkg.dev/samkirk-v3/samkirk-v3/web:latest
 
-# 5.2 Deploy to Cloud Run
+# 8.2 Deploy to Cloud Run
 gcloud run deploy samkirk-v3 \
   --image=us-central1-docker.pkg.dev/samkirk-v3/samkirk-v3/web:latest \
   --region=us-central1 \
@@ -242,7 +401,7 @@ gcloud run deploy samkirk-v3 \
   --max-instances=10
 ```
 
-### 5.3 Verify Health Endpoint
+### 8.3 Verify Health Endpoint
 
 ```bash
 # Get the Cloud Run URL
@@ -255,9 +414,9 @@ curl "${CLOUD_RUN_URL}/api/health"
 
 ---
 
-## Step 6: Custom Domain
+## Step 9: Custom Domain
 
-### 6.1 Add Custom Domain in Cloud Run
+### 9.1 Add Custom Domain in Cloud Run
 
 ```bash
 # Open Cloud Run console to add domain mapping
@@ -271,7 +430,7 @@ In the console:
 4. Click **"Continue"**
 5. Copy the provided DNS records
 
-### 6.2 Configure DNS in Microsoft DNS
+### 9.2 Configure DNS in Microsoft DNS
 
 Add these records in your Microsoft DNS management console:
 
@@ -283,7 +442,7 @@ Add these records in your Microsoft DNS management console:
 
 > **Note:** DNS propagation can take up to 48 hours.
 
-### 6.3-6.4 Verify SSL and Redirect
+### 9.3-9.4 Verify SSL and Redirect
 
 ```bash
 # Wait for SSL certificate (may take 15-30 minutes)
@@ -297,7 +456,7 @@ curl -I https://www.samkirk.com/
 
 ---
 
-## Step 7: Cloud Scheduler
+## Step 10: Cloud Scheduler
 
 Create a scheduled job to trigger the retention cleanup endpoint daily.
 
@@ -324,9 +483,9 @@ gcloud scheduler jobs run retention-cleanup --location=us-central1
 
 ---
 
-## Step 8: Billing Budget
+## Step 11: Billing Budget
 
-### 8.1-8.2 Create Budget with Email Alerts
+### 11.1-11.2 Create Budget with Email Alerts
 
 ```bash
 # Open Billing Budgets console
@@ -391,6 +550,14 @@ gcloud logging read "resource.type=cloud_run_revision AND resource.labels.servic
    - Authorized JavaScript origins: `https://samkirk.com`
    - Authorized redirect URIs: `https://samkirk.com/api/auth/callback/google`
 
+### GitHub Actions CI Fails
+
+**gitleaks failure:** A secret was detected in the commit history. Remove it using `git filter-branch` or BFG Repo Cleaner, then force push.
+
+**CodeQL failure:** Review the security alerts in the GitHub Security tab and fix the flagged code.
+
+**Build failure:** Run `npm run build` locally in the `web/` directory to reproduce and fix.
+
 ---
 
 ## Quick Reference Commands
@@ -413,6 +580,12 @@ gcloud scheduler jobs describe retention-cleanup --location=us-central1
 
 # Manual retention cleanup
 curl -X POST https://samkirk.com/api/maintenance/retention
+
+# Check GitHub Actions status
+gh run list --limit 5
+
+# Watch a CI run
+gh run watch
 ```
 
 ---
@@ -453,6 +626,6 @@ $ npm run lint
 ✓ No lint errors
 ```
 
-### Step 2-8: (To be completed)
+### Steps 2-11: (To be completed)
 
 _Document execution results here as steps are completed._
