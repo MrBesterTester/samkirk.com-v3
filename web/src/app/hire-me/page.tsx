@@ -47,8 +47,8 @@ export default function HireMePage() {
         </li>
         <li>
           Downloads are a complete .zip package with both inputs and outputs of
-          your session for traceability. Typically, you'll select the output
-          folder after it's unzipped and choose your file in the formats of .txt,
+          your session for traceability. Typically, you&apos;ll select the output
+          folder after it&apos;s unzipped and choose your file in the formats of .txt,
           .md and .html.
         </li>
       </ul>
