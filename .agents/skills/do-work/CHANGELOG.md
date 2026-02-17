@@ -4,6 +4,15 @@ What's new, what's better, what's different. Most recent stuff on top.
 
 ---
 
+## 0.14.0 — The Bouncer II (2026-02-17)
+
+Strict serial ordering is now enforced. No REQ can be processed until every lower-numbered REQ is fully completed or failed. This prevents the work loop from jumping ahead past dependencies — if REQ-120 is stuck in `working/` or still pending, REQ-121+ are blocked and the loop reports the blocker instead of charging ahead.
+
+- Added Strict Serial Order Rule to Step 1 with efficient checking algorithm
+- Work loop checks `working/` for stuck lower-numbered REQs before claiming anything
+- Reports blocker with resolution options (complete, re-queue, or fail the stuck REQ)
+- Updated orchestrator checklist and common mistakes list
+
 ## 0.13.0 — The Handoff (2026-02-17)
 
 Mixed checklists now work. When a REQ has both AI and human items (tagged with `[Sam]`, `[Manual]`, etc.), the work loop handles AI items first, then prompts the user for their manual items before moving on. No more skipping half the checklist because it said "[Sam]" next to it.

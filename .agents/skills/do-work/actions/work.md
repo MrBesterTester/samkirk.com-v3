@@ -279,11 +279,48 @@ The work action is an **orchestrator**. You (the orchestrator) are responsible f
 
 1. **List** (don't read) `REQ-*.md` filenames in `do-work/` folder using a shell command (e.g., `ls do-work/REQ-*.md`). Do NOT use file-search tools that respect `.gitignore` — the `do-work/` folder is gitignored.
 2. Sort by filename (REQ-001 before REQ-002)
-3. Pick the first one
+3. **Enforce strict serial order** before picking the first one (see below)
+4. Pick the first eligible one
 
 **Important**: Do NOT read the contents of all request files. Only list filenames to find the next one. You'll read the chosen request in Step 3.
 
 If no request files found, report completion and exit.
+
+#### Strict Serial Order Rule
+
+**No REQ may be processed until ALL lower-numbered REQs are fully completed.** This is a hard constraint — no exceptions.
+
+Before claiming the first pending REQ (e.g., REQ-025), verify that every REQ with a lower number (REQ-001 through REQ-024) is accounted for. A lower-numbered REQ is "accounted for" if it exists in any of these locations with `status: completed` or `status: failed`:
+
+1. `do-work/archive/` (root level)
+2. `do-work/archive/UR-*/` (inside archived UR folders)
+
+If a lower-numbered REQ is found in any of these locations, it is **NOT accounted for** and blocks the queue:
+
+- `do-work/` (still pending in the queue)
+- `do-work/working/` (claimed but not finished — stuck from a previous session)
+
+**How to check efficiently:**
+
+You do NOT need to scan every number from 1 to N. Instead:
+
+1. Extract the REQ number from the first pending file in the queue (e.g., REQ-121 → 121)
+2. Check `do-work/working/` for any `REQ-*.md` files — if any exist with a lower number, they block
+3. Check `do-work/` itself for any other `REQ-*.md` files with lower numbers (shouldn't happen since you sorted, but verify)
+
+If a lower-numbered REQ is found in `do-work/working/` (stuck from a previous session), you cannot process anything. Report the blocker and exit:
+
+```
+Blocked: REQ-120 is still in working/ (claimed but not completed from a previous session).
+All higher-numbered REQs are blocked until REQ-120 is resolved.
+
+Options:
+- Complete REQ-120 manually
+- Move it back to the queue: mv do-work/working/REQ-120-*.md do-work/
+- Archive it as failed: update status to "failed" and mv to do-work/archive/
+```
+
+**Why strict ordering?** REQs are numbered in dependency order — later REQs often depend on earlier ones being complete. Processing out of order risks building on foundations that don't exist yet.
 
 ### Step 2: Claim the Request
 
@@ -1039,6 +1076,7 @@ Use this checklist to ensure you don't skip critical steps:
 
 ```
 □ Step 1: List REQ-*.md files in do-work/, pick first one
+□ Step 1: Enforce strict serial order — check working/ for stuck lower-numbered REQs
 □ Step 2: mkdir -p do-work/working && mv do-work/REQ-XXX.md do-work/working/
 □ Step 2: Update frontmatter: status: claimed, claimed_at: <timestamp>
 □ Step 3: Read request, decide route (A/B/C), update frontmatter with route
@@ -1062,6 +1100,7 @@ Use this checklist to ensure you don't skip critical steps:
 ```
 
 **Common mistakes to avoid:**
+- **Processing a REQ before all lower-numbered REQs are done** — strict serial order is mandatory, no skipping ahead
 - Spawning implementation agent without first moving file to `working/`
 - Completing implementation without moving file to `archive/`
 - Forgetting to update status in frontmatter
