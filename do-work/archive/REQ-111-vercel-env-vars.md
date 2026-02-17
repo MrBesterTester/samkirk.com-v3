@@ -1,9 +1,12 @@
 ---
 id: REQ-111
 title: "Configure environment variables in Vercel"
-status: pending
+status: completed
 created_at: 2026-02-16T12:00:00-08:00
 user_request: UR-033
+claimed_at: 2026-02-16T20:02:00-08:00
+route: A
+completed_at: 2026-02-16T20:07:00-08:00
 related: [REQ-110, REQ-112]
 batch: "vercel-migration-phase-3"
 source_step: "3.2"
@@ -18,9 +21,9 @@ model_hint: ""
 Sam retrieves all secret values from GCP Secret Manager and adds all 13 env vars (5 plain text + 7 sensitive + 1 NEXT_PUBLIC) to the Vercel dashboard.
 
 ## Checklist
-- [ ] **[Sam]** Retrieve all secret values from GCP Secret Manager (6 secrets)
-- [ ] **[Sam]** Add all 13 env vars to Vercel dashboard (5 plain text + 7 sensitive + 1 NEXT_PUBLIC)
-- [ ] **[Sam]** Double-check: `GOOGLE_APPLICATION_CREDENTIALS_JSON` is the full JSON blob (not a file path)
+- [x] **[Sam]** Retrieve all secret values from GCP Secret Manager (6 secrets)
+- [x] **[Sam]** Add all 13 env vars to Vercel dashboard (5 plain text + 7 sensitive + 1 NEXT_PUBLIC)
+- [x] **[Sam]** Double-check: `GOOGLE_APPLICATION_CREDENTIALS_JSON` is the full JSON blob (not a file path)
 
 ## Blueprint Guidance
 
@@ -71,3 +74,36 @@ Depends on REQ-110 (project must exist) and REQ-112 (SA key needed for one of th
 
 ---
 *Source: docs/vercel-migration-TODO.md, Step 3.2*
+
+---
+
+## Triage
+
+**Route: A** - Simple
+
+**Reasoning:** Manual dashboard task — retrieve secrets via gcloud CLI, paste into Vercel dashboard.
+
+**Planning:** Not required
+
+## Plan
+
+**Planning not required** - Route A: Direct implementation
+
+Rationale: Clear list of 13 env vars to add. CLI fetched all secret values, Sam pasted into Vercel.
+
+*Skipped by work action*
+
+## Implementation Summary
+
+- Retrieved 6 secret values from GCP Secret Manager via `gcloud secrets versions access`
+- Sam added all 13 env vars to Vercel dashboard (5 plain text + 7 sensitive + 1 NEXT_PUBLIC)
+- GOOGLE_APPLICATION_CREDENTIALS_JSON set as full JSON blob from SA key
+
+*Completed by work action (Route A) — gcloud CLI + manual step by Sam*
+
+## Testing
+
+**Tests run:** N/A
+**Result:** Manual dashboard action — verification will occur during first deploy (REQ-113).
+
+*Verified by work action*
