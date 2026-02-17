@@ -13,6 +13,7 @@ This is the day-to-day reference for samkirk-v3 development. It covers the AI-as
   - [Source Materials](#source-materials)
 - [Local Development](#local-development)
 - [Deploying to Production](#deploying-to-production)
+- [Deploying to Vercel](#deploying-to-vercel)
 - [Cheat Sheet — Slash Commands](#cheat-sheet--slash-commands)
   - [do-work (task queue)](#do-work-task-queue)
   - [do-work companions](#do-work-companions)
@@ -237,6 +238,88 @@ See `docs/GCP-DEPLOY.md` for full infrastructure setup (one-time) and troublesho
 
 ---
 
+## Deploying to Vercel
+
+The project is also configured for Vercel deployment (Next.js on Vercel's platform). The Vercel MCP server provides deployment management directly from Claude Code.
+
+### Prerequisites
+
+| Prerequisite | Check | Setup |
+|---|---|---|
+| Vercel CLI | `vercel whoami` | `npm i -g vercel && vercel login` |
+| Project linked | `cat web/.vercel/project.json` | `cd web && vercel link` |
+| Vercel MCP | `/mcp` → select `vercel` | Add to `.mcp.json` (see below) |
+
+The MCP server is configured in `.mcp.json` at the project root:
+
+```json
+{
+  "mcpServers": {
+    "vercel": {
+      "type": "http",
+      "url": "https://mcp.vercel.com"
+    }
+  }
+}
+```
+
+### Authentication
+
+```bash
+/login-vercel
+```
+
+This verifies CLI auth, project linking, and MCP connectivity in one step. The browser auth flow supports passkeys stored in macOS Passwords.
+
+### Deploy
+
+Use the Vercel MCP `deploy_to_vercel` tool from Claude Code, or deploy manually:
+
+```bash
+cd web && vercel --prod
+```
+
+Preview deployments (non-production) are created automatically for non-main branches, or manually:
+
+```bash
+cd web && vercel
+```
+
+### Vercel MCP Capabilities
+
+The Vercel MCP server (`mcp__vercel__*` tools) provides:
+
+| Capability | Tool | Example use |
+|---|---|---|
+| Deploy | `deploy_to_vercel` | Deploy the current project |
+| Build logs | `get_deployment_build_logs` | Debug a failed deployment |
+| Runtime logs | `get_runtime_logs` | Investigate production errors |
+| Project info | `get_project`, `list_projects` | Check project config |
+| Deployments | `list_deployments`, `get_deployment` | Review deployment history |
+| Protected URLs | `web_fetch_vercel_url` | Fetch auth-protected preview URLs |
+| Docs search | `search_vercel_documentation` | Look up Vercel platform features |
+
+### Troubleshooting
+
+```bash
+# Check CLI auth
+vercel whoami
+
+# Check project link
+cat web/.vercel/project.json
+
+# List recent deployments
+vercel ls
+
+# View build logs for latest deployment (via MCP)
+# Ask Claude: "show me the build logs for the latest deployment"
+
+# Re-authenticate if token expired
+vercel login
+```
+
+---
+
 ## Cheat Sheet — Slash Commands
 
 All custom slash commands available in this project.
@@ -281,6 +364,7 @@ Aliases: `run`/`go`/`start`, `list`/`status`/`queue`, `verify`/`check`/`evaluate
 | `/restart-dev-server` | Rebuild and start the Next.js dev server on localhost:3000 |
 | `/login-gcloud` | Set up GCP Application Default Credentials |
 | `/deploy-gcloud` | Deploy to Google Cloud Run via Cloud Build |
+| `/login-vercel` | Authenticate Vercel CLI + verify MCP connection |
 
 ---
 

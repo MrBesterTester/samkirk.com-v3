@@ -1,6 +1,6 @@
 # samkirk.com v3
 
-Personal website and showcase of Sam Kirk's projects over the past three years in generative AI, mainly in software development.
+Personal website and showcase of Sam Kirk's projects over the past three years in generative AI, mainly in software development. Built using state-of-the-art generative AI methods, layering Matt Maher's do-work methodology on top of Dylan Davis' 3-document method.
 
 **Interview Me NOW - LLM-powered hiring tools - The Sam Kirk chatbot** — Upload a job description to the Sam Kirk chatbot to get a tailored fit analysis, a custom two-page resume, or just have an interactive interview with my chatbot alter ego, all driven by a master resume and Vertex AI.
 
@@ -123,7 +123,7 @@ samkirk-v3/
 
 ## Development Methodology
 
-This project was built entirely with AI, blending two methodologies: **Dylan Davis's three-document system** (Specification, Blueprint, TODO) for structured planning, and **Matt Maher's do-work pattern** for autonomous execution. A custom `/ingest-todo` bridge connects the two — TODO steps become do-work queue items that process autonomously with fresh AI context per task.
+This project was built entirely with AI, layering **Matt Maher's do-work methodology** for autonomous execution on top of **Dylan Davis's three-document system** (Specification, Blueprint, TODO) for structured planning. A custom `/ingest-todo` bridge connects the two — TODO steps become do-work queue items that process autonomously with fresh AI context per task.
 
 **For the full write-up** (how both methods work, the bridge, workflow diagrams, and links to original source videos): **[Development Methodology in the Developer Guide](README_dev_guide.md#development-methodology)**
 

@@ -164,8 +164,9 @@ export default function Home() {
             This Showcase of genAI
           </h2>
           <p className="mt-1 text-text-secondary">
-            This site was built using state-of-the-art generative AI methods
-            from Dylan Davis and Matt Maher.
+            This site was built using state-of-the-art generative AI
+            methods, layering Matt Maher&apos;s do-work methodology on top
+            of Dylan Davis&apos; 3-document method.
           </p>
           <a
             href="https://github.com/MrBesterTester/samkirk.com-v3"
