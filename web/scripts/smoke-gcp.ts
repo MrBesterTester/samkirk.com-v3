@@ -2252,12 +2252,6 @@ ${resumeContext}
       transcriptLines.push("");
     }
 
-    transcriptLines.push("## Sources Referenced");
-    transcriptLines.push("");
-    testChunks.forEach((chunk, i) => {
-      transcriptLines.push(`${i + 1}. **${chunk.title}** — ${chunk.sourceRef}`);
-    });
-
     const transcript = transcriptLines.join("\n");
 
     // Write transcript to GCS
