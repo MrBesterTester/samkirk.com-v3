@@ -158,6 +158,24 @@ export default function Home() {
             Browse explorations &rarr;
           </Link>
         </section>
+
+        <section>
+          <h2 className="text-2xl font-semibold text-text-primary">
+            This Showcase of genAI
+          </h2>
+          <p className="mt-1 text-text-secondary">
+            This site was built using state-of-the-art generative AI methods
+            from Dylan Davis and Matt Maher.
+          </p>
+          <a
+            href="https://github.com/MrBesterTester/samkirk.com-v3"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-2 inline-block font-medium text-accent hover:text-accent-hover"
+          >
+            View the source on GitHub &rarr;
+          </a>
+        </section>
       </div>
     </div>
   );
