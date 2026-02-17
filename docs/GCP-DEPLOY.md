@@ -28,9 +28,9 @@ This guide walks through pushing to GitHub and deploying the application to Goog
 
 ### Step 2: Pre-Push Security Scan
 
-- [ ] 2.1 Install gitleaks
-- [ ] 2.2 Scan git history for secrets
-- [ ] 2.3 Scan working directory for secrets
+- [x] 2.1 Install gitleaks
+- [x] 2.2 Scan git history for secrets
+- [x] 2.3 Scan working directory for secrets
 
 ### Step 3: Squashed Push to GitHub
 
