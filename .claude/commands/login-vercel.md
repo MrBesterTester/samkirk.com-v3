@@ -2,17 +2,14 @@ Re-authenticate the Vercel CLI and verify the MCP connection.
 
 **Steps:**
 
-1. Check the current Vercel CLI login status:
-   ```
-   vercel whoami
-   ```
-   If already authenticated, note the username and skip to step 3.
-
-2. If not authenticated, run:
+1. Tell the user: "A browser tab will open for Vercel OAuth — select **Other** login option, then **Passkey**, OK with Touch ID, then click **OK** to authorize the device."
+   Then run `vercel login` to authenticate (always run this, even if already logged in):
    ```
    vercel login
    ```
-   This opens the browser where the user can authenticate with their passkey (stored in macOS Passwords) or another method. Wait for the login to complete.
+   Wait for the login to complete.
+
+2. After login completes, open a new browser tab to `https://vercel.com` using the Claude in Chrome extension so the user can visually confirm they are logged into their Vercel dashboard.
 
 3. Verify the project is linked by checking for `.vercel/project.json` in the `web/` directory:
    ```
