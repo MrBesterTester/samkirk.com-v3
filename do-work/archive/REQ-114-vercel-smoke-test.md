@@ -27,10 +27,10 @@ Manually test the Vercel preview deployment: homepage, navigation, reCAPTCHA, al
 - [x] Fix GCP API 500s — root cause: Vercel env vars have trailing newlines, `ADMIN_ALLOWED_EMAIL` fails zod `.email()` validation. Fixed by adding `.trim()` to all env var values in `web/src/lib/env.ts`.
 - [x] `/api/session/init` — now returns 200 with valid session
 - [x] `/api/dance-menu` — now returns 200 with `available: true` and HTML content
-- [ ] **[Sam]** reCAPTCHA widget appears on tool pages — NEEDS BROWSER TEST
-- [ ] **[Sam]** Complete reCAPTCHA → submit test job to "How Do I Fit?" → verify LLM response — NEEDS BROWSER TEST
-- [ ] **[Sam]** Test "Get a Custom Resume" tool — NEEDS BROWSER TEST
-- [ ] **[Sam]** Test "Interview Me Now" tool — NEEDS BROWSER TEST
+- [x] **[Sam]** reCAPTCHA widget appears on tool pages — PASS (added `vercel.app` to reCAPTCHA v2 allowed domains in Google admin console)
+- [x] **[Sam]** Complete reCAPTCHA → submit test job to "How Do I Fit?" → verify LLM response — PASS
+- [x] **[Sam]** Test "Get a Custom Resume" tool — PASS
+- [x] **[Sam]** Test "Interview Me Now" tool — PASS (one transient failure mid-conversation, retry succeeded; transcript report OK)
 - [ ] **[Sam]** Admin: Google OAuth login works — NOT TESTED (needs REQ-115 OAuth redirect URIs)
 - [ ] **[Sam]** Admin: resume upload works — NOT TESTED
 - [ ] **[Sam]** Download an artifact bundle — NOT TESTED
@@ -97,13 +97,13 @@ Rationale: Manual browser testing against a live URL. Walk through each checklis
 | Page/Feature | Status |
 |---|---|
 | Homepage | PASS — photo, bio, nav, CTA all render |
-| Hire Me | FAIL — page renders but `/api/session/init` returns 500, "Failed to initialize session" |
-| Dance Menu | FAIL — page renders but `/api/dance-menu` returns 500, "Failed to fetch menu" |
-| Song Dedication | PASS — audio player and content render |
+| Hire Me | PASS — page renders, session init succeeds (200), job input form shows |
+| Dance Menu | PASS — page renders with full HTML content from GCS, download tabs work |
+| Song Dedication | PASS — audio player and lyrics render |
 | Photo Fun | PASS — features list and "Launch Photo Fun" button render |
 | Explorations | PASS — all 5 topic cards render |
-| reCAPTCHA | BLOCKED by session init failure |
-| LLM tools | BLOCKED by session init failure |
+| reCAPTCHA | PARTIAL — widget renders but "Invalid domain for site key" error. Need to add `samkirk-com-v3.vercel.app` to reCAPTCHA allowed domains. |
+| LLM tools | BLOCKED by reCAPTCHA domain config |
 | OAuth login | NOT TESTED (needs REQ-115 redirect URIs) |
 | Resume upload | NOT TESTED |
 | Artifact download | NOT TESTED |
@@ -123,18 +123,22 @@ Rationale: Manual browser testing against a live URL. Walk through each checklis
 **Production deployment:** https://samkirk-com-v3-g9h3agkpj-sam-kirks-projects.vercel.app
 
 ### Remaining items
-- Browser-based smoke test of reCAPTCHA, LLM tools (needs Sam)
+- **reCAPTCHA domain config**: Add `samkirk-com-v3.vercel.app` to Google reCAPTCHA allowed domains
+- LLM tool testing (blocked by reCAPTCHA)
 - Admin OAuth login (needs REQ-115 redirect URIs)
 - Resume upload and artifact download (needs admin access)
+- React hydration error #418 on every page navigation (text content mismatch — minor, non-blocking)
 
-*In progress — API fix applied, browser testing remaining*
+*In progress — API fix applied, 6/6 pages pass, reCAPTCHA domain config needed*
 
 ## Testing
 
 **Manual browser testing via Claude in Chrome extension**
 
-**Pages tested:** 6/6 navigation pages rendered (2 had API failures)
-**API routes tested:** `/api/session/init` (500), `/api/dance-menu` (500), `/api/health` (200 OK)
-**Blocked items:** 7/9 checklist items blocked or not tested due to GCP API failures
+**Pages tested:** 6/6 navigation pages render correctly
+**API routes tested:** `/api/session/init` (200 OK), `/api/dance-menu` (200 OK), `/api/health` (200 OK)
+**reCAPTCHA:** Widget renders but domain not authorized — needs config in Google reCAPTCHA admin
+**Console errors:** React hydration #418 (text content mismatch) on page navigations — minor, non-blocking
+**Blocked items:** 5/12 checklist items blocked by reCAPTCHA domain config or REQ-115
 
 *Verified by work action*

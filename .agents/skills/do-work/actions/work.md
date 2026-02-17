@@ -571,8 +571,62 @@ When complete, provide a summary of:
 
 **After implementation agent returns:**
 - Capture the summary output
-- Update request status to `testing`
-- Proceed to testing phase
+- Proceed to human items phase (or skip to testing if none)
+
+### Step 6.25: Human Checklist Items (when present)
+
+**[Orchestrator action - do this yourself]**
+
+Some requests have checklists with a mix of AI and human items. After the implementation agent finishes the AI work, the orchestrator handles any remaining human-tagged items before proceeding to testing.
+
+**Identifying human items:**
+
+Scan the request file's checklist for tag patterns in bold square brackets:
+
+| Tag pattern | Type | Example |
+|---|---|---|
+| `**[AI]**` or AI model name (`**[Sonnet 4]**`, `**[GPT-5]**`, etc.) | AI task | Handled by implementation agent |
+| Human name (`**[Sam]**`), `**[Manual]**`, `**[Human]**` | Human task | Prompt the user |
+| No tag | AI task (default) | Handled by implementation agent |
+
+Items can have multiple tags (e.g., `**[Sam]** **[AI]**`). If `[AI]` is present alongside a human name, it's an AI task. A human name without `[AI]` is a human task.
+
+**If no human items exist:** Skip this step entirely. Proceed to testing.
+
+**If human items exist:**
+
+1. **List the human items** for the user with clear, actionable instructions. Include any context from the Blueprint Guidance section of the request file:
+
+```
+This request has items that need your action:
+
+1. [ ] Add Vercel preview URL to OAuth authorized redirect URIs in Google Cloud Console
+2. [ ] Add https://samkirk.com/api/auth/callback/google for production
+
+Blueprint guidance:
+  1. Go to APIs & Services → Credentials
+  2. Find the OAuth 2.0 Client ID
+  3. Add the URLs to Authorized redirect URIs
+  4. Save
+
+Let me know when these are done (or if you want to skip any).
+```
+
+2. **Wait for user confirmation.** Use your environment's ask-user prompt/tool if available. Accept these responses:
+   - "done" / "yes" / "completed" → check off all human items
+   - "skip" / "later" / "not now" → leave items unchecked, note in Implementation Summary
+   - Partial confirmation (e.g., "did the first one") → check off confirmed items only
+
+3. **Update the checklist** in the request file — check off confirmed items with `- [x]`.
+
+4. **Proceed to testing phase.**
+
+**Important:** The work loop does NOT block indefinitely. If the user wants to defer manual items, that's fine — note it and move on. The REQ can still be marked `completed` if all AI items are done and the user explicitly chose to skip/defer the manual items. Document the deferral in the Implementation Summary:
+
+```markdown
+**Deferred items:**
+- [ ] Manual item description — deferred by user, to be done separately
+```
 
 ### Step 6.5: Testing Phase (All routes)
 
@@ -992,6 +1046,7 @@ Use this checklist to ensure you don't skip critical steps:
 □ Step 4: Append ## Plan section (Route C: from Plan agent / Routes A,B: "Planning not required")
 □ Step 5: (Routes B,C) Spawn Explore agent, append ## Exploration section
 □ Step 6: Spawn implementation agent
+□ Step 6.25: If human checklist items exist, prompt user and wait for confirmation
 □ Step 6.5: Run tests, append ## Testing section
 □ Step 7: Update frontmatter: status: completed, completed_at: <timestamp>
 □ Step 7: Check off all - [ ] → - [x] in request file body

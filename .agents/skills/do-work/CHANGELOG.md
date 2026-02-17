@@ -4,6 +4,15 @@ What's new, what's better, what's different. Most recent stuff on top.
 
 ---
 
+## 0.13.0 — The Handoff (2026-02-17)
+
+Mixed checklists now work. When a REQ has both AI and human items (tagged with `[Sam]`, `[Manual]`, etc.), the work loop handles AI items first, then prompts the user for their manual items before moving on. No more skipping half the checklist because it said "[Sam]" next to it.
+
+- Added Step 6.25: Human Checklist Items — identifies human-tagged items and prompts the user
+- Tag detection: `[AI]`/model names → AI task, human names/`[Manual]` → human task, untagged → AI default
+- User can confirm, partially complete, or defer manual items without blocking the queue
+- Updated orchestrator checklist with new step
+
 ## 0.12.5 — The Duplicate Blind Spot (2026-02-16)
 
 Step 2's duplicate check now looks inside `archive/UR-*/` folders. Previously it only checked `do-work/working/` and `do-work/archive/` top-level, but all archived REQs live inside UR subfolders — so the check found nothing and agents could create redundant requests for completed work.
