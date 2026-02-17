@@ -433,10 +433,8 @@ test.describe("Download Buttons - Distinct Reports", () => {
     await input.fill("What programming languages do you know?");
     await input.press("Enter");
 
-    // Wait for assistant response
-    await expect(page.locator("text=Sam Kirk").nth(1)).toBeVisible({
-      timeout: 60000,
-    });
+    // Wait for assistant response to complete (input re-enables)
+    await expect(input).toBeEnabled({ timeout: 60000 });
 
     // Interview Summary download button should appear
     const downloadButton = page
@@ -525,9 +523,8 @@ test.describe("Download Buttons - Distinct Reports", () => {
     await input.fill("Tell me about your experience with TypeScript");
     await input.press("Enter");
 
-    await expect(page.locator("text=Sam Kirk").last()).toBeVisible({
-      timeout: 60000,
-    });
+    // Wait for assistant response to complete (input re-enables)
+    await expect(input).toBeEnabled({ timeout: 60000 });
     await expect(
       page.getByRole("button", { name: /interview/i }).first()
     ).toBeVisible({ timeout: 10000 });

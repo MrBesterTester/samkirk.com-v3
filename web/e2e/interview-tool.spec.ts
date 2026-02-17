@@ -170,8 +170,8 @@ test.describe("Interview Tool - Conversation", () => {
     await input.fill("Does Sam do his work well");
     await input.press("Enter");
 
-    // Wait for the first assistant response
-    await expect(page.locator("text=Sam Kirk").nth(1)).toBeVisible({ timeout: 60000 });
+    // Wait for the first assistant response to complete (input re-enables)
+    await expect(input).toBeEnabled({ timeout: 60000 });
 
     // After the first response, exactly one Interview Summary button should exist
     const downloadButtons = page.getByRole("button", { name: /interview summary/i });
@@ -181,8 +181,8 @@ test.describe("Interview Tool - Conversation", () => {
     await input.fill("Does Sam know TypeScript");
     await input.press("Enter");
 
-    // Wait for the second assistant response (nth(2) = third "Sam Kirk" label)
-    await expect(page.locator("text=Sam Kirk").nth(2)).toBeVisible({ timeout: 60000 });
+    // Wait for the second assistant response to complete (input re-enables)
+    await expect(input).toBeEnabled({ timeout: 60000 });
 
     // After the second response, there should STILL be exactly one Interview Summary button
     await expect(downloadButtons).toHaveCount(1, { timeout: 5000 });
@@ -204,9 +204,8 @@ test.describe("Interview Tool - Conversation", () => {
     await input.fill("What programming languages do you know?");
     await input.press("Enter");
 
-    // Wait for the assistant response to appear
-    // The "Sam Kirk" label appears on assistant messages
-    await expect(page.locator("text=Sam Kirk").nth(1)).toBeVisible({ timeout: 60000 });
+    // Wait for the assistant response to complete (input re-enables)
+    await expect(input).toBeEnabled({ timeout: 60000 });
 
     // Download button should appear in actions bar after conversation
     const downloadButton = page.getByRole("button", { name: /interview/i }).first();

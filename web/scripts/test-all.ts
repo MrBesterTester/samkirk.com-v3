@@ -421,6 +421,41 @@ function checkChromePrerequisite(suitesToRun: Suite[]): void {
   log("Chrome is running", true);
 }
 
+/**
+ * Kill any existing dev server on port 3000 so Playwright can start its own
+ * with the correct E2E environment variables (E2E_TESTING, NEXT_PUBLIC_E2E_TESTING).
+ *
+ * After REQ-095 removed the NODE_ENV=development captcha bypass, the dev server
+ * must be started with explicit E2E flags for captcha auto-bypass to work.
+ * Playwright's webServer config sets these flags, but only when it starts
+ * its own server (not when reusing an existing one).
+ */
+function killDevServerForE2E(suitesToRun: Suite[]): void {
+  const needsE2EServer = suitesToRun.some((s) => s.name === "E2E Tests");
+  if (!needsE2EServer) return;
+
+  try {
+    const pidOutput = execSync("lsof -ti:3000", { encoding: "utf-8" }).trim();
+    if (pidOutput) {
+      // lsof may return multiple PIDs (one per line) — kill each one
+      const pids = pidOutput.split("\n").map((p) => p.trim()).filter(Boolean);
+      log("Stopping existing dev server on :3000 for E2E captcha bypass");
+      for (const pid of pids) {
+        try {
+          execSync(`kill ${pid}`, { stdio: "ignore" });
+        } catch {
+          // Process may already be gone
+        }
+      }
+      // Wait for the port to free up
+      execSync("sleep 2", { stdio: "ignore" });
+      log("Dev server stopped — Playwright will start its own with E2E env", true);
+    }
+  } catch {
+    // No process on port 3000 — nothing to kill
+  }
+}
+
 // ============================================================================
 // Fixture Mtime Tracking
 // ============================================================================
@@ -510,9 +545,15 @@ function runSuite(suite: Suite, verbose: boolean): Promise<SuiteResult> {
 
     log(`Running ${suite.name}...`);
 
+    // E2E Tests need E2E env vars so Playwright's webServer starts with captcha bypass
+    const suiteEnv =
+      suite.name === "E2E Tests"
+        ? { ...process.env, FORCE_COLOR: "1", E2E_TESTING: "true", NEXT_PUBLIC_E2E_TESTING: "true" }
+        : { ...process.env, FORCE_COLOR: "1" };
+
     const child: ChildProcess = spawn(suite.command, suite.args, {
       cwd: webDir,
-      env: { ...process.env, FORCE_COLOR: "1" },
+      env: suiteEnv,
       stdio: verbose ? ["inherit", "pipe", "pipe"] : ["ignore", "pipe", "pipe"],
       shell: process.platform === "win32",
     });
@@ -1101,6 +1142,9 @@ async function main(): Promise<void> {
 
   // Pre-flight: ensure Chrome is running if E2E suites are selected
   checkChromePrerequisite(toRun);
+
+  // Pre-flight: kill existing dev server so Playwright starts its own with E2E env
+  killDevServerForE2E(toRun);
 
   log(`Running ${toRun.length} suite(s), ${skipped.length} skipped`);
   console.log("-------------------------------------------------------------------");

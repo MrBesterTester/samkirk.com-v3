@@ -1,33 +1,39 @@
 # Interview Transcript
 
 **Candidate:** Sam Kirk
-**Date:** 2/14/2026
+**Date:** 2/16/2026
 **Total Messages:** 4
 
 ---
 
-**Interviewer:** *(5:58:48 PM)*
+**Interviewer:** *(6:16:16 PM)*
 
 What programming languages do you know?
 
 ---
 
-**Sam Kirk:** *(5:58:48 PM)*
+**Sam Kirk:** *(6:16:16 PM)*
 
-I have experience with a variety of programming languages throughout my career. I have over 15 years of experience with C, using it at companies like TRW/Vidar, ROLM/IBM, Frox, Media Vision, ESS, Teradyne, Sun, and AOptix. I've also been working with Python for over 8 years, from LTX-Credence to my current consulting work at SAK Consulting. Additionally, I have some experience with C++, primarily during my time at LTX-Credence. I also have experience with assembly languages, including 68K and 8080 assembly from my time at Motorola, ROLM/IBM, Frox, and TRW/Vidar.
+I have experience with a variety of programming languages acquired over my 45+ years in Silicon Valley. My primary languages include Python, TypeScript, and C. I also have experience with Rust and C++. Additionally, I have worked with assembly languages such as 68K and 8080 assembly.
+
+I have over 8 years of experience with Python, using it in various roles from LTX-Credence to my current consulting work. I've used Python for test automation, data visualization, and hardware control. I have over 4 years of experience with TypeScript, using it extensively in my consulting work for full-stack web development. I have over 15 years of experience with C, using it in various roles for firmware development, hardware testing, and diagnostic software. I have experience with Rust, using it for backend development in my consulting work. I have experience with C++, using it for hi-speed timing calibration at LTX-Credence.
+
+I have used these languages in various domains, including automatic test equipment, medical devices, automotive systems, and web development.
 
 
 ---
 
-**Interviewer:** *(5:58:48 PM)*
+**Interviewer:** *(6:16:16 PM)*
 
 Tell me about your most recent role.
 
 ---
 
-**Sam Kirk:** *(5:58:48 PM)*
+**Sam Kirk:** *(6:16:16 PM)*
 
-Most recently, I've been working as Chief Consulting Engineer at SAK Consulting since March 2022. My focus is on AI-assisted software development, applying generative AI to testing and documentation. I'm essentially taking a graduate-level approach to studying how AI can improve software development, especially in testing and creating documentation that's useful for both humans and AI chatbots. I've become proficient at prompt engineering, using tools like Perplexity.ai for research, Claude Code for development, and ChatGPT for various tasks. I'm using tools like Next.js, Cursor, and Vertex AI to build full-stack applications. You can see examples of my work at samkirk.com.
+Currently, I am working as Chief Consulting Engineer at Samuel A. Kirk Consulting, which I started in March 2022. My focus is on AI-assisted software development and applying genAI to testing and documentation.
+
+I've been doing a self-study, graduate-level course on genAI applied to software development, with emphasis on testing and documentation. I've become a journeyman "ChatBot Boss," practicing prompt engineering using tools like Perplexity.ai, Claude Code, and ChatGPT. I've also been building full-stack web applications using TypeScript, React, Next.js, and Tailwind CSS, with Google Cloud backends. Some of my recent projects include building AI-powered tools for hiring managers and exploring AI-powered photo transformation. More details are available at [www.samkirk.com](https://www.samkirk.com).
 
 
 ---
@@ -36,9 +42,9 @@ Most recently, I've been working as Chief Consulting Engineer at SAK Consulting 
 
 1. **Employment History > Sr. Software Engineer — LTX-Credence (2012-2014)** — h1:Employment History > h2:Sr. Software Engineer — LTX-Credence (2012-2014)
 2. **Aggregated Skills Summary** — h1:Aggregated Skills Summary
-3. **Employment History > Chief Consulting Engineer — SAK Consulting (Current, 2022-present) > Projects — Creative & Explorations** — h1:Employment History > h2:Chief Consulting Engineer — SAK Consulting (Current, 2022-present) > h3:Projects — Creative & Explorations
-4. **Samuel A. Kirk > Contact Information** — h1:Samuel A. Kirk > h2:Contact Information
-5. **Employment History > Field Applications Engineer — Motorola Semiconductor (1984-1985)** — h1:Employment History > h2:Field Applications Engineer — Motorola Semiconductor (1984-1985)
+3. **Samuel A. Kirk > Contact Information** — h1:Samuel A. Kirk > h2:Contact Information
+4. **Employment History > Field Applications Engineer — Motorola Semiconductor (1984-1985)** — h1:Employment History > h2:Field Applications Engineer — Motorola Semiconductor (1984-1985)
+5. **Employment History > Sr. Diagnostic Software Engineer — Cadence Design Systems (2015-2017)** — h1:Employment History > h2:Sr. Diagnostic Software Engineer — Cadence Design Systems (2015-2017)
 
 ---
 
