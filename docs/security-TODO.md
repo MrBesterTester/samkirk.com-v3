@@ -27,10 +27,10 @@
 
 ### 1.1 Remove NODE_ENV from CAPTCHA bypass condition
 
-- [ ] **[Sonnet 4]** Update `isE2ETestingEnabled()` in `web/src/lib/captcha.ts` to check only `E2E_TESTING === "true"`
-- [ ] **[Sonnet 4]** Update `isE2ETestingEnabled()` in `web/src/components/ReCaptcha.tsx` to check only `NEXT_PUBLIC_E2E_TESTING === "true"`
-- [ ] **[Sonnet 4]** TEST: Run `npm test` — all CAPTCHA-related tests pass
-- [ ] **[Gemini 3 Pro]** TEST: Run `npx playwright test` — all E2E tests pass (they set `E2E_TESTING=true`)
+- [x] **[Sonnet 4]** Update `isE2ETestingEnabled()` in `web/src/lib/captcha.ts` to check only `E2E_TESTING === "true"`
+- [x] **[Sonnet 4]** Update `isE2ETestingEnabled()` in `web/src/components/ReCaptcha.tsx` to check only `NEXT_PUBLIC_E2E_TESTING === "true"`
+- [x] **[Sonnet 4]** TEST: Run `npm test` — all CAPTCHA-related tests pass
+- [x] **[Gemini 3 Pro]** TEST: Run `npx playwright test` — all E2E tests pass (they set `E2E_TESTING=true`)
 
 ---
 
@@ -38,24 +38,24 @@
 
 ### 2.1 Create withToolProtection() wrapper
 
-- [ ] **[Codex/Opus]** Create `web/src/lib/tool-protection.ts` with `withToolProtection()` function
+- [x] **[Codex/Opus]** Create `web/src/lib/tool-protection.ts` with `withToolProtection()` function
   - Accepts `NextRequest`, returns `{ ok: true, sessionId } | { ok: false, response }`
   - Encapsulates: session check, captcha check, rate limit, spend cap
   - Error responses match existing route behavior exactly (same status codes, error codes, JSON shapes)
-- [ ] **[Codex/Opus]** Add unit tests in `web/src/lib/tool-protection.test.ts`
+- [x] **[Codex/Opus]** Add unit tests in `web/src/lib/tool-protection.test.ts`
   - Cover: no session, expired session, captcha not passed, rate limited, spend cap exceeded, success
-- [ ] **[Codex/Opus]** TEST: Run `npm test` — all new and existing tests pass
+- [x] **[Codex/Opus]** TEST: Run `npm test` — all new and existing tests pass
 
 ### 2.2 Migrate all 5 tool routes
 
-- [ ] **[Codex/Opus]** Migrate `web/src/app/api/tools/resume/route.ts` to use `withToolProtection()`
-- [ ] **[Codex/Opus]** Migrate `web/src/app/api/tools/interview/route.ts` to use `withToolProtection()`
-- [ ] **[Codex/Opus]** Migrate `web/src/app/api/tools/fit/start/route.ts` to use `withToolProtection()`
-- [ ] **[Codex/Opus]** Migrate `web/src/app/api/tools/fit/generate/route.ts` to use `withToolProtection()`
-- [ ] **[Codex/Opus]** Migrate `web/src/app/api/tools/fit/answer/route.ts` (rate limit + spend cap on "ready" path only)
-- [ ] **[Codex/Opus]** TEST: Run `npm test` — all unit tests pass
-- [ ] **[Gemini 3 Pro]** TEST: Run `npx playwright test` — all E2E tests pass
-- [ ] **[Codex/Opus]** TEST: Run `npm run smoke:gcp` — GCP smoke tests pass (optional but recommended)
+- [x] **[Codex/Opus]** Migrate `web/src/app/api/tools/resume/route.ts` to use `withToolProtection()`
+- [x] **[Codex/Opus]** Migrate `web/src/app/api/tools/interview/route.ts` to use `withToolProtection()`
+- [x] **[Codex/Opus]** Migrate `web/src/app/api/tools/fit/start/route.ts` to use `withToolProtection()`
+- [x] **[Codex/Opus]** Migrate `web/src/app/api/tools/fit/generate/route.ts` to use `withToolProtection()`
+- [x] **[Codex/Opus]** Migrate `web/src/app/api/tools/fit/answer/route.ts` (rate limit + spend cap on "ready" path only)
+- [x] **[Codex/Opus]** TEST: Run `npm test` — all unit tests pass
+- [x] **[Gemini 3 Pro]** TEST: Run `npx playwright test` — all E2E tests pass
+- [x] **[Codex/Opus]** TEST: Run `npm run smoke:gcp` — GCP smoke tests pass (optional but recommended)
 
 ---
 
@@ -63,14 +63,14 @@
 
 ### 3.1 Create spend estimation validation script
 
-- [ ] **[Codex/Opus]** Create `web/scripts/validate-spend.ts`
+- [x] **[Codex/Opus]** Create `web/scripts/validate-spend.ts`
   - Reads Firestore `spendMonthly/{YYYY-MM}` document
   - Prints: estimated spend, budget, % used, pricing constants
   - Prints: GCP Billing console URL for comparison
   - Includes `LAST_PRICING_REVIEW` date; warns if stale >30 days
-- [ ] **[Codex/Opus]** Add `"validate-spend"` script to `web/package.json`
-- [ ] **[Codex/Opus]** TEST: Run `npm run lint` — no lint errors
-- [ ] **[Codex/Opus]** TEST: Run `npm run validate-spend` with GCP credentials — output is clear and correct
+- [x] **[Codex/Opus]** Add `"validate-spend"` script to `web/package.json`
+- [x] **[Codex/Opus]** TEST: Run `npm run lint` — no lint errors
+- [x] **[Codex/Opus]** TEST: Run `npm run validate-spend` with GCP credentials — output is clear and correct
 
 ---
 
