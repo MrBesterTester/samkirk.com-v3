@@ -118,7 +118,7 @@ This project was built entirely with AI, blending two methodologies: **Dylan Dav
 - [Dylan Davis: I've Built 50+ Apps with AI](REFERENCES/Dylan-Davis-50plus-method.html) — three-document system (Specification → Blueprint → TODO)
 - [Matt Maher: Claude Code Meta-Programming](REFERENCES/Matt-Maher_Claude-Code.html) — six practices + the do-work autonomous queue pattern
 
-**Three-document sets** (Dylan Davis pattern — used five times in this project):
+**Three-document sets** (Dylan Davis pattern — used six times in this project):
 
 | Set | Spec | Blueprint | TODO | Status |
 |-----|------|-----------|------|--------|
@@ -127,6 +127,7 @@ This project was built entirely with AI, blending two methodologies: **Dylan Dav
 | Master Tests | [master-test-SPEC](docs/master-test-SPECIFICATION.md) | [master-test-BP](docs/master-test-BLUEPRINT.md) | [master-test-TODO](docs/master-test-TODO.md) | Complete |
 | Hire Me Unified | [unified-SPEC](docs/hire-me-unified-SPECIFICATION.md) | [unified-BP](docs/hire-me-unified-BLUEPRINT.md) | [unified-TODO](docs/hire-me-unified-TODO.md) | Complete |
 | Hire Me Streamline | [streamline-SPEC](docs/hire-me-streamline-SPECIFICATION.md) | [streamline-BP](docs/hire-me-streamline-BLUEPRINT.md) | [streamline-TODO](docs/hire-me-streamline-TODO.md) | Pending |
+| Security Hardening | [security-SPEC](docs/security-SPECIFICATION.md) | [security-BP](docs/security-BLUEPRINT.md) | [security-TODO](docs/security-TODO.md) | In Progress |
 
 The Master Tests set also has two companion documents: [`master-test-plan.md`](docs/master-test-plan.md) (the original monolithic plan, superseded when it was restructured into the three-document format) and [`master-test-START-DEV.md`](docs/master-test-START-DEV.md) (a temporary quick-reference card for kicking off the do-work build process).
 

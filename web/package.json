@@ -14,6 +14,7 @@
     "smoke:gcp": "npx tsx scripts/smoke-gcp.ts",
     "seed:resume": "npx tsx scripts/seed-resume.ts",
     "validate:resume": "npx tsx scripts/validate-resume.ts",
+    "validate:spend": "npx tsx scripts/validate-spend.ts",
     "test:results": "npx tsx scripts/test-results.ts",
     "test:all": "npx tsx scripts/test-all.ts"
   },
