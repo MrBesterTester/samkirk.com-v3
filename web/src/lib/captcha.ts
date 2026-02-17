@@ -73,7 +73,7 @@ export function buildVerifyRequestBody(
  * This allows bypassing reCAPTCHA verification in E2E tests.
  */
 export function isE2ETestingEnabled(): boolean {
-  return process.env.E2E_TESTING === "true" || process.env.NODE_ENV === "development";
+  return process.env.E2E_TESTING === "true";
 }
 
 /**
