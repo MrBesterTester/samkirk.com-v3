@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { parseEnv } from "./env";
 
 const baseEnv = {
+  NODE_ENV: "test" as const,
   GCP_PROJECT_ID: "project-123",
   GCS_PUBLIC_BUCKET: "public-bucket",
   GCS_PRIVATE_BUCKET: "private-bucket",
@@ -24,7 +25,7 @@ describe("parseEnv", () => {
   });
 
   it("throws when required values are missing", () => {
-    const rest = { ...baseEnv } as Record<string, string>;
+    const rest = { ...baseEnv } as NodeJS.ProcessEnv;
     delete rest.GCP_PROJECT_ID;
 
     expect(() => parseEnv(rest)).toThrow(
