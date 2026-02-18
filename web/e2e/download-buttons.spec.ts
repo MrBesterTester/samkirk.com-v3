@@ -238,16 +238,11 @@ test.describe("Download Buttons - Distinct Reports", () => {
       page.getByText(/generating your custom resume/i)
     ).toBeVisible({ timeout: 5000 });
 
-    // Wait for resume preview
-    await expect(page.getByText(/summary/i).first()).toBeVisible({
-      timeout: 240000,
-    });
-
-    // Verify Custom Resume download button appears
+    // Wait for Custom Resume download button (resume generation can take a while)
     const resumeDownloadButton = page.getByRole("button", {
       name: /custom resume/i,
     });
-    await expect(resumeDownloadButton).toBeVisible();
+    await expect(resumeDownloadButton).toBeVisible({ timeout: 240000 });
 
     // ---- Phase 3: Download both and compare ----
 
@@ -390,9 +385,10 @@ test.describe("Download Buttons - Distinct Reports", () => {
       page.getByText(/generating your custom resume/i)
     ).toBeVisible({ timeout: 5000 });
 
-    await expect(page.getByText(/summary/i).first()).toBeVisible({
-      timeout: 240000,
-    });
+    // Wait for Custom Resume download button (resume generation can take a while)
+    await expect(
+      page.getByRole("button", { name: /custom resume/i })
+    ).toBeVisible({ timeout: 240000 });
 
     const { download, zipPath, tmpDir } = await clickAndSaveDownload(
       page,
@@ -511,12 +507,10 @@ test.describe("Download Buttons - Distinct Reports", () => {
       page.getByText(/generating your custom resume/i)
     ).toBeVisible({ timeout: 5000 });
 
-    await expect(page.getByText(/summary/i).first()).toBeVisible({
-      timeout: 240000,
-    });
+    // Wait for Custom Resume download button (resume generation can take a while)
     await expect(
       page.getByRole("button", { name: /custom resume/i })
-    ).toBeVisible();
+    ).toBeVisible({ timeout: 240000 });
 
     // ---- Phase 3: Send a chat message to trigger Interview transcript ----
     const input = page.getByPlaceholder(/ask about sam's career/i);
