@@ -116,7 +116,7 @@ samkirk-v3/
 
 ## Tech Stack
 
-- **Frontend + backend**: Next.js (App Router) on Cloud Run
+- **Frontend + backend**: Next.js (App Router) on Vercel
 - **Language**: TypeScript (strict)
 - **LLM**: Gemini via Vertex AI
 - **Storage**: Cloud Storage (files) + Firestore (metadata/counters)

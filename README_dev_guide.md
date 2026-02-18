@@ -554,7 +554,7 @@ Release mode enforces the following rules:
 - **Manual verification checklist is printed** after all automated suites complete:
   - VER-001: Visual inspect resume PDF layout
   - VER-002: OAuth flow in fresh browser session
-  - VER-003: Cloud Run deployment serves traffic
+  - VER-003: Vercel deployment serves traffic
 - **Results are archived** to `do-work/archive/test-runs/YYYY-MM-DD_HH-MM-SS/` with `release_candidate: true` in the summary frontmatter.
 
 After the automated suites pass, work through the manual verification checklist (see [Manual Verifications](#manual-verifications) below), then commit the evidence:
