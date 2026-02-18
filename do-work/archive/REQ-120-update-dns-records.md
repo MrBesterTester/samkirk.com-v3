@@ -83,6 +83,29 @@ DNS propagated within minutes. Vercel dashboard confirmed:
 
 *Completed by work action (Route A) — manual steps performed by Sam with browser automation assistance*
 
+## DNS Cleanup — Legacy Network Solutions Records
+
+After updating the Vercel DNS records, 4 legacy Network Solutions records were identified and removed:
+
+**Deleted:**
+1. **A `*` → 206.188.192.158** — Wildcard record routing all unmatched subdomains to Network Solutions hosting. The new explicit `www` CNAME takes precedence, but the wildcard was no longer needed.
+2. **CNAME `mail` → mail.samkirk.com.netsolmail.net** — Legacy Network Solutions email routing (email now handled by Microsoft 365 Exchange records).
+3. **CNAME `smtp` → smtp.samkirk.com.netsolmail.net** — Legacy Network Solutions SMTP routing (no longer in use).
+4. **SRV `_autodiscover._tcp` → 10 0 0 autodiscover.hostingplatform.com** — Legacy Network Solutions autodiscover (Microsoft 365 has its own CNAME `autodiscover` → `autodiscover.outlook.com`).
+
+**Remaining Custom records (all valid):**
+- A `@` → 216.198.79.1 (Vercel)
+- TXT `@` — MS=ms15380125 (Microsoft 365 verification)
+- TXT `@` — 2x Google site verification records
+- CNAME `lyncdiscover` → webdir.online.lync.com (Microsoft 365)
+- CNAME `photo-fun` → f4047871b3ace296.vercel-dns-017.com (Vercel)
+- CNAME `sip` → sipdir.online.lync.com (Microsoft 365)
+- A `www.tensor-logic` → 34.111.179.208 + TXT verification (Replit)
+- CNAME `www` → 972b3d2e641c184d.vercel-dns-017.com (Vercel)
+- SRV `_sipfederationtls._tcp` + SRV `_sip._tls` (Microsoft 365)
+
+**Microsoft Exchange records** (MX, TXT SPF, CNAME autodiscover) — all showing OK status, unaffected by cleanup.
+
 ## Testing
 
 **Tests run:** Vercel domain configuration refresh
