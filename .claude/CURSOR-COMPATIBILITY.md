@@ -90,23 +90,17 @@ Review all changes and create a local commit. Exclude secrets.
 Follow the git-commit-local pattern from ~/.cursor/commands/git-commit-local.md.
 ```
 
-### Clean Squash and Push
+### Push to Remote
 
 **Cursor:**
 ```
-/git-remote-push-clean-with-squash
+Run gitleaks, then push to main.
 ```
 
 **Claude Code:**
 ```
-Squash my local commits and push to remote with clean history.
-Follow the git-remote-push-clean-with-squash pattern from ~/.cursor/commands/git-remote-push-clean-with-squash.md:
-1. Save current branch name
-2. Fetch latest from origin
-3. Create/reset clean-main from origin/main
-4. Squash merge changes
-5. Push clean-main
-6. Switch back to original branch
+Run gitleaks detect --source . to scan for secrets, then push to main.
+CI runs gitleaks + CodeQL as a second gate on every push.
 ```
 
 ## File References

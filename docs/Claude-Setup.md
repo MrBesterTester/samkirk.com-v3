@@ -174,7 +174,6 @@ Cursor uses precise slash commands defined in `.cursor/commands/`:
 /start-step 1.1
 /continue-step 1.2
 /git-commit-local
-/git-remote-push-clean-with-squash
 ```
 
 ### Claude Code (Natural Language)
@@ -215,26 +214,19 @@ Review the changes and create a local commit with a clear message.
 Exclude .env, credentials, and other secrets.
 ```
 
-**Git Workflow (Clean Push):**
+**Git Workflow (Push to Remote):**
 ```
-Squash my local commits and push to remote with clean history.
-Follow the clean-main workflow pattern.
+Run gitleaks detect --source . to scan for secrets, then push to main.
+CI runs gitleaks + CodeQL as a second gate on every push.
 ```
 
 ---
 
-## 🎯 Global Git Commands
+## 🎯 Git Workflow
 
-Git workflow commands exist globally in `~/.cursor/commands/` (outside this project):
+Push directly to `main` after gitleaks scan passes — no squash, no intermediate branches. CI runs gitleaks + CodeQL on every push as a second gate. For one-time history scrubs (e.g., removing a leaked secret retroactively), use `git-filter-repo`.
 
-| Command | Location | Purpose |
-|---------|----------|---------|
-| `git-commit-local.md` | `~/.cursor/commands/` | Commit outstanding work to local repo |
-| `git-remote-push-clean-with-squash.md` | `~/.cursor/commands/` | Squash local commits and push to remote |
-
-**Status:** Both files exist and are preserved.
-
-**Claude Code Behavior:** Mirrors the same git workflow patterns through natural language instructions. The actual workflow logic (squash merge, clean-main branch, etc.) remains consistent across both tools.
+**Claude Code Behavior:** Mirrors the same git workflow through natural language instructions.
 
 ---
 

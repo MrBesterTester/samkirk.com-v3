@@ -10,13 +10,9 @@ This file mirrors `.cursor/rules/` for Claude Code compatibility.
 - If global commands already exist, **do not overwrite them** unless the user explicitly asks to replace/update them.
 - Prefer creating **project** commands in `.cursor/commands/` or `.claude/skills/` for each new repo.
 
-### Required global git commands
+### Git workflow
 
-Git workflow commands exist globally in `~/.cursor/commands/`:
-- `git-commit-local.md` - Commit outstanding work to local repo
-- `git-remote-push-clean-with-squash.md` - Squash local commits and push to remote
-
-When working with Claude Code, these git operations should follow the same patterns defined in those files.
+Push directly to `main` after gitleaks scan passes — no squash, no intermediate branches. CI runs gitleaks + CodeQL on every push as a second gate. For one-time history scrubs (e.g., removing a leaked secret retroactively), use `git-filter-repo`.
 
 ### Setup checklist hygiene
 

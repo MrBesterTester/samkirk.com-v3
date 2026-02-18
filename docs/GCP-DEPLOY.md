@@ -1,10 +1,13 @@
-# Cloud Run Deployment Guide for samkirk.com v3
+# GCP Services & GitHub Setup Guide for samkirk.com v3
 
-This guide walks through pushing to GitHub and deploying the application to Google Cloud Run. It assumes you've completed all steps in `docs/GCP-SETUP.md` (Steps 1-8).
+This guide covers GCP backend services setup, GitHub repository configuration, and the security scanning workflow. It assumes you've completed all steps in `docs/GCP-SETUP.md` (Steps 1-8).
+
+> **Architecture:** The website is deployed to **Vercel** (see `README_dev_guide.md` → Deploying to Vercel). GCP provides backend services only: **Firestore** (data), **Cloud Storage** (buckets), and **Vertex AI** (LLM). Cloud Run was used for an earlier deployment and has been **decommissioned** (set to internal, public access removed).
 
 > **Related documents:**
 > - `docs/GCP-SETUP.md` — GCP resource setup (Firestore, Storage, OAuth, reCAPTCHA)
-> - `docs/TODO.md` — Implementation checklist (references this guide for Step 10.2)
+> - `README_dev_guide.md` → Deploying to Vercel — production website deployment
+> - `docs/TODO.md` — Implementation checklist
 > - `docs/SPECIFICATION.md` — Application requirements
 
 ---
@@ -18,13 +21,13 @@ This guide walks through pushing to GitHub and deploying the application to Goog
 - [x] Smoke tests pass (`npm run smoke:gcp`)
 - [x] E2E tests pass (`npm run test:e2e`)
 
-### Step 1: Infrastructure Files (Code)
+### Step 1: Infrastructure Files (Code) — retained for Vercel
 
 - [x] 1.1 Health check endpoint created (`web/src/app/api/health/route.ts`)
-- [x] 1.2 Dockerfile created (`web/Dockerfile`)
-- [x] 1.3 .dockerignore created (`web/.dockerignore`)
+- [x] 1.2 Dockerfile created (`web/Dockerfile`) — Cloud Run legacy, retained for reference
+- [x] 1.3 .dockerignore created (`web/.dockerignore`) — Cloud Run legacy, retained for reference
 - [x] 1.4 next.config.ts updated (standalone output + www redirect)
-- [x] 1.5 cloudbuild.yaml created (repo root)
+- [x] 1.5 cloudbuild.yaml created (repo root) — Cloud Run legacy, retained for reference
 
 ### Step 2: Pre-Push Security Scan
 
@@ -45,11 +48,11 @@ This guide walks through pushing to GitHub and deploying the application to Goog
 - [x] 4.1 Create `.github/workflows/ci.yml`
 - [x] 4.2 Push and verify both jobs pass green
 
-### Step 5: Artifact Registry
+### Step 5: Artifact Registry — Cloud Run legacy (decommissioned)
 
 - [x] 5.1 Create Artifact Registry repository
 
-### Step 6: Service Account & IAM
+### Step 6: Service Account & IAM — still active for GCP backend services
 
 - [x] 6.1 Create Cloud Run service account
 - [x] 6.2 Grant roles/datastore.user (Firestore access)
@@ -57,7 +60,7 @@ This guide walks through pushing to GitHub and deploying the application to Goog
 - [x] 6.4 Grant roles/aiplatform.user (Vertex AI access)
 - [x] 6.5 Grant roles/secretmanager.secretAccessor (Secret Manager access)
 
-### Step 7: Secret Manager
+### Step 7: Secret Manager — still active (secrets used by Vercel via env vars)
 
 - [x] 7.1 Create google-oauth-client-id secret
 - [x] 7.2 Create google-oauth-client-secret secret
@@ -66,22 +69,23 @@ This guide walks through pushing to GitHub and deploying the application to Goog
 - [x] 7.5 Create auth-secret secret
 - [x] 7.6 Create admin-allowed-email secret
 
-### Step 8: Deploy to Cloud Run
+### Step 8: Deploy to Cloud Run — decommissioned (site now on Vercel)
 
 - [x] 8.1 Build and push Docker image
 - [x] 8.2 Deploy Cloud Run service
 - [x] 8.3 Verify health endpoint returns 200
+- [x] 8.4 **Decommissioned** — public access removed, ingress set to internal
 
-### Step 9: Custom Domain
+### Step 9: Custom Domain — superseded by Vercel domain config
 
-- [ ] 9.1 Add samkirk.com as custom domain in Cloud Run
-- [ ] 9.2 Configure DNS A record in Microsoft DNS
-- [ ] 9.3 Wait for SSL certificate provisioning
-- [ ] 9.4 Verify www.samkirk.com redirects to samkirk.com
+- [x] ~~9.1 Add samkirk.com as custom domain in Cloud Run~~ — N/A, domain now on Vercel
+- [x] ~~9.2 Configure DNS A record in Microsoft DNS~~ — DNS points to Vercel
+- [x] ~~9.3 Wait for SSL certificate provisioning~~ — Vercel handles SSL
+- [x] ~~9.4 Verify www.samkirk.com redirects to samkirk.com~~ — Vercel handles redirect
 
-### Step 10: Cloud Scheduler
+### Step 10: Cloud Scheduler — pending review
 
-- [ ] 10.1 Create retention-cleanup job (daily at 3 AM UTC)
+- [ ] 10.1 Create retention-cleanup job (daily at 3 AM UTC) — needs Vercel-compatible endpoint URL
 
 ### Step 11: Billing Budget
 
@@ -90,12 +94,12 @@ This guide walks through pushing to GitHub and deploying the application to Goog
 
 ### Final Verification
 
-- [ ] Health endpoint returns 200 (`curl https://samkirk.com/api/health`)
-- [ ] Public pages load correctly
-- [ ] Admin login works (Google OAuth)
+- [ ] Health endpoint returns 200 on Vercel (`curl https://samkirk.com/api/health`)
+- [ ] Public pages load correctly on Vercel
+- [ ] Admin login works (Google OAuth → Vercel)
 - [ ] Tool pages show captcha gate
-- [ ] www.samkirk.com redirects to samkirk.com
-- [ ] Cloud Scheduler job visible in GCP Console
+- [ ] www.samkirk.com redirects to samkirk.com (Vercel)
+- [ ] GCP backend services accessible from Vercel (Firestore, Storage, Vertex AI)
 - [ ] Billing budget email notification tested
 
 ---
@@ -134,7 +138,7 @@ This catches any secrets in untracked or uncommitted files.
 
 ## Step 3: Push to GitHub
 
-The local repo has 272 commits of development history. A `git-filter-repo` scrub (Step 3.1) removed sensitive GCP identifiers (billing account ID, project number) from the history, so the full commit history can be safely published.
+The local repo has 272 commits of development history. A one-time `git-filter-repo` scrub (Step 3.1) removed sensitive GCP identifiers (billing account ID, project number) from the history before going public. For ongoing pushes, gitleaks serves as the pre-push gate and CI runs gitleaks + CodeQL as a second gate on every push. No squashing or filtering is needed for routine work.
 
 ### 3.1 Scrub Sensitive Identifiers (Completed)
 
@@ -230,7 +234,9 @@ Both jobs should pass green. If gitleaks flags anything, resolve it before conti
 
 ---
 
-## Step 5: Create Artifact Registry Repository
+## Step 5: Artifact Registry (Cloud Run legacy — decommissioned)
+
+> Cloud Run has been decommissioned. Artifact Registry was used for Docker images. This section is retained for historical reference only.
 
 ```bash
 # Enable Artifact Registry API (if not already enabled)
@@ -250,7 +256,9 @@ gcloud artifacts repositories list --location=us-central1
 
 ## Step 6: Service Account & IAM
 
-### 6.1 Create Cloud Run Service Account
+> Still active — the service account provides access to Firestore, Cloud Storage, and Vertex AI. These GCP services are called from the Vercel-hosted application using Application Default Credentials (ADC) in development and service account credentials in production.
+
+### 6.1 Create Service Account
 
 ```bash
 # Create the service account
@@ -346,7 +354,18 @@ gcloud secrets list
 
 ---
 
-## Step 8: Deploy to Cloud Run
+## Step 8: Deploy to Cloud Run (decommissioned)
+
+> **Cloud Run has been decommissioned.** The website is now deployed to Vercel (see `README_dev_guide.md` → Deploying to Vercel). Public access was removed and ingress set to internal:
+>
+> ```bash
+> gcloud run services update samkirk-v3 --region=us-central1 --ingress=internal
+> gcloud run services remove-iam-policy-binding samkirk-v3 --region=us-central1 \
+>   --member="allUsers" --role="roles/run.invoker"
+> ```
+
+<details>
+<summary>Original Cloud Run deployment instructions (historical reference)</summary>
 
 ### Option A: Using Cloud Build (Recommended)
 
@@ -362,10 +381,8 @@ This will:
 
 ### Option B: Manual Deployment
 
-If you prefer manual control:
-
 ```bash
-# 8.1 Build the Docker image locally
+# Build the Docker image locally
 cd web
 docker build -t us-central1-docker.pkg.dev/samkirk-v3/samkirk-v3/web:latest .
 
@@ -375,7 +392,7 @@ gcloud auth configure-docker us-central1-docker.pkg.dev
 # Push the image
 docker push us-central1-docker.pkg.dev/samkirk-v3/samkirk-v3/web:latest
 
-# 8.2 Deploy to Cloud Run
+# Deploy to Cloud Run
 gcloud run deploy samkirk-v3 \
   --image=us-central1-docker.pkg.dev/samkirk-v3/samkirk-v3/web:latest \
   --region=us-central1 \
@@ -391,58 +408,46 @@ gcloud run deploy samkirk-v3 \
   --max-instances=10
 ```
 
-### 8.3 Verify Health Endpoint
+### Verify Health Endpoint
 
 ```bash
-# Get the Cloud Run URL
 CLOUD_RUN_URL=$(gcloud run services describe samkirk-v3 --region=us-central1 --format='value(status.url)')
-
-# Test health endpoint
 curl "${CLOUD_RUN_URL}/api/health"
-# Expected: {"status":"ok","timestamp":"..."}
 ```
+
+</details>
 
 ---
 
-## Step 9: Custom Domain
+## Step 9: Custom Domain (superseded by Vercel)
 
-### 9.1 Add Custom Domain in Cloud Run
+> Domain configuration is now managed in Vercel. DNS was updated at the **Microsoft 365 admin center** (admin.microsoft.com) on 2026-02-17 per REQ-120.
 
-```bash
-# Open Cloud Run console to add domain mapping
-open "https://console.cloud.google.com/run/domains?project=samkirk-v3"
-```
+### Current DNS records (samkirk.com → Vercel)
 
-In the console:
-1. Click **"Add Mapping"**
-2. Select service: `samkirk-v3`
-3. Enter domain: `samkirk.com`
-4. Click **"Continue"**
-5. Copy the provided DNS records
+| Type | Name | Value | Purpose |
+|------|------|-------|---------|
+| A | `@` | `216.198.79.1` | Vercel (apex domain) |
+| CNAME | `www` | `972b3d2e641c184d.vercel-dns-017.com` | Vercel (www redirect) |
 
-### 9.2 Configure DNS in Microsoft DNS
+Both verified as "Valid Configuration" on the Vercel dashboard. SSL auto-provisioned by Vercel.
 
-Add these records in your Microsoft DNS management console:
+> **Note:** The blueprint's generic values (`76.76.21.21` and `cname.vercel-dns.com`) were replaced with project-specific values provided by Vercel during domain setup.
 
-| Type | Name | Value |
-|------|------|-------|
-| A | @ | (IP address from Cloud Run) |
-| AAAA | @ | (IPv6 address from Cloud Run) |
-| CNAME | www | samkirk.com |
+### DNS cleanup (2026-02-17)
 
-> **Note:** DNS propagation can take up to 48 hours.
+Four legacy Network Solutions records were removed during the Vercel cutover:
 
-### 9.3-9.4 Verify SSL and Redirect
+| Deleted Record | Reason |
+|---------------|--------|
+| A `*` → 206.188.192.158 | Wildcard to Network Solutions hosting — no longer needed |
+| CNAME `mail` → mail.samkirk.com.netsolmail.net | Legacy email routing — Microsoft 365 handles email |
+| CNAME `smtp` → smtp.samkirk.com.netsolmail.net | Legacy SMTP — no longer in use |
+| SRV `_autodiscover._tcp` → autodiscover.hostingplatform.com | Legacy autodiscover — Microsoft 365 has its own |
 
-```bash
-# Wait for SSL certificate (may take 15-30 minutes)
-# Check certificate status in Cloud Run console
+**Remaining custom records (all valid):** A `@` (Vercel), TXT `@` (Microsoft 365 verification + Google site verification), CNAME `lyncdiscover`/`sip` (Microsoft 365), CNAME `photo-fun` (Vercel), A `www.tensor-logic` (Replit), CNAME `www` (Vercel), SRV records (Microsoft 365). Microsoft Exchange records (MX, TXT SPF, CNAME autodiscover) unaffected.
 
-# Once ready, verify:
-curl -I https://samkirk.com/api/health
-curl -I https://www.samkirk.com/
-# www should redirect (301) to samkirk.com
-```
+For full details, see `do-work/archive/REQ-120-update-dns-records.md`.
 
 ---
 
@@ -500,7 +505,13 @@ In the console:
 
 ## Troubleshooting
 
-### Cloud Run Deployment Fails
+### GCP Service Access from Vercel
+
+**Error:** `Permission denied` on Firestore, Storage, or Vertex AI
+
+**Solution:** Ensure the service account has the required roles (Step 6) and that the correct credentials are configured in Vercel environment variables.
+
+### Secret Manager Access
 
 **Error:** `Permission denied on secret`
 
@@ -510,24 +521,6 @@ gcloud secrets add-iam-policy-binding YOUR_SECRET_NAME \
   --member="serviceAccount:samkirk-v3-cloudrun@samkirk-v3.iam.gserviceaccount.com" \
   --role="roles/secretmanager.secretAccessor"
 ```
-
-### Health Check Fails
-
-**Error:** Cloud Run reports unhealthy
-
-**Solution:** Check Cloud Run logs:
-```bash
-gcloud logging read "resource.type=cloud_run_revision AND resource.labels.service_name=samkirk-v3" --limit=50
-```
-
-### Custom Domain SSL Pending
-
-**Issue:** Certificate shows "Provisioning" for more than 1 hour
-
-**Solution:**
-1. Verify DNS records are correct
-2. Check that no CAA records block Google's CA
-3. Wait up to 24 hours for propagation
 
 ### OAuth Redirect Error in Production
 
@@ -542,7 +535,7 @@ gcloud logging read "resource.type=cloud_run_revision AND resource.labels.servic
 
 ### GitHub Actions CI Fails
 
-**gitleaks failure:** A secret was detected in the commit history. Remove it using `git filter-branch` or BFG Repo Cleaner, then force push.
+**gitleaks failure:** A secret was detected in the commit history. Remove it using `git-filter-repo` with a targeted replacement, then force push.
 
 **CodeQL failure:** Review the security alerts in the GitHub Security tab and fix the flagged code.
 
@@ -553,23 +546,18 @@ gcloud logging read "resource.type=cloud_run_revision AND resource.labels.servic
 ## Quick Reference Commands
 
 ```bash
-# View Cloud Run service
-gcloud run services describe samkirk-v3 --region=us-central1
+# Pre-push secret scan
+gitleaks detect --source .
 
-# View recent logs
-gcloud logging read "resource.type=cloud_run_revision AND resource.labels.service_name=samkirk-v3" --limit=20
-
-# Redeploy with latest image
-gcloud run deploy samkirk-v3 --image=us-central1-docker.pkg.dev/samkirk-v3/samkirk-v3/web:latest --region=us-central1
-
-# Update a secret
+# Update a GCP secret
 echo -n "NEW_VALUE" | gcloud secrets versions add SECRET_NAME --data-file=-
 
-# Check scheduler job status
-gcloud scheduler jobs describe retention-cleanup --location=us-central1
-
-# Manual retention cleanup
-curl -X POST https://samkirk.com/api/maintenance/retention
+# Check service account roles
+SA_EMAIL="samkirk-v3-cloudrun@samkirk-v3.iam.gserviceaccount.com"
+gcloud projects get-iam-policy samkirk-v3 \
+  --flatten="bindings[].members" \
+  --filter="bindings.members:${SA_EMAIL}" \
+  --format="table(bindings.role)"
 
 # Check GitHub Actions status
 gh run list --limit 5

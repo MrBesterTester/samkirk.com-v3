@@ -54,10 +54,9 @@ Review the changes and create a local commit with a clear message.
 Exclude .env, credentials, and other secrets.
 ```
 
-**Clean push:**
+**Push to remote:**
 ```
-Squash my local commits and push to remote with clean history.
-Follow the clean-main workflow pattern.
+Run gitleaks detect --source . to scan for secrets, then push to main.
 ```
 
 ## Tips

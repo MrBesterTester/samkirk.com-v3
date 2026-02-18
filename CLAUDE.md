@@ -49,7 +49,7 @@ For steps needing visual testing, debugging, or human judgment:
 
 ### Git Integration
 - do-work commits locally per REQ (granular history on working branch)
-- Use existing squash-push workflow to clean up before pushing to remote
+- Push directly to remote after gitleaks scan passes (no squashing)
 
 ## Model Preferences (from TODO.md)
 
@@ -86,9 +86,11 @@ Remind the user which model is recommended for the current step:
 
 ## Git Workflow
 
-- Never push working branch directly
-- Use clean-main workflow with squash
-- See `~/.cursor/commands/git-*.md` for patterns
+- Push directly to `main` — no squash, no intermediate branches
+- Run `gitleaks detect --source .` before pushing to catch secrets
+- CI runs gitleaks + CodeQL on every push as a second gate
+- For one-time history scrubs (e.g., removing a leaked secret retroactively), use `git-filter-repo`
+- See `docs/GCP-DEPLOY.md` Step 2 for the gitleaks setup
 
 ## Troubleshooting
 

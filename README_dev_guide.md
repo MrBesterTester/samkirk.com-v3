@@ -165,82 +165,49 @@ Open `http://localhost:3000`. If the dev server gets into a bad state (stale cac
 
 ## Deploying to Production
 
-> **Current status (2026-02-16):** The production site is **offline**. Public access was removed (IAM `allUsers` binding removed) and ingress was set to `internal`. To bring it back online:
->
-> ```bash
-> gcloud run services update samkirk-v3 --region=us-central1 --ingress=all
-> gcloud run services add-iam-policy-binding samkirk-v3 --region=us-central1 \
->   --member="allUsers" --role="roles/run.invoker"
-> ```
+The site is deployed to **Vercel** with auto-deploy on push. GCP provides backend services only (Firestore, Cloud Storage, Vertex AI).
 
-The site is deployed to Google Cloud Run. Deploys are manual — there is no auto-deploy trigger. The full workflow is:
+> **Cloud Run (decommissioned):** The site was previously on Cloud Run. See `docs/GCP-DEPLOY.md` for historical reference and GCP backend service setup (IAM, secrets, etc.).
 
-### 1. Run tests
+### How the pipeline works
 
-```bash
-npm run test:all
+```
+npm run test:all → /ship → push to main → GitHub Actions CI → Vercel auto-deploy
+                                             (gitleaks, CodeQL,     (build, deploy,
+                                              type check, lint,      SSL, CDN)
+                                              build)
 ```
 
-All suites should pass. At minimum, run unit + E2E (`npm run test:all -- --unit --e2e`).
+Pushing to `main` triggers two things automatically:
+1. **GitHub Actions CI** — gitleaks secret scan, CodeQL analysis, type check, lint, production build
+2. **Vercel auto-deploy** — builds and deploys the site, provisions SSL, serves via CDN
 
-### 2. Commit and push
-
-```bash
-git add <files>
-git commit -m "description of changes"
-git push origin main
-```
-
-Wait for GitHub Actions CI to pass. Check with `gh run list --limit 1` or `gh run watch`.
-
-### 3. Deploy
+### Standard release workflow
 
 ```bash
-/deploy-gcloud
+npm run test:all    # 1. run tests locally
+/ship               # 2. the rest is automated (see below)
 ```
 
-Or manually:
+`/ship` walks through the full pipeline:
 
-```bash
-gcloud builds submit --config=cloudbuild.yaml \
-  --substitutions=COMMIT_SHA=$(git rev-parse HEAD)
-```
+| Step | What happens | If it fails |
+|------|-------------|-------------|
+| Pre-flight | Confirms tests have passed | Stops — run `npm run test:all` first |
+| Commit | Stages changes, creates commit | Stops — nothing to push |
+| Gitleaks scan | Scans for secrets locally | Stops — fix the leak before pushing |
+| Push | `git push origin main` | Stops — resolve git issues |
+| Monitor CI | Tails GitHub Actions until complete | Shows failed logs and stops |
+| Monitor Vercel | Polls deployment until `READY` | Shows build logs and stops |
+| Health check | Fetches `/api/health` on production | Reports failure |
+| Visual confirm | Opens the live site in Chrome | — |
 
-The `COMMIT_SHA` substitution is required because `$COMMIT_SHA` is only auto-populated by Cloud Build triggers, not by local `gcloud builds submit`.
+### Other deploy commands
 
-Cloud Build will: build the Docker image, push to Artifact Registry, and deploy to Cloud Run (~3-5 minutes).
-
-### 4. Verify
-
-```bash
-CLOUD_RUN_URL=$(gcloud run services describe samkirk-v3 \
-  --region=us-central1 --format='value(status.url)')
-curl "${CLOUD_RUN_URL}/api/health"
-```
-
-Expected: `{"status":"ok","timestamp":"..."}`
-
-Spot-check the live site: home page loads, photo appears, tool pages show captcha gate.
-
-### Troubleshooting
-
-```bash
-# View the latest Cloud Build log
-gcloud builds log $(gcloud builds list --limit=1 --format='value(id)')
-
-# View Cloud Run logs
-gcloud logging read \
-  "resource.type=cloud_run_revision AND resource.labels.service_name=samkirk-v3" \
-  --limit=20
-```
-
-See `docs/GCP-DEPLOY.md` for full infrastructure setup (one-time) and troubleshooting reference.
-
----
-
-## Deploying to Vercel
-
-The project is also configured for Vercel deployment (Next.js on Vercel's platform). The Vercel MCP server provides deployment management directly from Claude Code.
+| Command | When to use it |
+|---------|---------------|
+| `/watch-deploy` | You've already pushed and want to check CI + Vercel status |
+| `/deploy-vercel` | Manual override — bypasses CI/CD pipeline (hotfixes, GitHub integration down) |
 
 ### Prerequisites
 
@@ -271,17 +238,7 @@ The MCP server is configured in `.mcp.json` at the project root:
 
 This verifies CLI auth, project linking, and MCP connectivity in one step. The browser auth flow supports passkeys stored in macOS Passwords.
 
-### Deploy
-
-```bash
-/deploy-vercel
-```
-
-This deploys via MCP, verifies the health endpoint, and opens the site in Chrome for visual confirmation. Or deploy manually:
-
-```bash
-cd web && vercel --prod
-```
+### Preview deployments
 
 Preview deployments (non-production) are created automatically for non-main branches, or manually:
 
@@ -295,7 +252,7 @@ The Vercel MCP server (`mcp__vercel__*` tools) provides:
 
 | Capability | Tool | Example use |
 |---|---|---|
-| Deploy | `deploy_to_vercel` | Deploy the current project |
+| Deploy | `deploy_to_vercel` | Manual deploy (bypasses CI/CD) |
 | Build logs | `get_deployment_build_logs` | Debug a failed deployment |
 | Runtime logs | `get_runtime_logs` | Investigate production errors |
 | Project info | `get_project`, `list_projects` | Check project config |
@@ -366,10 +323,11 @@ Aliases: `run`/`go`/`start`, `list`/`status`/`queue`, `verify`/`check`/`evaluate
 | Command | What it does |
 |---------|-------------|
 | `/restart-dev-server` | Rebuild and start the Next.js dev server on localhost:3000 |
-| `/login-gcloud` | Set up GCP Application Default Credentials |
-| `/deploy-gcloud` | Deploy to Google Cloud Run via Cloud Build |
+| `/login-gcloud` | Set up GCP Application Default Credentials (for local dev/tests) |
 | `/login-vercel` | Authenticate Vercel CLI + verify MCP connection |
-| `/deploy-vercel` | Deploy to Vercel via MCP with health check |
+| `/ship` | Commit + gitleaks scan + push + monitor CI + Vercel auto-deploy + health check |
+| `/watch-deploy` | Monitor CI and Vercel deployment status (no commit/push) |
+| `/deploy-vercel` | Manual Vercel deploy via MCP (bypasses CI/CD pipeline — use for hotfixes) |
 
 ---
 
@@ -786,6 +744,7 @@ These commands read the SPECIFICATION, BLUEPRINT, and TODO for context, then wal
 - **Skip guards**: GCP-dependent tests use skip guards so they pass cleanly without credentials
 - **Strict TypeScript**: No `any` types
 - **Archive structure**: Test run archives go to `do-work/archive/test-runs/YYYY-MM-DD_HH-MM-SS/` with `summary.md` (committed) and `*.log` (gitignored)
+- **Git workflow**: Push directly to `main` — no squash, no intermediate branches. Run `gitleaks detect --source .` before pushing; CI runs gitleaks + CodeQL as a second gate. Use `git-filter-repo` only for one-time retroactive history scrubs.
 
 ---
 

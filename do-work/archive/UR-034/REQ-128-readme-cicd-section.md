@@ -1,7 +1,9 @@
 ---
 id: REQ-128
 title: "Rewrite Deploying to Vercel README section"
-status: pending
+status: completed
+completed_at: 2026-02-18T12:00:00-08:00
+route: A
 created_at: 2026-02-17T11:00:00-08:00
 user_request: UR-034
 related: [REQ-125, REQ-126, REQ-127]
@@ -105,6 +107,12 @@ In the "Cheat Sheet — Slash Commands" → "Utilities" section, add:
 
 ## Dependencies
 Depends on REQ-125, REQ-126, and REQ-127 being complete (all three commands must exist before documenting them).
+
+## Implementation Summary
+
+Rewrote the "Deploying to Production" and "Deploying to Vercel" sections in `README_dev_guide.md` into a single unified section. Includes: ASCII pipeline diagram, step-by-step `/ship` table with failure handling, command comparison table (`/ship` vs `/watch-deploy` vs `/deploy-vercel`), prerequisites, authentication, preview deployments, MCP capabilities, and troubleshooting. Added `/ship`, `/watch-deploy`, and `/deploy-vercel` (with hotfix note) to the Utilities slash commands table. Removed the old separate "Deploying to Vercel" framing as secondary.
+
+*Completed manually during conversation — not via do-work run*
 
 ---
 *Source: UR-034 — CI/CD slash commands*

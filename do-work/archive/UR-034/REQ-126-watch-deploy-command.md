@@ -1,7 +1,9 @@
 ---
 id: REQ-126
 title: "Create /watch-deploy slash command"
-status: pending
+status: completed
+completed_at: 2026-02-18T12:00:00-08:00
+route: A
 created_at: 2026-02-17T11:00:00-08:00
 user_request: UR-034
 related: [REQ-125, REQ-127]
@@ -47,6 +49,12 @@ Create `.claude/commands/watch-deploy.md` — a monitor-only command that checks
 
 ## Dependencies
 None — can be implemented immediately.
+
+## Implementation Summary
+
+Created `.claude/commands/watch-deploy.md` — monitor-only command that checks latest CI run and Vercel deployment status without committing or pushing. Follows the spec as written.
+
+*Completed manually during conversation — not via do-work run*
 
 ---
 *Source: UR-034 — CI/CD slash commands*

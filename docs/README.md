@@ -76,7 +76,7 @@ The methodological backbone of the entire project. This is a detailed write-up o
 - The **Specification → Blueprint → TODO** pipeline with exact prompts for each phase
 - **Model selection heuristics** (which AI model to use for which task type)
 - **Cursor slash commands** (`/create-spec`, `/create-blueprint`, `/start-step`, etc.)
-- **Global git workflow commands** (local commit + clean squash-push)
+- **Git workflow** (local commit + gitleaks-gated push to main)
 - An **error handling and lesson embedding** protocol
 - A comprehensive **Phase 0 through Phase 6 meta-checklist** tracking the setup and execution of the methodology itself
 

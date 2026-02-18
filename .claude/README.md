@@ -47,10 +47,10 @@ Review the changes and create a local commit with a clear message.
 (Mirrors: ~/.cursor/commands/git-commit-local.md)
 ```
 
-**Clean push to remote:**
+**Push to remote:**
 ```
-Squash my local commits and push to remote with a clean history.
-(Mirrors: ~/.cursor/commands/git-remote-push-clean-with-squash.md)
+Run gitleaks detect --source . to scan for secrets, then push to main.
+CI runs gitleaks + CodeQL as a second gate on every push.
 ```
 
 ### Model Reminders

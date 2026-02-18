@@ -1,7 +1,9 @@
 ---
 id: REQ-125
 title: "Create /ship slash command"
-status: pending
+status: completed
+completed_at: 2026-02-18T12:00:00-08:00
+route: A
 created_at: 2026-02-17T11:00:00-08:00
 user_request: UR-034
 related: [REQ-126, REQ-127]
@@ -49,6 +51,12 @@ Create `.claude/commands/ship.md` — the "big red button" that commits, pushes,
 
 ## Dependencies
 None — can be implemented immediately.
+
+## Implementation Summary
+
+Created `.claude/commands/ship.md` with the full pipeline: pre-flight test confirmation → commit → gitleaks scan → push to main → monitor GitHub Actions CI → monitor Vercel auto-deploy → health check → open in Chrome. Enhanced from original spec with gitleaks scanning (Step 3) and test confirmation (Step 1) based on the project's gitleaks-gated push workflow.
+
+*Completed manually during conversation — not via do-work run*
 
 ---
 *Source: UR-034 — CI/CD slash commands*
