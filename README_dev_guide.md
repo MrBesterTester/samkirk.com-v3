@@ -452,6 +452,20 @@ npm run test:e2e:ui                       # Playwright UI mode (interactive)
 npm run test:all -- --no-archive
 ```
 
+**E2E against Vercel preview deployments:**
+
+```bash
+PLAYWRIGHT_BASE_URL=https://samkirk-com-v3-<hash>-sam-kirks-projects.vercel.app \
+  VERCEL_AUTOMATION_BYPASS_SECRET=<secret> \
+  npx playwright test
+```
+
+When `PLAYWRIGHT_BASE_URL` is set, Playwright skips the local dev server and tests against the remote URL. When `VERCEL_AUTOMATION_BYPASS_SECRET` is also set, the config automatically passes `x-vercel-protection-bypass` and `x-vercel-set-bypass-cookie` headers to bypass Vercel Deployment Protection.
+
+The bypass secret is stored in `web/.env.local` (gitignored) and matches the Protection Bypass for Automation secret configured in Vercel project settings. Preview deployments also have `NEXT_PUBLIC_E2E_TESTING=true` and `E2E_TESTING=true` set (Preview environment only, not Production) so the captcha auto-passes.
+
+**Known flakiness against remote deployments:** LLM-dependent tests (fit-tool full flows, resume-tool generation, interview-tool conversations) may time out against Vercel due to cold starts and network latency. The current timeouts (4-5 minutes) are tuned for localhost. For reliable remote testing, consider increasing `timeout` values in these specs or running with retries (`--retries 1`). As of 2026-02-17, 48/55 tests pass against Vercel preview; the 7 failures are all LLM timeout flakes, not infrastructure issues.
+
 ### Prerequisites
 
 The Playwright E2E tests (`--e2e`) use system Chrome directly — they do **not** require the Claude in Chrome extension or the Playwright MCP server (those are development tools for AI-assisted debugging, not test dependencies). No manual dev server is needed — Playwright starts one automatically with captcha bypass enabled.
