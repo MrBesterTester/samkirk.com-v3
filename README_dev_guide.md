@@ -184,6 +184,8 @@ Pushing to `main` triggers two things automatically:
 
 ### Standard release workflow
 
+**`/ship` is the only command you need for a normal release.** It handles commit, scan, push, CI monitoring, deploy monitoring, and health check — all in one step.
+
 ```bash
 npm run test:all    # 1. run tests locally
 /ship               # 2. the rest is automated (see below)
@@ -202,12 +204,14 @@ npm run test:all    # 1. run tests locally
 | Health check | Fetches `/api/health` on production | Reports failure |
 | Visual confirm | Opens the live site in Chrome | — |
 
-### Other deploy commands
+### Edge-case commands (rarely needed)
+
+These are **not** part of the normal release workflow — `/ship` covers everything above.
 
 | Command | When to use it |
 |---------|---------------|
-| `/watch-deploy` | You've already pushed and want to check CI + Vercel status |
-| `/deploy-vercel` | Manual override — bypasses CI/CD pipeline (hotfixes, GitHub integration down) |
+| `/watch-deploy` | You pushed manually (outside `/ship`) and want to monitor CI + Vercel status |
+| `/deploy-vercel` | Manual override — bypasses the entire CI/CD pipeline. Use only for hotfixes or when GitHub Actions is down |
 
 ### Prerequisites
 
@@ -325,9 +329,9 @@ Aliases: `run`/`go`/`start`, `list`/`status`/`queue`, `verify`/`check`/`evaluate
 | `/restart-dev-server` | Rebuild and start the Next.js dev server on localhost:3000 |
 | `/login-gcloud` | Set up GCP Application Default Credentials (for local dev/tests) |
 | `/login-vercel` | Authenticate Vercel CLI + verify MCP connection |
-| `/ship` | Commit + gitleaks scan + push + monitor CI + Vercel auto-deploy + health check |
-| `/watch-deploy` | Monitor CI and Vercel deployment status (no commit/push) |
-| `/deploy-vercel` | Manual Vercel deploy via MCP (bypasses CI/CD pipeline — use for hotfixes) |
+| `/ship` | **Standard release** — commit + scan + push + monitor CI + Vercel deploy + health check |
+| `/watch-deploy` | Monitor-only — check CI + Vercel status after a manual push (not needed with `/ship`) |
+| `/deploy-vercel` | Manual override — bypass CI/CD pipeline entirely (hotfixes only, not normal releases) |
 
 ---
 
