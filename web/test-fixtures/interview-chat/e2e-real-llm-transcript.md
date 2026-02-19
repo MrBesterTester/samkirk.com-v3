@@ -6,48 +6,32 @@
 
 ---
 
-**Interviewer:** *(8:15:37 AM)*
+**Interviewer:** *(8:53:24 AM)*
 
 What programming languages do you know?
 
 ---
 
-**Sam Kirk:** *(8:15:37 AM)*
+**Sam Kirk:** *(8:53:24 AM)*
 
-I have experience with a variety of programming languages over my career. The primary languages I've used professionally include:
+I have experience with a variety of programming languages acquired over 45+ years in Silicon Valley. My primary languages include Python (8+ years), TypeScript (4+ years), and C (15+ years). I also have experience with Rust (1+ year) for backend development, C++ (2 years) for hi-speed timing calibration, and assembly languages (5+ years) for various processors.
 
-*   **Python:** I have 8+ years of experience with Python, using it at SAK Consulting, Talis BioMedical, Excelfore, Cadence, and LTX-Credence.
-*   **TypeScript:** I have 4+ years of experience with TypeScript, primarily at SAK Consulting for full-stack web development projects.
-*   **C:** I have 15+ years of experience with C, using it at AOptix, Sun Microsystems, Teradyne, ESS Technology, Media Vision, Frox, ROLM/IBM, and TRW/Vidar.
-*   **Rust:** I have 1+ years of experience with Rust, using it at SAK Consulting for backend development.
-*   **C++:** I have 2 years of experience with C++, specifically at LTX-Credence.
-*   **68K/8080 Assembly:** I have 5+ years of experience with assembly languages like 68K and 8080, gained at Motorola, ROLM/IBM, Frox, and TRW/Vidar.
-
-I also have experience with other languages like Perl, Java, MacPascal, and Scilab from various roles throughout my career.
+In recent years, I've focused on modern web development using TypeScript, React, and Next.js, along with Rust for backend services. I also have extensive experience using Python for test automation, data visualization, and scripting. My C experience spans various domains, including embedded systems, hardware testing, and audio processing.
 
 
 ---
 
-**Interviewer:** *(8:15:37 AM)*
+**Interviewer:** *(8:53:24 AM)*
 
 Tell me about your most recent role.
 
 ---
 
-**Sam Kirk:** *(8:15:37 AM)*
+**Sam Kirk:** *(8:53:24 AM)*
 
 Currently, I am working as Chief Consulting Engineer at Samuel A. Kirk Consulting, which I started in March 2022. My focus is on AI-assisted software development and applying genAI to testing and documentation.
 
-I've been immersed in a self-study, graduate-level course on genAI applied to software development, emphasizing testing and documentation. I'm leveraging tools like Cursor and Claude Code for full-stack development, and building products that solve real problems. I've become proficient in prompt engineering, using tools like Perplexity.ai for research, Claude Code for software development, and ChatGPT for various tasks.
-
-Some of the projects I've been working on include:
-
-*   **samkirk.com:** My personal portfolio website built with TypeScript, React, Next.js, and Tailwind CSS, with a Google Cloud backend.
-*   **"Hire Me" AI Tools Suite:** A suite of Vertex AI-powered tools for hiring managers.
-*   **Photo Fun:** An AI-powered photo transformation app using Google Gemini.
-*   **Villa Madu Bali:** A website for an Indonesian resort.
-
-I'm also exploring creative projects like "Dance Menu," a weekly curated playlist for social dancers, and "Tensor Logic," an educational demo of Pedro Domingos' Tensor Logic.
+I've been deeply involved in full-stack development using tools like Cursor and Claude Code, building products that solve real problems. A significant part of my work involves a self-study, graduate-level course on genAI applied to software development, with an emphasis on testing and documentation. I've also become proficient in prompt engineering, using tools like Perplexity.ai, Claude Code, and ChatGPT to enhance my development process.
 
 
 ---
