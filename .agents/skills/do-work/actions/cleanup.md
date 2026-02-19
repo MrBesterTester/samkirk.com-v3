@@ -11,7 +11,24 @@ The archive should be a collection of self-contained UR folders, each containing
 
 ## What It Does
 
-Three passes, in order:
+Four passes, in order:
+
+### Pass 0: Fix Flat UR Files
+
+Check `do-work/user-requests/` for UR files that were created as flat `.md` files instead of proper folders. This happens when a model doesn't follow the do action's folder convention.
+
+For each `.md` file in `do-work/user-requests/` matching `UR-NNN*.md` (e.g., `UR-040-gate-vercel-deploy.md`):
+
+1. Extract the UR number from the filename (e.g., `UR-040`)
+2. Check that no `do-work/user-requests/UR-NNN/` folder already exists (avoid conflicts)
+3. If no folder exists:
+   - Create `do-work/user-requests/UR-NNN/`
+   - Move the flat file into the folder as `input.md`: `mv UR-NNN-slug.md UR-NNN/input.md`
+   - Check the frontmatter — if `requests` array is missing, scan `do-work/`, `do-work/working/`, and `do-work/archive/` for REQ files with `user_request: UR-NNN` and add the `requests` array
+   - Report: `Fixed flat UR file: UR-NNN-slug.md → UR-NNN/input.md`
+4. If a folder already exists: report a warning — `UR-NNN exists as both a folder and a flat file. Manual resolution needed.`
+
+Also check `do-work/archive/` root for flat UR `.md` files (same pattern) and apply the same fix, creating the folder in `do-work/archive/UR-NNN/`.
 
 ### Pass 1: Close Completed User Requests
 
@@ -70,6 +87,7 @@ Print a summary at the end:
 
 ```
 Archive cleanup complete:
+  - Fixed flat URs: UR-040-slug.md → UR-040/input.md
   - Archived: UR-011 (3 REQs), UR-004 (8 REQs)
   - Consolidated: 5 loose REQs into their UR folders
   - Legacy: 24 REQs moved to archive/legacy/

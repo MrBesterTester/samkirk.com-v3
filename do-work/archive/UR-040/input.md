@@ -2,6 +2,7 @@
 id: UR-040
 title: "Gate Vercel deployment behind GitHub Actions CI"
 created_at: 2026-02-19T08:22:00-08:00
+requests: [REQ-134]
 source: conversation
 ---
 

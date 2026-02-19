@@ -4,6 +4,13 @@ What's new, what's better, what's different. Most recent stuff on top.
 
 ---
 
+## 0.14.1 — The Flat File Fix (2026-02-19)
+
+URs created as flat `.md` files (instead of proper `UR-NNN/input.md` folders) no longer slip through the cracks. Cleanup now detects and converts them, and the work action gracefully handles them during archival instead of silently failing to find the UR.
+
+- Added Pass 0 to cleanup action: detects flat UR files in `user-requests/` and `archive/`, converts them to proper folder structure
+- Added flat-UR fallback to work action Step 7: if `UR-NNN/` folder doesn't exist, checks for `UR-NNN*.md` flat file and converts before proceeding
+
 ## 0.14.0 — The Bouncer II (2026-02-17)
 
 Strict serial ordering is now enforced. No REQ can be processed until every lower-numbered REQ is fully completed or failed. This prevents the work loop from jumping ahead past dependencies — if REQ-120 is stuck in `working/` or still pending, REQ-121+ are blocked and the loop reports the blocker instead of charging ahead.

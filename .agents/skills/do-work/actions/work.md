@@ -842,7 +842,8 @@ mkdir -p do-work/archive
 5. **Archive the request file** — behavior depends on whether the REQ has a UR:
 
 **If REQ has `user_request: UR-NNN` (new system):**
-   - Read the UR's `input.md` from `do-work/user-requests/UR-NNN/`
+   - Read the UR's `input.md` from `do-work/user-requests/UR-NNN/input.md`
+   - **Fallback for flat UR files:** If no folder exists at `do-work/user-requests/UR-NNN/`, check for a flat file matching `do-work/user-requests/UR-NNN*.md` (e.g., `UR-040-gate-vercel-deploy.md`). If found, convert it first: create the folder, move the file to `UR-NNN/input.md`, then proceed. This handles URs that were incorrectly created as flat files.
    - Check its `requests` array (e.g., `[REQ-018, REQ-019, REQ-020]`)
    - Determine if ALL listed REQs are resolved using this algorithm:
      ```
