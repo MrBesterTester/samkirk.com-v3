@@ -1,4 +1,4 @@
-> **Manual override** — this bypasses the normal CI/CD pipeline (GitHub Actions + Vercel auto-deploy). Prefer `/ship` for the standard commit → push → CI → deploy workflow. Use `/deploy-vercel` for hotfixes or when the GitHub integration isn't deploying.
+> **EMERGENCY MANUAL OVERRIDE** — Vercel auto-deploy is disabled; production deploys go through GitHub Actions CI. Use this ONLY for emergency hotfixes when the CI pipeline is broken or you need to bypass it. Prefer `/ship` for the standard commit → push → CI → deploy workflow.
 
 Deploy the application to Vercel.
 
