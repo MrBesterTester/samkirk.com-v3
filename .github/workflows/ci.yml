@@ -135,19 +135,17 @@ jobs:
       - name: Health check
         run: |
           DEPLOY_URL="${{ steps.deploy.outputs.url }}"
-          echo "Checking: $DEPLOY_URL/api/health"
-          sleep 10
+          echo "Verifying deployment: $DEPLOY_URL"
           for i in 1 2 3 4 5; do
-            echo "Health check attempt $i/5..."
-            STATUS=$(curl -s -o /dev/null -w "%{http_code}" -A "Vercel-Health-Check" "$DEPLOY_URL/api/health" || true)
-            if [ "$STATUS" = "200" ]; then
-              echo "Health check passed (HTTP 200)"
-              BODY=$(curl -s -A "Vercel-Health-Check" "$DEPLOY_URL/api/health")
-              echo "Response: $BODY"
+            echo "Check attempt $i/5..."
+            STATE=$(vercel inspect "$DEPLOY_URL" --token=${{ secrets.VERCEL_TOKEN }} 2>&1 | grep -i 'status' | head -1 || true)
+            echo "  $STATE"
+            if echo "$STATE" | grep -qi 'ready'; then
+              echo "Deployment is READY"
               exit 0
             fi
-            echo "Got HTTP $STATUS, waiting 15s..."
-            sleep 15
+            sleep 10
           done
-          echo "Health check failed after 5 attempts"
+          echo "Deployment did not reach READY state"
+          vercel inspect "$DEPLOY_URL" --token=${{ secrets.VERCEL_TOKEN }} 2>&1
           exit 1
