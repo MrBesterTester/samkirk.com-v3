@@ -1,28 +1,8 @@
-"use client";
-
 import Link from "next/link";
-
-function getBuildDate(): string {
-  const now = new Date();
-  const parts = new Intl.DateTimeFormat("en-US", {
-    timeZone: "America/Los_Angeles",
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: false,
-  }).formatToParts(now);
-
-  const get = (type: Intl.DateTimeFormatPartTypes) =>
-    parts.find((p) => p.type === type)?.value ?? "";
-
-  return `v${get("month")}-${get("day")}-${get("year")}_${get("hour")}:${get("minute")}`;
-}
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
-  const buildDate = getBuildDate();
+  const buildDate = process.env.NEXT_PUBLIC_BUILD_DATE ?? "dev";
 
   return (
     <footer className="border-t border-border bg-secondary">
