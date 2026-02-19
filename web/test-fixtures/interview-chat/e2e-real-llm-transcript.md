@@ -1,37 +1,53 @@
 # Interview Transcript
 
 **Candidate:** Sam Kirk
-**Date:** 2/18/2026
+**Date:** 2/19/2026
 **Total Messages:** 4
 
 ---
 
-**Interviewer:** *(3:29:25 PM)*
+**Interviewer:** *(8:15:37 AM)*
 
 What programming languages do you know?
 
 ---
 
-**Sam Kirk:** *(3:29:25 PM)*
+**Sam Kirk:** *(8:15:37 AM)*
 
-I have experience with a variety of programming languages over my career. I have extensive experience with C (15+ years) and Python (8+ years). I also have experience with TypeScript (4+ years), Rust (1+ year), and C++ (2 years). Additionally, I have worked with assembly languages like 68K and 8080 assembly.
+I have experience with a variety of programming languages over my career. The primary languages I've used professionally include:
+
+*   **Python:** I have 8+ years of experience with Python, using it at SAK Consulting, Talis BioMedical, Excelfore, Cadence, and LTX-Credence.
+*   **TypeScript:** I have 4+ years of experience with TypeScript, primarily at SAK Consulting for full-stack web development projects.
+*   **C:** I have 15+ years of experience with C, using it at AOptix, Sun Microsystems, Teradyne, ESS Technology, Media Vision, Frox, ROLM/IBM, and TRW/Vidar.
+*   **Rust:** I have 1+ years of experience with Rust, using it at SAK Consulting for backend development.
+*   **C++:** I have 2 years of experience with C++, specifically at LTX-Credence.
+*   **68K/8080 Assembly:** I have 5+ years of experience with assembly languages like 68K and 8080, gained at Motorola, ROLM/IBM, Frox, and TRW/Vidar.
+
+I also have experience with other languages like Perl, Java, MacPascal, and Scilab from various roles throughout my career.
 
 
 ---
 
-**Interviewer:** *(3:29:25 PM)*
+**Interviewer:** *(8:15:37 AM)*
 
 Tell me about your most recent role.
 
 ---
 
-**Sam Kirk:** *(3:29:25 PM)*
+**Sam Kirk:** *(8:15:37 AM)*
 
-Currently, I am working as Chief Consulting Engineer at Samuel A. Kirk Consulting, my own consultancy, which I started in March 2022. My focus is on AI-assisted software development and applying generative AI to testing and documentation. I'm essentially running a self-study, graduate-level course on generative AI applied to software development, with a strong emphasis on testing and creating up-to-date documentation that's useful for both chatbots and developers.
+Currently, I am working as Chief Consulting Engineer at Samuel A. Kirk Consulting, which I started in March 2022. My focus is on AI-assisted software development and applying genAI to testing and documentation.
 
-I've been deeply involved in full-stack development, using tools like Cursor and Claude Code to build products that address real-world problems. A significant part of my work involves test automation at all levels of the computer stack, including firmware testing for hardware. I've also become proficient in prompt engineering, using tools like Perplexity.ai for research, Claude Code for software development, and ChatGPT for various tasks.
+I've been immersed in a self-study, graduate-level course on genAI applied to software development, emphasizing testing and documentation. I'm leveraging tools like Cursor and Claude Code for full-stack development, and building products that solve real problems. I've become proficient in prompt engineering, using tools like Perplexity.ai for research, Claude Code for software development, and ChatGPT for various tasks.
 
-Some of the projects I've undertaken include developing my personal portfolio website (samkirk.com) with AI-powered hiring manager tools, creating an AI-powered photo transformation app called "Photo Fun," and building a website for a resort in Bali. I've also been exploring advanced AI techniques and developing educational demos like "Tensor Logic" to bridge neural and symbolic AI.
+Some of the projects I've been working on include:
+
+*   **samkirk.com:** My personal portfolio website built with TypeScript, React, Next.js, and Tailwind CSS, with a Google Cloud backend.
+*   **"Hire Me" AI Tools Suite:** A suite of Vertex AI-powered tools for hiring managers.
+*   **Photo Fun:** An AI-powered photo transformation app using Google Gemini.
+*   **Villa Madu Bali:** A website for an Indonesian resort.
+
+I'm also exploring creative projects like "Dance Menu," a weekly curated playlist for social dancers, and "Tensor Logic," an educational demo of Pedro Domingos' Tensor Logic.
 
 
 ---
