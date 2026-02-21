@@ -1,4 +1,23 @@
+import type { Metadata } from "next";
 import Link from "next/link";
+import { SITE_URL, OG_IMAGE } from "@/lib/seo";
+
+export const metadata: Metadata = {
+  title: "Explorations — Side Projects & Experiments",
+  description:
+    "A collection of Sam Kirk's side projects and experiments — category theory, dance instruction, AI workflows, tensor logic, and more.",
+  openGraph: {
+    title: "Explorations — Side Projects & Experiments",
+    description:
+      "A collection of Sam Kirk's side projects and experiments — category theory, dance instruction, AI workflows, tensor logic, and more.",
+    url: `${SITE_URL}/explorations`,
+    type: "website",
+    images: [{ url: OG_IMAGE, alt: "Sam Kirk" }],
+  },
+  alternates: {
+    canonical: `${SITE_URL}/explorations`,
+  },
+};
 
 interface Exploration {
   href: string;

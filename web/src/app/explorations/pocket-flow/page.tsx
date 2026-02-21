@@ -1,4 +1,23 @@
+import type { Metadata } from "next";
 import { StaticHtmlViewer } from "@/components";
+import { SITE_URL, OG_IMAGE } from "@/lib/seo";
+
+export const metadata: Metadata = {
+  title: "Pocket Flow — AI Workflow Framework",
+  description:
+    "A lightweight framework for building AI workflows with simplicity and composability — chaining LLM calls, managing context, and orchestrating multi-step pipelines.",
+  openGraph: {
+    title: "Pocket Flow — AI Workflow Framework",
+    description:
+      "A lightweight framework for building AI workflows with simplicity and composability — chaining LLM calls, managing context, and orchestrating multi-step pipelines.",
+    url: `${SITE_URL}/explorations/pocket-flow`,
+    type: "website",
+    images: [{ url: OG_IMAGE, alt: "Sam Kirk" }],
+  },
+  alternates: {
+    canonical: `${SITE_URL}/explorations/pocket-flow`,
+  },
+};
 
 export default function PocketFlowPage() {
   return (

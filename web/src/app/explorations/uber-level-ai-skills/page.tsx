@@ -1,4 +1,23 @@
+import type { Metadata } from "next";
 import { StaticHtmlViewer } from "@/components";
+import { SITE_URL, OG_IMAGE } from "@/lib/seo";
+
+export const metadata: Metadata = {
+  title: "Uber Level AI Skills — Advanced AI Techniques",
+  description:
+    "Advanced techniques for getting the most out of AI tools, taken from Nate B. Jones.",
+  openGraph: {
+    title: "Uber Level AI Skills — Advanced AI Techniques",
+    description:
+      "Advanced techniques for getting the most out of AI tools, taken from Nate B. Jones.",
+    url: `${SITE_URL}/explorations/uber-level-ai-skills`,
+    type: "website",
+    images: [{ url: OG_IMAGE, alt: "Sam Kirk" }],
+  },
+  alternates: {
+    canonical: `${SITE_URL}/explorations/uber-level-ai-skills`,
+  },
+};
 
 export default function UberLevelAiSkillsPage() {
   return (

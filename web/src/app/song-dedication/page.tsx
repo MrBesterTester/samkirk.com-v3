@@ -1,3 +1,23 @@
+import type { Metadata } from "next";
+import { SITE_URL, OG_IMAGE } from "@/lib/seo";
+
+export const metadata: Metadata = {
+  title: "Resilience in the Storm — Song Dedication",
+  description:
+    "A song created for Sam Kirk's mother using ChatGPT and Udio.com, celebrating her strength through hurricanes Ian and Milton.",
+  openGraph: {
+    title: "Resilience in the Storm — Song Dedication",
+    description:
+      "A song created for Sam Kirk's mother using ChatGPT and Udio.com, celebrating her strength through hurricanes Ian and Milton.",
+    url: `${SITE_URL}/song-dedication`,
+    type: "website",
+    images: [{ url: OG_IMAGE, alt: "Sam Kirk" }],
+  },
+  alternates: {
+    canonical: `${SITE_URL}/song-dedication`,
+  },
+};
+
 export default function SongDedicationPage() {
   return (
     <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">

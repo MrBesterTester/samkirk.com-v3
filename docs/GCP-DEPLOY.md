@@ -6,9 +6,28 @@ This guide covers GCP backend services setup, GitHub repository configuration, a
 
 > **Related documents:**
 > - `docs/GCP-SETUP.md` — GCP resource setup (Firestore, Storage, OAuth, reCAPTCHA)
+> - `docs/SEO.md` — SEO, Google Analytics 4, and Search Console setup
 > - `README_dev_guide.md` → Deploying to Vercel — production website deployment
 > - `docs/TODO.md` — Implementation checklist
 > - `docs/SPECIFICATION.md` — Application requirements
+
+## Table of Contents
+
+- [Deployment Checklist](#deployment-checklist)
+- [Step 2: Pre-Push Security Scan](#step-2-pre-push-security-scan)
+- [Step 3: Push to GitHub](#step-3-push-to-github)
+- [Step 4: GitHub Actions CI](#step-4-github-actions-ci)
+- [Step 5: Artifact Registry (decommissioned)](#step-5-artifact-registry-cloud-run-legacy--decommissioned)
+- [Step 6: Service Account & IAM](#step-6-service-account--iam)
+- [Step 7: Secret Manager](#step-7-secret-manager)
+- [Step 8: Deploy to Cloud Run (decommissioned)](#step-8-deploy-to-cloud-run-decommissioned)
+- [Step 9: Custom Domain (superseded by Vercel)](#step-9-custom-domain-superseded-by-vercel)
+- [Step 10: Cloud Scheduler](#step-10-cloud-scheduler)
+- [Step 11: Billing Budget](#step-11-billing-budget)
+- [Step 12: Google Analytics 4 & SEO](#step-12-google-analytics-4--seo)
+- [Troubleshooting](#troubleshooting)
+- [Quick Reference Commands](#quick-reference-commands)
+- [Execution Evidence](#execution-evidence)
 
 ---
 
@@ -91,6 +110,12 @@ This guide covers GCP backend services setup, GitHub repository configuration, a
 
 - [x] 11.1 Create $20/month budget for samkirk-v3
 - [x] 11.2 Configure email alerts to sam@samkirk.com (50%, 90%, 100% thresholds)
+
+### Step 12: Google Analytics 4
+
+- [ ] 12.1 Create GA4 property for samkirk.com under account 376572742
+- [ ] 12.2 Get measurement ID (G-XXXXXXXXXX) and update `web/src/lib/seo.ts`
+- [ ] 12.3 Deploy and verify gtag.js loads in browser Network tab
 
 ### Final Verification
 
@@ -500,6 +525,12 @@ In the console:
    - Email to: `sam@samkirk.com`
    - Check "Email alerts to billing admins and users"
 7. Click **"Finish"**
+
+---
+
+## Step 12: Google Analytics 4 & SEO
+
+> Full setup instructions and checklist are in **`docs/SEO.md`**. This step covers GA4 property creation, Search Console verification, and post-deploy SEO checks.
 
 ---
 

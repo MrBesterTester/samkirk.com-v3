@@ -1,3 +1,23 @@
+import type { Metadata } from "next";
+import { SITE_URL, OG_IMAGE } from "@/lib/seo";
+
+export const metadata: Metadata = {
+  title: "Tensor Logic — Unified AI Programming Paradigm",
+  description:
+    "An educational interactive demo illustrating Pedro Domingos' Tensor Logic — a unified programming paradigm bridging neural and symbolic AI.",
+  openGraph: {
+    title: "Tensor Logic — Unified AI Programming Paradigm",
+    description:
+      "An educational interactive demo illustrating Pedro Domingos' Tensor Logic — a unified programming paradigm bridging neural and symbolic AI.",
+    url: `${SITE_URL}/explorations/tensor-logic`,
+    type: "website",
+    images: [{ url: OG_IMAGE, alt: "Sam Kirk" }],
+  },
+  alternates: {
+    canonical: `${SITE_URL}/explorations/tensor-logic`,
+  },
+};
+
 export default function TensorLogicPage() {
   return (
     <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">

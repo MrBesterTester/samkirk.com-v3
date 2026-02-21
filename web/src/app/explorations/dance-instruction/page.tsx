@@ -1,4 +1,23 @@
+import type { Metadata } from "next";
 import { StaticHtmlViewer } from "@/components";
+import { SITE_URL, OG_IMAGE } from "@/lib/seo";
+
+export const metadata: Metadata = {
+  title: "Dance Instruction — Teaching & Learning Dance",
+  description:
+    "Thoughts and resources on teaching and learning dance — from philosophy of instruction to practical learning principles.",
+  openGraph: {
+    title: "Dance Instruction — Teaching & Learning Dance",
+    description:
+      "Thoughts and resources on teaching and learning dance — from philosophy of instruction to practical learning principles.",
+    url: `${SITE_URL}/explorations/dance-instruction`,
+    type: "website",
+    images: [{ url: OG_IMAGE, alt: "Sam Kirk" }],
+  },
+  alternates: {
+    canonical: `${SITE_URL}/explorations/dance-instruction`,
+  },
+};
 
 export default function DanceInstructionPage() {
   return (

@@ -1,3 +1,23 @@
+import type { Metadata } from "next";
+import { SITE_URL, OG_IMAGE } from "@/lib/seo";
+
+export const metadata: Metadata = {
+  title: "Photo Fun — AI Photo Transformation with Google Gemini",
+  description:
+    "Transform your photos into creative styles with AI-powered presets or custom prompts, built with Google Gemini.",
+  openGraph: {
+    title: "Photo Fun — AI Photo Transformation with Google Gemini",
+    description:
+      "Transform your photos into creative styles with AI-powered presets or custom prompts, built with Google Gemini.",
+    url: `${SITE_URL}/photo-fun`,
+    type: "website",
+    images: [{ url: OG_IMAGE, alt: "Sam Kirk" }],
+  },
+  alternates: {
+    canonical: `${SITE_URL}/photo-fun`,
+  },
+};
+
 export default function PhotoFunPage() {
   return (
     <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">

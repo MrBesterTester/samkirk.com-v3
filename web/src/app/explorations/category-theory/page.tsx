@@ -1,4 +1,23 @@
+import type { Metadata } from "next";
 import { StaticHtmlViewer } from "@/components";
+import { SITE_URL, OG_IMAGE } from "@/lib/seo";
+
+export const metadata: Metadata = {
+  title: "Category Theory — Everyday Examples",
+  description:
+    "Examples of Category Theory using common, everyday non-mathematical objects to make abstract concepts accessible.",
+  openGraph: {
+    title: "Category Theory — Everyday Examples",
+    description:
+      "Examples of Category Theory using common, everyday non-mathematical objects to make abstract concepts accessible.",
+    url: `${SITE_URL}/explorations/category-theory`,
+    type: "website",
+    images: [{ url: OG_IMAGE, alt: "Sam Kirk" }],
+  },
+  alternates: {
+    canonical: `${SITE_URL}/explorations/category-theory`,
+  },
+};
 
 export default function CategoryTheoryPage() {
   return (
