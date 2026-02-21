@@ -240,8 +240,12 @@ samkirk.com had minimal SEO — only a root title ("Sam Kirk") and a generic des
 ### Optional Future Improvements
 
 - [ ] Replace OG image with branded 1200x630 card (current profile photo is 192x256)
-- [ ] Add LinkedIn and other social profiles to Person schema `sameAs` array
+  - **Benefit**: Social platforms (LinkedIn, Twitter/X, Slack, iMessage) display a large preview card when someone shares a link. A properly sized 1200x630 image renders as a crisp, full-width card instead of a tiny, letterboxed thumbnail. A branded card with name, title, and a professional photo looks polished and drives higher click-through rates.
+  - **Risk if skipped**: The current 192x256 profile photo will be stretched, cropped awkwardly, or shown with large black/white bars depending on the platform. The link preview looks unprofessional and is easy to scroll past, reducing engagement when the site is shared.
+- [x] Add LinkedIn and other social profiles to Person schema `sameAs` array
 - [ ] Set up GA4 events for key interactions (hire-me tool usage, dance menu downloads)
+  - **Benefit**: Default GA4 only tracks page views. Custom events would show how many visitors actually use the hire-me evaluation tool, download dance menu playlists, or interact with explorations — the actions that matter most for measuring whether the site is achieving its goals.
+  - **Risk if skipped**: You can see traffic volume but have no visibility into engagement quality. You won't know if 100 visitors to `/hire-me` means 100 people used the tool or 100 people bounced. Decision-making about what to improve or promote will be based on guesswork rather than data.
 
 ---
 

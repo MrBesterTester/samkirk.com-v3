@@ -71,7 +71,7 @@ const personJsonLd = {
     "Google Cloud Platform",
     "Full-Stack Development",
   ],
-  sameAs: ["https://github.com/MrBesterTester"],
+  sameAs: ["https://github.com/MrBesterTester", "https://www.linkedin.com/in/samuelkirk"],
 };
 
 const websiteJsonLd = {

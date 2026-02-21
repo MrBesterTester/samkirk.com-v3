@@ -18,7 +18,7 @@ Personal website and showcase of Sam Kirk's projects over the past three years i
     - [Updating the Resume](#updating-the-resume)
     - [Updating the Dance Schedule](#updating-the-dance-schedule)
     - [Validating LLM Spend](#validating-llm-spend)
-    - [Checking Analytics & Search Performance](#checking-analytics--search-performance)
+    - [Checking Analytics & Search Performance](#checking-analytics-search-performance)
   - [The README Project Structure](#the-readme-project-structure)
   - [Tech Stack](#tech-stack)
   - [Development Methodology](#development-methodology)
