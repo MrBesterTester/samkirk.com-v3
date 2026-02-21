@@ -218,7 +218,7 @@ samkirk.com had minimal SEO — only a root title ("Sam Kirk") and a generic des
     submitting sitemaps, and requesting indexing. Search Console verifies domain ownership via a DNS
     TXT record (managed in [Microsoft 365 admin center](https://admin.microsoft.com) → Domains →
     samkirk.com). A Google site verification TXT record may already exist from a previous setup.
-- [ ] 2.3 Deploy and verify `gtag.js` loads in browser Network tab
+- [x] 2.3 Deploy and verify `gtag.js` loads in browser Network tab
 
 ### Google Search Console
 
