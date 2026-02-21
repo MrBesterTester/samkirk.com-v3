@@ -185,3 +185,5 @@ Requests on hold — to be picked up after current priorities:
 
 - [REQ-035: Fix DNS for tensor-logic.samkirk.com](do-work/archive/hold/REQ-035-fix-tensor-logic-dns.md)
 - [REQ-037: Add photo option on generated resume](do-work/archive/hold/REQ-037-photo-option-generated-resume.md)
+- [Set up GA4 custom events](docs/SEO.md#optional-future-improvements) — Track key interactions (hire-me tool usage, dance menu downloads) beyond default page views. Without this, there's no visibility into engagement quality vs. raw traffic volume.
+- [Cloud Scheduler for retention cleanup](docs/GCP-DEPLOY.md#step-10-cloud-scheduler) — Create daily 3 AM UTC job to call `/api/maintenance/retention` and delete expired submissions (90-day TTL). Endpoint exists; scheduler not yet created.

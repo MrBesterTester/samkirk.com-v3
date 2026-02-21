@@ -113,9 +113,9 @@ This guide covers GCP backend services setup, GitHub repository configuration, a
 
 ### Step 12: Google Analytics 4
 
-- [ ] 12.1 Create GA4 property for samkirk.com under account 376572742
-- [ ] 12.2 Get measurement ID (G-XXXXXXXXXX) and update `web/src/lib/seo.ts`
-- [ ] 12.3 Deploy and verify gtag.js loads in browser Network tab
+- [x] 12.1 Create GA4 property for samkirk.com under account 376572742
+- [x] 12.2 Get measurement ID (`G-QPGLH8V5MM`) and update `web/src/lib/seo.ts`
+- [x] 12.3 Deploy and verify gtag.js loads in browser Network tab
 
 ### Final Verification
 

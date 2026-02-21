@@ -206,33 +206,33 @@ Test evidence is scattered across 5 locations with no clear organization:
 ## 9) Acceptance Criteria
 
 ### 9.1) Master Test Runner
-- [ ] Single command (`npm run test:all`) runs all suites
-- [ ] GCP auto-detection with graceful skip fallback
-- [ ] `--release` mode enforces all-suites, no-skip behavior
-- [ ] Colored summary table output
-- [ ] Exit code 0 on all-pass, 1 on any failure
+- [x] Single command (`npm run test:all`) runs all suites
+- [x] GCP auto-detection with graceful skip fallback
+- [x] `--release` mode enforces all-suites, no-skip behavior
+- [x] Colored summary table output
+- [x] Exit code 0 on all-pass, 1 on any failure
 
 ### 9.2) Skip Guards
-- [ ] `route.test.ts` — 3 tests skip cleanly when GCP unavailable
-- [ ] `full-app.spec.ts` — 4 tests skip cleanly when GCP unavailable
-- [ ] No test logic modified, only skip guards added
+- [x] `route.test.ts` — 3 tests skip cleanly when GCP unavailable
+- [x] `full-app.spec.ts` — 4 tests skip cleanly when GCP unavailable
+- [x] No test logic modified, only skip guards added
 
 ### 9.3) Test Results Archive
-- [ ] `summary.md` written to `do-work/archive/test-runs/YYYY-MM-DD_HH-MM-SS/`
-- [ ] Raw logs gitignored, summary committed
-- [ ] Cross-links work in both directions (REQ <-> test-run)
+- [x] `summary.md` written to `do-work/archive/test-runs/YYYY-MM-DD_HH-MM-SS/`
+- [x] Raw logs gitignored, summary committed
+- [x] Cross-links work in both directions (REQ <-> test-run)
 
 ### 9.4) Documentation
-- [ ] `docs/test-catalog.md` created with metadata for all tests
-- [ ] `docs/feature-test-matrix.md` created mapping features to tests
-- [ ] `docs/verification-registry.md` created with manual verification procedures
+- [x] `docs/test-catalog.md` created with metadata for all tests
+- [x] `docs/feature-test-matrix.md` created mapping features to tests
+- [x] `docs/verification-registry.md` created with manual verification procedures
 
 ### 9.5) Developer Guide
-- [ ] `README_dev_guide.md` created at project root with day-to-day test workflows
-- [ ] Root `README.md` updated with link to the dev guide (README.md already exists)
-- [ ] Dev guide covers: do-work test workflows, suite reference, running tests, manual verification, manual fallback
+- [x] `README_dev_guide.md` created at project root with day-to-day test workflows
+- [x] Root `README.md` updated with link to the dev guide (README.md already exists)
+- [x] Dev guide covers: do-work test workflows, suite reference, running tests, manual verification, manual fallback
 
 ### 9.6) Triage (Task B)
-- [ ] All 7 pre-existing failures evaluated
-- [ ] Each test assigned an outcome: keep, rewrite, or delete
-- [ ] Catalog and matrix updated to reflect triage decisions
+- [x] All 7 pre-existing failures evaluated
+- [x] Each test assigned an outcome: keep, rewrite, or delete
+- [x] Catalog and matrix updated to reflect triage decisions

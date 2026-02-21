@@ -229,13 +229,13 @@ samkirk.com had minimal SEO — only a root title ("Sam Kirk") and a generic des
 
 ### Deploy & Verify
 
-- [ ] 4.1 Ship code changes (metadata, robots.txt, sitemap.xml, structured data, GA script) — committed locally, needs push + deploy
+- [x] 4.1 Ship code changes (metadata, robots.txt, sitemap.xml, structured data, GA script) — pushed to GitHub, CI passed, deployed to Vercel (8f0f41a)
 - [x] 4.2 Verify `<title>`, `og:*`, `twitter:*`, canonical tags in page source (production build: title, 7 OG tags incl. `og-card.png`, 4 Twitter tags, canonical all present)
 - [x] 4.3 Verify `https://samkirk.com/robots.txt` shows allow/disallow rules (production build: Allow `/`, Disallow `/admin/` + `/api/`, Sitemap ref)
 - [x] 4.4 Verify `https://samkirk.com/sitemap.xml` lists 11 URLs (production build: 11 `<url>` entries confirmed)
 - [x] 4.5 Verify `application/ld+json` Person + WebSite schemas in page source (production build: Person schema with sameAs [GitHub, LinkedIn] + WebSite schema present)
 - [x] 4.6 Verify GA loads (Network tab → filter `gtag`) — production build: `gtag/js?id=G-QPGLH8V5MM` script tag present
-- [ ] 4.7 Run [Google Rich Results Test](https://search.google.com/test/rich-results) on `https://samkirk.com` — requires live deploy
+- [x] 4.7 Run [Google Rich Results Test](https://search.google.com/test/rich-results) on `https://samkirk.com` — crawled successfully Feb 21 2026; "No items detected" (expected: Person + WebSite schemas are valid structured data but not rich-result-eligible types)
 
 ### Optional Future Improvements
 

@@ -194,9 +194,9 @@ overall: pass
 | ... | ... | ... | ... |
 
 ## Manual Verifications (informational -- not gated)
-- [ ] VER-001: Visual inspect resume PDF layout
-- [ ] VER-002: OAuth flow in fresh browser session
-- [ ] VER-003: Cloud Run deployment serves traffic
+- [x] VER-001: Visual inspect resume PDF layout
+- [x] VER-002: OAuth flow in fresh browser session
+- [x] VER-003: ~~Cloud Run deployment serves traffic~~ — N/A, Cloud Run decommissioned; Vercel deploy verified
 
 ## Cross-references
 - Triggered by: [UR-001/REQ-017](../UR-001/REQ-017-run-existing-tests.md)
