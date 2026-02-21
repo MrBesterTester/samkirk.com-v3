@@ -36,4 +36,4 @@ export const OG_IMAGE = `${SITE_URL}/profile-photo.jpg`;
  * Replace with your actual ID after creating the GA4 property.
  * See docs/GCP-DEPLOY.md Step 12 for setup instructions.
  */
-export const GA_MEASUREMENT_ID = "G-XXXXXXXXXX";
+export const GA_MEASUREMENT_ID = "G-QPGLH8V5MM";

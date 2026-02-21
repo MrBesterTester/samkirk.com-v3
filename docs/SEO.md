@@ -209,8 +209,15 @@ samkirk.com had minimal SEO — only a root title ("Sam Kirk") and a generic des
 
 ### Google Analytics 4
 
-- [ ] 2.1 Create GA4 property for samkirk.com (see [setup instructions](#google-analytics-4-setup) below)
-- [ ] 2.2 Get measurement ID (`G-XXXXXXXXXX`) and update `web/src/lib/seo.ts` → `GA_MEASUREMENT_ID`
+- [x] 2.1 Create GA4 property for samkirk.com (see [setup instructions](#google-analytics-4-setup) below)
+- [x] 2.2 Get measurement ID (`G-QPGLH8V5MM`) and update `web/src/lib/seo.ts` → `GA_MEASUREMENT_ID`
+  - **Note**: GA4 does NOT require DNS changes. The measurement ID is a JavaScript tag embedded in the
+    website code that sends analytics data to Google when visitors load pages. It works as soon as the
+    code is deployed — no DNS TXT records needed. DNS verification is only required for **Google Search
+    Console** (step 3.1–3.2), which is a separate Google product for monitoring search appearance,
+    submitting sitemaps, and requesting indexing. Search Console verifies domain ownership via a DNS
+    TXT record (managed in [Microsoft 365 admin center](https://admin.microsoft.com) → Domains →
+    samkirk.com). A Google site verification TXT record may already exist from a previous setup.
 - [ ] 2.3 Deploy and verify `gtag.js` loads in browser Network tab
 
 ### Google Search Console
