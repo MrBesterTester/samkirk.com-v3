@@ -18,6 +18,7 @@ Personal website and showcase of Sam Kirk's projects over the past three years i
     - [Updating the Resume](#updating-the-resume)
     - [Updating the Dance Schedule](#updating-the-dance-schedule)
     - [Validating LLM Spend](#validating-llm-spend)
+    - [Checking Analytics & Search Performance](#checking-analytics--search-performance)
   - [The README Project Structure](#the-readme-project-structure)
   - [Tech Stack](#tech-stack)
   - [Development Methodology](#development-methodology)
@@ -78,6 +79,28 @@ cd web && npm run validate:spend
 Requires GCP credentials (`/login-gcloud`). The script reads the current month's Firestore `spendMonthly` document and prints estimated spend, budget, percentage used, and the hardcoded pricing constants. It also prints a direct link to the GCP Billing console for manual comparison.
 
 If the `LAST_PRICING_REVIEW` date in the script is older than 30 days, it warns you to re-check Vertex AI pricing. Update the date in `web/scripts/validate-spend.ts` after each review.
+
+### Checking Analytics & Search Performance
+
+Two Google dashboards track how samkirk.com is performing. Both are signed in under `sam@samkirk.com`.
+
+**Google Analytics 4** — [analytics.google.com](https://analytics.google.com/) (property: samkirk.com, measurement ID: `G-QPGLH8V5MM`)
+
+Shows visitor activity *on* your site. Key reports:
+- **Realtime** — live visitors currently on the site
+- **Engagement › Pages and screens** — which pages get the most views
+- **Acquisition › Traffic acquisition** — where visitors come from (Google search, direct, social, referral)
+- **User › Demographics** — visitor locations and devices
+
+**Google Search Console** — [search.google.com/search-console](https://search.google.com/search-console?resource_id=sc-domain:samkirk.com) (domain property: samkirk.com)
+
+Shows how your site appears *in Google Search*. Key reports:
+- **Performance** — which search queries lead to impressions and clicks, click-through rates, and average position
+- **Indexing › Pages** — how many pages are indexed vs. excluded, and why
+- **Sitemaps** — status of the submitted sitemap (`https://samkirk.com/sitemap.xml`, 11 pages)
+- **URL Inspection** (top search bar) — check indexing status of any specific page
+
+> **Note:** Search Console does not send email notifications when indexing completes for a requested URL. To check indexing status, go to the same [Google Search Console link](https://search.google.com/search-console?resource_id=sc-domain:samkirk.com) above, type the page URL into the "Inspect any URL" search bar at the top, and look for "URL is on Google" (indexed) vs. "URL is not on Google" (still pending). Indexing typically takes a few days to a couple of weeks after requesting. Search Console does send email alerts for crawl errors, security issues, or manual actions — just not for routine indexing completions.
 
 ## The README Project Structure
 

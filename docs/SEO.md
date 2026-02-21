@@ -222,10 +222,10 @@ samkirk.com had minimal SEO — only a root title ("Sam Kirk") and a generic des
 
 ### Google Search Console
 
-- [ ] 3.1 Add `samkirk.com` as a Domain property in [Search Console](https://search.google.com/search-console)
-- [ ] 3.2 Verify ownership via DNS TXT record (add in [Microsoft 365 admin center](https://admin.microsoft.com) → Domains → samkirk.com — may already exist)
-- [ ] 3.3 Submit sitemap: `https://samkirk.com/sitemap.xml`
-- [ ] 3.4 Request indexing of key pages (homepage, `/hire-me`) via URL Inspection
+- [x] 3.1 Add `samkirk.com` as a Domain property in [Search Console](https://search.google.com/search-console)
+- [x] 3.2 Verify ownership via DNS TXT record (auto-verified — existing DNS TXT record from previous setup)
+- [x] 3.3 Submit sitemap: `https://samkirk.com/sitemap.xml` (11 pages discovered; removed 2 stale 2010-era sitemaps)
+- [x] 3.4 Request indexing of key pages (homepage, `/hire-me`) via URL Inspection
 
 ### Deploy & Verify
 
