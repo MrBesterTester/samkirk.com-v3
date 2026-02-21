@@ -239,7 +239,7 @@ samkirk.com had minimal SEO — only a root title ("Sam Kirk") and a generic des
 
 ### Optional Future Improvements
 
-- [ ] Replace OG image with branded 1200x630 card (current profile photo is 192x256)
+- [x] Replace OG image with branded 1200x630 card (`og-card.png`, previously 192x256 `profile-photo.jpg`)
   - **Benefit**: Social platforms (LinkedIn, Twitter/X, Slack, iMessage) display a large preview card when someone shares a link. A properly sized 1200x630 image renders as a crisp, full-width card instead of a tiny, letterboxed thumbnail. A branded card with name, title, and a professional photo looks polished and drives higher click-through rates.
   - **Risk if skipped**: The current 192x256 profile photo will be stretched, cropped awkwardly, or shown with large black/white bars depending on the platform. The link preview looks unprofessional and is easy to scroll past, reducing engagement when the site is shared.
 - [x] Add LinkedIn and other social profiles to Person schema `sameAs` array

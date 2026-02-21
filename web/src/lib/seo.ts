@@ -29,7 +29,7 @@ export const KEYWORDS = [
   "Fort Myers developer",
 ];
 
-export const OG_IMAGE = `${SITE_URL}/profile-photo.jpg`;
+export const OG_IMAGE = `${SITE_URL}/og-card.png`;
 
 /**
  * Google Analytics 4 Measurement ID.
