@@ -229,13 +229,13 @@ samkirk.com had minimal SEO — only a root title ("Sam Kirk") and a generic des
 
 ### Deploy & Verify
 
-- [ ] 4.1 Ship code changes (metadata, robots.txt, sitemap.xml, structured data, GA script)
-- [ ] 4.2 Verify `<title>`, `og:*`, `twitter:*`, canonical tags in page source
-- [ ] 4.3 Verify `https://samkirk.com/robots.txt` shows allow/disallow rules
-- [ ] 4.4 Verify `https://samkirk.com/sitemap.xml` lists 11 URLs
-- [ ] 4.5 Verify `application/ld+json` Person + WebSite schemas in page source
-- [ ] 4.6 Verify GA loads (Network tab → filter `gtag`) — requires 2.2 complete
-- [ ] 4.7 Run [Google Rich Results Test](https://search.google.com/test/rich-results) on `https://samkirk.com`
+- [ ] 4.1 Ship code changes (metadata, robots.txt, sitemap.xml, structured data, GA script) — committed locally, needs push + deploy
+- [x] 4.2 Verify `<title>`, `og:*`, `twitter:*`, canonical tags in page source (verified locally: title, 8 OG tags, 4 Twitter tags, canonical all present)
+- [x] 4.3 Verify `https://samkirk.com/robots.txt` shows allow/disallow rules (verified locally: Allow `/`, Disallow `/admin/` + `/api/`, Sitemap ref)
+- [x] 4.4 Verify `https://samkirk.com/sitemap.xml` lists 11 URLs (verified locally: 11 `<url>` entries)
+- [x] 4.5 Verify `application/ld+json` Person + WebSite schemas in page source (verified locally: Person + WebSite schemas present)
+- [x] 4.6 Verify GA loads (Network tab → filter `gtag`) — verified locally: `gtag/js?id=G-QPGLH8V5MM` script tag present
+- [ ] 4.7 Run [Google Rich Results Test](https://search.google.com/test/rich-results) on `https://samkirk.com` — requires live deploy
 
 ### Optional Future Improvements
 
