@@ -74,6 +74,24 @@ const personJsonLd = {
   sameAs: ["https://github.com/MrBesterTester", "https://www.linkedin.com/in/samuelkirk"],
 };
 
+const profilePageJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "ProfilePage",
+  dateCreated: "2025-02-15T00:00:00-08:00",
+  dateModified: new Date().toISOString(),
+  mainEntity: {
+    "@type": "Person",
+    name: "Sam Kirk",
+    alternateName: "Samuel Kirk",
+    description: "GenAI Software Engineer specializing in Claude Code, Cursor, and full-stack TypeScript",
+    image: `${SITE_URL}/profile-photo.jpg`,
+    sameAs: [
+      "https://github.com/MrBesterTester",
+      "https://www.linkedin.com/in/samuelkirk",
+    ],
+  },
+};
+
 const websiteJsonLd = {
   "@context": "https://schema.org",
   "@type": "WebSite",
@@ -107,6 +125,10 @@ export default function RootLayout({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(profilePageJsonLd) }}
         />
 
         {/* Google Analytics 4 — only loads when a real measurement ID is configured */}
