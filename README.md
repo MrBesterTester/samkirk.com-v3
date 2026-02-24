@@ -68,6 +68,8 @@ Go to `/admin/dance-menu` (requires admin authentication).
 
 **Constraints:** Max 10 MB per file, 50 MB total. One file per format. Files are stored in GCS as `sams-dance-menu.{ext}`, replacing the previous version.
 
+**Troubleshooting "Failed to store dance menu files":** This usually means GCP credentials have expired (Google Workspace RAPT policy). Fix: run `/login-gcloud` to refresh credentials, then **restart the dev server** so it picks up the new ADC token.
+
 ### Validating LLM Spend
 
 Run monthly (or whenever you suspect pricing drift) to compare the app's estimated spend against actual GCP billing:
