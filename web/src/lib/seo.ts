@@ -4,7 +4,7 @@ export const SITE_URL = "https://samkirk.com";
 export const SITE_NAME = "Sam Kirk";
 
 export const SITE_DESCRIPTION =
-  "Sam Kirk — GenAI software engineer specializing in Claude Code, Cursor, and full-stack TypeScript. AI-powered hiring tools, side projects, and explorations.";
+  "Sam Kirk — genAI consultant. AI-augmented software and firmware test development. Claude Code, Cursor AI, and 45+ years in Silicon Valley.";
 
 export const AUTHOR = {
   name: "Sam Kirk",

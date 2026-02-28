@@ -26,7 +26,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "Sam Kirk — GenAI Software Engineer | Cursor & Claude Code",
+    default: "Sam Kirk — genAI Consulting | Software & Firmware Test Development",
     template: "%s | Sam Kirk",
   },
   description: SITE_DESCRIPTION,
@@ -37,14 +37,14 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     siteName: SITE_NAME,
-    title: "Sam Kirk — GenAI Software Engineer | Cursor & Claude Code",
+    title: "Sam Kirk — genAI Consulting | Software & Firmware Test Development",
     description: SITE_DESCRIPTION,
     url: SITE_URL,
-    images: [{ url: OG_IMAGE, alt: "Sam Kirk" }],
+    images: [{ url: OG_IMAGE, alt: "Sam Kirk — genAI Consulting" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Sam Kirk — GenAI Software Engineer | Cursor & Claude Code",
+    title: "Sam Kirk — genAI Consulting | Software & Firmware Test Development",
     description: SITE_DESCRIPTION,
     images: [OG_IMAGE],
   },
