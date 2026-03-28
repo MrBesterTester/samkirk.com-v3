@@ -1,7 +1,7 @@
 ---
 id: REQ-135
 title: Add SAK Consulting booking CTA at top of homepage
-status: pending
+status: done
 created_at: 2026-03-27T12:00:00Z
 user_request: UR-041
 ---

@@ -38,6 +38,27 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Booking CTA */}
+      <section className="mt-8 rounded-lg border border-accent/20 bg-accent/5 p-6 text-center">
+        <h2 className="text-2xl font-semibold text-text-primary">
+          Book a Free 30-Min Consultation
+        </h2>
+        <p className="mx-auto mt-2 max-w-lg text-text-secondary">
+          Let&apos;s talk about your project, team, or technical challenge.
+          Schedule an introductory call — no obligation, no pitch.
+        </p>
+        <div className="mt-4">
+          <a
+            href="https://calendar.app.google/8H2wFxaahHkoTeM6A"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block rounded-lg bg-accent px-6 py-3 text-base font-semibold text-white shadow-sm transition-colors hover:bg-accent-hover"
+          >
+            Book a Call &rarr;
+          </a>
+        </div>
+      </section>
+
       {/* Quick Actions for Hiring Managers */}
       <section className="mt-8">
         <h2 className="text-center text-2xl font-semibold text-text-primary">
@@ -56,7 +77,10 @@ export default function Home() {
             <li>All output including a chat transcript are downloadable</li>
           </ul>
         </div>
-        <div className="mt-6 text-center">
+        <div className="mt-4 text-center text-text-muted">
+          or, in the meantime&hellip;
+        </div>
+        <div className="mt-2 text-center">
           <Link
             href="/hire-me"
             className="inline-block rounded-lg bg-accent px-6 py-3 text-base font-semibold text-white shadow-sm transition-colors hover:bg-accent-hover"
