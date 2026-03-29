@@ -90,24 +90,25 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Table of Contents */}
+      {/* Project Showcase — consulting-first order (REQ-136) */}
       <div className="mt-8 space-y-10">
         <section>
           <h2 className="text-2xl font-semibold text-text-primary">
-            My Dance Menu
+            This Showcase of genAI
           </h2>
           <p className="mt-1 text-text-secondary">
-            Weekly curated playlists for social dancers — Swing, Waltz, Two Step, and more.
+            This site was built using state-of-the-art generative AI
+            methods, layering Matt Maher&apos;s do-work methodology on top
+            of Dylan Davis&apos; 3-document method.
           </p>
-          <ul className="mt-1 list-disc pl-5 text-sm text-text-muted">
-            <li>Curated with Claude Cowork</li>
-          </ul>
-          <Link
-            href="/dance-menu"
+          <a
+            href="https://github.com/MrBesterTester/samkirk.com-v3"
+            target="_blank"
+            rel="noopener noreferrer"
             className="mt-2 inline-block font-medium text-accent hover:text-accent-hover"
           >
-            View this week&apos;s menu &rarr;
-          </Link>
+            View the source on GitHub &rarr;
+          </a>
         </section>
 
         <section>
@@ -152,24 +153,6 @@ export default function Home() {
 
         <section>
           <h2 className="text-2xl font-semibold text-text-primary">
-            Song Dedication to Mom
-          </h2>
-          <p className="mt-1 text-text-secondary">
-            A song for Mom with the story and lyrics behind it.
-          </p>
-          <ul className="mt-1 list-disc pl-5 text-sm text-text-muted">
-            <li>Lyrics done in ChatGPT; sound track done on www.udio.com.</li>
-          </ul>
-          <Link
-            href="/song-dedication"
-            className="mt-2 inline-block font-medium text-accent hover:text-accent-hover"
-          >
-            Listen and read the dedication &rarr;
-          </Link>
-        </section>
-
-        <section>
-          <h2 className="text-2xl font-semibold text-text-primary">
             Explorations
           </h2>
           <p className="mt-1 text-text-secondary">
@@ -185,21 +168,38 @@ export default function Home() {
 
         <section>
           <h2 className="text-2xl font-semibold text-text-primary">
-            This Showcase of genAI
+            My Dance Menu
           </h2>
           <p className="mt-1 text-text-secondary">
-            This site was built using state-of-the-art generative AI
-            methods, layering Matt Maher&apos;s do-work methodology on top
-            of Dylan Davis&apos; 3-document method.
+            Weekly curated playlists for social dancers — Swing, Waltz, Two Step, and more.
           </p>
-          <a
-            href="https://github.com/MrBesterTester/samkirk.com-v3"
-            target="_blank"
-            rel="noopener noreferrer"
+          <ul className="mt-1 list-disc pl-5 text-sm text-text-muted">
+            <li>Curated with Claude Cowork</li>
+          </ul>
+          <Link
+            href="/dance-menu"
             className="mt-2 inline-block font-medium text-accent hover:text-accent-hover"
           >
-            View the source on GitHub &rarr;
-          </a>
+            View this week&apos;s menu &rarr;
+          </Link>
+        </section>
+
+        <section>
+          <h2 className="text-2xl font-semibold text-text-primary">
+            Song Dedication to Mom
+          </h2>
+          <p className="mt-1 text-text-secondary">
+            A song for Mom with the story and lyrics behind it.
+          </p>
+          <ul className="mt-1 list-disc pl-5 text-sm text-text-muted">
+            <li>Lyrics done in ChatGPT; sound track done on www.udio.com.</li>
+          </ul>
+          <Link
+            href="/song-dedication"
+            className="mt-2 inline-block font-medium text-accent hover:text-accent-hover"
+          >
+            Listen and read the dedication &rarr;
+          </Link>
         </section>
       </div>
     </div>

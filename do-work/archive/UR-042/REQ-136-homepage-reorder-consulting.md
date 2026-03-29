@@ -1,7 +1,7 @@
 ---
 id: REQ-136
 title: Reorder homepage sections for consulting business focus
-status: pending
+status: done
 created_at: 2026-03-27T19:10:00Z
 user_request: UR-042
 related: [REQ-137]
