@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Physics of LoRA: From Thermodynamics to Normal Modes</title>
+<!-- KaTeX for math rendering -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body, {
+    delimiters: [
+      {left: '$$', right: '$$', display: true},
+      {left: '$', right: '$', display: false}
+    ]
+  });"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;line-height:1.7;color:#2d2d2d;background:#f0f2f5;padding:20px}
+.container{max-width:960px;margin:0 auto;background:#fff;padding:40px 45px;box-shadow:0 2px 20px rgba(0,0,0,0.08);border-radius:10px}
+h1{color:#1a3a5c;border-bottom:3px solid #1a3a5c;padding-bottom:12px;margin-bottom:8px;font-size:2.1em;line-height:1.3}
+.subtitle{color:#555;font-size:1.05em;margin-bottom:25px}
+h2{color:#1a3a5c;margin:35px 0 18px;font-size:1.6em;border-left:5px solid #1a3a5c;padding-left:14px}
+h3{color:#2c5282;margin:22px 0 12px;font-size:1.2em}
+p{margin-bottom:14px;text-align:justify}
+ul,ol{margin:0 0 14px 28px}
+li{margin-bottom:8px}
+.abstract{background:#e8f0fe;padding:18px 22px;border-left:5px solid #1a3a5c;margin-bottom:28px;border-radius:4px;font-style:italic}
+.diagram{margin:25px 0;padding:18px;background:#fafbfc;border-radius:6px;text-align:center}
+.diagram svg{max-width:100%;height:auto;display:block;margin:0 auto}
+.caption{margin-top:8px;font-size:.9em;color:#666;font-style:italic;text-align:center}
+table{width:100%;border-collapse:collapse;margin:18px 0;font-size:.95em}
+th,td{border:1px solid #d0d7de;padding:10px 12px;text-align:left;vertical-align:top}
+th{background:#1a3a5c;color:#fff;font-weight:600}
+tr:nth-child(even){background:#f6f8fa}
+.note{background:#fff8e1;padding:14px 18px;border-left:4px solid #f9a825;margin:16px 0;border-radius:4px}
+.note strong{color:#e65100}
+.insight{background:#e8f5e9;padding:14px 18px;border-left:4px solid #2e7d32;margin:16px 0;border-radius:4px}
+.insight strong{color:#1b5e20}
+.punchline{background:#fce4ec;padding:16px 20px;border-left:5px solid #c62828;margin:20px 0;border-radius:4px;font-size:1.1em}
+.punchline strong{color:#b71c1c}
+.eq{background:#f5f5f5;padding:16px 20px;margin:16px 0;border-left:4px solid #1a3a5c;overflow-x:auto;text-align:center;font-size:1.15em}
+a{color:#1a3a5c}
+.footer{margin-top:40px;padding-top:18px;border-top:2px solid #e0e0e0;text-align:center;color:#888;font-size:.85em}
+.pipeline-step{display:flex;align-items:flex-start;gap:14px;margin:12px 0;padding:12px 16px;background:#f9fafb;border-radius:6px;border:1px solid #e8e8e8}
+.pipeline-num{background:#1a3a5c;color:#fff;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.95em;flex-shrink:0;margin-top:2px}
+.pipeline-content{flex:1}
+.pipeline-content strong{color:#1a3a5c}
+.tag{display:inline-block;padding:2px 8px;border-radius:3px;font-size:.8em;margin:2px;font-weight:600}
+.tag-outside{background:#e3f2fd;color:#1565c0}
+.tag-inside{background:#fce4ec;color:#c62828}
+.tag-both{background:#e8f5e9;color:#2e7d32}
+.toc{background:#f5f7fa;padding:18px 24px;border-radius:6px;border:1px solid #e0e0e0;margin-bottom:28px}
+.toc h3{margin:0 0 10px;color:#1a3a5c;font-size:1.05em;border:none;padding:0}
+.toc ol{margin:0 0 0 20px;padding:0}
+.toc li{margin-bottom:4px;font-size:.95em}
+.toc a{color:#2c5282;text-decoration:none}
+.toc a:hover{text-decoration:underline;color:#1a3a5c}
+.part-label{display:inline-block;padding:4px 12px;border-radius:4px;font-size:.85em;font-weight:700;letter-spacing:.05em;text-transform:uppercase;margin-bottom:8px}
+.part-outside{background:#e3f2fd;color:#1565c0}
+.part-inside{background:#fce4ec;color:#c62828}
+.part-bridge{background:#e8f5e9;color:#2e7d32}
+hr.part-divider{border:none;border-top:3px double #1a3a5c;margin:45px 0 10px}
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>The Physics of LoRA</h1>
+<p class="subtitle">From Thermodynamics to Normal Modes &nbsp;|&nbsp; A Unified Interpretation &nbsp;|&nbsp; March 2026</p>
+
+<div class="abstract">
+<strong>What this document does:</strong> LoRA fine-tuning can be understood through two complementary
+physics lenses &mdash; one looking at the system from the <em>outside</em> (thermodynamics), the other
+looking <em>inside</em> each adapted layer (normal mode analysis). This document presents both views,
+then shows how the macroscopic thermodynamic description <em>predicts</em> the microscopic modal structure.
+The framework is CompuFlair (Ardavan Borzou): $P = e^{-F}/Z$ &mdash; the thesis that all of ML
+can be interpreted through the Gibbs&ndash;Boltzmann equation.
+</div>
+
+<nav class="toc">
+<h3>Table of Contents</h3>
+<ol>
+  <li><a href="#framework">The CompuFlair Framework</a></li>
+  <li style="margin-top:8px"><strong>Part I &mdash; The Outside View: Thermodynamics</strong>
+    <ol style="margin:4px 0 0 18px">
+      <li><a href="#equilibrium">The Base Model as Thermodynamic Equilibrium</a></li>
+      <li><a href="#perturbation">LoRA as Perturbation Theory</a></li>
+      <li><a href="#annealing">Training Dynamics as Annealing</a></li>
+      <li><a href="#quantization">4-Bit Quantization as Literal Quantization</a></li>
+    </ol>
+  </li>
+  <li style="margin-top:8px"><strong>Part II &mdash; The Inside View: Normal Modes</strong>
+    <ol style="margin:4px 0 0 18px">
+      <li><a href="#two-axes">The Two Decompositions</a></li>
+      <li><a href="#svd">Within Each Layer: Normal Mode Analysis</a></li>
+      <li><a href="#hierarchy">Across Layers: The Feature Hierarchy</a></li>
+      <li><a href="#paradox">Resolving the Apparent Paradox</a></li>
+    </ol>
+  </li>
+  <li style="margin-top:8px"><strong>Part III &mdash; Connecting the Views</strong>
+    <ol style="margin:4px 0 0 18px">
+      <li><a href="#macro-predicts-micro">How the Outside Predicts the Inside</a></li>
+      <li><a href="#pipeline">The Complete Pipeline</a></li>
+      <li><a href="#implications">Implications &amp; Future Directions</a></li>
+    </ol>
+  </li>
+  <li><a href="#sources">Source Materials</a></li>
+</ol>
+</nav>
+
+<!-- ================================================================ -->
+<h2 id="framework">1. The CompuFlair Framework</h2>
+
+<p>CompuFlair's central thesis is that the entire field of ML can be interpreted through one equation from statistical mechanics:</p>
+
+<div class="eq">
+$$P = \frac{e^{-F}}{Z}$$
+</div>
+
+<p>where $F$ is the free energy (the loss or cost function), and $Z = \sum_{\text{configs}} e^{-F}$ is the partition function &mdash; a normalization over all possible configurations of the system. Training an ML model is equivalent to <strong>cooling a physical system</strong>: finding the low-energy configuration of parameters that best fits the data.</p>
+
+<p>This document applies that lens at two scales &mdash; macroscopic and microscopic &mdash; and shows that they tell a single coherent story.</p>
+
+<!-- ================================================================ -->
+<hr class="part-divider">
+<div class="part-label part-outside">Part I &mdash; The Outside View</div>
+<h2 id="equilibrium">2. The Base Model as Thermodynamic Equilibrium</h2>
+
+<p><strong>Llama 3.2 3B</strong> was pre-trained on trillions of tokens by Meta. In the CompuFlair framework, this pre-training was a massive annealing process: the system ($\sim\!3 \times 10^9$ parameters) was heated (high learning rate, large batches, diverse data) and slowly cooled over weeks of training on GPU clusters, settling into a low-energy equilibrium across the loss landscape.</p>
+
+<p>The result is a parameter configuration $\mathbf{W}_0$ that sits in a deep, broad basin of the energy surface. The model's &ldquo;knowledge&rdquo; &mdash; grammar, reasoning patterns, factual recall &mdash; is encoded in the <em>geometry</em> of this basin.</p>
+
+<div class="insight">
+<strong>Key insight:</strong> The base model is a <em>solved system.</em> Meta spent millions of dollars and weeks of GPU-cluster time carefully annealing 3&nbsp;billion parameters into this equilibrium. It knows grammar, reasoning, conversation, world knowledge &mdash; an enormous amount of structure encoded in the curvature of that energy landscape.
+</div>
+
+<p>Now you want it to also know about hardware diagnostics. The brute-force approach &mdash; full fine-tuning &mdash; would unfreeze all 3&nbsp;billion parameters. In thermodynamic terms, <strong>you'd be melting the entire system down and re-annealing from scratch.</strong></p>
+
+<div class="punchline">
+<strong>You don't melt down a cathedral because you want to add a room. Don't melt it &mdash; perturb it.</strong>
+</div>
+
+<!-- SVG: Melt vs. Perturb -->
+<div class="diagram">
+<svg viewBox="0 0 780 280" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="arr-r" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#c62828"/></marker>
+    <marker id="arr-g" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#2e7d32"/></marker>
+  </defs>
+  <!-- Left: Full Fine-Tuning -->
+  <rect x="20" y="20" width="350" height="240" rx="8" fill="#fce4ec" stroke="#c62828" stroke-width="2"/>
+  <text x="195" y="50" text-anchor="middle" font-size="15" font-weight="bold" fill="#c62828">FULL FINE-TUNING</text>
+  <text x="195" y="72" text-anchor="middle" font-size="11" fill="#c62828">&ldquo;Melt the cathedral&rdquo;</text>
+  <path d="M 60,190 Q 100,100 140,170 Q 170,210 195,130 Q 220,80 250,180 Q 280,220 310,150 Q 330,110 340,190" stroke="#c62828" stroke-width="2" fill="none" stroke-dasharray="6,4"/>
+  <text x="195" y="230" text-anchor="middle" font-size="10" fill="#555">all 3B parameters free to move</text>
+  <text x="195" y="245" text-anchor="middle" font-size="10" fill="#555">equilibrium destroyed</text>
+  <circle cx="195" cy="122" r="7" fill="#c62828" opacity="0.7"/>
+  <line x1="195" y1="129" x2="160" y2="165" stroke="#c62828" stroke-width="1.5" stroke-dasharray="3,3"/>
+  <line x1="195" y1="129" x2="240" y2="155" stroke="#c62828" stroke-width="1.5" stroke-dasharray="3,3"/>
+  <line x1="195" y1="129" x2="195" y2="95" stroke="#c62828" stroke-width="1.5" stroke-dasharray="3,3"/>
+  <!-- Right: LoRA -->
+  <rect x="410" y="20" width="350" height="240" rx="8" fill="#e8f5e9" stroke="#2e7d32" stroke-width="2"/>
+  <text x="585" y="50" text-anchor="middle" font-size="15" font-weight="bold" fill="#2e7d32">LoRA FINE-TUNING</text>
+  <text x="585" y="72" text-anchor="middle" font-size="11" fill="#2e7d32">&ldquo;Perturb it&rdquo;</text>
+  <path d="M 450,190 Q 490,100 530,170 Q 560,210 585,130 Q 610,80 640,180 Q 670,220 700,150 Q 720,110 730,190" stroke="#1a3a5c" stroke-width="2" fill="none"/>
+  <text x="585" y="230" text-anchor="middle" font-size="10" fill="#555">base frozen, only rank-8 correction moves</text>
+  <text x="585" y="245" text-anchor="middle" font-size="10" fill="#555">equilibrium preserved</text>
+  <circle cx="585" cy="122" r="7" fill="#2e7d32"/>
+  <line x1="592" y1="120" x2="608" y2="115" stroke="#2e7d32" stroke-width="2.5" marker-end="url(#arr-g)"/>
+  <text x="630" y="112" font-size="9" fill="#2e7d32" font-weight="bold">&Delta;W = BA</text>
+</svg>
+<div class="caption">Figure 1: Full fine-tuning melts the entire energy landscape. LoRA keeps it frozen and applies a small, targeted perturbation.</div>
+</div>
+
+<!-- ================================================================ -->
+<h2 id="perturbation">3. LoRA as Perturbation Theory</h2>
+
+<p>In quantum mechanics and statistical mechanics, perturbation theory handles problems of the form:</p>
+
+<div class="eq">
+$$\hat{H} = \hat{H}_0 + \lambda \hat{V}$$
+</div>
+
+<p>where $\hat{H}_0$ is the solved Hamiltonian, $\hat{V}$ is a small perturbation, and $\lambda$ controls the perturbation strength. LoRA does exactly this:</p>
+
+<div class="eq">
+$$\mathbf{W} = \mathbf{W}_0 + \Delta\mathbf{W} = \mathbf{W}_0 + \mathbf{B}\mathbf{A}$$
+</div>
+
+<ul>
+  <li>$\mathbf{W}_0$ (frozen base weights) = the <strong>ground state</strong> $\hat{H}_0$</li>
+  <li>$\Delta\mathbf{W} = \mathbf{BA}$ (low-rank adapters) = the <strong>perturbation correction</strong> $\lambda\hat{V}$</li>
+  <li>$\mathbf{B} \in \mathbb{R}^{d \times r}$, $\mathbf{A} \in \mathbb{R}^{r \times k}$, rank $r \ll \min(d, k)$</li>
+</ul>
+
+<table>
+  <tr><th style="width:28%">Parameter</th><th style="width:22%">Value</th><th style="width:50%">Physics Analogy</th></tr>
+  <tr><td>Rank $r$</td><td>8</td><td>8 perturbation modes per adapted layer</td></tr>
+  <tr><td>Base weights $\mathbf{W}_0$</td><td>$\sim\!3 \times 10^9$, frozen</td><td>Ground state &mdash; solved, don't touch</td></tr>
+  <tr><td>LoRA parameters</td><td>$\sim\!3.47 \times 10^6$ trainable</td><td>Perturbation corrections only</td></tr>
+  <tr><td>Compression</td><td>$\sim\!1500 : 1$</td><td>Only 1 in 1500 degrees of freedom moves</td></tr>
+</table>
+
+<div class="insight">
+<strong>Why this works:</strong> The &ldquo;distance&rdquo; in parameter space between the base model
+and our hardware-diagnostics specialist lies in a <em>very low-dimensional subspace</em>.
+Perturbation theory predicts that first-order corrections capture most of the effect
+when the perturbation is small relative to the unperturbed system. Higher-order corrections
+(higher rank, more layers) yield diminishing returns &mdash; just as in physics.
+</div>
+
+<!-- SVG: Parameter space -->
+<div class="diagram">
+<svg viewBox="0 0 780 280" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="a3" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#2e7d32"/></marker>
+    <marker id="a4" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#c62828"/></marker>
+  </defs>
+  <text x="390" y="24" text-anchor="middle" font-size="15" font-weight="bold" fill="#1a3a5c">Parameter Space: 3 Billion Dimensions</text>
+  <ellipse cx="390" cy="155" rx="340" ry="115" fill="#f5f7fa" stroke="#bbb" stroke-width="1.5" stroke-dasharray="6,4"/>
+  <text x="680" y="255" font-size="10" fill="#999">full weight space</text>
+  <circle cx="280" cy="150" r="8" fill="#1a3a5c"/>
+  <text x="255" y="135" font-size="13" font-weight="bold" fill="#1a3a5c">W&#x2080;</text>
+  <text x="232" y="185" font-size="10" fill="#555">base model</text>
+  <text x="232" y="198" font-size="10" fill="#555">(ground state)</text>
+  <ellipse cx="370" cy="145" rx="100" ry="35" fill="rgba(46,125,50,0.12)" stroke="#2e7d32" stroke-width="2" transform="rotate(-12 370 145)"/>
+  <text x="420" y="112" font-size="11" font-weight="bold" fill="#2e7d32">LoRA subspace (rank 8)</text>
+  <line x1="288" y1="148" x2="428" y2="138" stroke="#2e7d32" stroke-width="2.5" marker-end="url(#a3)"/>
+  <circle cx="435" cy="137" r="6" fill="#2e7d32"/>
+  <text x="445" y="145" font-size="12" font-weight="bold" fill="#2e7d32">W*</text>
+  <text x="445" y="160" font-size="10" fill="#555">fine-tuned</text>
+  <text x="345" y="130" font-size="11" fill="#2e7d32">&Delta;W = BA</text>
+  <line x1="288" y1="152" x2="570" y2="200" stroke="#c62828" stroke-width="1.5" stroke-dasharray="5,4" marker-end="url(#a4)"/>
+  <text x="490" y="215" font-size="10" fill="#c62828">full fine-tuning (catastrophic forgetting)</text>
+</svg>
+<div class="caption">Figure 2: LoRA constrains the update to a low-rank subspace (green). The base model $\mathbf{W}_0$ stays fixed. Full fine-tuning (red) wanders through all 3B dimensions.</div>
+</div>
+
+<!-- ================================================================ -->
+<h2 id="annealing">4. Training Dynamics as Annealing</h2>
+
+<p>The gradient descent process maps directly to thermodynamic annealing:</p>
+
+<h3>4.1 Learning Rate as Temperature</h3>
+
+<div class="eq">$$\eta \;\longleftrightarrow\; T$$</div>
+
+<p>Our $\eta = 10^{-5}$ is very low &mdash; a <em>cold</em> annealing. The system almost never accepts uphill moves: $P(\text{accept}) \propto e^{-\Delta F / T}$. Appropriate for refining a perturbation to an already-good solution.</p>
+
+<h3>4.2 Batch Size as Thermal Noise</h3>
+
+<div class="eq">$$\text{batch size} \;\longleftrightarrow\; \frac{1}{\sigma^2_{\text{thermal}}}$$</div>
+
+<p>Batch size <strong>1</strong> means high stochastic noise &mdash; each gradient update is computed from a single example. These thermal fluctuations help the perturbation parameters explore the low-dimensional LoRA subspace without destabilizing the solution.</p>
+
+<h3>4.3 The Annealing Schedule</h3>
+
+<!-- SVG: Loss curve with three phases -->
+<div class="diagram">
+<svg viewBox="0 0 700 220" xmlns="http://www.w3.org/2000/svg">
+  <line x1="70" y1="185" x2="660" y2="185" stroke="#333" stroke-width="1.5"/>
+  <line x1="70" y1="185" x2="70" y2="25" stroke="#333" stroke-width="1.5"/>
+  <text x="365" y="215" text-anchor="middle" font-size="12" fill="#333">Iteration</text>
+  <text x="25" y="108" text-anchor="middle" font-size="12" fill="#333" transform="rotate(-90 25 108)">Loss (Energy)</text>
+  <line x1="168" y1="185" x2="168" y2="190" stroke="#333"/><text x="168" y="202" text-anchor="middle" font-size="10" fill="#555">100</text>
+  <line x1="364" y1="185" x2="364" y2="190" stroke="#333"/><text x="364" y="202" text-anchor="middle" font-size="10" fill="#555">400</text>
+  <line x1="560" y1="185" x2="560" y2="190" stroke="#333"/><text x="560" y="202" text-anchor="middle" font-size="10" fill="#555">600</text>
+  <path d="M 70,45 Q 100,50 120,72 Q 140,100 168,118 Q 250,148 364,162 Q 460,168 560,170 Q 620,171 650,171" stroke="#1a3a5c" stroke-width="3" fill="none"/>
+  <rect x="70" y="25" width="98" height="160" fill="rgba(198,40,40,0.06)"/>
+  <rect x="168" y="25" width="196" height="160" fill="rgba(255,152,0,0.06)"/>
+  <rect x="364" y="25" width="196" height="160" fill="rgba(46,125,50,0.06)"/>
+  <text x="119" y="42" text-anchor="middle" font-size="10" font-weight="bold" fill="#c62828">Phase I: Rapid cooling</text>
+  <text x="266" y="42" text-anchor="middle" font-size="10" font-weight="bold" fill="#e65100">Phase II: Settling</text>
+  <text x="462" y="42" text-anchor="middle" font-size="10" font-weight="bold" fill="#2e7d32">Phase III: Equilibrium</text>
+</svg>
+<div class="caption">Figure 3: The three thermodynamic phases of LoRA training. 600 iterations at batch&nbsp;1 over 385 examples (&sim;1.95 epochs).</div>
+</div>
+
+<!-- ================================================================ -->
+<h2 id="quantization">5. 4-Bit Quantization as Literal Quantization</h2>
+
+<p>This mapping is the most satisfying because it's not an analogy &mdash; it's the same operation:</p>
+
+<div class="eq">
+$$\text{Continuous weight space } \mathbb{R} \;\longrightarrow\; 16 \text{ discrete levels} \quad (4\;\text{bits} = 2^4 = 16)$$
+</div>
+
+<p>Each parameter is mapped to one of 16 discrete levels, like energy quantization in a quantum harmonic oscillator ($\Delta E = \hbar\omega$). It works because the base model is a low-temperature system &mdash; parameters cluster near equilibrium values, so 16 levels per parameter captures the meaningful structure with negligible loss. Memory drops from $\sim\!6$&nbsp;GB to $\sim\!2$&nbsp;GB.</p>
+
+<!-- SVG: Quantization -->
+<div class="diagram">
+<svg viewBox="0 0 700 180" xmlns="http://www.w3.org/2000/svg">
+  <text x="175" y="18" text-anchor="middle" font-size="12" font-weight="bold" fill="#1a3a5c">32-bit (continuous)</text>
+  <line x1="30" y1="130" x2="320" y2="130" stroke="#333" stroke-width="1"/>
+  <path d="M 60,130 Q 80,128 100,120 Q 130,90 155,50 Q 175,32 195,50 Q 220,90 250,120 Q 270,128 290,130" stroke="#1a3a5c" stroke-width="2.5" fill="rgba(26,58,92,0.1)"/>
+  <text x="175" y="150" text-anchor="middle" font-size="10" fill="#555">weight distribution (peaked at equilibrium)</text>
+  <text x="350" y="80" text-anchor="middle" font-size="22" fill="#555">&rarr;</text>
+  <text x="350" y="100" text-anchor="middle" font-size="10" fill="#555">quantize</text>
+  <text x="525" y="18" text-anchor="middle" font-size="12" font-weight="bold" fill="#2e7d32">4-bit (16 levels)</text>
+  <line x1="380" y1="130" x2="670" y2="130" stroke="#333" stroke-width="1"/>
+  <rect x="410" y="125" width="8" height="5" fill="#2e7d32"/>
+  <rect x="428" y="118" width="8" height="12" fill="#2e7d32"/>
+  <rect x="446" y="105" width="8" height="25" fill="#2e7d32"/>
+  <rect x="464" y="85" width="8" height="45" fill="#2e7d32"/>
+  <rect x="482" y="58" width="8" height="72" fill="#2e7d32"/>
+  <rect x="500" y="35" width="8" height="95" fill="#2e7d32"/>
+  <rect x="518" y="42" width="8" height="88" fill="#2e7d32"/>
+  <rect x="536" y="63" width="8" height="67" fill="#2e7d32"/>
+  <rect x="554" y="90" width="8" height="40" fill="#2e7d32"/>
+  <rect x="572" y="108" width="8" height="22" fill="#2e7d32"/>
+  <rect x="590" y="118" width="8" height="12" fill="#2e7d32"/>
+  <rect x="608" y="123" width="8" height="7" fill="#2e7d32"/>
+  <text x="525" y="150" text-anchor="middle" font-size="10" fill="#555">same distribution, 16 bins &mdash; minimal information loss</text>
+</svg>
+<div class="caption">Figure 4: Quantization maps a continuous weight distribution to 16 discrete levels. Minimal loss because the system is already at equilibrium.</div>
+</div>
+
+<!-- ================================================================ -->
+<hr class="part-divider">
+<div class="part-label part-inside">Part II &mdash; The Inside View</div>
+<h2 id="two-axes">6. The Two Decompositions</h2>
+
+<p>Part I treated LoRA as a single perturbation applied to the whole system. Now we look <em>inside</em> and ask: what is the structure of that perturbation? LoRA involves two independent choices that operate on orthogonal axes:</p>
+
+<table>
+  <tr>
+    <th style="width:22%">Choice</th>
+    <th style="width:25%">Question</th>
+    <th style="width:18%">Our Config</th>
+    <th style="width:35%">Physics Analogy</th>
+  </tr>
+  <tr>
+    <td><span class="tag tag-inside">Rank</span> $r = 8$</td>
+    <td>How many independent correction modes per layer?</td>
+    <td>8 modes</td>
+    <td>Normal mode truncation</td>
+  </tr>
+  <tr>
+    <td><span class="tag tag-outside">Layers</span> top 8 of 32</td>
+    <td>Where in the network to apply the correction?</td>
+    <td>Layers 25&ndash;32</td>
+    <td>Spatially localized perturbation</td>
+  </tr>
+</table>
+
+<!-- SVG: Two-axis overview -->
+<div class="diagram">
+<svg viewBox="0 0 780 320" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="arr-b" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#1565c0"/></marker>
+    <marker id="arr-r2" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#c62828"/></marker>
+  </defs>
+  <rect x="120" y="60" width="580" height="220" rx="4" fill="#fafbfc" stroke="#ddd"/>
+  <line x1="120" y1="280" x2="700" y2="280" stroke="#1565c0" stroke-width="2" marker-end="url(#arr-b)"/>
+  <line x1="120" y1="280" x2="120" y2="60" stroke="#c62828" stroke-width="2" marker-end="url(#arr-r2)"/>
+  <text x="410" y="310" text-anchor="middle" font-size="13" font-weight="bold" fill="#1565c0">Layer axis (compositional: basic &rarr; abstract)</text>
+  <text x="35" y="170" text-anchor="middle" font-size="13" font-weight="bold" fill="#c62828" transform="rotate(-90 35 170)">Rank axis (energy: dominant &rarr; least)</text>
+  <text x="175" y="52" text-anchor="middle" font-size="10" fill="#1565c0">Layer 1</text>
+  <text x="295" y="52" text-anchor="middle" font-size="10" fill="#1565c0">Layer 12</text>
+  <text x="415" y="52" text-anchor="middle" font-size="10" fill="#1565c0">Layer 24</text>
+  <text x="535" y="52" text-anchor="middle" font-size="10" fill="#2e7d32" font-weight="bold">Layer 25</text>
+  <text x="655" y="52" text-anchor="middle" font-size="10" fill="#2e7d32" font-weight="bold">Layer 32</text>
+  <!-- Frozen zone -->
+  <rect x="130" y="68" width="320" height="200" rx="4" fill="rgba(200,200,200,0.15)" stroke="#ccc" stroke-dasharray="6,4"/>
+  <text x="290" y="165" text-anchor="middle" font-size="16" fill="#bbb" font-weight="bold">FROZEN</text>
+  <text x="290" y="185" text-anchor="middle" font-size="11" fill="#bbb">no adapters</text>
+  <!-- Adapted zone -->
+  <rect x="470" y="68" width="220" height="200" rx="4" fill="rgba(46,125,50,0.08)" stroke="#2e7d32" stroke-width="2"/>
+  <rect x="478" y="76" width="204" height="20" rx="3" fill="rgba(46,125,50,0.25)"/>
+  <text x="580" y="91" text-anchor="middle" font-size="10" font-weight="bold" fill="#2e7d32">Mode 1 (largest &sigma;)</text>
+  <rect x="478" y="100" width="204" height="20" rx="3" fill="rgba(46,125,50,0.20)"/>
+  <text x="580" y="115" text-anchor="middle" font-size="10" fill="#2e7d32">Mode 2</text>
+  <rect x="478" y="124" width="204" height="20" rx="3" fill="rgba(46,125,50,0.16)"/>
+  <text x="580" y="139" text-anchor="middle" font-size="10" fill="#2e7d32">Mode 3</text>
+  <rect x="478" y="148" width="204" height="12" rx="3" fill="rgba(46,125,50,0.12)"/>
+  <rect x="478" y="164" width="204" height="12" rx="3" fill="rgba(46,125,50,0.09)"/>
+  <rect x="478" y="180" width="204" height="12" rx="3" fill="rgba(46,125,50,0.07)"/>
+  <rect x="478" y="196" width="204" height="12" rx="3" fill="rgba(46,125,50,0.05)"/>
+  <rect x="478" y="212" width="204" height="20" rx="3" fill="rgba(46,125,50,0.04)"/>
+  <text x="580" y="227" text-anchor="middle" font-size="10" fill="#999">Mode 8 (smallest &sigma;)</text>
+  <text x="107" y="88" text-anchor="end" font-size="10" fill="#c62828">r = 1</text>
+  <text x="107" y="225" text-anchor="end" font-size="10" fill="#c62828">r = 8</text>
+</svg>
+<div class="caption">Figure 5: LoRA's two orthogonal axes. The <span style="color:#1565c0;font-weight:bold">layer axis</span> selects <em>where</em> to perturb. The <span style="color:#c62828;font-weight:bold">rank axis</span> controls <em>how rich</em> the correction is. The green region is where all 3.47M trainable parameters live.</div>
+</div>
+
+<!-- ================================================================ -->
+<h2 id="svd">7. Within Each Layer: Normal Mode Analysis</h2>
+
+<h3>7.1 The SVD Connection</h3>
+
+<p>Any matrix decomposes via the Singular Value Decomposition:</p>
+
+<div class="eq">
+$$\mathbf{M} = \mathbf{U\Sigma V}^\top = \sigma_1 \mathbf{u}_1\mathbf{v}_1^\top + \sigma_2 \mathbf{u}_2\mathbf{v}_2^\top + \sigma_3 \mathbf{u}_3\mathbf{v}_3^\top + \cdots$$
+</div>
+
+<p>where $\sigma_1 \geq \sigma_2 \geq \sigma_3 \geq \cdots$ are the <strong>singular values</strong> (the &ldquo;energies&rdquo; of each mode), and $\mathbf{u}_i, \mathbf{v}_i$ are the mode shapes. This is structurally identical to a <strong>normal mode expansion</strong> of a vibrating system: any complex motion decomposes into independent modes, each with its own energy and shape.</p>
+
+<h3>7.2 LoRA as Truncated Normal Mode Expansion</h3>
+
+<p>The correction $\Delta\mathbf{W} = \mathbf{BA}$ has rank at most $r = 8$:</p>
+
+<div class="eq">
+$$\Delta\mathbf{W} = \mathbf{BA} \;\approx\; \sigma_1 \mathbf{u}_1\mathbf{v}_1^\top + \sigma_2 \mathbf{u}_2\mathbf{v}_2^\top + \cdots + \sigma_8 \mathbf{u}_8\mathbf{v}_8^\top$$
+</div>
+
+<p>Gradient descent finds the $\mathbf{B}$ and $\mathbf{A}$ that minimize training loss, but the result is equivalent to keeping only the 8 dominant modes of the needed correction. Modes 9+ are below the noise floor.</p>
+
+<!-- SVG: SVD decomposition -->
+<div class="diagram">
+<svg viewBox="0 0 780 240" xmlns="http://www.w3.org/2000/svg">
+  <rect x="30" y="45" width="100" height="100" rx="4" fill="#e8f0fe" stroke="#1a3a5c" stroke-width="2"/>
+  <text x="80" y="100" text-anchor="middle" font-size="14" font-weight="bold" fill="#1a3a5c">&Delta;W</text>
+  <text x="80" y="162" text-anchor="middle" font-size="10" fill="#555">full correction</text>
+  <text x="155" y="100" text-anchor="middle" font-size="20" fill="#555">=</text>
+  <!-- Modes with decreasing size/opacity -->
+  <rect x="180" y="55" width="52" height="80" rx="3" fill="rgba(46,125,50,0.30)" stroke="#2e7d32"/>
+  <text x="206" y="100" text-anchor="middle" font-size="11" font-weight="bold" fill="#2e7d32">&sigma;&#x2081;</text>
+  <text x="206" y="150" text-anchor="middle" font-size="9" fill="#2e7d32">largest</text>
+  <text x="245" y="100" font-size="16" fill="#555">+</text>
+  <rect x="262" y="60" width="46" height="70" rx="3" fill="rgba(46,125,50,0.22)" stroke="#2e7d32"/>
+  <text x="285" y="100" text-anchor="middle" font-size="11" fill="#2e7d32">&sigma;&#x2082;</text>
+  <text x="320" y="100" font-size="16" fill="#555">+</text>
+  <rect x="336" y="65" width="40" height="60" rx="3" fill="rgba(46,125,50,0.16)" stroke="#2e7d32"/>
+  <text x="356" y="100" text-anchor="middle" font-size="11" fill="#2e7d32">&sigma;&#x2083;</text>
+  <text x="390" y="100" font-size="14" fill="#555">+ &middot;&middot;&middot; +</text>
+  <rect x="440" y="73" width="30" height="44" rx="3" fill="rgba(46,125,50,0.06)" stroke="#2e7d32"/>
+  <text x="455" y="100" text-anchor="middle" font-size="11" fill="#999">&sigma;&#x2088;</text>
+  <text x="455" y="150" text-anchor="middle" font-size="9" fill="#999">smallest</text>
+  <!-- Truncation line -->
+  <line x1="488" y1="42" x2="488" y2="142" stroke="#c62828" stroke-width="2" stroke-dasharray="6,4"/>
+  <!-- Discarded -->
+  <rect x="508" y="80" width="22" height="30" rx="3" fill="rgba(200,200,200,0.2)" stroke="#ccc"/>
+  <rect x="538" y="83" width="18" height="24" rx="3" fill="rgba(200,200,200,0.15)" stroke="#ccc"/>
+  <rect x="564" y="86" width="14" height="18" rx="3" fill="rgba(200,200,200,0.1)" stroke="#ccc"/>
+  <text x="590" y="100" font-size="11" fill="#ccc">&middot;&middot;&middot;</text>
+  <text x="550" y="150" text-anchor="middle" font-size="9" fill="#ccc">discarded (negligible energy)</text>
+  <!-- Energy bars -->
+  <text x="80" y="210" text-anchor="middle" font-size="10" fill="#555">Singular value spectrum:</text>
+  <rect x="185" y="215" width="48" height="12" rx="2" fill="#2e7d32"/>
+  <rect x="267" y="215" width="36" height="12" rx="2" fill="rgba(46,125,50,0.7)"/>
+  <rect x="340" y="215" width="26" height="12" rx="2" fill="rgba(46,125,50,0.5)"/>
+  <rect x="400" y="215" width="18" height="12" rx="2" fill="rgba(46,125,50,0.35)"/>
+  <rect x="445" y="215" width="12" height="12" rx="2" fill="rgba(46,125,50,0.2)"/>
+  <rect x="508" y="215" width="6" height="12" rx="2" fill="rgba(200,200,200,0.4)"/>
+  <rect x="538" y="215" width="4" height="12" rx="2" fill="rgba(200,200,200,0.3)"/>
+  <rect x="564" y="215" width="3" height="12" rx="2" fill="rgba(200,200,200,0.2)"/>
+</svg>
+<div class="caption">Figure 6: The correction matrix decomposes into modes ordered by singular value (energy). LoRA keeps the 8 dominant modes. This is truncated SVD &mdash; structurally identical to keeping the fundamental modes of a vibrating system.</div>
+</div>
+
+<h3>7.3 The Information Bottleneck</h3>
+
+<p>Matrix $\mathbf{A}$ is a <strong>measurement operator</strong> (compress $d$ dimensions to 8); matrix $\mathbf{B}$ is a <strong>reconstruction operator</strong> (project 8 dimensions back to $d$):</p>
+
+<!-- SVG: A/B pipeline -->
+<div class="diagram">
+<svg viewBox="0 0 780 160" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="arr5" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#1a3a5c"/></marker>
+    <marker id="arr5g" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#2e7d32"/></marker>
+  </defs>
+  <rect x="30" y="35" width="80" height="80" rx="6" fill="#e3f2fd" stroke="#1565c0" stroke-width="2"/>
+  <text x="70" y="72" text-anchor="middle" font-size="13" font-weight="bold" fill="#1565c0">x</text>
+  <text x="70" y="88" text-anchor="middle" font-size="10" fill="#1565c0">d-dim</text>
+  <text x="70" y="132" text-anchor="middle" font-size="10" fill="#555">layer input</text>
+  <line x1="118" y1="75" x2="188" y2="75" stroke="#1a3a5c" stroke-width="2" marker-end="url(#arr5)"/>
+  <rect x="198" y="45" width="100" height="60" rx="6" fill="#fff3e0" stroke="#e65100" stroke-width="2"/>
+  <text x="248" y="73" text-anchor="middle" font-size="14" font-weight="bold" fill="#e65100">A</text>
+  <text x="248" y="90" text-anchor="middle" font-size="10" fill="#e65100">r &times; d</text>
+  <text x="248" y="132" text-anchor="middle" font-size="10" fill="#e65100">measure / compress</text>
+  <line x1="306" y1="75" x2="363" y2="75" stroke="#1a3a5c" stroke-width="2" marker-end="url(#arr5)"/>
+  <rect x="373" y="50" width="40" height="50" rx="6" fill="#e8f5e9" stroke="#2e7d32" stroke-width="2"/>
+  <text x="393" y="73" text-anchor="middle" font-size="11" font-weight="bold" fill="#2e7d32">8-d</text>
+  <text x="393" y="132" text-anchor="middle" font-size="10" fill="#2e7d32" font-weight="bold">bottleneck</text>
+  <line x1="421" y1="75" x2="478" y2="75" stroke="#2e7d32" stroke-width="2" marker-end="url(#arr5g)"/>
+  <rect x="488" y="45" width="100" height="60" rx="6" fill="#e8f5e9" stroke="#2e7d32" stroke-width="2"/>
+  <text x="538" y="73" text-anchor="middle" font-size="14" font-weight="bold" fill="#2e7d32">B</text>
+  <text x="538" y="90" text-anchor="middle" font-size="10" fill="#2e7d32">d &times; r</text>
+  <text x="538" y="132" text-anchor="middle" font-size="10" fill="#2e7d32">reconstruct / project up</text>
+  <line x1="596" y1="75" x2="658" y2="75" stroke="#2e7d32" stroke-width="2" marker-end="url(#arr5g)"/>
+  <rect x="668" y="35" width="80" height="80" rx="6" fill="#e8f5e9" stroke="#2e7d32" stroke-width="2"/>
+  <text x="708" y="72" text-anchor="middle" font-size="12" font-weight="bold" fill="#2e7d32">BA(x)</text>
+  <text x="708" y="88" text-anchor="middle" font-size="10" fill="#2e7d32">d-dim</text>
+  <text x="708" y="132" text-anchor="middle" font-size="10" fill="#555">correction</text>
+</svg>
+<div class="caption">Figure 7: Inside each adapted layer. $\mathbf{A}$ compresses to an 8-dimensional &ldquo;fingerprint&rdquo; (what matters for the domain correction); $\mathbf{B}$ reconstructs a full-dimensional correction. The bottleneck forces the correction into a low-dimensional subspace.</div>
+</div>
+
+<!-- ================================================================ -->
+<h2 id="hierarchy">8. Across Layers: The Feature Hierarchy</h2>
+
+<h3>8.1 The CNN Precedent</h3>
+
+<p>The layer hierarchy was first understood through convolutional networks for vision, which recapitulate biological visual processing (Hubel &amp; Wiesel, 1960s):</p>
+
+<table>
+  <tr><th style="width:18%">Depth</th><th style="width:35%">CNN Features</th><th style="width:47%">Biological Vision</th></tr>
+  <tr><td>Layers 1&ndash;2</td><td>Edges, oriented gradients</td><td>Simple cells in V1 &mdash; orientation-selective</td></tr>
+  <tr><td>Layers 3&ndash;5</td><td>Textures, patterns, corners</td><td>Complex cells in V1/V2 &mdash; position-invariant</td></tr>
+  <tr><td>Layers 6&ndash;10</td><td>Object parts, component shapes</td><td>V4, inferotemporal cortex</td></tr>
+  <tr><td>Final layers</td><td>Object identity, scene semantics</td><td>High-level recognition areas</td></tr>
+</table>
+
+<div class="note">
+<strong>The critical observation:</strong> early layers are <em>universal</em> (edge detectors transfer from dogs to X-rays); late layers are <em>task-specific</em> (the &ldquo;golden retriever&rdquo; classifier is useless for radiology). Transfer learning freezes early layers, retrains late layers. The same principle governs LoRA's choice of which transformer layers to adapt.
+</div>
+
+<!-- SVG: CNN hierarchy -->
+<div class="diagram">
+<svg viewBox="0 0 780 180" xmlns="http://www.w3.org/2000/svg">
+  <defs><marker id="arr6" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#666"/></marker></defs>
+  <rect x="30" y="35" width="140" height="80" rx="6" fill="#e3f2fd" stroke="#1565c0" stroke-width="2"/>
+  <text x="100" y="60" text-anchor="middle" font-size="12" font-weight="bold" fill="#1565c0">Early Layers</text>
+  <text x="100" y="78" text-anchor="middle" font-size="10" fill="#1565c0">edges, gradients</text>
+  <text x="100" y="100" text-anchor="middle" font-size="10" font-weight="bold" fill="#1565c0">UNIVERSAL</text>
+  <text x="100" y="130" text-anchor="middle" font-size="9" fill="#888">frozen in LoRA</text>
+  <line x1="178" y1="75" x2="208" y2="75" stroke="#666" stroke-width="1.5" marker-end="url(#arr6)"/>
+  <rect x="218" y="35" width="140" height="80" rx="6" fill="#e8eaf6" stroke="#3949ab" stroke-width="2"/>
+  <text x="288" y="60" text-anchor="middle" font-size="12" font-weight="bold" fill="#3949ab">Middle Layers</text>
+  <text x="288" y="78" text-anchor="middle" font-size="10" fill="#3949ab">textures, parts, grammar</text>
+  <text x="288" y="100" text-anchor="middle" font-size="10" font-weight="bold" fill="#3949ab">COMPOSITIONAL</text>
+  <text x="288" y="130" text-anchor="middle" font-size="9" fill="#888">frozen in LoRA</text>
+  <line x1="366" y1="75" x2="396" y2="75" stroke="#666" stroke-width="1.5" marker-end="url(#arr6)"/>
+  <rect x="406" y="35" width="140" height="80" rx="6" fill="#fce4ec" stroke="#c62828" stroke-width="2"/>
+  <text x="476" y="60" text-anchor="middle" font-size="12" font-weight="bold" fill="#c62828">Late Layers</text>
+  <text x="476" y="78" text-anchor="middle" font-size="10" fill="#c62828">domain knowledge, style</text>
+  <text x="476" y="100" text-anchor="middle" font-size="10" font-weight="bold" fill="#c62828">TASK-SPECIFIC</text>
+  <text x="476" y="130" text-anchor="middle" font-size="10" font-weight="bold" fill="#2e7d32">adapted by LoRA</text>
+  <!-- Bracket -->
+  <line x1="590" y1="28" x2="590" y2="122" stroke="#2e7d32" stroke-width="2"/>
+  <line x1="590" y1="28" x2="580" y2="28" stroke="#2e7d32" stroke-width="2"/>
+  <line x1="590" y1="122" x2="580" y2="122" stroke="#2e7d32" stroke-width="2"/>
+  <text x="610" y="70" font-size="11" font-weight="bold" fill="#2e7d32">Adapt</text>
+  <text x="610" y="86" font-size="11" font-weight="bold" fill="#2e7d32">here</text>
+</svg>
+<div class="caption">Figure 8: The universal &rarr; task-specific gradient is shared by CNNs and transformers alike. Domain specialization lives in the late layers; the early layers are foundational and don't need correction.</div>
+</div>
+
+<h3>8.2 The Same Hierarchy in Transformers</h3>
+
+<table>
+  <tr><th style="width:20%">Depth</th><th style="width:42%">Transformer Function</th><th style="width:38%">CNN Analogue</th></tr>
+  <tr><td>Layers 1&ndash;8</td><td>Token embeddings, basic syntax, local patterns</td><td>Edge detection &mdash; structural primitives</td></tr>
+  <tr><td>Layers 9&ndash;20</td><td>Grammar, coreference, semantic relationships</td><td>Texture/part recognition &mdash; compositional</td></tr>
+  <tr><td>Layers 21&ndash;28</td><td>Abstract reasoning, domain knowledge, style</td><td>Object recognition &mdash; high-level meaning</td></tr>
+  <tr><td>Layers 29&ndash;32</td><td>Task-specific output shaping</td><td>Classification head &mdash; final decision</td></tr>
+</table>
+
+<p>In hardware terms: you don't re-verify the entire board when you update application firmware. The lower levels (power, clocks, connectivity) are proven and stable. You test at the functional level &mdash; the top of the stack &mdash; where the change has effect.</p>
+
+<!-- ================================================================ -->
+<h2 id="paradox">9. Resolving the Apparent Paradox</h2>
+
+<div class="punchline">
+<strong>In harmonic analysis, the fundamental modes (lowest frequency, most energy) come &ldquo;first.&rdquo;
+In neural networks, the most basic features are also in the first layers. But we adapt the LAST layers
+and call our rank-8 modes &ldquo;fundamental harmonics.&rdquo; Which end is fundamental?</strong>
+</div>
+
+<p>The resolution: <strong>&ldquo;fundamental&rdquo; means different things on the two axes.</strong></p>
+
+<h3>9.1 The Layer Axis: Compositional Hierarchy</h3>
+
+<p>Layers are ordered by <strong>abstraction level</strong>, not importance. Layer 1 isn't the most important &mdash; it's the most basic. Each layer composes the previous into higher abstractions:</p>
+
+<div class="eq">
+$$\text{tokens} \;\xrightarrow{\text{layers 1–8}}\; \text{syntax} \;\xrightarrow{\text{layers 9–20}}\; \text{semantics} \;\xrightarrow{\text{layers 21–32}}\; \text{domain behavior}$$
+</div>
+
+<p>You don't adapt the atoms to specialize the organism. The atoms are fine. &ldquo;Fundamental&rdquo; here means <em>foundational</em> &mdash; everything builds on it, but it doesn't need to change.</p>
+
+<h3>9.2 The Rank Axis: Energy Hierarchy</h3>
+
+<p>Within each adapted layer, modes are ordered by <strong>correction energy</strong> (singular value). Mode 1 carries the most &mdash; it's the dominant correction. This is the classical harmonic ordering:</p>
+
+<div class="eq">
+$$\sigma_1 \;\geq\; \sigma_2 \;\geq\; \cdots \;\geq\; \sigma_8 \;\gg\; \sigma_9 \;\approx\; 0$$
+</div>
+
+<p>&ldquo;Fundamental&rdquo; here means <em>most energetic</em> &mdash; the mode that carries the most correction.</p>
+
+<h3>9.3 The Axes Are Orthogonal</h3>
+
+<p>The layer axis is a compositional hierarchy (basic &rarr; abstract). The rank axis is an energy hierarchy (dominant &rarr; least). They are independent. The rank-8 modes are &ldquo;fundamental&rdquo; in the energy sense, operating within layers at the abstract end of the compositional hierarchy. No contradiction.</p>
+
+<!-- ================================================================ -->
+<hr class="part-divider">
+<div class="part-label part-bridge">Part III &mdash; Connecting the Views</div>
+<h2 id="macro-predicts-micro">10. How the Outside Predicts the Inside</h2>
+
+<p>The two views are not independent observations &mdash; the thermodynamic (outside) description <em>predicts</em> the modal (inside) structure. Here is the logical chain:</p>
+
+<div class="pipeline-step">
+  <div class="pipeline-num">1</div>
+  <div class="pipeline-content">
+    <strong>The base model is at thermodynamic equilibrium</strong> <span class="tag tag-outside">outside</span><br>
+    Pre-training annealed 3B parameters to a deep, stable energy minimum. The system is well-ordered &mdash; most degrees of freedom are tightly constrained to their equilibrium values.
+  </div>
+</div>
+
+<div class="pipeline-step">
+  <div class="pipeline-num">2</div>
+  <div class="pipeline-content">
+    <strong>Domain adaptation is a small perturbation to that equilibrium</strong> <span class="tag tag-outside">outside</span><br>
+    &ldquo;Hardware diagnostics specialist&rdquo; is close to &ldquo;general helpful assistant&rdquo; in parameter space. Most of the model's structure doesn't need to change &mdash; only the domain-specific behavior.
+  </div>
+</div>
+
+<div class="pipeline-step">
+  <div class="pipeline-num">3</div>
+  <div class="pipeline-content">
+    <strong>Perturbation theory says: first-order corrections are low-rank</strong> <span class="tag tag-both">bridge</span><br>
+    When a perturbation is small relative to the system, the response is concentrated in a few modes. The correction's singular value spectrum decays rapidly. This is why $r = 8$ captures 27.5% val loss improvement &mdash; most of the correction energy lives in the first few modes.
+  </div>
+</div>
+
+<div class="pipeline-step">
+  <div class="pipeline-num">4</div>
+  <div class="pipeline-content">
+    <strong>The compositional hierarchy localizes the perturbation to the surface</strong> <span class="tag tag-both">bridge</span><br>
+    In any hierarchically structured system, perturbations to high-level behavior don't require changes to low-level structure. Syntax and grammar (deep layers) are shared across all domains; only the abstract, task-specific layers (surface) need correction.
+  </div>
+</div>
+
+<div class="pipeline-step">
+  <div class="pipeline-num">5</div>
+  <div class="pipeline-content">
+    <strong>Therefore: the correction is low-rank AND spatially localized</strong> <span class="tag tag-inside">inside</span><br>
+    8 modes per layer (rank) &times; 8 adapted layers (surface) = 3.47M parameters. The macroscopic thermodynamic argument predicts both the rank structure and the layer localization that we observe empirically.
+  </div>
+</div>
+
+<div class="insight">
+<strong>The punchline:</strong> The outside view (thermodynamics) and the inside view (normal modes) are
+not two separate analogies. They are the macroscopic and microscopic descriptions of the <em>same
+physical system</em>. The thermodynamic statement &ldquo;the perturbation is small&rdquo; is equivalent to
+the modal statement &ldquo;the correction is low-rank and surface-localized.&rdquo; One implies the other.
+This is exactly how statistical mechanics works: macroscopic thermodynamic properties emerge from
+microscopic modal structure.
+</div>
+
+<!-- ================================================================ -->
+<h2 id="pipeline">11. The Complete Pipeline</h2>
+
+<div class="pipeline-step">
+  <div class="pipeline-num">1</div>
+  <div class="pipeline-content">
+    <strong>Download base model</strong><br>
+    Import a pre-solved thermodynamic system ($\mathbf{W}_0$) annealed to equilibrium by Meta. Cost to create: millions. Cost to us: one download.
+  </div>
+</div>
+
+<div class="pipeline-step">
+  <div class="pipeline-num">2</div>
+  <div class="pipeline-content">
+    <strong>Quantize to 4-bit</strong><br>
+    Discretize the state space: $\mathbb{R} \to 2^4 = 16$ levels per weight. Minimal information loss &mdash; the system is at equilibrium. Memory: $\sim\!2$&nbsp;GB.
+  </div>
+</div>
+
+<div class="pipeline-step">
+  <div class="pipeline-num">3</div>
+  <div class="pipeline-content">
+    <strong>Initialize LoRA adapters</strong><br>
+    Create the perturbation subspace: rank $r = 8$, top 8 layers. $\mathbf{B}$ initialized to zero (perturbation starts as &ldquo;no change&rdquo;).
+  </div>
+</div>
+
+<div class="pipeline-step">
+  <div class="pipeline-num">4</div>
+  <div class="pipeline-content">
+    <strong>Training (annealing)</strong><br>
+    Cool the perturbation parameters toward a domain-specific minimum. $\eta = 10^{-5}$ (cold), batch 1 (thermal noise), 600 iterations. The system finds the dominant correction modes via gradient descent.
+  </div>
+</div>
+
+<div class="pipeline-step">
+  <div class="pipeline-num">5</div>
+  <div class="pipeline-content">
+    <strong>Inference</strong><br>
+    $\mathbf{W} = \mathbf{W}_0 + \mathbf{BA}$ at each adapted layer. The ground state is perturbed by 8 learned modes per layer, producing domain-specialized output. The cathedral stands; the room is open.
+  </div>
+</div>
+
+<!-- ================================================================ -->
+<h2 id="implications">12. Implications &amp; Future Directions</h2>
+
+<h3>12.1 What the Training Run Confirmed</h3>
+
+<p>Val loss $2.809 \to 2.037$ (27.5% reduction) with rank 8, top 8 of 32 layers, confirms:</p>
+<ol>
+  <li><strong>The correction is low-rank</strong> &mdash; 8 modes per layer suffice; the singular value spectrum decays rapidly.</li>
+  <li><strong>The correction is surface-localized</strong> &mdash; adapting 25% of layers (the abstract end) was enough.</li>
+  <li><strong>The two views are consistent</strong> &mdash; the small thermodynamic perturbation predicted both facts.</li>
+</ol>
+
+<h3>12.2 Tuning Strategies (the Two Axes)</h3>
+
+<table>
+  <tr><th style="width:25%">Strategy</th><th style="width:40%">What It Does</th><th style="width:35%">When to Try</th></tr>
+  <tr><td>Increase rank ($r = 16, 32$)</td><td>More modes &mdash; finer correction structure</td><td>Domain generally right but lacking nuance</td></tr>
+  <tr><td>More layers (16 of 32)</td><td>Deeper perturbation into semantic layers</td><td>Need to change how the model <em>reasons</em></td></tr>
+  <tr><td>More training data</td><td>More signal for existing parameters</td><td>Diminishing returns at current data size</td></tr>
+</table>
+
+<p>Our loss curve showed 85% of improvement by iteration 200 &mdash; the current configuration has extracted most available signal from 385 examples. <strong>More data, not more parameters, is the next leverage point.</strong></p>
+
+<!-- ================================================================ -->
+<h2 id="sources">13. Source Materials</h2>
+
+<p>The physics interpretations in this document draw on three bodies of work at the physics&ndash;ML intersection, plus the LoRA paper itself.</p>
+
+<h3>CompuFlair (Ardavan Borzou) <span class="tag tag-outside">Physics &rarr; ML</span></h3>
+
+<p>Central thesis: all of ML can be interpreted through the Gibbs&ndash;Boltzmann equation, $P = e^{-F}/Z$. Training as annealing, models as spin systems, phase transitions in training dynamics.</p>
+
+<ul>
+  <li><a href="https://compu-flair.com/">CompuFlair website</a></li>
+  <li><a href="https://compu-flair.com/physics-inspired-ml/">Physics-Inspired ML program</a></li>
+  <li><a href="https://compu-flair.com/bootcamp/">Bootcamp</a></li>
+  <li><a href="https://www.youtube.com/@CompuFlair">CompuFlair YouTube</a></li>
+  <li><a href="https://www.youtube.com/watch?v=MqDdYybN8o0">&ldquo;This physics idea might be the next generation of ML&rdquo;</a> (active inference / free energy principle)</li>
+  <li><a href="https://www.youtube.com/watch?v=CJGVsZAMtyI">&ldquo;What is neural entropy in physics-based diffusion models?&rdquo;</a></li>
+</ul>
+
+<h3>Vitali Vanchurin <span class="tag tag-both">Learning &harr; Physics</span></h3>
+
+<p>Learning dynamics <em>are</em> fundamental physics. The Hamiltonian is the loss function; Hamilton's equations emerge from gradient descent. QM, GR, and field theory as limits of learning dynamics.</p>
+
+<ul>
+  <li><a href="https://arxiv.org/abs/2008.01540"><em>The World as a Neural Network</em></a> &mdash; foundational paper (arXiv:2008.01540, 2020)</li>
+  <li><a href="https://www.mdpi.com/1099-4300/22/11/1210">Published in <em>Entropy</em></a> (MDPI, 2020)</li>
+  <li>Local reference docs: <code>~/Desktop/Physics ML - Vanchurin-Comput-flare/</code> (6 HTML documents including the three-way comparison with CompuFlair and Brunton)</li>
+</ul>
+
+<h3>Steve Brunton <span class="tag tag-inside">Physics &rarr; Architecture</span></h3>
+
+<p>Five-stage framework for embedding physics into ML architectures. Hamiltonian and Lagrangian Neural Networks. Hard constraints (architecture) vs. soft constraints (loss function).</p>
+
+<ul>
+  <li><a href="https://databookuw.com/"><em>Data-Driven Science and Engineering</em></a> &mdash; textbook, 2nd ed. (Brunton &amp; Kutz, Cambridge University Press). Ch.&nbsp;12 covers physics-informed ML.</li>
+  <li><a href="https://www.youtube.com/@Eigensteve">Eigensteve YouTube channel</a> &mdash; comprehensive lecture series on SVD, dynamical systems, and physics-informed ML</li>
+  <li><a href="https://www.cambridge.org/highereducation/books/data-driven-science-and-engineering/6F9A730B7A9A9F43F68CF21A24BEC339">Cambridge University Press page</a></li>
+</ul>
+
+<h3>The LoRA Paper</h3>
+
+<ul>
+  <li>Hu et al., <a href="https://arxiv.org/abs/2106.09685"><em>LoRA: Low-Rank Adaptation of Large Language Models</em></a> (arXiv:2106.09685, 2021). The technique used in this project.</li>
+</ul>
+
+<div class="footer">
+  Unified from <a href="archive/COMPUFLAIR_LORA_INTERPRETATION.html">thermodynamic interpretation</a> (Mar 12)
+  and <a href="archive/LoRA_Mathematical_Mechanism.html">modal analysis</a> (Mar 13)
+  &nbsp;|&nbsp; Hardware Diagnostics LLM &nbsp;|&nbsp; Sam Kirk (with Claude Code) &nbsp;|&nbsp; March 2026
+</div>
+
+</div><!-- .container -->
+</body>
+</html>

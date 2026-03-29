@@ -90,8 +90,32 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Project Showcase — consulting-first order (REQ-136) */}
+      {/* Project Showcase — consulting-first order (REQ-136, REQ-137) */}
       <div className="mt-8 space-y-10">
+        <section>
+          <h2 className="text-2xl font-semibold text-text-primary">
+            Computer Diagnostics via LLM Fine-Tuning
+          </h2>
+          <p className="mt-1 text-text-secondary">
+            LoRA fine-tuned Llama 3.2 3B for hardware diagnostics on an M1
+            iMac — 252 physics-grounded Q&amp;A pairs rooted in Fault
+            Isolation and Fault Identification, val loss reduced 27.5%. I
+            taught an LLM my craft.
+          </p>
+          <ul className="mt-1 list-disc pl-5 text-sm text-text-muted">
+            <li>
+              Consumer hardware, no cloud GPU — proves useful AI
+              doesn&apos;t require massive infrastructure
+            </li>
+          </ul>
+          <Link
+            href="/computer-diagnostics"
+            className="mt-2 inline-block font-medium text-accent hover:text-accent-hover"
+          >
+            Learn more &rarr;
+          </Link>
+        </section>
+
         <section>
           <h2 className="text-2xl font-semibold text-text-primary">
             This Showcase of genAI
