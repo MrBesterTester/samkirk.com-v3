@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { StaticHtmlViewer } from "@/components";
 
 export default function ComputerDiagnosticsPage() {
   return (
@@ -13,212 +14,66 @@ export default function ComputerDiagnosticsPage() {
         hardware.
       </p>
 
-      {/* Why this matters */}
+      <div className="mt-12">
+        <StaticHtmlViewer
+          src="computer-diagnostics-feature.html"
+          title="Hardware Diagnostics LLM Fine-Tuning — Project Feature"
+          minHeight={800}
+        />
+      </div>
+
+      {/* Old Sam → New Sam */}
       <section className="mt-12">
         <h2 className="text-2xl font-semibold text-text-primary">
-          Why This Project Matters
+          Old Sam Kirk, Meet New Sam Kirk
         </h2>
         <p className="mt-3 text-text-secondary">
-          Every other project on this site demonstrates that I can{" "}
-          <em>use</em> AI &mdash; calling APIs, wrapping AI services in web
-          apps. Thousands of developers do this. This project demonstrates
-          that I can <em>teach</em> AI. The foundation is the diagnostic
-          discipline of Fault Isolation and Fault Identification &mdash; a
-          methodology inherited from IBM&apos;s field service philosophy
-          that systematically narrows a failure to its root cause. I
-          generated 252 training examples grounded in these principles,
-          fine-tuned a model using LoRA adapters on my M1 iMac, and
-          published the results.
+          For four decades I wrote automated test and diagnostic programs for
+          hardware in Silicon Valley &mdash; board-level in-circuit test,
+          boundary scan, system-level power-on self-test, mixed-signal
+          functional test. That was Old Sam Kirk.
         </p>
         <p className="mt-3 text-text-secondary">
-          I&apos;ve reinforced this diagnostic foundation using the
-          physics-based interpretation of computing championed by{" "}
-          <a
-            href="https://compu-flair.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="font-medium text-accent hover:text-accent-hover"
-          >
-            CompuFlair
-          </a>
-          , applying it at both the macro and micro levels of LLMs:
+          New Sam Kirk took that same diagnostic expertise and fed it into a
+          modern language model. The training data isn&apos;t scraped from the
+          web &mdash; it&apos;s distilled from real field experience with
+          fault isolation and fault identification, grounded in the physics of
+          how hardware actually fails. The result: a fine-tuned model that
+          thinks the way a physicist-engineer does, not the way a chatbot
+          guesses.
         </p>
-        <ul className="mt-3 space-y-3 text-text-secondary">
-          <li className="flex gap-2">
-            <span className="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-accent" />
-            <span>
-              <strong className="text-text-primary">Macro level:</strong>{" "}
-              the pre-trained model is treated as a thermodynamic system
-              already annealed to a low-energy equilibrium &mdash; LoRA
-              applies a small, targeted perturbation rather than melting the
-              entire structure. (
-              <a
-                href="https://github.com/MrBesterTester/ml-training-m1#readme"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="font-medium text-accent hover:text-accent-hover"
-              >
-                Project README
-              </a>
-              )
-            </span>
-          </li>
-          <li className="flex gap-2">
-            <span className="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-accent" />
-            <span>
-              <strong className="text-text-primary">Micro level:</strong>{" "}
-              each adapted layer&apos;s correction decomposes into
-              independent modes ordered by energy, mirroring how physical
-              systems decompose into fundamental harmonics. Only 8 dominant
-              modes per layer are needed because domain specialization lies
-              in a very low-dimensional subspace of parameter space. (
-              <Link
-                href="/computer-diagnostics/physics-of-lora"
-                className="font-medium text-accent hover:text-accent-hover"
-              >
-                Physics of LoRA
-              </Link>
-              )
-            </span>
-          </li>
-        </ul>
+        <p className="mt-3 text-text-secondary">
+          This project is the bridge. It proves that decades of domain
+          expertise aren&apos;t made obsolete by AI &mdash; they&apos;re made
+          more valuable, because only someone who lived the work can teach a
+          model to reason about it correctly.
+        </p>
       </section>
 
-      {/* What I built */}
-      <section className="mt-12">
-        <h2 className="text-2xl font-semibold text-text-primary">
-          What I Built
-        </h2>
-        <div className="mt-4 overflow-x-auto rounded-lg border border-border">
-          <table className="w-full text-left text-sm">
-            <tbody className="divide-y divide-border">
-              <tr>
-                <td className="whitespace-nowrap px-4 py-3 font-medium text-text-primary">
-                  Model
-                </td>
-                <td className="px-4 py-3 text-text-secondary">
-                  Llama 3.2 3B, 4-bit quantized
-                </td>
-              </tr>
-              <tr>
-                <td className="whitespace-nowrap px-4 py-3 font-medium text-text-primary">
-                  Method
-                </td>
-                <td className="px-4 py-3 text-text-secondary">
-                  LoRA fine-tuning (rank 8)
-                </td>
-              </tr>
-              <tr>
-                <td className="whitespace-nowrap px-4 py-3 font-medium text-text-primary">
-                  Dataset
-                </td>
-                <td className="px-4 py-3 text-text-secondary">
-                  252 physics-grounded Q&amp;A pairs across 12 categories
-                </td>
-              </tr>
-              <tr>
-                <td className="whitespace-nowrap px-4 py-3 font-medium text-text-primary">
-                  Hardware
-                </td>
-                <td className="px-4 py-3 text-text-secondary">
-                  M1 iMac, 16 GB &mdash; no cloud GPU
-                </td>
-              </tr>
-              <tr>
-                <td className="whitespace-nowrap px-4 py-3 font-medium text-text-primary">
-                  Training time
-                </td>
-                <td className="px-4 py-3 text-text-secondary">
-                  ~47 minutes
-                </td>
-              </tr>
-              <tr>
-                <td className="whitespace-nowrap px-4 py-3 font-medium text-text-primary">
-                  Val loss improvement
-                </td>
-                <td className="px-4 py-3 text-text-secondary">
-                  2.809 &rarr; 2.037 (27.5% reduction)
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
-
-      {/* Why it's a differentiator */}
-      <section className="mt-12">
-        <h2 className="text-2xl font-semibold text-text-primary">
-          Why It&apos;s a Differentiator
-        </h2>
-        <ul className="mt-4 space-y-3 text-text-secondary">
-          <li className="flex gap-2">
-            <span className="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-accent" />
-            <span>
-              <strong className="text-text-primary">
-                Bridges old and new career:
-              </strong>{" "}
-              feeds the diagnostic discipline of Fault Isolation and Fault
-              Identification into modern AI &mdash; not abandoning the old,
-              amplifying it
-            </span>
-          </li>
-          <li className="flex gap-2">
-            <span className="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-accent" />
-            <span>
-              <strong className="text-text-primary">
-                Consumer hardware:
-              </strong>{" "}
-              proves useful AI doesn&apos;t require massive infrastructure
-              &mdash; directly relevant to consulting clients
-            </span>
-          </li>
-          <li className="flex gap-2">
-            <span className="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-accent" />
-            <span>
-              <strong className="text-text-primary">
-                Dramatic results:
-              </strong>{" "}
-              the base model thought boundary scan meant &ldquo;scanning
-              edges of the board&rdquo;; the fine-tuned model correctly
-              explains TAP controllers and JTAG chains
-            </span>
-          </li>
-        </ul>
-      </section>
-
-      {/* Project evolution */}
+      {/* Further work */}
       <section className="mt-12 rounded-lg border border-accent/30 bg-accent/5 p-6">
         <h2 className="text-lg font-semibold text-text-primary">
-          Project Evolution
+          Further Work
         </h2>
-        <ul className="mt-3 space-y-3 text-text-secondary">
-          <li className="flex gap-2">
-            <span className="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-accent" />
-            <span>
-              <strong className="text-text-primary">v1 (basic) &mdash; Knowledge base:</strong>{" "}
-              252 conceptual Q&amp;A pairs covering hardware diagnostics
-              fundamentals &mdash; the model can explain boundary scan,
-              JTAG chains, mixed-signal fault isolation, and more.
-            </span>
+        <p className="mt-2 text-text-secondary">
+          The results above are from <strong>v1</strong> &mdash; the first
+          fine-tuned model, trained on 252 conceptual Q&amp;A pairs. Two
+          further iterations are planned:
+        </p>
+        <ul className="mt-3 space-y-2 text-sm text-text-secondary">
+          <li>
+            <strong className="text-text-primary">v2:</strong> expand the
+            training dataset with 133 Fault Detection / Fault Isolation
+            diagnostic scenarios presenting real measurement data, traces,
+            and logs &mdash; moving the model from knowledgeable explainer
+            to working diagnostician. The dataset is ready; training is
+            next.
           </li>
-          <li className="flex gap-2">
-            <span className="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-accent" />
-            <span>
-              <strong className="text-text-primary">v2 (current) &mdash; Working diagnostician:</strong>{" "}
-              added 133 Fault Detection / Fault Isolation scenario entries
-              presenting specific measurements, traces, and logs that
-              require anomaly detection and root-cause analysis.
-            </span>
-          </li>
-          <li className="flex gap-2">
-            <span className="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-accent" />
-            <span>
-              <strong className="text-text-primary">v3 (next) &mdash; Explicit reasoning:</strong>{" "}
-              the model now classifies each problem into a diagnostic mode
-              (FD, FI, FD+FI, or Triage) as its opening step, surfacing
-              its reasoning process for validation &mdash; transforming it
-              from an answer generator into a reasoning partner.
-            </span>
+          <li>
+            <strong className="text-text-primary">v3:</strong> add explicit
+            diagnostic mode classification (FD, FI, FD+FI, or Triage) as
+            the model&apos;s opening reasoning step &mdash; surfacing its
+            diagnostic logic for validation.
           </li>
         </ul>
       </section>
@@ -253,6 +108,21 @@ export default function ComputerDiagnosticsPage() {
           </li>
           <li>
             <a
+              href="https://compu-flair.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-medium text-accent hover:text-accent-hover"
+            >
+              CompuFlair &rarr;
+            </a>
+            <p className="mt-1 text-sm text-text-muted">
+              Physics-based interpretation of computing by Ardavan Borzou,
+              PhD &mdash; the framework behind the macro/micro framing in
+              this project.
+            </p>
+          </li>
+          <li>
+            <a
               href="https://github.com/MrBesterTester/ml-training-m1"
               target="_blank"
               rel="noopener noreferrer"
@@ -262,7 +132,7 @@ export default function ComputerDiagnosticsPage() {
             </a>
             <p className="mt-1 text-sm text-text-muted">
               Full source code, training scripts, dataset, and project
-              README with the macro-level physics framing.
+              README.
             </p>
           </li>
           <li>
@@ -277,21 +147,6 @@ export default function ComputerDiagnosticsPage() {
             <p className="mt-1 text-sm text-text-muted">
               Published LoRA adapter weights for the hardware diagnostics
               fine-tuned Llama 3.2 3B model.
-            </p>
-          </li>
-          <li>
-            <a
-              href="https://compu-flair.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-medium text-accent hover:text-accent-hover"
-            >
-              CompuFlair &rarr;
-            </a>
-            <p className="mt-1 text-sm text-text-muted">
-              Data science coaching and consulting by Ardavan Borzou, PhD
-              &mdash; physics-based interpretation of computing that
-              informs the macro/micro framing used in this project.
             </p>
           </li>
         </ul>

@@ -104,6 +104,11 @@ export default function Home() {
           </p>
           <ul className="mt-1 list-disc pl-5 text-sm text-text-muted">
             <li>
+              Exemplifies how Old Sam Kirk — decades of hardware test
+              engineering — upgrades to New Sam Kirk, who can teach AI
+              what he knows
+            </li>
+            <li>
               Consumer hardware, no cloud GPU — proves useful AI
               doesn&apos;t require massive infrastructure
             </li>

@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hardware Diagnostics LLM Fine-Tuning — Sam Kirk</title>
+<meta name="description" content="Fine-tuning Llama 3.2 3B with LoRA on Apple Silicon to create a physics-first hardware diagnostics advisor. By Sam Kirk.">
+<style>
+  /* ===== Reset & Base ===== */
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  /* ===== Dark Mode (Default) ===== */
+  :root {
+    --bg: #0f172a;
+    --bg-subtle: #131c33;
+    --card: #1e293b;
+    --card-hover: #253349;
+    --accent: #38bdf8;
+    --accent-dim: rgba(56, 189, 248, 0.12);
+    --accent-glow: rgba(56, 189, 248, 0.25);
+    --text: #f4f4f5;
+    --text-secondary: #a1a1aa;
+    --text-muted: #71717a;
+    --border: #27272a;
+    --border-light: #3f3f46;
+    --green: #4ade80;
+    --green-dim: rgba(74, 222, 128, 0.12);
+    --red: #f87171;
+    --red-dim: rgba(248, 113, 113, 0.12);
+    --amber: #fbbf24;
+  }
+
+  /* ===== Light Mode ===== */
+  @media (prefers-color-scheme: light) {
+    :root {
+      --bg: #ffffff;
+      --bg-subtle: #fafafa;
+      --card: #f4f4f5;
+      --card-hover: #e8e8ea;
+      --accent: #0284c7;
+      --accent-dim: rgba(2, 132, 199, 0.08);
+      --accent-glow: rgba(2, 132, 199, 0.15);
+      --text: #18181b;
+      --text-secondary: #52525b;
+      --text-muted: #a1a1aa;
+      --border: #e4e4e7;
+      --border-light: #d4d4d8;
+      --green: #16a34a;
+      --green-dim: rgba(22, 163, 74, 0.08);
+      --red: #dc2626;
+      --red-dim: rgba(220, 38, 38, 0.08);
+      --amber: #d97706;
+    }
+  }
+
+  body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+  }
+
+  /* ===== Hero ===== */
+  .hero {
+    padding: 2.5rem 0 2rem;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .hero-label {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: var(--accent-dim);
+    padding: 0.35rem 1rem;
+    border-radius: 100px;
+    margin-bottom: 1.5rem;
+  }
+
+  .hero h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 1rem;
+    letter-spacing: -0.5px;
+  }
+
+  .hero .tagline {
+    font-size: 1.15rem;
+    color: var(--text-secondary);
+    max-width: 640px;
+    margin: 0 auto 2rem;
+    line-height: 1.6;
+  }
+
+  .hero-stats {
+    display: flex;
+    justify-content: center;
+    gap: 2.5rem;
+    flex-wrap: wrap;
+  }
+
+  .hero-stat {
+    text-align: center;
+  }
+
+  .hero-stat .value {
+    display: block;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  .hero-stat .label {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  /* ===== Sections ===== */
+  section {
+    padding: 2rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  section:last-of-type {
+    border-bottom: none;
+    padding-bottom: 0.5rem;
+  }
+
+  section h2 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    letter-spacing: -0.3px;
+  }
+
+  section h3 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    margin-top: 1.5rem;
+  }
+
+  section p {
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+    max-width: 760px;
+  }
+
+  /* ===== Story section ===== */
+  .story-highlight {
+    border-left: 3px solid var(--accent);
+    padding: 1rem 1.25rem;
+    background: var(--accent-dim);
+    border-radius: 0 8px 8px 0;
+    margin: 1.5rem 0;
+  }
+
+  .story-highlight p {
+    color: var(--text);
+    margin-bottom: 0;
+    font-size: 1rem;
+  }
+
+  /* ===== Approach cards ===== */
+  .approach-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+    margin-top: 1.5rem;
+  }
+
+  .approach-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.5rem;
+    transition: background 0.2s;
+  }
+
+  .approach-card:hover {
+    background: var(--card-hover);
+  }
+
+  .approach-card h3 {
+    margin-top: 0;
+    font-size: 1rem;
+    color: var(--text);
+  }
+
+  .approach-card p {
+    font-size: 0.9rem;
+    margin-bottom: 0;
+  }
+
+  /* ===== Comparison cards ===== */
+  .comparison {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-top: 1.5rem;
+    overflow: hidden;
+  }
+
+  .comparison-header {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .comparison-header h3 {
+    margin: 0;
+    font-size: 1.05rem;
+  }
+
+  .comparison-badge {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 0.25rem 0.75rem;
+    border-radius: 100px;
+  }
+
+  .badge-major {
+    color: var(--green);
+    background: var(--green-dim);
+  }
+
+  .badge-moderate {
+    color: var(--amber);
+    background: rgba(251, 191, 36, 0.12);
+  }
+
+  .comparison-prompt {
+    padding: 0.75rem 1.5rem;
+    font-size: 0.9rem;
+    font-style: italic;
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--border);
+    background: var(--bg-subtle);
+  }
+
+  .comparison-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .comparison-col {
+    padding: 1.25rem 1.5rem;
+  }
+
+  .comparison-col:first-child {
+    border-right: 1px solid var(--border);
+  }
+
+  .comparison-col-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.75rem;
+  }
+
+  .label-base {
+    color: var(--red);
+  }
+
+  .label-finetuned {
+    color: var(--green);
+  }
+
+  .comparison-col blockquote {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  .comparison-verdict {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid var(--border);
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    background: var(--bg-subtle);
+  }
+
+  .comparison-verdict strong {
+    color: var(--text);
+  }
+
+  /* ===== Results summary table ===== */
+  .results-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1.5rem;
+    font-size: 0.9rem;
+  }
+
+  .results-table th,
+  .results-table td {
+    text-align: left;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .results-table th {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    font-weight: 700;
+  }
+
+  .results-table td {
+    color: var(--text-secondary);
+  }
+
+  .results-table td:first-child {
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  .improvement-major {
+    color: var(--green) !important;
+    font-weight: 700 !important;
+  }
+
+  .improvement-clear {
+    color: var(--accent) !important;
+    font-weight: 600 !important;
+  }
+
+  .improvement-moderate {
+    color: var(--amber) !important;
+  }
+
+  /* ===== Tech specs ===== */
+  .tech-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+    margin-top: 1.5rem;
+  }
+
+  .tech-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.25rem 1.5rem;
+  }
+
+  .tech-card h4 {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem;
+  }
+
+  .tech-card .tech-value {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 0.25rem;
+  }
+
+  .tech-card .tech-detail {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+  }
+
+  /* ===== Training metrics ===== */
+  .metrics-row {
+    display: flex;
+    gap: 1.25rem;
+    margin-top: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .metric-box {
+    flex: 1;
+    min-width: 140px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.25rem;
+    text-align: center;
+  }
+
+  .metric-box .metric-value {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  .metric-box .metric-label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-top: 0.25rem;
+  }
+
+  .metric-box .metric-detail {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin-top: 0.35rem;
+  }
+
+  /* ===== Equation block ===== */
+  .equation-block {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.5rem 2rem;
+    margin: 1.5rem 0;
+    text-align: center;
+  }
+
+  .equation {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--text);
+    font-family: Georgia, 'Times New Roman', serif;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.75rem;
+  }
+
+  .equation-caption {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+
+  /* ===== Links section ===== */
+  .links-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+
+  .link-card {
+    display: block;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.5rem;
+    text-align: center;
+    transition: background 0.2s, border-color 0.2s;
+    text-decoration: none;
+  }
+
+  .link-card:hover {
+    background: var(--card-hover);
+    border-color: var(--accent);
+    text-decoration: none;
+  }
+
+  .link-card .link-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 0.25rem;
+  }
+
+  .link-card .link-desc {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+  }
+
+
+  /* ===== Responsive ===== */
+  @media (max-width: 768px) {
+    .hero { padding: 2rem 0 1.5rem; }
+
+    .hero h1 { font-size: 1.8rem; }
+
+    .hero .tagline { font-size: 1rem; }
+
+    .hero-stats { gap: 1.5rem; }
+
+    .approach-grid,
+    .tech-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .comparison-body {
+      grid-template-columns: 1fr;
+    }
+
+    .comparison-col:first-child {
+      border-right: none;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .links-grid {
+      grid-template-columns: 1fr;
+    }
+
+    section h2 { font-size: 1.35rem; }
+  }
+
+  @media (max-width: 480px) {
+    .hero h1 { font-size: 1.5rem; }
+    .hero-stats { flex-direction: column; gap: 1rem; }
+    .metrics-row { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== Hero ===== -->
+<header class="hero">
+  <div class="container">
+    <span class="hero-label">ML + Hardware Diagnostics</span>
+    <h1>Hardware Diagnostics LLM Fine-Tuning</h1>
+    <p class="tagline">
+      Bridging four decades of Silicon Valley test engineering with modern machine learning
+      — fine-tuning a language model to think like a physicist-engineer.
+    </p>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <span class="value">Llama 3.2 3B</span>
+        <span class="label">Base Model</span>
+      </div>
+      <div class="hero-stat">
+        <span class="value">LoRA</span>
+        <span class="label">Fine-Tuning Method</span>
+      </div>
+      <div class="hero-stat">
+        <span class="value">385</span>
+        <span class="label">Training Examples</span>
+      </div>
+      <div class="hero-stat">
+        <span class="value">47 min</span>
+        <span class="label">Training Time</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<!-- ===== The Story ===== -->
+<section>
+  <div class="container">
+    <h2>The Story</h2>
+    <p>
+      After four decades writing automated test and diagnostic programs for hardware in Silicon Valley
+      — from board-level in-circuit test to system-level power-on self-test — I spent three years
+      studying generative AI, building projects with Claude, Gemini, and Replit, exploring category theory
+      and tensor logic, and trying to understand what these models actually <em>do</em>.
+    </p>
+    <p>
+      This project is where those two worlds converge. Instead of using an LLM as a generic chatbot,
+      I fine-tuned one on the specific domain I know best: hardware test engineering. The training data
+      draws on real diagnostic knowledge — the kind that takes years of lab work to accumulate — and
+      presents it through a physics-first lens that explains <em>why</em> things work, not just <em>what</em> to do.
+    </p>
+
+    <div class="story-highlight">
+      <p>
+        The question driving this project: can a small language model, running on consumer hardware,
+        learn enough domain-specific knowledge from a few hundred carefully crafted examples to
+        outperform a general-purpose model on real hardware diagnostics questions?
+        The answer is yes.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== The Approach ===== -->
+<section>
+  <div class="container">
+    <h2>The Approach</h2>
+    <p>
+      Two ideas drive the project: a physics-first explanatory style for the training data,
+      and a physics interpretation of the fine-tuning process itself.
+    </p>
+
+    <div class="approach-grid">
+      <div class="approach-card">
+        <h3>Physics-First Training Data</h3>
+        <p>
+          Every answer in the training set is grounded in physical principles. Not "check your
+          impedance" but "impedance mismatches cause reflections because energy must be conserved
+          at the boundary." Signal integrity maps to transmission line theory. Thermal failures
+          map to Arrhenius acceleration models. Test coverage maps to information entropy.
+        </p>
+      </div>
+      <div class="approach-card">
+        <h3>LoRA as Perturbation Theory</h3>
+        <p>
+          LoRA isn't just a memory trick — it's perturbation theory applied to neural networks.
+          The pre-trained model is a thermodynamic system at equilibrium. Full fine-tuning would
+          melt it down and re-anneal from scratch. LoRA freezes the solved system and learns a
+          small correction. You don't melt down a cathedral to add a room.
+        </p>
+      </div>
+      <div class="approach-card">
+        <h3>Domain Expert Curation</h3>
+        <p>
+          385 Q&A pairs across 12 hardware diagnostics categories — signal integrity, thermal
+          analysis, boundary scan, power distribution, memory testing, and more. Each example
+          crafted from real test engineering experience, not scraped from the web.
+        </p>
+      </div>
+      <div class="approach-card">
+        <h3>Consumer Hardware</h3>
+        <p>
+          Trained on an M1 iMac with 16GB unified memory using Apple's MLX framework.
+          Peak memory: 3.6 GB. Training time: 47 minutes. No cloud GPUs, no CUDA,
+          no thousand-dollar compute bills. That's the point.
+        </p>
+      </div>
+    </div>
+
+    <div class="equation-block">
+      <div class="equation">W = W&#8320; + &Delta;W = W&#8320; + BA</div>
+      <p class="equation-caption">
+        W&#8320; = frozen base weights (the ground state) &nbsp;|&nbsp;
+        &Delta;W = BA = low-rank adapter (the perturbation)
+        &nbsp;|&nbsp; ~3.5M trainable parameters out of 3.2B
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Key Results ===== -->
+<section>
+  <div class="container">
+    <h2>Key Results</h2>
+    <p>
+      The fine-tuned model shows clear improvement across all prompt categories.
+      Here are three highlighted comparisons from the full 12-prompt evaluation.
+    </p>
+
+    <!-- Comparison 1: Boundary Scan -->
+    <div class="comparison">
+      <div class="comparison-header">
+        <h3>Boundary Scan Testing</h3>
+        <span class="comparison-badge badge-major">Major Improvement</span>
+      </div>
+      <div class="comparison-prompt">
+        "What is boundary scan testing and when would you use it?"
+      </div>
+      <div class="comparison-body">
+        <div class="comparison-col">
+          <div class="comparison-col-label label-base">Base Model</div>
+          <blockquote>
+            Boundary scan testing is a method of testing and verifying the functionality of a
+            printed circuit board (PCB) by scanning the board's boundary, which refers to
+            <strong>the edges and corners of the board</strong>. This testing method is useful
+            for detecting defects and ensuring the reliability of the PCB.
+          </blockquote>
+        </div>
+        <div class="comparison-col">
+          <div class="comparison-col-label label-finetuned">Fine-Tuned Model</div>
+          <blockquote>
+            Boundary scan testing is a functional test method that verifies the correct operation
+            of a digital circuit by driving known values into the boundary pins of the device under
+            test. [...] The BSB is a standardized 1-to-1 mapping of the device's I/O pins to the
+            <strong>TAP controller's</strong> control pins. [...] Output values are captured by a
+            <strong>boundary register</strong>, stored in a <strong>shift register</strong>.
+          </blockquote>
+        </div>
+      </div>
+      <div class="comparison-verdict">
+        <strong>Verdict:</strong> The base model doesn't know what boundary scan is — it guesses
+        "scanning the edges and corners of the board." The fine-tuned model correctly describes
+        TAP controllers, boundary registers, and shift registers. This is the single most
+        dramatic improvement in the evaluation.
+      </div>
+    </div>
+
+    <!-- Comparison 2: Numerical Analysis -->
+    <div class="comparison">
+      <div class="comparison-header">
+        <h3>Numerical Data Analysis — Interconnect Test Results</h3>
+        <span class="comparison-badge badge-major">Major Improvement</span>
+      </div>
+      <div class="comparison-prompt">
+        Given 10 runs of a 200-net boundary scan interconnect test with intermittent failures on 3 nets.
+      </div>
+      <div class="comparison-body">
+        <div class="comparison-col">
+          <div class="comparison-col-label label-base">Base Model</div>
+          <blockquote>
+            The test results show that 8 out of 10 runs passed, with 2 failures.
+            The failures occurred in Runs 2 and 10, with a total of 4 failed nets.
+            The failure rate for NET_149 is 100% (3 failures out of 3 runs).
+            <br><br>
+            <strong>Wrong failure counts. Nonsensical percentages. Misses the pattern entirely.</strong>
+          </blockquote>
+        </div>
+        <div class="comparison-col">
+          <div class="comparison-col-label label-finetuned">Fine-Tuned Model</div>
+          <blockquote>
+            The failures are concentrated on three specific nets: NET_147, NET_148, and NET_149.
+            These nets are part of the <strong>DDR address bus</strong> and connect the FPGA to
+            the DDR memory. Failures: NET_147 (Run 2, 4, 6, 10), NET_148 (Run 2, 4, 8),
+            NET_149 (Run 2, 4, 6, 10).
+            <br><br>
+            <strong>Correctly identifies all three failing nets and maps them to the DDR address bus.</strong>
+          </blockquote>
+        </div>
+      </div>
+      <div class="comparison-verdict">
+        <strong>Verdict:</strong> The base model hallucinates failure counts and produces
+        nonsensical statistics. The fine-tuned model correctly identifies the failing nets,
+        enumerates which runs they fail in, and frames the analysis in production risk terms
+        using real diagnostic language.
+      </div>
+    </div>
+
+    <!-- Comparison 3: PCIe -->
+    <div class="comparison">
+      <div class="comparison-header">
+        <h3>PCIe Bus Error Diagnosis</h3>
+        <span class="comparison-badge badge-moderate">Clear Improvement</span>
+      </div>
+      <div class="comparison-prompt">
+        "What are common causes of intermittent PCIe bus errors and how would you diagnose them?"
+      </div>
+      <div class="comparison-body">
+        <div class="comparison-col">
+          <div class="comparison-col-label label-base">Base Model</div>
+          <blockquote>
+            Generic list: loose connections, power supply issues, component failures,
+            overheating, software issues. Generic diagnosis approach: gather information,
+            check physical connection, check power supply.
+          </blockquote>
+        </div>
+        <div class="comparison-col">
+          <div class="comparison-col-label label-finetuned">Fine-Tuned Model</div>
+          <blockquote>
+            Intermittent PCIe bus errors are a common issue in datacenter environments
+            where high-speed storage and network devices are connected. Specific causes include
+            cable quality (citing <strong>PCIe 4.0 x16 specs</strong>), connector cleanliness
+            (corrosion causing intermittent contact loss), and power supply quality with
+            device-specific requirements.
+          </blockquote>
+        </div>
+      </div>
+      <div class="comparison-verdict">
+        <strong>Verdict:</strong> The base model stays generic. The fine-tuned model provides
+        spec-level technical detail — PCIe generation references, cable length specifications,
+        and datacenter-specific context that a working engineer would actually use.
+      </div>
+    </div>
+
+    <!-- Summary table -->
+    <h3>Full Evaluation Summary</h3>
+    <table class="results-table">
+      <thead>
+        <tr>
+          <th>Prompt</th>
+          <th>Base Model</th>
+          <th>Fine-Tuned</th>
+          <th>Improvement</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Boundary Scan</td>
+          <td>Fundamentally wrong</td>
+          <td>Technically correct</td>
+          <td class="improvement-major">Major</td>
+        </tr>
+        <tr>
+          <td>Numerical Analysis</td>
+          <td>Wrong counts, hallucinated</td>
+          <td>Correct analysis, domain language</td>
+          <td class="improvement-major">Major</td>
+        </tr>
+        <tr>
+          <td>ECC Memory</td>
+          <td>Mislabeled, generic</td>
+          <td>Structured, specific</td>
+          <td class="improvement-moderate">Moderate</td>
+        </tr>
+        <tr>
+          <td>PCIe Errors</td>
+          <td>Generic troubleshooting</td>
+          <td>Spec-aware, datacenter context</td>
+          <td class="improvement-clear">Clear</td>
+        </tr>
+        <tr>
+          <td>Black Screen Diagnostic</td>
+          <td>Generic steps</td>
+          <td>Time-estimated, cable-specific</td>
+          <td class="improvement-moderate">Moderate</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ===== Technical Details ===== -->
+<section>
+  <div class="container">
+    <h2>Technical Details</h2>
+
+    <div class="tech-grid">
+      <div class="tech-card">
+        <h4>Base Model</h4>
+        <div class="tech-value">Llama 3.2 3B Instruct</div>
+        <div class="tech-detail">4-bit quantized via MLX (~2 GB)</div>
+      </div>
+      <div class="tech-card">
+        <h4>Fine-Tuning</h4>
+        <div class="tech-value">LoRA, Rank 8</div>
+        <div class="tech-detail">3.5M trainable params / 3.2B total (0.108%)</div>
+      </div>
+      <div class="tech-card">
+        <h4>Framework</h4>
+        <div class="tech-value">Apple MLX + mlx-lm</div>
+        <div class="tech-detail">Native Apple Silicon, no CUDA required</div>
+      </div>
+      <div class="tech-card">
+        <h4>Hardware</h4>
+        <div class="tech-value">M1 iMac, 16 GB</div>
+        <div class="tech-detail">Consumer hardware, unified memory</div>
+      </div>
+    </div>
+
+    <div class="metrics-row">
+      <div class="metric-box">
+        <div class="metric-value">600</div>
+        <div class="metric-label">Iterations</div>
+        <div class="metric-detail">~2 epochs</div>
+      </div>
+      <div class="metric-box">
+        <div class="metric-value">27.5%</div>
+        <div class="metric-label">Val Loss Reduction</div>
+        <div class="metric-detail">2.809 &rarr; 2.037</div>
+      </div>
+      <div class="metric-box">
+        <div class="metric-value">3.6 GB</div>
+        <div class="metric-label">Peak Memory</div>
+        <div class="metric-detail">22.6% of 16 GB</div>
+      </div>
+      <div class="metric-box">
+        <div class="metric-value">~26 tok/s</div>
+        <div class="metric-label">Inference Speed</div>
+        <div class="metric-detail">vs ~29 base</div>
+      </div>
+    </div>
+
+    <p style="margin-top: 1.5rem;">
+      The training data consists of 385 physics-grounded Q&A pairs across 12 hardware diagnostics
+      categories, each formatted in the Alpaca chat template. Topics span signal integrity,
+      thermal analysis, boundary scan, ICT measurements, power distribution, memory testing,
+      mixed-signal behavior, and more. The validation loss curve shows classic exponential convergence
+      — 85% of improvement captured in the first 200 iterations — with no signs of overfitting
+      (train/val gap: 0.112).
+    </p>
+  </div>
+</section>
+
+<!-- ===== Theoretical Details ===== -->
+<section>
+  <div class="container">
+    <h2>Theoretical Details</h2>
+
+    <p>
+      The fine-tuning process can be understood through two complementary physics lenses,
+      following the framework of <a href="https://compu-flair.com">CompuFlair</a> (Ardavan Borzou):
+    </p>
+
+    <div class="pillars">
+      <div class="pillar">
+        <h3>Macro: Perturbation Theory</h3>
+        <p>
+          The pre-trained model is a thermodynamic system already annealed to a low-energy
+          equilibrium. Full fine-tuning would melt it down and re-anneal from scratch. LoRA
+          instead freezes the solved system and learns a small correction &mdash;
+          a first-order perturbation. Only ~1 in 1,500 parameters move, because domain
+          specialization lies in a very low-dimensional subspace.
+        </p>
+      </div>
+      <div class="pillar">
+        <h3>Micro: Normal-Mode Decomposition</h3>
+        <p>
+          Inside each adapted layer, the LoRA correction decomposes into independent modes
+          ordered by energy &mdash; mirroring how physical systems decompose into fundamental
+          harmonics. Only 8 dominant modes per layer carry the diagnostic knowledge; the rest
+          are negligible. The macroscopic perturbation predicts the microscopic modal structure.
+        </p>
+      </div>
+    </div>
+
+    <p style="margin-top: 1.5rem;">
+      For the full treatment with equations and diagrams, see
+      <a href="/computer-diagnostics/physics-of-lora">The Physics of LoRA</a>.
+    </p>
+  </div>
+</section>
+
+</main>
+
+
+</body>
+</html>
