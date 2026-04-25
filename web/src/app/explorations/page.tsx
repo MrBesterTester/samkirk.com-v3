@@ -55,6 +55,12 @@ const explorations: Exploration[] = [
     description:
       "Educational interactive demo illustrating a unified programming paradigm bridging neural and symbolic AI.",
   },
+  {
+    href: "/explorations/safer-ai",
+    title: "Safer AI",
+    description:
+      "Essay drafts for the Anthropic Fellows Program 2026 — applying Nancy Leveson's STAMP/STPA systems-safety methodology to AI safety, drawing on four decades of test and diagnostic engineering.",
+  },
 ];
 
 export default function ExplorationsPage() {

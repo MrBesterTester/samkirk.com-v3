@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Samuel A. Kirk — Fellows Program Essay Drafts v1</title>
+<style>
+  @page { size: Letter; margin: 0.6in; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    color: #1a1a1a;
+    line-height: 1.5;
+    max-width: 7.4in;
+    margin: 0 auto;
+    padding: 0.4in 0.3in;
+  }
+  h1 { font-size: 22pt; margin: 0 0 4pt 0; color: #0a2540; }
+  h2 { font-size: 14pt; margin: 22pt 0 6pt 0; color: #0a2540; border-bottom: 1px solid #d0d7de; padding-bottom: 3pt; }
+  h3 { font-size: 11.5pt; margin: 14pt 0 4pt 0; color: #24292f; }
+  .meta { color: #57606a; font-size: 10pt; margin-bottom: 12pt; }
+  .banner {
+    background: #fff8c5;
+    border-left: 4px solid #d4a72c;
+    padding: 8pt 12pt;
+    margin: 10pt 0 18pt 0;
+    font-size: 10pt;
+  }
+  .prompt {
+    font-size: 10pt;
+    color: #57606a;
+    font-style: italic;
+    margin-bottom: 4pt;
+  }
+  .draft {
+    background: #f6f8fa;
+    border: 1px solid #d0d7de;
+    border-radius: 4px;
+    padding: 12pt 16pt;
+    margin: 8pt 0 18pt 0;
+    font-size: 10.5pt;
+    line-height: 1.55;
+    page-break-inside: avoid;
+  }
+  .wordcount {
+    font-size: 9pt;
+    color: #8b949e;
+    margin-top: 6pt;
+    text-align: right;
+  }
+  .option {
+    background: #ddf4ff;
+    border-left: 4px solid #0969da;
+    padding: 8pt 12pt;
+    margin: 6pt 0;
+    font-size: 10pt;
+    border-radius: 3px;
+  }
+  hr { border: 0; border-top: 1px solid #d0d7de; margin: 14pt 0; }
+  .toc { background: #f6f8fa; border: 1px solid #d0d7de; border-radius: 4px; padding: 10pt 18pt; font-size: 10pt; margin: 0 0 18pt 0; }
+  .toc a { color: #0969da; text-decoration: none; }
+</style>
+</head>
+<body>
+
+<h1>Fellows Program Essay Drafts — v1</h1>
+<div class="meta">
+  <strong>Samuel A. Kirk</strong> &nbsp;|&nbsp;
+  <strong>Drafted:</strong> 2026-04-23 PST &nbsp;|&nbsp;
+  <strong>For:</strong> Anthropic Fellows Program (cohort Jul 20, 2026) &nbsp;|&nbsp;
+  <strong>Target submission:</strong> Sat 4/25
+</div>
+
+<div class="banner">
+  <strong>Drafts, not final.</strong> These are v1 responses to every essay and short-answer field on the Airtable form. Sam will review and revise after completing the Leveson/AI-safety reading (SAFEWARE, STPA, Core Views, Concrete Problems). The Leveson-lineage framing is intentionally threaded through essays 1, 2, 3, and 5. Keep it or trim it as the final essays want — but the framing is the distinctive angle.
+</div>
+
+<div class="toc">
+  <strong>Contents — Form fields in order</strong>
+  <ul>
+    <li><a href="#e1">Essay 1 — Why are you interested in the Fellows program?</a></li>
+    <li><a href="#e2">Essay 2 — Research areas you're excited about?</a></li>
+    <li><a href="#e3">Essay 3 — Relevant background (optional)?</a></li>
+    <li><a href="#e4">Essay 4 — % likelihood of accepting FT offer</a></li>
+    <li><a href="#e5">Essay 5 — % likelihood of continuing in AI safety/security</a></li>
+    <li><a href="#sa1">Short answer — Other commitments during program period</a></li>
+    <li><a href="#sa2">Short answer — How did you hear about the Fellows program (optional)</a></li>
+    <li><a href="#sa3">Short answer — Anything else to share (optional)</a></li>
+    <li><a href="#sa4">Short answer — Earliest FT start date</a></li>
+  </ul>
+</div>
+
+<hr>
+
+<h2 id="e1">Essay 1 — Why are you interested in the Fellows program?</h2>
+<div class="prompt">Form prompt: "Why are you interested in participating in the Fellows program?" (1–2 paragraphs, required)</div>
+
+<div class="draft">
+<p>I've spent forty years as a test and diagnostic engineer — from standalone POST firmware for Class 5 CO telephone switches at TRW/Vidar in 1980, through 10 Gbps ethernet silicon verification on SPARC IV at Sun, to a LoRA-fine-tuned Llama 3.2 model for hardware diagnostics three years ago. What draws me to the Fellows program is not a career pivot but a lineage step. The discipline of asking "how does this system fail, and what failure modes have I not yet imagined?" is the discipline Nancy Leveson formalized in <em>SAFEWARE</em> (1995) and extended through STAMP and STPA — and it is the same discipline at the core of AI safety: red-teaming, evaluation, scalable oversight, reliability under distribution shift. The intellectual inheritance is explicit, even if the ML research community does not always make it visible.</p>
+
+<p>The Fellows program is the right container for that inheritance to become a contribution. I'm not joining to build my first ML intuition; I'm joining to bring a structured systems-safety lens to a research team already doing the hard empirical work. The ML Systems &amp; Performance workstream is the natural fit — it sits at the boundary where engineering rigor, model behavior, and operational reliability meet, and where my cross-stack instincts (silicon, firmware, cloud, now LLMs) are most useful. Four months of full-time research, paired with an Anthropic mentor, is the shortest path I know of from "forty years of diagnostic practice" to "a tangible AI safety research artifact."</p>
+</div>
+<div class="wordcount">~220 words · 2 paragraphs · within "1–2 paragraphs" bound</div>
+
+<hr>
+
+<h2 id="e2">Essay 2 — Research areas you're excited about?</h2>
+<div class="prompt">Form prompt: "With your selected team(s) in mind, tell us briefly about one or more research areas you're excited about right now, and why." (1 paragraph, required)</div>
+
+<div class="draft">
+<p>One direction I'm eager to explore is applying Leveson's STPA (Systems-Theoretic Process Analysis) to language-model training and deployment. STPA treats a system as a control structure, enumerates unsafe control actions, and traces them to process-model mismatches and missing feedback — it produces a structured hazard taxonomy rather than a list of empirical test cases. Modern AI red-teaming is enormously powerful empirically but largely ad hoc in its taxonomy; STPA offers a method that complements empirical red-teaming by forcing the analyst to name the control loops a model participates in and reason about what the absence of a particular feedback signal would cause. I think this is especially relevant to ML Systems &amp; Performance questions — deployment reliability, evaluation coverage, failure-mode cataloguing — and it's a method most ML researchers have not been exposed to. I have drafted a four-month research proposal for this work — anchored on four canonical Leveson texts (<em>Engineering a Safer World</em>, the <em>STPA Handbook</em>, the <em>CAST Handbook</em>, and her 2023 <em>An Introduction to System Safety Engineering</em>) and organized around a biweekly internal seminar that I would lead, culminating in a written report and a scoped STPA analysis of one Claude deployment case. Beyond STPA specifically, I'm interested in any line of work that treats evaluation as a structured engineering practice rather than a benchmark exercise.</p>
+</div>
+<div class="wordcount">~245 words · 1 paragraph · slightly over "1 paragraph" envelope — Sam may want to tighten</div>
+
+<hr>
+
+<h2 id="e3">Essay 3 — Relevant background (optional)</h2>
+<div class="prompt">Form prompt: "(Optional) Please share any relevant background and provide links where possible (e.g., research experience, coursework, self-directed study, past roles, relevant projects). 1 paragraph"</div>
+
+<div class="draft">
+<p>My technical foundation spans four decades of diagnostic and test engineering: standalone and online diagnostics (TRW/Vidar, IBM/ROLM, Sun Microsystems); ATE timing calibration at picosecond accuracy (Teradyne, LTX-Credence); post-silicon verification of 10 Gbps ethernet on SPARC IV (Sun); manufacturing test at scale (ESS Technology, Media Vision); and full instrument-level test infrastructure at Talis Biomedical. Since 2022 I have been shifting the same craft toward AI-adjacent work: a LoRA-fine-tuned Llama 3.2 3B for the hardware-diagnostics domain, end-to-end — dataset curation, Parameter-Efficient Fine-Tuning (PEFT) training, evaluation, serving (<a href="https://samkirk.com/computer-diagnostics">samkirk.com/computer-diagnostics</a>); a retrieval-augmented chatbot on Google Vertex AI with source citations (<a href="https://samkirk.com/hire-me">samkirk.com/hire-me</a>); a Rust/Axum backend for an interactive neurosymbolic-AI demo of Pedro Domingos' Tensor Logic; and daily AI-assisted development with Claude Code and Cursor. On my shelf: Leveson's <em>SAFEWARE</em>, which I recognized as a seminal text at the time of its publication and have now pulled back off the shelf as the bridge between the engineering tradition I know and the AI safety research I want to contribute to. A research-plan write-up on studying STAMP/STPA and applying the method to current AI safety problems is in progress for publication on samkirk.com.</p>
+</div>
+<div class="wordcount">~180 words · 1 paragraph · includes project links as the form requests</div>
+
+<hr>
+
+<h2 id="e4">Essay 4 — % likelihood of accepting FT offer</h2>
+<div class="prompt">Form prompt: "How likely are you to accept a full-time offer at Anthropic if you receive one after the Fellows program? Please include a brief explanation, and if possible, a % estimate. You don't have to be confident in your estimate." (required)</div>
+
+<div class="draft">
+<p><strong>100%.</strong></p>
+<p>Anthropic is where I want to be. The combination of frontier research, public safety mandate, and mentor-rich research culture is the exact environment I've been working toward for the past three years of independent AI practice. Practical considerations also align: the full-time rate meets my consulting floor, Berkeley is a manageable hybrid commute from Fremont, and my current independent work is at a stage where converting to a full-time role at Anthropic would be a net gain, not a sacrifice.</p>
+</div>
+<div class="wordcount">~90 words</div>
+
+<hr>
+
+<h2 id="e5">Essay 5 — % likelihood of continuing in AI safety/security</h2>
+<div class="prompt">Form prompt: "How likely are you to be interested in continuing to work on AI safety/security after the Fellows program? Please include a brief explanation, and if possible, a % estimate. You don't have to be confident in your estimate." (required)</div>
+
+<div class="draft">
+<p><strong>100%.</strong></p>
+<p>Testing engineering is not a far stretch from AI safety and security — testing is the craft of finding failure modes, edge cases, and reliability gaps, which is the core of red-teaming, evaluations, and safety research. I've practiced that craft for forty years across hardware, firmware, and cloud software. To be clear, I have not practiced Leveson's STAMP/STPA methodology itself — I recognized <em>SAFEWARE</em> as important work when it came out, kept it as a reference, and am pulling it back off the shelf now as the structured framework that can formalize what I've done informally. As a concrete first step, I am drafting a public research-plan write-up — to be published on samkirk.com — that lays out how I intend to study STAMP/STPA and apply the method to current AI safety problems. Bringing the two together — the practical test-engineering craft I have and the methodological scaffolding Leveson built — is what I want to pursue beyond the Fellowship, whether at Anthropic, at an adjacent safety-focused organization, or through my own applied work. This is where the rest of my career belongs.</p>
+</div>
+<div class="wordcount">~195 words</div>
+
+<hr>
+
+<h2 id="sa1">Short answer — Other commitments during program period</h2>
+<div class="prompt">Form prompt: "Do you have any other commitments or obligations during the Fellows program period? Please include a brief explanation of any other commitments (e.g., vacations, work, school, or other projects) and, if possible, hours per week you would spend on ongoing obligations versus on the program. Please note that this program is full-time (40 hours per week)." (required)</div>
+
+<div class="draft">
+<p>I run a solo consultancy, SAK Consulting, focused on AI-augmented software engineering. Client work is currently episodic and explicitly pauseable — I would suspend new engagements for the duration of the Fellows program and resume or not based on the direction the research takes afterward. I have no other concurrent work, academic, or competing-project commitments, and no planned vacation during the July–November 2026 window.</p>
+</div>
+<div class="wordcount">~65 words</div>
+
+<hr>
+
+<h2 id="sa2">Short answer — How did you hear about the Fellows program?</h2>
+<div class="prompt">Form prompt: "(Optional) How did you hear about the Fellows program?"</div>
+
+<div class="draft">
+<p>Direct email invitation from Anthropic on April 11, 2026.</p>
+</div>
+<p style="font-size:9pt; color:#57606a;"><em>Note: Sid Doshi is not mentioned — he would be a weak reference, and the separate heads-up text to Sid has already been sent outside the form.</em></p>
+
+<hr>
+
+<h2 id="sa3">Short answer — Anything else to share (optional)</h2>
+<div class="prompt">Form prompt: "(Optional) Is there anything else you would like to share?"</div>
+
+<div class="draft">
+<p>If the Fellows team would find it useful to see examples of my recent ML-adjacent work, <a href="https://samkirk.com">samkirk.com</a> hosts the current portfolio. The LoRA fine-tuning project (<a href="https://samkirk.com/computer-diagnostics">/computer-diagnostics</a>) and the Vertex AI retrieval-augmented chatbot (<a href="https://samkirk.com/hire-me">/hire-me</a>) are the most directly relevant.</p>
+</div>
+<div class="wordcount">~50 words</div>
+
+<hr>
+
+<h2 id="sa4">Short answer — Earliest FT start date</h2>
+<div class="prompt">Form prompt: "If you were to start at Anthropic full-time after the Fellows program, when is the earliest you could start? E.g., immediately after the program ends, or some other date" (required)</div>
+
+<div class="draft">
+<p>Immediately after the program ends (approximately November 20, 2026).</p>
+</div>
+
+</body>
+</html>

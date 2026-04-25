@@ -48,6 +48,11 @@ describe("Explorations hub page", () => {
       "href",
       "/explorations/tensor-logic"
     );
+
+    const saferAiLink = screen.getByRole("link", {
+      name: /safer ai/i,
+    });
+    expect(saferAiLink).toHaveAttribute("href", "/explorations/safer-ai");
   });
 
   it("renders descriptions for each exploration topic", () => {
@@ -71,6 +76,10 @@ describe("Explorations hub page", () => {
 
     expect(
       screen.getByText(/educational interactive demo illustrating/i)
+    ).toBeInTheDocument();
+
+    expect(
+      screen.getByText(/anthropic fellows program 2026/i)
     ).toBeInTheDocument();
   });
 });
