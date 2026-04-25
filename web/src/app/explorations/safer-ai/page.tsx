@@ -3,13 +3,13 @@ import { StaticHtmlViewer } from "@/components";
 import { SITE_URL, OG_IMAGE } from "@/lib/seo";
 
 export const metadata: Metadata = {
-  title: "Safer AI — Anthropic Fellows Program 2026 Essays",
+  title: "Safer AI — Leveson's System-Safety Framework Applied to Claude Models",
   description:
-    "Essay drafts for the Anthropic Fellows Program 2026, exploring how Nancy Leveson's STAMP/STPA systems-safety methodology can be applied to AI safety — drawing on four decades of test and diagnostic engineering.",
+    "A four-month research project proposal for the Anthropic Fellows Program 2026, adapting Nancy G. Leveson's STAMP/STPA/CAST system-safety framework to the deployed-LLM context at Anthropic, with Claude's safety evaluation and red-teaming pipeline as the case study.",
   openGraph: {
-    title: "Safer AI — Anthropic Fellows Program 2026 Essays",
+    title: "Safer AI — Leveson's System-Safety Framework Applied to Claude Models",
     description:
-      "Essay drafts for the Anthropic Fellows Program 2026, exploring how Nancy Leveson's STAMP/STPA systems-safety methodology can be applied to AI safety — drawing on four decades of test and diagnostic engineering.",
+      "A four-month research project proposal for the Anthropic Fellows Program 2026, adapting Nancy G. Leveson's STAMP/STPA/CAST system-safety framework to the deployed-LLM context at Anthropic, with Claude's safety evaluation and red-teaming pipeline as the case study.",
     url: `${SITE_URL}/explorations/safer-ai`,
     type: "website",
     images: [{ url: OG_IMAGE, alt: "Sam Kirk" }],
@@ -25,18 +25,27 @@ export default function SaferAIPage() {
       <h1 className="text-3xl font-bold tracking-tight text-text-primary">
         Safer AI
       </h1>
+      <p className="mt-2 text-base text-text-secondary">
+        Leveson&apos;s System-Safety Framework Applied to Claude Models — a
+        research project proposal for the Anthropic Fellows Program (cohort
+        July 2026).
+      </p>
       <p className="mt-4 text-lg text-text-secondary">
-        Essay drafts for the Anthropic Fellows Program 2026 — exploring how
-        Nancy Leveson&apos;s STAMP/STPA systems-safety methodology can be
-        applied to AI safety, drawing on four decades of test and diagnostic
-        engineering as the bridge between traditional safety engineering and
-        modern red-teaming, evaluation, and reliability research.
+        A four-month proposal adapting Nancy G. Leveson&apos;s system-safety
+        engineering framework — STAMP, STPA, and CAST — to the deployed-LLM
+        context at Anthropic. Anchored on four canonical Leveson texts and
+        applied to Claude&apos;s safety evaluation and red-teaming pipeline as
+        a case study, with a weekly working seminar that ships a concrete
+        artifact each session. The deliverable is a written report and a
+        minimum-viable prototype that translate Leveson&apos;s control-structure
+        hazard analysis into a structured complement to Anthropic&apos;s existing
+        empirical safety practice.
       </p>
 
       <div className="mt-6">
         <a
           href="/static/safer-ai.html"
-          download="SamuelKirk_Essays_Anthropic_Fellows_2026-04-23.html"
+          download="Leveson_Research_Project_Proposal_2026-04-24.html"
           className="inline-flex items-center gap-2 rounded-lg border border-border bg-primary px-4 py-2 text-sm font-medium text-text-secondary shadow-sm transition-colors hover:border-accent hover:bg-secondary"
         >
           <svg
@@ -59,7 +68,7 @@ export default function SaferAIPage() {
       <div className="mt-12">
         <StaticHtmlViewer
           src="safer-ai.html"
-          title="Anthropic Fellows Program 2026 — Essay Drafts"
+          title="Leveson's System-Safety Framework Applied to Claude Models — Research Project Proposal"
           minHeight={800}
         />
       </div>

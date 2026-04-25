@@ -2,184 +2,911 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Samuel A. Kirk — Fellows Program Essay Drafts v1</title>
+<title>Research Project Proposal — Leveson's System-Safety Framework Applied to Claude Models</title>
 <style>
   @page { size: Letter; margin: 0.6in; }
   body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
     color: #1a1a1a;
-    line-height: 1.5;
+    line-height: 1.55;
     max-width: 7.4in;
     margin: 0 auto;
     padding: 0.4in 0.3in;
   }
   h1 { font-size: 22pt; margin: 0 0 4pt 0; color: #0a2540; }
   h2 { font-size: 14pt; margin: 22pt 0 6pt 0; color: #0a2540; border-bottom: 1px solid #d0d7de; padding-bottom: 3pt; }
-  h3 { font-size: 11.5pt; margin: 14pt 0 4pt 0; color: #24292f; }
+  h3 { font-size: 12pt; margin: 14pt 0 4pt 0; color: #24292f; }
+  h4 { font-size: 10.5pt; margin: 10pt 0 2pt 0; color: #24292f; }
   .meta { color: #57606a; font-size: 10pt; margin-bottom: 12pt; }
   .banner {
     background: #fff8c5;
     border-left: 4px solid #d4a72c;
+    padding: 10pt 14pt;
+    margin: 12pt 0;
+    font-size: 10.5pt;
+  }
+  .claim {
+    background: #dafbe1;
+    border-left: 4px solid #1a7f37;
+    padding: 10pt 14pt;
+    margin: 12pt 0;
+    font-size: 10.5pt;
+  }
+  .caveat {
+    background: #ffebe9;
+    border-left: 4px solid #cf222e;
     padding: 8pt 12pt;
-    margin: 10pt 0 18pt 0;
+    margin: 10pt 0;
     font-size: 10pt;
   }
-  .prompt {
-    font-size: 10pt;
-    color: #57606a;
-    font-style: italic;
-    margin-bottom: 4pt;
-  }
-  .draft {
-    background: #f6f8fa;
+  table { border-collapse: collapse; width: 100%; margin: 8pt 0; font-size: 10pt; }
+  th, td { border: 1px solid #d0d7de; padding: 6pt 8pt; text-align: left; vertical-align: top; }
+  th { background: #f6f8fa; font-weight: 600; }
+  tr:nth-child(even) td { background: #fafbfc; }
+  ul, ol { margin: 6pt 0 10pt 0; padding-left: 22pt; }
+  li { margin-bottom: 3pt; }
+  code { font-family: "SF Mono", Consolas, Menlo, monospace; font-size: 9.5pt; background: #f6f8fa; padding: 1pt 4pt; border-radius: 3px; }
+  blockquote { border-left: 3px solid #d0d7de; margin: 6pt 0; padding: 2pt 12pt; color: #57606a; font-style: italic; }
+  .toc { background: #f6f8fa; border: 1px solid #d0d7de; border-radius: 4px; padding: 10pt 18pt; font-size: 10pt; margin: 0 0 18pt 0; }
+  .toc ul { margin: 0; padding-left: 18pt; }
+  .toc a { color: #0969da; text-decoration: none; }
+  .phase {
+    background: #eef2f7;
     border: 1px solid #d0d7de;
     border-radius: 4px;
-    padding: 12pt 16pt;
-    margin: 8pt 0 18pt 0;
-    font-size: 10.5pt;
-    line-height: 1.55;
+    padding: 10pt 14pt;
+    margin: 10pt 0;
+    font-size: 10pt;
     page-break-inside: avoid;
   }
-  .wordcount {
-    font-size: 9pt;
-    color: #8b949e;
-    margin-top: 6pt;
-    text-align: right;
-  }
-  .option {
-    background: #ddf4ff;
-    border-left: 4px solid #0969da;
-    padding: 8pt 12pt;
-    margin: 6pt 0;
-    font-size: 10pt;
-    border-radius: 3px;
-  }
-  hr { border: 0; border-top: 1px solid #d0d7de; margin: 14pt 0; }
-  .toc { background: #f6f8fa; border: 1px solid #d0d7de; border-radius: 4px; padding: 10pt 18pt; font-size: 10pt; margin: 0 0 18pt 0; }
-  .toc a { color: #0969da; text-decoration: none; }
+  .phase-header { font-weight: 700; color: #0a2540; margin-bottom: 4pt; }
+  hr { border: 0; border-top: 1px solid #d0d7de; margin: 18pt 0; }
 </style>
 </head>
 <body>
 
-<h1>Fellows Program Essay Drafts — v1</h1>
+<h1>Leveson's System-Safety Framework Applied to Claude Models</h1>
+<h3 style="color:#57606a; font-weight:normal; margin-top:-4pt;">A Research Project Proposal for the Anthropic Fellows Program (Cohort July 2026)</h3>
 <div class="meta">
-  <strong>Samuel A. Kirk</strong> &nbsp;|&nbsp;
-  <strong>Drafted:</strong> 2026-04-23 PST &nbsp;|&nbsp;
-  <strong>For:</strong> Anthropic Fellows Program (cohort Jul 20, 2026) &nbsp;|&nbsp;
-  <strong>Target submission:</strong> Sat 4/25
+  <strong>Author:</strong> Samuel A. Kirk &nbsp;|&nbsp;
+  <strong>Proposed workstream:</strong> ML Systems &amp; Performance (primary); AI Security &amp; Frontier Red Team (secondary) &nbsp;|&nbsp;
+  <strong>Drafted:</strong> 2026-04-24 PST &nbsp;|&nbsp;
+  <strong>Duration:</strong> 4 months (full-time, aligned with Fellows program July 20 – November 20, 2026)
 </div>
 
 <div class="banner">
-  <strong>Drafts, not final.</strong> These are v1 responses to every essay and short-answer field on the Airtable form. Sam will review and revise after completing the Leveson/AI-safety reading (SAFEWARE, STPA, Core Views, Concrete Problems). The Leveson-lineage framing is intentionally threaded through essays 1, 2, 3, and 5. Keep it or trim it as the final essays want — but the framing is the distinctive angle.
-</div>
+<strong>In one paragraph.</strong> This proposal adapts Nancy G. Leveson's system-safety engineering framework — STAMP (Systems-Theoretic Accident Model and Processes), STPA (Systems-Theoretic Process Analysis), and CAST (Causal Analysis based on STAMP) — to the deployed-LLM context at Anthropic. The work is anchored in four canonical Leveson texts, applied to Claude's safety evaluation and red-teaming pipeline as a case study, and run as a <strong>weekly working seminar</strong> Sam leads alongside interested Anthropic researchers — every session ships a concrete artifact, not a discussion. The deliverable is a written report and a minimum-viable prototype that translate Leveson's control-structure hazard analysis into a structured complement to Anthropic's existing empirical safety practice.</div>
 
 <div class="toc">
-  <strong>Contents — Form fields in order</strong>
+  <strong>Contents</strong>
   <ul>
-    <li><a href="#e1">Essay 1 — Why are you interested in the Fellows program?</a></li>
-    <li><a href="#e2">Essay 2 — Research areas you're excited about?</a></li>
-    <li><a href="#e3">Essay 3 — Relevant background (optional)?</a></li>
-    <li><a href="#e4">Essay 4 — % likelihood of accepting FT offer</a></li>
-    <li><a href="#e5">Essay 5 — % likelihood of continuing in AI safety/security</a></li>
-    <li><a href="#sa1">Short answer — Other commitments during program period</a></li>
-    <li><a href="#sa2">Short answer — How did you hear about the Fellows program (optional)</a></li>
-    <li><a href="#sa3">Short answer — Anything else to share (optional)</a></li>
-    <li><a href="#sa4">Short answer — Earliest FT start date</a></li>
+    <li><a href="#motivation">1. Motivation &amp; Honest Positioning</a></li>
+    <li><a href="#corpus">2. The Four Canonical Leveson Works</a>
+      <ul>
+        <li><a href="#books-relate">How the 2012 and 2023 books relate</a></li>
+        <li><a href="#acquisition">Acquisition workflow for the 2023 textbook</a></li>
+      </ul>
+    </li>
+    <li><a href="#hypothesis">3. Research Hypothesis &amp; Questions</a></li>
+    <li><a href="#methodology">4. Methodology — 4 Phases over 16 weeks</a>
+      <ul>
+        <li><a href="#phase-table">Phase chart (with tier mapping)</a></li>
+        <li><a href="#lesson-plan">Weekly lesson plan</a></li>
+      </ul>
+    </li>
+    <li><a href="#seminar">5. Seminar Design — Biweekly, Internal, Sam-Led</a>
+      <ul>
+        <li><a href="#session-structure">Session structure</a></li>
+        <li><a href="#session-plan">Session plan</a></li>
+        <li><a href="#seminar-ownership">Authority &amp; ownership (incl. three contribution mechanisms)</a></li>
+        <li><a href="#seminar-lifecycle">Artifact lifecycle: ship → appraise → revise → archive</a></li>
+        <li><a href="#seminar-logistics">Format &amp; logistics</a></li>
+      </ul>
+    </li>
+    <li><a href="#deliverables">6. Deliverables &amp; Success Criteria</a>
+      <ul>
+        <li><a href="#deliverables-list">Deliverables</a></li>
+        <li><a href="#success-criteria">Success criteria</a></li>
+      </ul>
+    </li>
+    <li><a href="#resources">7. Resources &amp; Support Needed from Anthropic</a></li>
+    <li><a href="#risks">8. Risks, Scope Limits &amp; Open Questions</a>
+      <ul>
+        <li><a href="#kickoff-questions">Open questions to resolve with mentor at project kickoff</a></li>
+      </ul>
+    </li>
+    <li><a href="#after">9. What Happens After the Fellowship</a></li>
+    <li><a href="#references">10. References</a></li>
+    <li><a href="#reading-plan">11. Reading Plan</a>
+      <ul>
+        <li><a href="#reading-tier-0">Tier 0 — Leveson canonical</a></li>
+        <li><a href="#reading-tier-1">Tier 1 — Anthropic context</a></li>
+        <li><a href="#reading-tier-2">Tier 2 — Broader AI safety field</a></li>
+        <li><a href="#reading-supplementary">Supplementary references</a></li>
+      </ul>
+    </li>
+    <li><a href="#scan-workflow">12. Scan &amp; OCR Workflow for Hardcopy References</a>
+      <ul>
+        <li><a href="#scan-hardcopies">Hardcopies in scope</a></li>
+        <li><a href="#scan-steps">Workflow steps (applied to both books)</a></li>
+      </ul>
+    </li>
+    <li><a href="#alt-prototypes">13. Alternative Prototype Scopes</a>
+      <ul>
+        <li><a href="#alt-prototype-a">Alternative A — Hazard-taxonomy diff tool</a></li>
+        <li><a href="#alt-prototype-b">Alternative B — Process-model probe</a></li>
+        <li><a href="#alt-prototype-decision">Why Deliverable #7 chose the eval prototype</a></li>
+      </ul>
+    </li>
+    <li><a href="#qa">14. Frequently Asked Questions</a>
+      <ul>
+        <li><a href="#qa-bridge">Q1. How does this proposal build upon test-engineering + genAI experience?</a></li>
+        <li><a href="#qa-mentor">Q2. Does this proposal require a mentor, and will Anthropic provide one?</a></li>
+        <li><a href="#qa-seminar-experience">Q3. What experience does Sam have leading a seminar?</a></li>
+      </ul>
+    </li>
   </ul>
 </div>
 
 <hr>
 
-<h2 id="e1">Essay 1 — Why are you interested in the Fellows program?</h2>
-<div class="prompt">Form prompt: "Why are you interested in participating in the Fellows program?" (1–2 paragraphs, required)</div>
+<h2 id="motivation">1. Motivation &amp; Honest Positioning</h2>
 
-<div class="draft">
-<p>I've spent forty years as a test and diagnostic engineer — from standalone POST firmware for Class 5 CO telephone switches at TRW/Vidar in 1980, through 10 Gbps ethernet silicon verification on SPARC IV at Sun, to a LoRA-fine-tuned Llama 3.2 model for hardware diagnostics three years ago. What draws me to the Fellows program is not a career pivot but a lineage step. The discipline of asking "how does this system fail, and what failure modes have I not yet imagined?" is the discipline Nancy Leveson formalized in <em>SAFEWARE</em> (1995) and extended through STAMP and STPA — and it is the same discipline at the core of AI safety: red-teaming, evaluation, scalable oversight, reliability under distribution shift. The intellectual inheritance is explicit, even if the ML research community does not always make it visible.</p>
+<p>Modern AI safety at frontier labs is enormously powerful empirically — red-teaming, evaluations, Constitutional AI, RLHF, interpretability — but its hazard <em>taxonomy</em> is largely built from the bottom up: observed failure patterns aggregated into categories. This is exactly the practice Leveson documented in aerospace and medical device safety before STAMP: useful but brittle, hard to reason about completeness, and vulnerable to missing hazards that don't resemble past failures.</p>
 
-<p>The Fellows program is the right container for that inheritance to become a contribution. I'm not joining to build my first ML intuition; I'm joining to bring a structured systems-safety lens to a research team already doing the hard empirical work. The ML Systems &amp; Performance workstream is the natural fit — it sits at the boundary where engineering rigor, model behavior, and operational reliability meet, and where my cross-stack instincts (silicon, firmware, cloud, now LLMs) are most useful. Four months of full-time research, paired with an Anthropic mentor, is the shortest path I know of from "forty years of diagnostic practice" to "a tangible AI safety research artifact."</p>
-</div>
-<div class="wordcount">~220 words · 2 paragraphs · within "1–2 paragraphs" bound</div>
+<p>Leveson's contribution across four decades has been a complementary top-down method: treat any safety-critical system as a <em>control structure</em>, enumerate the <em>unsafe control actions</em> it can produce, and trace each to the underlying process-model mismatches and missing feedback loops that would cause it. The result is a structured hazard catalog derived from system architecture, not from incident history. This is the method that now underwrites aviation, nuclear, automotive, and medical-device safety-critical work.</p>
 
-<hr>
+<p><strong>Anthropic ships at startup velocity. This proposal matches that cadence rather than the contemplative graduate-seminar shape Leveson's MIT course uses. Every phase produces a concrete artifact, every weekly working session ends with a named artifact and a scope locked for the next session, and the four-month deliverable is something Anthropic can pick up and extend Monday morning — not a monograph that gets archived and forgotten.</strong></p>
 
-<h2 id="e2">Essay 2 — Research areas you're excited about?</h2>
-<div class="prompt">Form prompt: "With your selected team(s) in mind, tell us briefly about one or more research areas you're excited about right now, and why." (1 paragraph, required)</div>
+<div class="claim"><strong>The research claim.</strong> Leveson's framework can be adapted to the deployed-LLM context — treating a Claude model plus its deployment surround (prompt format, tools, retrieval, human oversight, training pipeline) as a control structure — to produce a structured hazard taxonomy that complements Anthropic's existing empirical safety practice. The method is not a replacement for red-teaming; it's a scaffolding that tells red-teamers <em>where to look</em> by naming the control loops a model participates in and reasoning about the failure modes each loop can exhibit.</div>
 
-<div class="draft">
-<p>One direction I'm eager to explore is applying Leveson's STPA (Systems-Theoretic Process Analysis) to language-model training and deployment. STPA treats a system as a control structure, enumerates unsafe control actions, and traces them to process-model mismatches and missing feedback — it produces a structured hazard taxonomy rather than a list of empirical test cases. Modern AI red-teaming is enormously powerful empirically but largely ad hoc in its taxonomy; STPA offers a method that complements empirical red-teaming by forcing the analyst to name the control loops a model participates in and reason about what the absence of a particular feedback signal would cause. I think this is especially relevant to ML Systems &amp; Performance questions — deployment reliability, evaluation coverage, failure-mode cataloguing — and it's a method most ML researchers have not been exposed to. I have drafted a four-month research proposal for this work — anchored on four canonical Leveson texts (<em>Engineering a Safer World</em>, the <em>STPA Handbook</em>, the <em>CAST Handbook</em>, and her 2023 <em>An Introduction to System Safety Engineering</em>) and organized around a biweekly internal seminar that I would lead, culminating in a written report and a scoped STPA analysis of one Claude deployment case. Beyond STPA specifically, I'm interested in any line of work that treats evaluation as a structured engineering practice rather than a benchmark exercise.</p>
-</div>
-<div class="wordcount">~245 words · 1 paragraph · slightly over "1 paragraph" envelope — Sam may want to tighten</div>
+<div class="caveat"><strong>Honest positioning.</strong> Sam Kirk has forty years of test and diagnostic engineering (TRW/Vidar, IBM/ROLM, Sun Microsystems, Teradyne, Cadence, Talis Biomedical, SAK Consulting), which is the <em>practitioner</em> lineage that system safety engineering formalizes. He has <em>not</em> previously practiced STAMP/STPA/CAST methods themselves. This proposal is scoped to what a full-time Fellow with his background can credibly produce in 4 months: a rigorous literature engagement, a structured first-pass application to one concrete Claude deployment context, and a seminar-led knowledge transfer inside Anthropic.</div>
 
 <hr>
 
-<h2 id="e3">Essay 3 — Relevant background (optional)</h2>
-<div class="prompt">Form prompt: "(Optional) Please share any relevant background and provide links where possible (e.g., research experience, coursework, self-directed study, past roles, relevant projects). 1 paragraph"</div>
+<h2 id="corpus">2. The Four Canonical Leveson Works</h2>
 
-<div class="draft">
-<p>My technical foundation spans four decades of diagnostic and test engineering: standalone and online diagnostics (TRW/Vidar, IBM/ROLM, Sun Microsystems); ATE timing calibration at picosecond accuracy (Teradyne, LTX-Credence); post-silicon verification of 10 Gbps ethernet on SPARC IV (Sun); manufacturing test at scale (ESS Technology, Media Vision); and full instrument-level test infrastructure at Talis Biomedical. Since 2022 I have been shifting the same craft toward AI-adjacent work: a LoRA-fine-tuned Llama 3.2 3B for the hardware-diagnostics domain, end-to-end — dataset curation, Parameter-Efficient Fine-Tuning (PEFT) training, evaluation, serving (<a href="https://samkirk.com/computer-diagnostics">samkirk.com/computer-diagnostics</a>); a retrieval-augmented chatbot on Google Vertex AI with source citations (<a href="https://samkirk.com/hire-me">samkirk.com/hire-me</a>); a Rust/Axum backend for an interactive neurosymbolic-AI demo of Pedro Domingos' Tensor Logic; and daily AI-assisted development with Claude Code and Cursor. On my shelf: Leveson's <em>SAFEWARE</em>, which I recognized as a seminal text at the time of its publication and have now pulled back off the shelf as the bridge between the engineering tradition I know and the AI safety research I want to contribute to. A research-plan write-up on studying STAMP/STPA and applying the method to current AI safety problems is in progress for publication on samkirk.com.</p>
-</div>
-<div class="wordcount">~180 words · 1 paragraph · includes project links as the form requests</div>
+<p>The project anchors on four Leveson works that together cover the theoretical framework, the forward hazard-analysis method, the backward accident-analysis method, and the current integrated textbook. Three are freely available; the fourth is commercial and held as a reference text.</p>
+
+<table>
+  <colgroup>
+    <col style="width: 4%">
+    <col style="width: 30%">
+    <col style="width: 28%">
+    <col style="width: 38%">
+  </colgroup>
+  <tr><th>#</th><th>Work</th><th>Role in project</th><th>Access status</th></tr>
+  <tr>
+    <td>1</td>
+    <td><strong>An Introduction to System Safety Engineering</strong> (Leveson, MIT Press, 2023)</td>
+    <td>Current integrated textbook — the update to <em>SAFEWARE</em> (1995). Primary reference for terminology and current framing.</td>
+    <td>Commercial. Hardcover <strong>$70 ordered 2026-04-25</strong>, ETA Mon 4/27. No DRM-free PDF offered (MIT Press ebook is browser-locked via <code>ublish.com</code>; Kindle is DRM-protected). Plan: self-scan to <code>Leveson_Literature/Introduction_to_System_Safety_Engineering_Leveson_2023.pdf</code> — workflow detailed below.</td>
+  </tr>
+  <tr>
+    <td>2</td>
+    <td><strong>Engineering a Safer World: Systems Thinking Applied to Safety</strong> (Leveson, MIT Press, 2012)</td>
+    <td>Foundational STAMP treatment. Introduces the control-theoretic model of safety and the argument against component-reliability framings.</td>
+    <td>Free PDF downloaded to <code>Leveson_Literature/Engineering_a_Safer_World_Leveson_2012.pdf</code>.</td>
+  </tr>
+  <tr>
+    <td>3</td>
+    <td><strong>STPA Handbook</strong> (Leveson &amp; Thomas, MIT Partnership for Systems Approaches to Safety and Security, 2018)</td>
+    <td>The operational "how to" for systems-theoretic process analysis — the forward hazard-analysis method to be applied to Claude.</td>
+    <td>Free PDF downloaded to <code>Leveson_Literature/STPA_Handbook_Leveson_Thomas_2018.pdf</code> (188 pp).</td>
+  </tr>
+  <tr>
+    <td>4</td>
+    <td><strong>CAST Handbook: How to Learn More from Incidents and Accidents</strong> (Leveson, 2019)</td>
+    <td>The operational "how to" for backward accident analysis. Used in the project for retrospective reasoning about published AI incidents (Bing Sydney, GPT jailbreaks, training-data memorization).</td>
+    <td>Free PDF downloaded to <code>Leveson_Literature/CAST_Handbook_Leveson_2019.pdf</code>.</td>
+  </tr>
+</table>
+
+<div class="banner" style="background:#dafbe1; border-left-color:#1a7f37;"><strong>Corpus verified.</strong> The four works above match the canonical corpus Leveson presented in her 2025 AVIATE/UIUC talk <em>"A Powerful New Approach to Safety Engineering"</em> (uploaded 2025-09-08, transcript pulled and cross-checked).</div>
+
+<h3 id="books-relate">How the 2012 and 2023 books relate (and why both are in the corpus)</h3>
+
+<p>The two MIT Press monographs in the corpus can look redundant at first glance — same author, overlapping vocabulary — but Leveson is explicit in the 2012 preface that they are <em>complementary, not substitutes</em>. <em>Engineering a Safer World</em> (2012) is the manifesto-and-method book that introduces STAMP, STPA, and CAST as a connected framework. <em>An Introduction to System Safety Engineering</em> (2023) is the literal update to <em>SAFEWARE</em> (1995) — a comprehensive textbook covering the whole System Safety field as it stands now, with STAMP/STPA/CAST as one major part among history, legal/ethical context, and policy.</p>
+
+<table>
+  <colgroup>
+    <col style="width: 20%">
+    <col style="width: 40%">
+    <col style="width: 40%">
+  </colgroup>
+  <tr>
+    <th>Dimension</th>
+    <th><em>Engineering a Safer World</em> (2012)</th>
+    <th><em>Introduction to System Safety Engineering</em> (2023)</th>
+  </tr>
+  <tr>
+    <td><strong>Lineage</strong></td>
+    <td>Successor to <em>SAFEWARE</em> (1995) <em>in spirit only</em> — a focused argument-and-method book introducing a new framework.</td>
+    <td>The literal update to <em>SAFEWARE</em> — a comprehensive field textbook.</td>
+  </tr>
+  <tr>
+    <td><strong>Stated audience</strong></td>
+    <td>"The sophisticated practitioner rather than the academic researcher or the general public" — already steeped in safety engineering.</td>
+    <td>Engineering students and practitioners learning the whole field — self-contained.</td>
+  </tr>
+  <tr>
+    <td><strong>What it assumes</strong></td>
+    <td>Per Leveson's preface: "information about basic concepts in safety engineering that appear in <em>SAFEWARE</em> are not, in general, repeated" — assumes SAFEWARE-level background.</td>
+    <td>Self-contained — includes the basics SAFEWARE covered, brought up to date.</td>
+  </tr>
+  <tr>
+    <td><strong>Core argument</strong></td>
+    <td>"Here is a NEW model for accident causation: STAMP. And a new hazard analysis technique: STPA." Argues the case against component-reliability framings.</td>
+    <td>"Here is the integrated state of System Safety as of 2023" — STAMP/STPA <em>plus</em> history, law, ethics, policy.</td>
+  </tr>
+  <tr>
+    <td><strong>Length</strong></td>
+    <td>~450 pages, focused.</td>
+    <td>696 pages, comprehensive.</td>
+  </tr>
+  <tr>
+    <td><strong>STAMP / STPA / CAST treatment</strong></td>
+    <td>First full presentation of all three: STAMP (Ch 4), STPA (Ch 8), CAST (Ch 11). The original source for the method.</td>
+    <td>Updated treatment, post-STPA-Handbook (2018) and post-CAST-Handbook (2019) — integrates the operational refinements from those handbooks.</td>
+  </tr>
+  <tr>
+    <td><strong>Distinctive content</strong></td>
+    <td>Friendly Fire worked example (Ch 5, ~50 pp), SUBSAFE case study (Ch 14), Vioxx pharmaceutical case (Ch 8.7), satellite-loss and Walkerton appendices.</td>
+    <td>Legal &amp; ethical frameworks, policy implications, historical context, broader engineering coverage.</td>
+  </tr>
+</table>
+
+<div class="claim"><strong>Why both are in the project corpus.</strong> The 2012 book is the <em>foundational source</em> for the STAMP method Sam will adapt to Claude — the place where STAMP, STPA, and CAST are first argued for and laid out, and the place to go for the full Friendly Fire and SUBSAFE worked examples. The 2023 textbook is the <em>current vocabulary and broader context</em>, including the legal, ethical, and policy framings that matter when adapting the framework to AI deployment. Reading them in order 2012 → 2023 (which Phase 1 does) gives Sam foundation argument first, then current integrated reference.</div>
+
+<h3 id="acquisition">Acquisition workflow for the 2023 textbook</h3>
+
+<p>The 2023 textbook is the only work in the canonical corpus without a free PDF channel. The acquisition path produces <code>Leveson_Literature/Introduction_to_System_Safety_Engineering_Leveson_2023.pdf</code> via destructive scan — full step-by-step procedure (acquire → spine cut → scan → 3-ring binder → save PDF) is consolidated in <a href="#scan-workflow">Section 12 — Scan &amp; OCR Workflow for Hardcopy References</a>, which also covers the parallel scan of <em>SAFEWARE</em> (1995, see <a href="#references">References</a>).</p>
 
 <hr>
 
-<h2 id="e4">Essay 4 — % likelihood of accepting FT offer</h2>
-<div class="prompt">Form prompt: "How likely are you to accept a full-time offer at Anthropic if you receive one after the Fellows program? Please include a brief explanation, and if possible, a % estimate. You don't have to be confident in your estimate." (required)</div>
+<h2 id="hypothesis">3. Research Hypothesis &amp; Questions</h2>
 
-<div class="draft">
-<p><strong>100%.</strong></p>
-<p>Anthropic is where I want to be. The combination of frontier research, public safety mandate, and mentor-rich research culture is the exact environment I've been working toward for the past three years of independent AI practice. Practical considerations also align: the full-time rate meets my consulting floor, Berkeley is a manageable hybrid commute from Fremont, and my current independent work is at a stage where converting to a full-time role at Anthropic would be a net gain, not a sacrifice.</p>
-</div>
-<div class="wordcount">~90 words</div>
+<p><strong>Primary hypothesis:</strong> STPA, applied to a deployed Claude model plus its deployment surround, produces a structured hazard taxonomy that (a) identifies hazards the current empirical red-teaming pipeline has not explicitly catalogued, and (b) gives Anthropic safety researchers a principled vocabulary for reasoning about coverage gaps in existing evaluations.</p>
 
-<hr>
-
-<h2 id="e5">Essay 5 — % likelihood of continuing in AI safety/security</h2>
-<div class="prompt">Form prompt: "How likely are you to be interested in continuing to work on AI safety/security after the Fellows program? Please include a brief explanation, and if possible, a % estimate. You don't have to be confident in your estimate." (required)</div>
-
-<div class="draft">
-<p><strong>100%.</strong></p>
-<p>Testing engineering is not a far stretch from AI safety and security — testing is the craft of finding failure modes, edge cases, and reliability gaps, which is the core of red-teaming, evaluations, and safety research. I've practiced that craft for forty years across hardware, firmware, and cloud software. To be clear, I have not practiced Leveson's STAMP/STPA methodology itself — I recognized <em>SAFEWARE</em> as important work when it came out, kept it as a reference, and am pulling it back off the shelf now as the structured framework that can formalize what I've done informally. As a concrete first step, I am drafting a public research-plan write-up — to be published on samkirk.com — that lays out how I intend to study STAMP/STPA and apply the method to current AI safety problems. Bringing the two together — the practical test-engineering craft I have and the methodological scaffolding Leveson built — is what I want to pursue beyond the Fellowship, whether at Anthropic, at an adjacent safety-focused organization, or through my own applied work. This is where the rest of my career belongs.</p>
-</div>
-<div class="wordcount">~195 words</div>
+<p><strong>Research questions:</strong></p>
+<ol>
+  <li><strong>Control-structure translation.</strong> What is the right STPA control-structure diagram for a deployed LLM? Where are the natural control boundaries (model vs. system prompt vs. tool use vs. human oversight vs. training pipeline)?</li>
+  <li><strong>Unsafe control actions for LLMs.</strong> How does the STPA vocabulary of "control action provided when it should not be," "not provided when it should be," "provided too early/too late," and "stopped too soon/applied too long" map onto LLM behavior (tool invocation, content refusal/compliance, tool parameter generation)?</li>
+  <li><strong>Process-model mismatch.</strong> What role does the model's internal representation of the user, the conversation, and the world play as a "process model" in STPA terms — and where can mismatch between that and reality produce unsafe control actions?</li>
+  <li><strong>Coverage comparison.</strong> How does an STPA-derived hazard list compare to Anthropic's empirical red-teaming taxonomy (from published model cards, RSP documents, and red-teaming posts)? Where do the two agree, and where does each surface hazards the other misses?</li>
+  <li><strong>CAST retrospective.</strong> Can CAST reconstruct a published AI incident (e.g., Bing Sydney 2023, a documented prompt-injection case) as a system-safety accident and extract lessons the empirical post-mortem did not emphasize?</li>
+</ol>
 
 <hr>
 
-<h2 id="sa1">Short answer — Other commitments during program period</h2>
-<div class="prompt">Form prompt: "Do you have any other commitments or obligations during the Fellows program period? Please include a brief explanation of any other commitments (e.g., vacations, work, school, or other projects) and, if possible, hours per week you would spend on ongoing obligations versus on the program. Please note that this program is full-time (40 hours per week)." (required)</div>
+<h2 id="methodology">4. Methodology — 4 Phases over 16 Weeks</h2>
 
-<div class="draft">
-<p>I run a solo consultancy, SAK Consulting, focused on AI-augmented software engineering. Client work is currently episodic and explicitly pauseable — I would suspend new engagements for the duration of the Fellows program and resume or not based on the direction the research takes afterward. I have no other concurrent work, academic, or competing-project commitments, and no planned vacation during the July–November 2026 window.</p>
-</div>
-<div class="wordcount">~65 words</div>
+<p>The methodology is organized along two axes: <strong>phases</strong> (which control timing) and <strong>reading tiers</strong> (which control content priority — see <a href="#reading-plan">Section 11</a>). The phase chart below maps tiers into phases; the weekly lesson plan that follows breaks each phase down into a week-by-week schedule of reading, working artifact, and seminar.</p>
+
+<h3 id="phase-table">Phase chart (with tier mapping)</h3>
+
+<table>
+  <colgroup>
+    <col style="width: 14%">
+    <col style="width: 8%">
+    <col style="width: 36%">
+    <col style="width: 42%">
+  </colgroup>
+  <tr><th>Phase</th><th>Weeks</th><th>Reading focus (tier &amp; pages)</th><th>Working artifacts &amp; seminar</th></tr>
+  <tr>
+    <td><strong>1. Foundations</strong></td><td>1–3</td>
+    <td><strong>Tier 0 — heavy:</strong> <em>Engineering a Safer World</em> (full, ~463 pp) + STPA Handbook (full, ~188 pp) + CAST Handbook (full, ~80 pp) + 2023 textbook (selected chapters, ~150 pp of 696). <strong>~880 pp total.</strong></td>
+    <td>Annotated reading notes; working glossary mapping Leveson vocabulary → AI safety vocabulary. Weekly working seminars S1–S3.</td>
+  </tr>
+  <tr>
+    <td><strong>2. Mapping</strong></td><td>4–7</td>
+    <td><strong>Tier 1 — primary:</strong> Anthropic Core Views, RSP v3.0, Claude system card, Constitutional AI paper, one Transformer Circuits post, one red-teaming post (~175 pp total). Plus ongoing 2023 textbook lookups.</td>
+    <td>First-draft Claude control-structure diagram; candidate unsafe control actions; hazard-mapping matrix v1 (STPA ↔ Anthropic empirical taxonomy). Weekly working seminars S4–S7.</td>
+  </tr>
+  <tr>
+    <td><strong>3. Application</strong></td><td>8–13</td>
+    <td><strong>Tier 2 — primary:</strong> Concrete Problems (~30 pp), Hendrycks Catastrophic Risks (~40 pp), NIST AI RMF (~48 pp), Ngo Alignment Problem (~30 pp). <strong>Plus supplementary:</strong> SAFEWARE Ch 1, 2, 4, 10 (~120 pp) for foundational concept lookups. <strong>~270 pp total.</strong></td>
+    <td>STPA analysis on one scoped Claude deployment case (mentor-chosen — tool-use loop, agentic coding, or long-horizon planning); CAST retrospective on one published AI incident; final hazard-mapping matrix. Weekly working seminars S8–S13.</td>
+  </tr>
+  <tr>
+    <td><strong>4. Synthesis</strong></td><td>14–16</td>
+    <td><strong>Reference lookups only.</strong> No new tier reading; spot-checks against the 2023 textbook and SAFEWARE for specific claims in the report.</td>
+    <td>Final research report (30–50 pp); summary slide deck; seminar-series archive; minimum-viable STPA-guided eval prototype (Deliverable #7). Weekly working seminars S14–S16.</td>
+  </tr>
+</table>
+
+<div class="banner"><strong>Reading-load distribution.</strong> Phase 1 is intentionally front-loaded (~880 pp in 3 weeks ≈ ~290 pp/week of full-time reading) — this is tight but doable for a focused reader with prior practitioner exposure. Phases 2–3 taper to ~30–60 pp/week, leaving most of the time for hands-on STPA work. Phase 4 is reference-only — the writing and prototype build dominate.</div>
+
+<h3 id="lesson-plan">Weekly lesson plan</h3>
+
+<p>The lesson plan integrates reading, working artifact, and seminar for each of the 16 weeks. Reading totals shown reflect new material; ongoing reference lookups (2023 textbook, model card, SAFEWARE) are not separately counted.</p>
+
+<table>
+  <colgroup>
+    <col style="width: 5%">
+    <col style="width: 7%">
+    <col style="width: 36%">
+    <col style="width: 32%">
+    <col style="width: 20%">
+  </colgroup>
+  <tr><th>Wk</th><th>Phase</th><th>Reading (pp)</th><th>Working artifact</th><th>Seminar</th></tr>
+  <tr>
+    <td>1</td><td>1</td>
+    <td>EaSW Ch 1–4 (~80 pp). Start working glossary.</td>
+    <td>Kickoff slides; orientation packet v1 (reading roadmap, glossary stub, ship list).</td>
+    <td><strong>S1 — odd, present:</strong> Course/seminar kickoff.</td>
+  </tr>
+  <tr>
+    <td>2</td><td>1</td>
+    <td>EaSW Ch 5–8 + STPA Hb Pt 1 (~150 pp).</td>
+    <td>Critique notes for orientation packet; <em>v2 posted between W2 and W3.</em></td>
+    <td><strong>S2 — even, review:</strong> Discuss orientation packet.</td>
+  </tr>
+  <tr>
+    <td>3</td><td>1</td>
+    <td>EaSW Ch 9–14 + STPA Hb Pt 2 + CAST Hb + 2023 textbook selected chapters (~430 pp). <strong>Heaviest week.</strong></td>
+    <td>STAMP foundations slides; small non-ML worked example v1.</td>
+    <td><strong>S3 — odd, present:</strong> STAMP foundations + worked example.</td>
+  </tr>
+  <tr>
+    <td>4</td><td>2</td>
+    <td>Anthropic Core Views + RSP v3.0 (~50 pp).</td>
+    <td>Critique notes; <em>v2 of STAMP example posted between W4 and W5.</em></td>
+    <td><strong>S4 — even, review:</strong> Discuss STAMP worked example.</td>
+  </tr>
+  <tr>
+    <td>5</td><td>2</td>
+    <td>Claude Sonnet 4.6 system card (~50 pp).</td>
+    <td>STPA mechanics slides; STPA worked example v1 on a non-ML system.</td>
+    <td><strong>S5 — odd, present:</strong> STPA mechanics + worked example.</td>
+  </tr>
+  <tr>
+    <td>6</td><td>2</td>
+    <td>Constitutional AI paper (~25 pp).</td>
+    <td>Critique notes; <em>v2 of STPA example posted between W6 and W7.</em></td>
+    <td><strong>S6 — even, review:</strong> Discuss STPA worked example.</td>
+  </tr>
+  <tr>
+    <td>7</td><td>2</td>
+    <td>One Transformer Circuits post + one red-teaming post (~50 pp).</td>
+    <td>Slides; first-draft Claude control structure v1.</td>
+    <td><strong>S7 — odd, present:</strong> Claude control structure (first draft).</td>
+  </tr>
+  <tr>
+    <td>8</td><td>3</td>
+    <td>Re-read 2023 textbook chapters relevant to the chosen Phase 3 scope (~50 pp).</td>
+    <td>Phase 3 scope memo (mentor-signed); critique notes; <em>v2 of control structure posted between W8 and W9.</em></td>
+    <td><strong>S8 — even, review:</strong> Discuss control structure; mentor-gated Phase 3 scope lock.</td>
+  </tr>
+  <tr>
+    <td>9</td><td>3</td>
+    <td>Concrete Problems in AI Safety (~30 pp).</td>
+    <td>Slides on UCA vocabulary; UCA list v1 for the chosen case.</td>
+    <td><strong>S9 — odd, present:</strong> STPA Step 1 (UCAs) on the case.</td>
+  </tr>
+  <tr>
+    <td>10</td><td>3</td>
+    <td>Hendrycks Catastrophic AI Risks (~40 pp).</td>
+    <td>Critique notes; <em>v2 of UCA list posted between W10 and W11.</em></td>
+    <td><strong>S10 — even, review:</strong> Discuss UCA list.</td>
+  </tr>
+  <tr>
+    <td>11</td><td>3</td>
+    <td>NIST AI RMF (~48 pp) + SAFEWARE Ch 1, 2 (~40 pp).</td>
+    <td>Slides; causal scenarios + process-model claims v1.</td>
+    <td><strong>S11 — odd, present:</strong> STPA Step 2 + process-model mismatch.</td>
+  </tr>
+  <tr>
+    <td>12</td><td>3</td>
+    <td>Ngo Alignment Problem (~30 pp) + SAFEWARE Ch 4, 10 (~80 pp).</td>
+    <td>Critique notes; <em>v2 of scenarios posted between W12 and W13.</em></td>
+    <td><strong>S12 — even, review:</strong> Discuss STPA Step 2 / process-model claims.</td>
+  </tr>
+  <tr>
+    <td>13</td><td>3</td>
+    <td>Reference lookups only.</td>
+    <td>Slides; CAST writeup v1 of chosen incident.</td>
+    <td><strong>S13 — odd, present:</strong> CAST retrospective on chosen incident.</td>
+  </tr>
+  <tr>
+    <td>14</td><td>4</td>
+    <td>Reference lookups only.</td>
+    <td>Critique notes; <em>v2 of CAST writeup posted between W14 and W15.</em></td>
+    <td><strong>S14 — even, review:</strong> Discuss CAST writeup.</td>
+  </tr>
+  <tr>
+    <td>15</td><td>4</td>
+    <td>Reference lookups only.</td>
+    <td>Slides; final report draft + STPA-guided eval prototype MVP v1.</td>
+    <td><strong>S15 — odd, present:</strong> Final report draft + prototype demo.</td>
+  </tr>
+  <tr>
+    <td>16</td><td>4</td>
+    <td>Reference lookups only.</td>
+    <td>Critique notes; final v2 of report and prototype; <strong>all deliverables shipped</strong>; follow-on backlog written.</td>
+    <td><strong>S16 — even, review:</strong> Discuss; ship; wrap.</td>
+  </tr>
+</table>
+
+<div class="banner" style="background:#dafbe1; border-left-color:#1a7f37;"><strong>Total new-reading load:</strong> ~1,200 pages across 16 weeks, with ~660 pp concentrated in weeks 1–3 (Phase 1) and the remaining ~540 pp distributed across weeks 4–12 at 30–90 pp/week. Weeks 13–16 are reference-only — synthesis, writing, and prototype build take the time.</div>
+
+<div class="caveat"><strong>Slack &amp; mentor discretion.</strong> The week-by-week plan is a target, not a contract. The Phase 3 scope memo (S8, week 8) is the natural place where the mentor and Sam can adjust the lesson plan — drop a Tier-2 paper if Phase 3 is running long, reshape a working-session topic if a more pressing issue surfaces, extend a reading week if Tier 1 needs more depth. Because the seminar runs every week, slack absorption happens <em>inside</em> sessions: a working block can pivot from the planned topic to an in-flight blocker. The shipping commitment (every session ends with a named artifact) stays — the scope of that artifact is what flexes.</div>
 
 <hr>
 
-<h2 id="sa2">Short answer — How did you hear about the Fellows program?</h2>
-<div class="prompt">Form prompt: "(Optional) How did you hear about the Fellows program?"</div>
+<h2 id="seminar">5. Seminar Design — Weekly Working Sessions, Sam-Led</h2>
 
-<div class="draft">
-<p>Direct email invitation from Anthropic on April 11, 2026.</p>
-</div>
-<p style="font-size:9pt; color:#57606a;"><em>Note: Sid Doshi is not mentioned — he would be a weak reference, and the separate heads-up text to Sid has already been sent outside the form.</em></p>
+<p>Anthropic ships at startup velocity, and this seminar matches that cadence rather than the contemplative graduate-seminar shape Leveson's MIT course uses. The seminar exists to <strong>drive shipping</strong>: STAMP/STPA/CAST gets applied to real Claude deployments week by week, and every session produces a concrete artifact that feeds the deliverables in <a href="#deliverables">Section 6</a>. Sam leads; the assigned Anthropic mentor co-pilots when the topic intersects their work; attendees come with blockers and contribute live.</p>
+
+<div class="banner"><strong>Pedagogical, not production.</strong> The artifacts shipped by the seminar are deliberately simple, worked teaching examples — not Anthropic's production STPA analysis, not its production hazard taxonomy, not its production eval suite. They exist so attendees can take the <em>method</em> and apply it to their own real-world, possibly confidential work after the Fellowship ends. Treat the seminar's output as <em>basis material</em> for downstream production work, not as a substitute for it.</div>
+
+<h3 id="session-structure">Weekly session structure (60 min) — the rule of three over a biweekly cycle</h3>
+
+<p>The classical pedagogical pattern — <strong>"say what you're going to say, say it, then summarize what you said"</strong> — plays out across each <strong>biweekly cycle</strong>, not within a single session. The cycle pairs an odd week (present) with the following even week (review):</p>
+
+<ul>
+  <li><strong>Odd weeks (W1, W3, W5, …, W15) — "Say what you'll do" + "Do it":</strong> Sam delivers slides on the week's concept, then states the deliverable (v1 of the worked example). The example is deliberately small — concept-first, not production-grade.</li>
+  <li><strong>Even weeks (W2, W4, W6, …, W16) — "Summarize what you did":</strong> Sam reviews the just-posted v1 deliverable; the group discusses it and proposes improvements. Sam revises to v2 in the days that follow and posts both v1 and v2 to the seminar archive — see <a href="#seminar-lifecycle">artifact lifecycle</a>.</li>
+  <li><strong>Between cycles:</strong> attendees read the assigned material in preparation for the next odd-week presentation. Reading is recommended for attendees, mandatory for Sam (he's preparing the slides).</li>
+</ul>
+
+<p>Sam's weekly prep produces slides and deliverable as a single piece of work — the slides walk attendees through what the deliverable shows.</p>
+
+<h4>Odd-week session (60 min) — Present concepts &amp; state the deliverable</h4>
+<ul>
+  <li><strong>5 min — Status.</strong> What was posted to the seminar archive since last session (v2 of the previous cycle's deliverable). What's on the table today.</li>
+  <li><strong>20 min — Theory / concept.</strong> The Leveson concept under discussion this cycle (e.g., "unsafe control actions in a tool-use loop"), via slides.</li>
+  <li><strong>25 min — State the deliverable.</strong> Sam presents v1 of the worked example: a simple, clear, useful demonstration of the concept applied to a Claude scenario. Attendees can pair-program here if it's a build session (see <a href="#seminar-ownership">attendee mechanisms above</a>).</li>
+  <li><strong>10 min — Q&amp;A and reading guide.</strong> Quick clarifying questions; reading assignment for next cycle posted in the shared notes.</li>
+</ul>
+
+<h4>Even-week session (60 min) — Review &amp; discuss the posted deliverable</h4>
+<ul>
+  <li><strong>5 min — Recap.</strong> Quick recap of last week's posted v1 deliverable for anyone who missed the odd-week session.</li>
+  <li><strong>45 min — Critique &amp; discussion.</strong> Attendees appraise v1 in detail — surface gaps, propose alternatives, push back where it doesn't land. Mentor weighs in. Sam takes notes; no defending in the moment. Possible improvements get logged in the shared notes.</li>
+  <li><strong>10 min — Decisions for v2.</strong> Sam confirms which of the proposed improvements land in v2; trade-offs are Sam's call (with mentor input on anything contested). Cycle wraps.</li>
+</ul>
+
+<div class="banner"><strong>Demonstrate the concept in the simplest useful fashion.</strong> The deliverable each cycle is a worked example, not a polished production artifact. The bar is "this teaches the concept clearly enough that an Anthropic researcher can take it and apply the method to their own real-world work." Simpler is better. The two-pass <a href="#seminar-lifecycle">artifact lifecycle</a> (v1 → critique → v2) is what raises quality, not over-engineering on the first pass.</div>
+
+<h3 id="session-plan">Session plan (8 biweekly cycles, 16 sessions)</h3>
+
+<p>Each cycle pairs an odd-week presentation (concept slides + v1 of the worked example) with the following even-week review (critique + commitments for v2). v2 is posted to the archive between the even-week session and the next odd-week presentation.</p>
+
+<table>
+  <colgroup>
+    <col style="width: 6%">
+    <col style="width: 8%">
+    <col style="width: 43%">
+    <col style="width: 43%">
+  </colgroup>
+  <tr><th>Cycle</th><th>Wks</th><th>Odd-week session — Present concepts + v1 deliverable</th><th>Even-week session — Review v1 + commit to v2</th></tr>
+  <tr>
+    <td>1</td><td>1+2</td>
+    <td><strong>S1 (W1):</strong> Course/seminar kickoff. Slides about the seminar itself — goals, the rule of three, the artifact lifecycle. Deliverable v1: orientation packet (reading roadmap, glossary stub, 16-week ship list).</td>
+    <td><strong>S2 (W2):</strong> Review the orientation packet. Discuss expectations, schedule, scope. Commit v2 of the orientation packet.</td>
+  </tr>
+  <tr>
+    <td>2</td><td>3+4</td>
+    <td><strong>S3 (W3):</strong> STAMP foundations — why component reliability ≠ system safety; control structures, process models. Deliverable v1: a small non-ML worked example (e.g., a household thermostat) walked through STAMP vocabulary.</td>
+    <td><strong>S4 (W4):</strong> Review the STAMP foundations example. Critique on clarity and faithfulness to the method. Commit v2.</td>
+  </tr>
+  <tr>
+    <td>3</td><td>5+6</td>
+    <td><strong>S5 (W5):</strong> STPA mechanics — the four-step process. Deliverable v1: STPA worked through on a simple non-ML system.</td>
+    <td><strong>S6 (W6):</strong> Review the STPA worked example. Critique. Commit v2.</td>
+  </tr>
+  <tr>
+    <td>4</td><td>7+8</td>
+    <td><strong>S7 (W7):</strong> Claude control structure — first draft. Slides on the deployment surround (model + prompts + tools + retrieval + human oversight + training pipeline). Deliverable v1: first-draft Claude control-structure diagram.</td>
+    <td><strong>S8 (W8):</strong> Review v1 of the control structure. Mentor-gated <strong>Phase 3 scope lock</strong> — pick the one Claude deployment case for deep STPA application. Commit v2 of the control structure.</td>
+  </tr>
+  <tr>
+    <td>5</td><td>9+10</td>
+    <td><strong>S9 (W9):</strong> STPA Step 1 (UCAs) on the chosen Phase 3 case. Slides on the UCA vocabulary; deliverable v1: UCA list for the case.</td>
+    <td><strong>S10 (W10):</strong> Review v1 of the UCA list. Critique. Commit v2.</td>
+  </tr>
+  <tr>
+    <td>6</td><td>11+12</td>
+    <td><strong>S11 (W11):</strong> STPA Step 2 (causal scenarios) and process-model mismatch. Deliverable v1: causal scenario set + process-model claims for the case.</td>
+    <td><strong>S12 (W12):</strong> Review v1 of the scenarios. Critique. Commit v2.</td>
+  </tr>
+  <tr>
+    <td>7</td><td>13+14</td>
+    <td><strong>S13 (W13):</strong> CAST retrospective on a chosen published AI incident. Slides on the CAST method; deliverable v1: CAST writeup of the chosen incident.</td>
+    <td><strong>S14 (W14):</strong> Review v1 of the CAST writeup. Critique. Commit v2.</td>
+  </tr>
+  <tr>
+    <td>8</td><td>15+16</td>
+    <td><strong>S15 (W15):</strong> Final report draft + STPA-guided eval prototype demo. Deliverable v1: report draft complete; prototype MVP runs end-to-end.</td>
+    <td><strong>S16 (W16):</strong> Review v1 of report and prototype. Critique. Commit v2; ship final deliverables; follow-on research handoff.</td>
+  </tr>
+</table>
+
+<h3 id="seminar-ownership">Authority &amp; ownership</h3>
+
+<p>The seminar is collaborative in spirit but not a group project. To avoid ambiguity:</p>
+<table>
+  <colgroup>
+    <col style="width: 18%">
+    <col style="width: 82%">
+  </colgroup>
+  <tr><th>Role</th><th>What they own / decide</th></tr>
+  <tr>
+    <td><strong>Sam</strong></td>
+    <td>Owns all seven deliverables (see <a href="#deliverables-list">Section 6</a>). Drives the weekly seminar. Owns the artifact each session ships and the work between sessions. The default actor for everything not explicitly contributed by an attendee.</td>
+  </tr>
+  <tr>
+    <td><strong>Mentor</strong></td>
+    <td>Gates the Phase 3 case-study scope (target lock at S8). Signs off on the final report before any external publication. Authority to require revisions to deliverables. Decides what is internal-only vs. external-facing. Sanctions any attendee working-group structure (see below).</td>
+  </tr>
+  <tr>
+    <td><strong>Attendees</strong></td>
+    <td>No formal authority over Sam's deliverables. Voice in working sessions: bring critique, examples, pushback. Three optional contribution mechanisms below — Sam picks per deliverable based on what the artifact needs.</td>
+  </tr>
+</table>
+
+<h4>Three attendee-contribution mechanisms (Sam picks per deliverable)</h4>
+
+<table>
+  <colgroup>
+    <col style="width: 22%">
+    <col style="width: 50%">
+    <col style="width: 28%">
+  </colgroup>
+  <tr><th>Mechanism</th><th>How it works</th><th>Best for</th></tr>
+  <tr>
+    <td><strong>Volunteer pull</strong></td>
+    <td>Sam asks during the working block: "I need someone to try this STPA step on the agentic-coding case before next week — anyone interested?" Whoever says yes is committed for that artifact; whoever doesn't is off the hook. No push, no implied obligation.</td>
+    <td>Small, time-bounded contributions. Examples Sam doesn't have access to. Quick reviews of an in-flight draft.</td>
+  </tr>
+  <tr>
+    <td><strong>Working-group opt-in</strong></td>
+    <td>3–5 attendees self-select into a higher-commitment subset for the duration of one phase or one deliverable. Mutual commitments are explicit. Mentor sanctions the structure so it has real weight inside Anthropic. The broader audience continues to attend at the lower commitment level.</td>
+    <td>Deliverables that benefit from sustained multi-person contribution: hazard-mapping matrix; STPA case study; prototype design.</td>
+  </tr>
+  <tr>
+    <td><strong>Pair-programming during the session</strong></td>
+    <td>Working blocks include real-time pair work: Sam and an attendee at one screen, contributions land in the artifact during the session itself. Credit goes to the contributor in the section their work shaped. No homework — the work happens in the room.</td>
+    <td>Build artifacts: the prototype (Deliverable #7), control-structure diagram refinements, eval-prompt drafting.</td>
+  </tr>
+</table>
+
+<h3 id="seminar-lifecycle">Artifact lifecycle: ship → appraise → revise → archive</h3>
+
+<p>Each cycle <em>is</em> one full lifecycle pass for the cycle's deliverable. The two-pass cycle (v1 → critique → v2) is structurally identical to the biweekly seminar cycle (odd-week present → even-week review):</p>
+
+<table>
+  <colgroup>
+    <col style="width: 24%">
+    <col style="width: 76%">
+  </colgroup>
+  <tr><th>Step</th><th>What happens</th></tr>
+  <tr>
+    <td><strong>Odd week — Ship v1</strong></td>
+    <td>Sam presents concept slides and states v1 of the deliverable. Brief walkthrough; the artifact is on the wall, not just in slides. v1 is posted to the seminar archive immediately after the session.</td>
+  </tr>
+  <tr>
+    <td><strong>Even week — Appraise</strong></td>
+    <td>Critique session. Attendees examine v1 in detail, surface gaps, propose alternatives, push back where it doesn't land. Mentor weighs in. Sam takes notes; no defending in the moment.</td>
+  </tr>
+  <tr>
+    <td><strong>Between cycles — Revise</strong></td>
+    <td>Sam produces v2 incorporating the appraisal in the days between the even-week session and the next odd-week presentation. Scope of revision is constrained by the next cycle's prep — not every comment lands in v2; trade-offs are Sam's call (with mentor input on anything contested).</td>
+  </tr>
+  <tr>
+    <td><strong>Archive — Post v1 + v2</strong></td>
+    <td>Both versions live in the internal Anthropic seminar archive (URL/space TBD with mentor at kickoff). v1 is preserved alongside v2 so the revision history is part of the teaching value — attendees see the method <em>improving</em> through critique, not just the final answer.</td>
+  </tr>
+</table>
+
+<div class="caveat"><strong>Cycle reality.</strong> The two-pass cycle is the default for the eight cycles in <a href="#session-plan">the session plan</a>. Small in-flight refinements (a glossary update, a quick UCA addition) can happen mid-cycle without going through the full lifecycle. Sam decides at the odd-week session which mode the cycle's artifact is in.</div>
+
+<h3 id="seminar-logistics">Format &amp; logistics</h3>
+<ul>
+  <li><strong>Venue:</strong> Berkeley workspace (hybrid-friendly) with remote attendance supported; tracked on an internal Anthropic calendar/channel. Same time, same day, every week.</li>
+  <li><strong>Attendance:</strong> Voluntary; targeted invites to ML Systems &amp; Performance, Safety &amp; Alignment, and Security &amp; Red Team teams. The bar for attendance is "you'll contribute or learn something useful in 60 minutes" — not "you should keep up with the seminar."</li>
+  <li><strong>Materials:</strong> Slide deck per session is the default — Sam prepares slides and the week's worked-example deliverable as a single piece of work. Slides walk attendees through what the deliverable shows; deliverable artifacts (diagrams, matrices, code, prose) are linked from the slides and posted to the seminar archive. Working notes in a shared doc capture the recap-discussion decisions inline.</li>
+  <li><strong>Feedback loop:</strong> Each session's working-block output and decisions feed directly into the next week's draft. The seminar <em>is</em> the research process, not a separate communication channel about it.</li>
+</ul>
 
 <hr>
 
-<h2 id="sa3">Short answer — Anything else to share (optional)</h2>
-<div class="prompt">Form prompt: "(Optional) Is there anything else you would like to share?"</div>
+<h2 id="deliverables">6. Deliverables &amp; Success Criteria</h2>
 
-<div class="draft">
-<p>If the Fellows team would find it useful to see examples of my recent ML-adjacent work, <a href="https://samkirk.com">samkirk.com</a> hosts the current portfolio. The LoRA fine-tuning project (<a href="https://samkirk.com/computer-diagnostics">/computer-diagnostics</a>) and the Vertex AI retrieval-augmented chatbot (<a href="https://samkirk.com/hire-me">/hire-me</a>) are the most directly relevant.</p>
-</div>
-<div class="wordcount">~50 words</div>
+<h3 id="deliverables-list">Deliverables</h3>
+<ol>
+  <li><strong>Final research report</strong> — a written artifact integrating the Leveson framework with Anthropic's safety practice. Target 30–50 pages. Intended audience: internal Anthropic safety researchers, with an optional external-release version if Anthropic approves.</li>
+  <li><strong>Claude deployment STPA analysis</strong> — a structured hazard taxonomy for one scoped Claude deployment case (tool-use loop, agentic coding, or long-horizon planning), produced using the STPA method.</li>
+  <li><strong>CAST retrospective</strong> — a worked accident-analysis write-up of one published AI incident.</li>
+  <li><strong>Hazard-mapping matrix</strong> — a concrete artifact that maps STPA-derived hazards to Anthropic's existing empirical red-teaming categories, highlighting coverage overlaps and gaps.</li>
+  <li><strong>Seminar-series archive</strong> — eight slide decks + shared notes, suitable for onboarding future Anthropic researchers who want to learn STAMP/STPA/CAST quickly.</li>
+  <li><strong>Public companion write-up</strong> — a distilled, non-confidential version of the framework and insights, published on <a href="https://samkirk.com">samkirk.com</a> after Anthropic approval.</li>
+  <li><strong>STPA-guided eval prototype (minimum viable)</strong> — a small, scoped software prototype that takes one STPA-derived "unsafe control action" from the Phase 3 case study and generates targeted evaluation prompts. The artifact is the proof-of-concept that STPA can guide where red-teamers look — the central claim of the proposal. Built in Phase 4 alongside the final report, in Python or TypeScript depending on the Anthropic mentor's preferred stack. Open-source under MIT license if Anthropic approves; otherwise internal-only.</li>
+</ol>
+
+<h3 id="success-criteria">Success criteria</h3>
+<ul>
+  <li><strong>Minimum:</strong> Sam emerges from the Fellowship with practitioner-level fluency in STAMP/STPA/CAST and a peer-reviewed (internally, via the seminar) Claude-specific STPA analysis artifact.</li>
+  <li><strong>Target:</strong> At least one STPA-derived hazard that prompts a concrete change to an Anthropic evaluation, red-teaming protocol, or safety documentation practice.</li>
+  <li><strong>Stretch:</strong> A credible case for adopting STPA as a standing complement to empirical red-teaming, with a transition plan that doesn't require Sam's continued presence.</li>
+</ul>
 
 <hr>
 
-<h2 id="sa4">Short answer — Earliest FT start date</h2>
-<div class="prompt">Form prompt: "If you were to start at Anthropic full-time after the Fellows program, when is the earliest you could start? E.g., immediately after the program ends, or some other date" (required)</div>
+<h2 id="resources">7. Resources &amp; Support Needed from Anthropic</h2>
 
-<div class="draft">
-<p>Immediately after the program ends (approximately November 20, 2026).</p>
-</div>
+<ul>
+  <li><strong>Mentor pairing</strong> with a senior researcher on the ML Systems &amp; Performance team (or adjacent), ideally someone whose work touches evaluation, red-teaming, or RSP operationalization.</li>
+  <li><strong>Scope-setting access</strong> to one concrete Claude deployment context for the STPA case study (Phase 3) — mentor-gated; Sam does not need internal IP outside that scope.</li>
+  <li><strong>Read access</strong> to relevant internal documents: red-teaming methodology, evaluation taxonomies, RSP capability thresholds, relevant post-incident writeups. NDA in place by Fellows onboarding.</li>
+  <li><strong>Seminar venue</strong> — standing biweekly calendar slot + Berkeley workspace room + remote-access bridge.</li>
+  <li><strong>Reimbursement for the 2023 Leveson textbook</strong> (~$70 hardcover).</li>
+  <li><strong>Compute funding</strong> as provided under the standard Fellows program budget — this project is analysis-heavy, not training-heavy, so compute spend will be modest.</li>
+</ul>
+
+<hr>
+
+<h2 id="risks">8. Risks, Scope Limits &amp; Open Questions</h2>
+
+<table>
+  <tr><th>Risk / Limit</th><th>Mitigation</th></tr>
+  <tr><td>Sam's prior Leveson practice is zero — learning curve in Phase 1.</td><td>Phase 1 is deliberately full 3 weeks of dedicated reading + first seminar sessions are foundational. Sam's 40 years of practitioner safety intuition should accelerate recognition once vocabulary lands.</td></tr>
+  <tr><td>The STPA → LLM mapping may not yield novel hazards.</td><td>Value exists even in negative results — a rigorous confirmation that empirical red-teaming already covers the structural-hazard landscape would itself be a useful artifact.</td></tr>
+  <tr><td>Scope creep toward STPA-on-everything.</td><td>Phase 3 explicitly constrains to one Claude deployment case, mentor-gated. The seminar is a creep-pressure outlet — ideas surface there and get logged, not pursued.</td></tr>
+  <tr><td>Confidentiality constraints on the public companion write-up.</td><td>Default posture: no internal IP in the public version. Final approval by Anthropic before samkirk.com publication.</td></tr>
+  <tr><td>4 months is short for this scope.</td><td>True. The seminar design assumes depth-per-session is ≥ breadth; the report is scoped to one case plus the framework mapping, not a field-wide treatise.</td></tr>
+  <tr><td>Adding a software prototype (Deliverable #7) to a methodology proposal expands scope.</td><td>The prototype is explicitly minimum-viable — one STPA-derived hazard, one eval generator, no production hardening. Built in Phase 4 alongside the report. <strong>If the report is at risk of not finishing on time, the prototype is the first thing cut</strong> — the methodology contribution remains the primary deliverable.</td></tr>
+</table>
+
+<h3 id="kickoff-questions">Open questions to resolve with mentor at project kickoff</h3>
+<ul>
+  <li>Which Claude deployment context is the right Phase 3 scope (target lock at S8, week 8)?</li>
+  <li>What level of publishing is appropriate for the final report (internal-only, Anthropic blog, journal paper, external-facing white paper)?</li>
+  <li>Which published AI incident is the right CAST case study (target lock at S12, week 12)?</li>
+  <li>Which prototype scope — Deliverable #7 (STPA-guided eval) or one of the alternatives in <a href="#alt-prototypes">Section 13</a> — best fits the team's near-term needs?</li>
+</ul>
+
+<hr>
+
+<h2 id="after">9. What Happens After the Fellowship</h2>
+
+<p>Regardless of a full-time offer outcome, Sam's stated intent (100% in the Fellows application) is to continue working in AI safety and security. Continuation scenarios for this specific research:</p>
+<ul>
+  <li><strong>Best case — continue inside Anthropic.</strong> A full-time role on a safety-adjacent team where the Leveson-framework scaffolding is one tool among many being developed and operationalized.</li>
+  <li><strong>Adjacent — continue at another safety-focused organization.</strong> The framework and methodology are portable; the Claude-specific analysis remains with Anthropic.</li>
+  <li><strong>Independent — continue as applied research at SAK Consulting.</strong> Extending the framework to other model providers, with the public companion write-up as the ongoing reference artifact at <a href="https://samkirk.com">samkirk.com</a>.</li>
+</ul>
+
+<hr>
+
+<h2 id="references">10. References</h2>
+
+<p><strong>Primary Leveson corpus</strong> (in project folder <code>Leveson_Literature/</code>). Full reading depth and access links also in <a href="#reading-tier-0">Section 11 Tier 0</a>.</p>
+<ol>
+  <li>Leveson, N. G. (2023). <em>An Introduction to System Safety Engineering.</em> Cambridge, MA: MIT Press. ISBN 978-0262546881. <strong>Commercial — no free download.</strong> Product page: <a href="https://mitpress.mit.edu/9780262546881/an-introduction-to-system-safety-engineering/">MIT Press</a>. Self-scan workflow: <a href="#scan-workflow">Section 12</a>.</li>
+  <li>Leveson, N. G. (2012). <em>Engineering a Safer World: Systems Thinking Applied to Safety.</em> Cambridge, MA: MIT Press. ISBN 978-0262016629. Free PDF (open access): <a href="https://direct.mit.edu/books/oa-monograph/2908/Engineering-a-Safer-WorldSystems-Thinking-Applied">MIT Press OA</a> · <a href="https://library.oapen.org/handle/20.500.12657/26043">OAPEN mirror</a> · <a href="https://library.oapen.org/bitstream/20.500.12657/26043/1/1004042.pdf">direct PDF</a>.</li>
+  <li>Leveson, N. G., &amp; Thomas, J. (2018). <em>STPA Handbook.</em> MIT Partnership for Systems Approaches to Safety and Security. Free PDF: <a href="http://psas.scripts.mit.edu/home/get_file.php?name=STPA_handbook.pdf">MIT PSASS direct download</a>.</li>
+  <li>Leveson, N. G. (2019). <em>CAST Handbook: How to Learn More from Incidents and Accidents.</em> Free PDF: <a href="http://sunnyday.mit.edu/CAST-Handbook.pdf">sunnyday.mit.edu</a>.</li>
+</ol>
+
+<p><strong>Companion Anthropic context</strong> (full reading list with links in <a href="#reading-tier-1">Section 11 Tier 1</a>):</p>
+<ul>
+  <li><a href="https://www.anthropic.com/news/core-views-on-ai-safety">"Core Views on AI Safety: When, Why, What, and How"</a> — Anthropic blog.</li>
+  <li><a href="https://www.anthropic.com/responsible-scaling-policy">Anthropic's Responsible Scaling Policy</a> (current revision: <a href="https://www.anthropic.com/news/responsible-scaling-policy-v3">v3.0, Feb 2026</a>).</li>
+  <li><a href="https://www.anthropic.com/claude-sonnet-4-6-system-card">Claude Sonnet 4.6 system card</a> (most recent at time of drafting; replace with the latest at Fellowship start).</li>
+  <li>Bai, Y. et al. (2022). <em>Constitutional AI: Harmlessness from AI Feedback.</em> <a href="https://arxiv.org/abs/2212.08073">arXiv:2212.08073</a>.</li>
+  <li>Anthropic interpretability work — <a href="https://transformer-circuits.pub/">transformer-circuits.pub</a>.</li>
+  <li>Anthropic red-teaming &amp; evaluation posts — <a href="https://www.anthropic.com/research">anthropic.com/research</a>.</li>
+</ul>
+
+<p><strong>Companion precedent — Leveson applied to autonomy:</strong> STPA-for-autonomous-vehicles papers (Thomas, Leveson and co-authors, ~2018–2024) constitute existence-proof that the method translates from human-in-the-loop engineering to automated systems. Specific citations selected during Phase 2; entry points: <a href="http://psas.scripts.mit.edu/home/publications/">MIT PSAS publications page</a> · <a href="https://scholar.google.com/scholar?q=Thomas+Leveson+STPA+autonomous+vehicles">Google Scholar (Thomas, Leveson, STPA AV)</a>. Cited in the final report as the methodological predecessor to LLM applications.</p>
+
+<p><strong>Supplementary historical reference:</strong> Leveson, N. G. (1995). <em>SAFEWARE: System Safety and Computers.</em> Reading, MA: Addison-Wesley. ISBN 0-201-11972-2. <strong>No free download — out of print; used copies via standard channels (AbeBooks, Amazon used, university libraries).</strong> Already on Sam's bookshelf since publication; to be self-scanned to PDF — see <a href="#scan-workflow">Section 12</a>. Functions as the intellectual prelude to STAMP and the field's foundational reference for software-safety concepts. The 2023 textbook (Reference #1) is its formal update; specific historical claims in the final report will cite SAFEWARE directly where appropriate. <strong>Not part of the four-canonical-works corpus</strong> — included here to support lineage arguments and ad-hoc lookup, not as required reading for the methodology.</p>
+
+<p><strong>Broader AI safety field</strong> (full reading list with links in <a href="#reading-tier-2">Section 11 Tier 2</a>): Amodei et al. (2016) <em>Concrete Problems in AI Safety</em>; NIST (2023) <em>AI Risk Management Framework (AI RMF 1.0)</em>; Hendrycks et al. (2023) <em>Overview of Catastrophic AI Risks</em>; Ngo (2022) <em>The Alignment Problem from a Deep Learning Perspective</em>.</p>
+
+<hr>
+
+<h2 id="reading-plan">11. Reading Plan</h2>
+
+<p>This section answers <em>what</em> to read and <em>where to find it</em>. For the <em>when</em> — the week-by-week schedule that integrates reading with working artifacts and seminar prep — see the <a href="#lesson-plan">Weekly Lesson Plan in Section 4</a>. The corpus is organized in three priority tiers plus supplementary: Tier 0 is the methodological core (the four canonical Leveson works); Tier 1 grounds Sam in Anthropic's specific safety practice; Tier 2 frames the broader AI safety landscape. SAFEWARE (1995) and STPA-for-autonomous-vehicles papers serve as supplementary references for specific historical or precedent claims.</p>
+
+<table>
+  <colgroup>
+    <col style="width: 22%">
+    <col style="width: 18%">
+    <col style="width: 18%">
+    <col style="width: 42%">
+  </colgroup>
+  <tr><th>Tier</th><th>Page count</th><th>Phase mapping</th><th>Role</th></tr>
+  <tr><td><a href="#reading-tier-0"><strong>Tier 0</strong></a> — Leveson canonical</td><td>~1,427 pp full; <strong>~880 pp on critical path</strong> (2023 textbook is selected chapters during Phase 1, ongoing reference thereafter)</td><td>Phase 1, weeks 1–3</td><td>Methodological core. Where STAMP, STPA, CAST are first argued and laid out.</td></tr>
+  <tr><td><a href="#reading-tier-1"><strong>Tier 1</strong></a> — Anthropic context</td><td>~175 pp</td><td>Phase 2, weeks 4–7</td><td>Grounds the proposal in Anthropic's actual safety practice, RSP framing, current model behavior.</td></tr>
+  <tr><td><a href="#reading-tier-2"><strong>Tier 2</strong></a> — Broader AI safety field</td><td>~150 pp</td><td>Phase 3, weeks 9–12</td><td>Field-level vocabulary and risk taxonomy beyond Anthropic's specific practice.</td></tr>
+  <tr><td><a href="#reading-supplementary"><strong>Supplementary</strong></a></td><td>~120 pp (SAFEWARE selected) + STPA-AV papers as needed</td><td>Phase 3 (concept lookups); Phase 4 (final-report citations)</td><td>Historical and methodological-precedent references for specific report claims.</td></tr>
+  <tr><td><strong>Total new reading</strong></td><td><strong>~1,200 pp over 16 weeks</strong></td><td>Distributed per <a href="#lesson-plan">lesson plan</a></td><td>~660 pp in weeks 1–3 (front-loaded); 30–90 pp/week in weeks 4–12; reference-only in weeks 13–16.</td></tr>
+</table>
+
+<h3 id="reading-tier-0">Tier 0 — Leveson Canonical (~1,427 pp full; ~880 pp on Phase 1 critical path)</h3>
+<table>
+  <colgroup>
+    <col style="width: 38%">
+    <col style="width: 42%">
+    <col style="width: 20%">
+  </colgroup>
+  <tr><th>Work &amp; access link</th><th>Reading depth</th><th>Phase</th></tr>
+  <tr>
+    <td><em>Engineering a Safer World</em> (Leveson, 2012). Free PDF (open access): <a href="https://direct.mit.edu/books/oa-monograph/2908/Engineering-a-Safer-WorldSystems-Thinking-Applied">MIT Press OA</a> · <a href="https://library.oapen.org/handle/20.500.12657/26043">OAPEN mirror</a> · <a href="https://library.oapen.org/bitstream/20.500.12657/26043/1/1004042.pdf">direct PDF</a>.</td>
+    <td>Full read. Primary STAMP/STPA/CAST source — the place where the methods are first argued for and laid out.</td>
+    <td>Phase 1, weeks 1–3.</td>
+  </tr>
+  <tr>
+    <td>STPA Handbook (Leveson &amp; Thomas, 2018). Free PDF: <a href="http://psas.scripts.mit.edu/home/get_file.php?name=STPA_handbook.pdf">MIT PSASS direct download</a>.</td>
+    <td>Full read. Operational manual for the forward hazard analysis Sam will apply in Phases 2–3.</td>
+    <td>Phase 1, weeks 2–3.</td>
+  </tr>
+  <tr>
+    <td>CAST Handbook (Leveson, 2019). Free PDF: <a href="http://sunnyday.mit.edu/CAST-Handbook.pdf">sunnyday.mit.edu</a>.</td>
+    <td>Full read. Operational manual for the retrospective accident analysis used in the Phase 3 secondary case study.</td>
+    <td>Phase 1, week 3.</td>
+  </tr>
+  <tr>
+    <td><em>An Introduction to System Safety Engineering</em> (Leveson, 2023). <strong>Commercial — no free download.</strong> Product page: <a href="https://mitpress.mit.edu/9780262546881/an-introduction-to-system-safety-engineering/">MIT Press</a>. Self-scan workflow in <a href="#scan-workflow">Section 12</a>.</td>
+    <td>Selected chapters during Phase 1 for current terminology and integrated framing. Returned to throughout the Fellowship for definitional lookups.</td>
+    <td>Phase 1 (selected); ongoing.</td>
+  </tr>
+</table>
+
+<h3 id="reading-tier-1">Tier 1 — Anthropic Context (~175 pp; Phase 2, weeks 4–7)</h3>
+<ul>
+  <li><strong><a href="https://www.anthropic.com/news/core-views-on-ai-safety">Core Views on AI Safety: When, Why, What, and How</a></strong> — Anthropic blog (March 2023). Single most important post.</li>
+  <li><strong><a href="https://www.anthropic.com/responsible-scaling-policy">Anthropic's Responsible Scaling Policy (RSP)</a></strong> — capability thresholds and the evaluation framing the proposal compares against. Most-recent revision: <a href="https://www.anthropic.com/news/responsible-scaling-policy-v3">RSP v3.0 announcement (Feb 2026)</a>.</li>
+  <li><strong>Most-recent Claude model card / system card.</strong> <a href="https://www.anthropic.com/claude-sonnet-4-6-system-card">Claude Sonnet 4.6 system card (Feb 2026)</a> — Safety Evaluations + Red-Teaming sections in particular.</li>
+  <li>Bai, Y. et al. (2022). <em>Constitutional AI: Harmlessness from AI Feedback.</em> <a href="https://arxiv.org/abs/2212.08073">arXiv:2212.08073</a> — abstract, method, results.</li>
+  <li>One Transformer Circuits post from Anthropic's interpretability team — pick from <a href="https://transformer-circuits.pub/">transformer-circuits.pub</a>. Vocabulary primer (features, circuits, superposition).</li>
+  <li>One published red-teaming or evaluation post — pick from <a href="https://www.anthropic.com/research">anthropic.com/research</a>.</li>
+</ul>
+
+<h3 id="reading-tier-2">Tier 2 — Broader AI Safety Field (~150 pp; Phase 3, weeks 9–12)</h3>
+<ul>
+  <li>Amodei, D. et al. (2016). <em>Concrete Problems in AI Safety.</em> <a href="https://arxiv.org/abs/1606.06565">arXiv:1606.06565</a> — field-defining short paper.</li>
+  <li>NIST (2023). <em>Artificial Intelligence Risk Management Framework (AI RMF 1.0).</em> <a href="https://nvlpubs.nist.gov/nistpubs/ai/nist.ai.100-1.pdf">Direct PDF (NIST AI 100-1)</a> · <a href="https://www.nist.gov/publications/artificial-intelligence-risk-management-framework-ai-rmf-10">official publication page</a>. Govern/Map/Measure/Manage four-function model, useful for the hazard-mapping matrix deliverable.</li>
+  <li>Hendrycks, D., Mazeika, M., &amp; Woodside, T. (2023). <em>An Overview of Catastrophic AI Risks.</em> <a href="https://arxiv.org/abs/2306.12001">arXiv:2306.12001</a>.</li>
+  <li>Ngo, R. (2022). <em>The Alignment Problem from a Deep Learning Perspective.</em> <a href="https://arxiv.org/abs/2209.00626">arXiv:2209.00626</a>.</li>
+</ul>
+
+<h3 id="reading-supplementary">Supplementary — Cited as Needed (~120 pp from SAFEWARE selected; STPA-AV papers as needed)</h3>
+<ul>
+  <li><strong><em>SAFEWARE: System Safety and Computers</em></strong> (Leveson, 1995, Addison-Wesley, ISBN 0-201-11972-2). <strong>No free download — out of print.</strong> Used copies available through standard channels (AbeBooks, Amazon used, university libraries). Already on Sam's bookshelf since publication; to be self-scanned to PDF (see <a href="#scan-workflow">Section 12</a>). Cited for foundational concept lookups (Ch 1, 2, 4, 10) and lineage continuity, not on the critical reading path.</li>
+  <li><strong>STPA-for-autonomous-vehicles papers</strong> (Thomas, Leveson, et al., ~2018–2024) — methodological precedent for STPA applied to automated systems. Specific citations selected during Phase 2; entry points: <a href="http://psas.scripts.mit.edu/home/publications/">MIT PSAS publications page</a> · <a href="https://scholar.google.com/scholar?q=Thomas+Leveson+STPA+autonomous+vehicles">Google Scholar (Thomas, Leveson, STPA AV)</a>. Cited in the final report as the closest existing analogue to LLM applications.</li>
+</ul>
+
+<div class="banner"><strong>Reading load reality.</strong> Total new reading is ~1,200 pp across 16 weeks. Phase 1 is the heavy lift (~660 pp in weeks 1–3, ≈ ~290 pp/week of full-time reading) — tight but doable for a focused reader with prior practitioner exposure. Phases 2–3 taper to ~30–90 pp/week, leaving most time for hands-on STPA work. Phase 4 is reference-only — writing and prototype build dominate. Full week-by-week distribution is in the <a href="#lesson-plan">Weekly Lesson Plan</a>.</div>
+
+<hr>
+
+<h2 id="scan-workflow">12. Scan &amp; OCR Workflow for Hardcopy References</h2>
+
+<p>Two physical books in this project are not freely available as DRM-free PDFs and need to be converted to searchable PDFs in <code>Leveson_Literature/</code> via destructive scan. The output is for Sam's own research use during the Fellowship — nothing is redistributed.</p>
+
+<h3 id="scan-hardcopies">Hardcopies in scope</h3>
+
+<table>
+  <colgroup>
+    <col style="width: 30%">
+    <col style="width: 70%">
+  </colgroup>
+  <tr><th>Hardcopy</th><th>Status &amp; reference</th></tr>
+  <tr>
+    <td><strong><em>An Introduction to System Safety Engineering</em></strong> (Leveson, MIT Press, 2023)</td>
+    <td>$70 hardcover ordered Sat 4/25 from Amazon; ETA Mon 4/27 to Fremont. Discussed in <a href="#corpus">Section 2</a> as canonical work #1. Save as <code>Leveson_Literature/Introduction_to_System_Safety_Engineering_Leveson_2023.pdf</code>.</td>
+  </tr>
+  <tr>
+    <td><strong><em>SAFEWARE: System Safety and Computers</em></strong> (Leveson, Addison-Wesley, 1995)</td>
+    <td>Already on Sam's bookshelf since publication. Listed in <a href="#references">References</a> as a supplementary historical reference (the prelude to STAMP). Save as <code>Leveson_Literature/SAFEWARE_Leveson_1995.pdf</code>.</td>
+  </tr>
+</table>
+
+<p>Both books can be processed in the same FedEx Office + ScanSnap session — combining is the efficient path.</p>
+
+<h3 id="scan-steps">Workflow steps (applied to both books)</h3>
+
+<table>
+  <colgroup>
+    <col style="width: 26%">
+    <col style="width: 74%">
+  </colgroup>
+  <tr><th>Step</th><th>Detail</th></tr>
+  <tr>
+    <td><strong>1. Acquire</strong></td>
+    <td>For the 2023 textbook: Amazon (fastest to Fremont, 1–2 days with Prime); MIT Press direct (~5–10 business days), Barnes &amp; Noble (special-order), or AbeBooks are slower channels. For SAFEWARE: already owned.</td>
+  </tr>
+  <tr>
+    <td><strong>2. Spine cut</strong></td>
+    <td>FedEx Office or local print shop trims the spine on a guillotine cutter (~$2–5). Check inner-margin width before they cut so body text isn't lost at the gutter.</td>
+  </tr>
+  <tr>
+    <td><strong>3. Scan</strong></td>
+    <td>Fujitsu ScanSnap ix1400 with ScanSnap Home, <strong>"Searchable PDF" output</strong> at <strong>300 dpi grayscale</strong> — embeds an OCR text layer over the scanned image. Feed in batches to avoid jams.</td>
+  </tr>
+  <tr>
+    <td><strong>4. Hole-punch &amp; 3-ring binder</strong></td>
+    <td>Hole-punch the loose pages and place them in a 3-ring binder. The hardcopy stays usable as a bench reference — lays flat, accepts margin tabs and sticky notes, survives working use better than an intact spine. Binder next to the workstation; searchable PDF in <code>Leveson_Literature/</code>.</td>
+  </tr>
+  <tr>
+    <td><strong>5. Save PDF</strong></td>
+    <td>File saved as <code>Leveson_Literature/&lt;Title&gt;_Leveson_&lt;Year&gt;.pdf</code>, matching the existing naming convention. The corpus table and References section are keyed to title, not filename — no further proposal edits required once each file is in place.</td>
+  </tr>
+</table>
+
+<div class="caveat"><strong>OCR caveat.</strong> ScanSnap OCR is excellent on clean modern body text, mediocre on equations and figure captions. The raster image layer remains underneath the OCR layer, so figures and diagrams stay readable visually even when the OCR text layer is imperfect — but expect that math and equation search will be unreliable. Acceptable for reference texts where the dominant query pattern is "look up a defined term and read the surrounding paragraph."</div>
+
+<div class="banner" style="background:#dafbe1; border-left-color:#1a7f37;"><strong>Legal posture.</strong> Personal-use format-shifting of a book Sam has purchased is widely accepted as fair use in the US. The scanned PDFs live only on Sam's machine and in this private project folder; nothing is redistributed.</div>
+
+<hr>
+
+<h2 id="alt-prototypes">13. Alternative Prototype Scopes</h2>
+
+<p>Deliverable #7 commits to one specific prototype scope — the STPA-guided eval prototype. Two alternative scopes were considered and are documented here so the choice is on the record. If the assigned mentor and Anthropic team would prefer one of these alternatives at project kickoff, the swap is straightforward — Phase 4's deliverable changes; the methodology and report do not.</p>
+
+<h3 id="alt-prototype-a">Alternative A — Hazard-taxonomy diff tool</h3>
+
+<p><strong>What:</strong> A Python notebook (or small CLI) that takes the STPA-derived hazard list from Phase 3 and the published Anthropic empirical red-teaming taxonomy (from model cards, RSP documents, blog posts) and produces a structured diff — what's covered by both, what's only in STPA, what's only in the empirical taxonomy.</p>
+
+<p><strong>Why:</strong> Directly automates Research Question 4 (Coverage Comparison). Less ambitious than Deliverable #7 but produces a concrete, machine-checkable artifact that surfaces coverage gaps.</p>
+
+<p><strong>Trade-offs:</strong> Lighter weight to build (weekend project), more clearly bounded. Lacks the proof-of-concept punch — it documents differences rather than demonstrating that STPA can guide red-teaming. Right choice if the mentor prefers a low-risk, pure-analysis artifact.</p>
+
+<h3 id="alt-prototype-b">Alternative B — Process-model probe</h3>
+
+<p><strong>What:</strong> An instrumentation/logging harness that monitors a Claude tool-use loop in real time and flags potential process-model mismatches — places where the model's apparent internal representation of state diverges from the actual environment state.</p>
+
+<p><strong>Why:</strong> Directly tests the proposal's process-model-mismatch hypothesis (Research Question 3). Most ambitious of the three options; closest to a research instrument that Anthropic could deploy beyond the Fellowship.</p>
+
+<p><strong>Trade-offs:</strong> Genuine research-prototype territory — the operational definition of "process-model mismatch" in an LLM is itself an open question, so the prototype has to define what it's looking for as it goes. Risk of being half-finished by week 16. Probably needs co-development with the mentor and is the riskiest of the three. Right choice if the mentor wants to push into novel research territory and accepts the schedule risk.</p>
+
+<h3 id="alt-prototype-decision">Why Deliverable #7 chose the STPA-guided eval prototype</h3>
+
+<ul>
+  <li><strong>Most directly tests the proposal's central claim.</strong> The proposal argues STPA is a scaffolding that tells red-teamers <em>where to look</em>. The eval prototype is the smallest possible artifact that demonstrates this in practice — STPA hazard in, targeted eval prompt out.</li>
+  <li><strong>Right scope for 4 months.</strong> One unsafe control action, one eval generator. Achievable as a side artifact alongside the report; not so ambitious as to threaten the report's completion.</li>
+  <li><strong>Anthropic-relevant.</strong> Eval generation is an active research area at Anthropic; a Fellow producing a small new eval-generation tool fits naturally into existing workflows and is something Anthropic researchers can pick up and extend.</li>
+  <li><strong>Sam can ship it.</strong> Daily Claude Code use, ~6 personal AI agents in production, and a portfolio of TypeScript/Python/Rust artifacts mean implementation risk is low. The risk is scope discipline, not capability — and Risks Section 8 explicitly addresses the discipline.</li>
+</ul>
+
+<hr>
+
+<h2 id="qa">14. Frequently Asked Questions</h2>
+
+<h3 id="qa-bridge">Q1. How does this proposal build upon Sam's past experience as a test software engineer who now applies genAI to accelerate software development?</h3>
+
+<p>The proposal is calibrated to bridge exactly those two halves of Sam's profile, and it depends on <em>both</em> being present.</p>
+
+<p><strong>Test engineering is the practitioner lineage that Leveson formalized.</strong> Forty years of finding failure modes, edge cases, and reliability gaps — across hardware POST, online diagnostics, picosecond-accuracy ATE timing, 10 Gbps silicon verification on SPARC IV, and instrument-level test infrastructure at Talis Biomedical — is exactly the practitioner discipline that STAMP/STPA structures. Sam already has the instincts; the proposal supplies the formal vocabulary (control structure, unsafe control actions, process-model mismatch) that names what those instincts have been doing all along. This is the lineage step described explicitly in the Fellows essays — not a career pivot, a methodological upgrade.</p>
+
+<p><strong>Empirical AI red-teaming is the same craft, applied to LLM behavior.</strong> Modern red-teaming is the descendant of the failure-mode hunting Sam has practiced for decades, just translated to a different substrate. The proposal explicitly frames STPA as a <em>complement</em> to empirical red-teaming, not a replacement. Sam's testing background is what makes him able to evaluate where the empirical pipeline already covers a hazard and where it doesn't — without that ground truth, an STPA-only analysis would risk re-deriving things red-teamers already know by intuition, or missing the subset of hazards that empirical methods catch without naming.</p>
+
+<p><strong>GenAI development practice is what makes the Phase 3 case studies tractable.</strong> The proposal's three candidate Phase 3 scopes — tool-use loop, agentic coding, long-horizon planning — are not academic abstractions for Sam. He uses Claude Code daily on real engineering work, runs ~6 personal AI agents in production, built a LoRA-fine-tuned Llama 3.2 3B for hardware diagnostics end-to-end (<a href="https://samkirk.com/computer-diagnostics">samkirk.com/computer-diagnostics</a>), and architected a Vertex AI RAG chatbot with source citations (<a href="https://samkirk.com/hire-me">samkirk.com/hire-me</a>). That means Sam has firsthand observational data on the actual failure modes of LLM-driven coding agents — process-model mismatches, tool-invocation errors, context loss across long sessions, brittle handoffs in multi-agent workflows. Phase 3 anchors on deployments Sam already lives inside, not on hypothetical ones.</p>
+
+<p><strong>The seminar is the channel where both halves come together.</strong> Each biweekly session pairs a Leveson concept (test-engineering lineage) with a Claude-specific worked scenario (genAI-builder lineage). Anthropic researchers attending the seminar get something a hire from only one of those backgrounds cannot easily provide: an analyst who can speak STAMP/STPA vocabulary <em>and</em> ground every example in an LLM-driven workflow he has personally built, deployed, and debugged. The intellectual contribution to Anthropic is the <em>conjunction</em> of those two lineages — not either one alone.</p>
+
+<p><strong>The result for Anthropic.</strong> A Fellow whose first-language fluency is "what does this system actually do under stress, and what fails first" — applied with both classical structured-safety method and a builder's instinct for where modern LLM deployments break.</p>
+
+<h3 id="qa-mentor">Q2. Does this proposal require a mentor, and will Anthropic provide one?</h3>
+
+<p>Both yes. The proposal calls for a mentor in three places — the resource ask in <a href="#resources">Section 7</a>, Phase 3 case-study scoping in <a href="#methodology">Section 4</a>, and scope-creep mitigation in <a href="#risks">Section 8</a>. And Anthropic provides one automatically: per the application form, mentorship is "direct, paired with a project and researcher from a chosen team." Mentor pairing is a built-in feature of the Fellows program, not a separate ask.</p>
+
+<p>What Sam controls: the <em>team</em>. Top-choice and additional-team selections on the form determine the pool the mentor is drawn from — Sam's slate is ML Systems &amp; Performance (top), AI Security &amp; Frontier Red Team (additional), and AI Safety &amp; Alignment (additional). The mentor will come from one of those teams. What Sam doesn't control: the specific researcher. Anthropic pairs based on project fit and availability. The proposal's mentor language therefore expresses a <em>preference</em> for mentor characteristics ("ideally someone whose work touches evaluation, red-teaming, or RSP operationalization") rather than asking for a mentor at all, since that's already included in the program structure.</p>
+
+<h3 id="qa-seminar-experience">Q3. What experience does Sam have leading a seminar?</h3>
+
+<p>Two distinct strands of teaching experience, both substantive:</p>
+
+<p><strong>Graduate-school teaching assistant (1980–1982, University of Louisville).</strong> Sam worked his way through grad school as a TA, instructing undergraduate courses in COBOL and BASIC programming. The deepest assignment was the APL (A Programming Language, Iverson's array notation) course — Sam taught the entire course himself, as the lead instructor rather than as a section leader. Teaching APL — a notation-heavy, concept-dense language — to undergraduates required exactly the kind of "translate the formal vocabulary into intuition, then back into formal vocabulary" pedagogy the Fellows seminar will need.</p>
+
+<p><strong>ROLM Europe — internal department training (mid-1980s).</strong> When ROLM ported its software stack from the original Data General Nova platform to Motorola 68K hardware, Sam taught the entire ROLM Europe software engineering department 68K assembly language — the working vocabulary they would need to do the port. This was a multi-week, full-department training program, not a one-off lecture; the audience was working software engineers being asked to add a new instruction set to their daily working knowledge. The structure (a working professional teaching working peers a new vocabulary they'll apply immediately to active work) is the closest historical analogue to the Fellows seminar.</p>
+
+<p><strong>Why this matters for the Fellows seminar.</strong> The seminar's audience and structure most closely resembles the ROLM Europe training: working engineers being introduced to a vocabulary and method they don't currently use, organized as a sequence of sessions with applied exercises. Sam has done this exact shape of teaching before, with the same kind of audience, on a comparable timeline.</p>
 
 </body>
 </html>

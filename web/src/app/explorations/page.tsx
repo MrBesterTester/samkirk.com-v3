@@ -59,7 +59,7 @@ const explorations: Exploration[] = [
     href: "/explorations/safer-ai",
     title: "Safer AI",
     description:
-      "Essay drafts for the Anthropic Fellows Program 2026 — applying Nancy Leveson's STAMP/STPA systems-safety methodology to AI safety, drawing on four decades of test and diagnostic engineering.",
+      "A research project proposal for the Anthropic Fellows Program 2026 — adapting Nancy Leveson's STAMP/STPA/CAST system-safety framework to deployed LLMs, with Claude's safety evaluation and red-teaming pipeline as the case study.",
   },
 ];
 
