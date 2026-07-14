@@ -116,4 +116,32 @@ describe("Header", () => {
     const desktopNav = document.querySelector("ul.md\\:flex");
     expect(desktopNav).toBeInTheDocument();
   });
+
+  it("renders the Machine Learning and Robotics top-level links", () => {
+    render(<Header />);
+
+    expect(screen.getAllByRole("link", { name: "Machine Learning" }).length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByRole("link", { name: "Robotics" }).length).toBeGreaterThanOrEqual(1);
+  });
+
+  it("points Machine Learning and Robotics at the right hrefs", () => {
+    render(<Header />);
+
+    expect(screen.getAllByRole("link", { name: "Machine Learning" })[0]).toHaveAttribute(
+      "href",
+      "/machine-learning"
+    );
+    expect(screen.getAllByRole("link", { name: "Robotics" })[0]).toHaveAttribute(
+      "href",
+      "/robotics"
+    );
+  });
+
+  it("surfaces Computer Diagnostics under the Machine Learning dropdown", () => {
+    render(<Header />);
+
+    expect(
+      screen.getAllByRole("link", { name: "Computer Diagnostics" })[0]
+    ).toHaveAttribute("href", "/computer-diagnostics");
+  });
 });

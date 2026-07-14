@@ -14,6 +14,26 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.9,
     },
     {
+      url: `${SITE_URL}/machine-learning`,
+      changeFrequency: "monthly",
+      priority: 0.9,
+    },
+    {
+      url: `${SITE_URL}/robotics`,
+      changeFrequency: "monthly",
+      priority: 0.9,
+    },
+    {
+      url: `${SITE_URL}/computer-diagnostics`,
+      changeFrequency: "monthly",
+      priority: 0.8,
+    },
+    {
+      url: `${SITE_URL}/computer-diagnostics/physics-of-lora`,
+      changeFrequency: "yearly",
+      priority: 0.6,
+    },
+    {
       url: `${SITE_URL}/explorations`,
       changeFrequency: "monthly",
       priority: 0.7,
@@ -57,6 +77,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
       url: `${SITE_URL}/explorations/uber-level-ai-skills`,
       changeFrequency: "yearly",
       priority: 0.5,
+    },
+    {
+      url: `${SITE_URL}/explorations/math-physics-guide`,
+      changeFrequency: "yearly",
+      priority: 0.6,
+    },
+    {
+      url: `${SITE_URL}/explorations/safer-ai`,
+      changeFrequency: "yearly",
+      priority: 0.6,
     },
   ];
 }

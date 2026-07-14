@@ -82,4 +82,12 @@ describe("Explorations hub page", () => {
       screen.getByText(/anthropic fellows program 2026/i)
     ).toBeInTheDocument();
   });
+
+  it("renders the math-physics guide card", () => {
+    render(<ExplorationsPage />);
+
+    expect(
+      screen.getByRole("link", { name: /principal equations of mathematical physics/i })
+    ).toHaveAttribute("href", "/explorations/math-physics-guide");
+  });
 });

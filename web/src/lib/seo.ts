@@ -26,7 +26,13 @@ export const KEYWORDS = [
   "AI-powered tools",
   "hire me AI",
   "software engineer portfolio",
-  "Fort Myers developer",
+  "machine learning engineer",
+  "robotics software engineer",
+  // Geographic terms, narrowest to broadest. Fremont is exact (and matches the site header and
+  // resume output); Bay Area and Silicon Valley are what recruiters actually search.
+  "Fremont CA developer",
+  "Bay Area software engineer",
+  "Silicon Valley developer",
 ];
 
 export const OG_IMAGE = `${SITE_URL}/og-card.png`;

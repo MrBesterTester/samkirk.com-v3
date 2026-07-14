@@ -81,7 +81,24 @@ test.describe("Public Pages - Render Correctly", () => {
   });
 });
 
+test.describe("Machine Learning & Robotics Pages - Render Correctly", () => {
+  test("machine learning page loads", async ({ page }) => {
+    await page.goto("/machine-learning");
+    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+  });
+
+  test("robotics page loads", async ({ page }) => {
+    await page.goto("/robotics");
+    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+  });
+});
+
 test.describe("Exploration Pages - Render Correctly", () => {
+  test("math physics guide page loads", async ({ page }) => {
+    await page.goto("/explorations/math-physics-guide");
+    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+  });
+
   test("category theory page loads", async ({ page }) => {
     await page.goto("/explorations/category-theory");
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();

@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Principal Equations of Mathematical Physics — reconstructed guide (2026-07-07)</title>
+<!-- Colorblind-safe: house blue/orange/green, never red-vs-green; color never the sole cue; no fill patterns.
+     Taxonomy relationships use grouping + arrow glyphs + word labels, not color, as the load-bearing cue. -->
+<style>
+:root{
+  --blue:#1f6feb; --blue-dk:#0b4fc0; --blue-bg:#eaf1fe;
+  --orange:#e8710a; --orange-dk:#b8560a; --orange-bg:#fdeede;
+  --green:#009E73; --green-dk:#046b50; --green-bg:#e6f5f0;
+  --ink:#1a1f29; --muted:#5a6473; --line:#d7dce4; --paper:#ffffff; --wash:#f7f9fc;
+}
+*{box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  color:var(--ink); line-height:1.62; margin:0; background:var(--wash);}
+.wrap{max-width:940px; margin:0 auto; padding:38px 26px 90px; background:var(--paper);}
+h1{font-size:29px; line-height:1.2; margin:0 0 6px;}
+h2{font-size:22px; margin:42px 0 10px; padding-top:14px; border-top:2px solid var(--line);}
+h3{font-size:18px; margin:24px 0 6px; color:var(--blue-dk);}
+p,li{font-size:15.5px;}
+a{color:var(--blue-dk);}
+.sub{color:var(--muted); font-size:14px; margin:0 0 4px;}
+.crumb{display:inline-block; font-size:13px; background:var(--blue-bg); border:1px solid #bcd3fb;
+  border-radius:999px; padding:3px 12px; margin:4px 0 0;}
+.focus{background:var(--orange-bg); border:1px solid #f2c896; border-left:5px solid var(--orange);
+  border-radius:0 10px 10px 0; padding:14px 18px; margin:18px 0;}
+.note{background:var(--blue-bg); border:1px solid #bcd3fb; border-left:5px solid var(--blue);
+  border-radius:0 10px 10px 0; padding:14px 18px; margin:18px 0;}
+.mean{background:var(--green-bg); border:1px solid #b6e2d5; border-left:5px solid var(--green);
+  border-radius:0 10px 10px 0; padding:10px 16px; margin:12px 0;}
+.mean .eqn{font-family:ui-monospace,Menlo,monospace; font-size:14px; color:#22303f; display:block; margin-bottom:2px;}
+.mean .say{color:var(--green-dk);}   /* the bold-italic "what it means" */
+figure{margin:22px 0; padding:14px; background:var(--wash); border:1px solid var(--line); border-radius:10px;}
+figcaption{font-size:13.5px; color:var(--muted); margin-top:8px; text-align:center;}
+svg{display:block; max-width:100%; height:auto; margin:0 auto;}
+code{background:#eef1f6; padding:1px 5px; border-radius:4px; font-size:13.5px;}
+.toc{background:var(--wash); border:1px solid var(--line); border-radius:10px; padding:16px 22px;}
+.toc ol{margin:6px 0; padding-left:22px;} .toc li{margin:3px 0;}
+.cite{font-size:11px; font-weight:700; text-decoration:none; color:var(--blue-dk); vertical-align:super; line-height:0; padding:0 1px;}
+.small{font-size:13.5px; color:var(--muted);}
+hr{border:none; border-top:1px solid var(--line); margin:30px 0;}
+ol.refs{font-size:13.5px; padding-left:26px;} ol.refs li{margin:6px 0;}
+ol.refs li:target{background:var(--blue-bg); border-radius:6px; padding:2px 6px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>The Principal Equations of Mathematical Physics</h1>
+<p class="sub">A reconstructed guide · 2026-07-07 (PST) · Research-only, in <code>research/</code></p>
+<a class="crumb" href="research-landscape-report-2026-07-07.html">← Back to the Research Landscape report (§1 points here)</a>
+
+<div class="note">
+<b>What this is.</b> A standalone reconstruction of the "$150 guide" video<a href="#g1" class="cite">[1]</a> — a guided
+tour of the principal differential equations of mathematical physics, organized by topic, with the <b>ancestral / sibling
+relationships</b> drawn out and each equation's meaning stated in <b><i>bold italics</i></b>. The paid PDF is not purchased;
+this is built from the video transcript.
+</div>
+
+<div class="toc">
+<b>Contents</b>
+<ol>
+<li><a href="#tax">The taxonomy &amp; inheritance chart</a></li>
+<li><a href="#map">The nine families at a glance</a></li>
+<li><a href="#mean">What each equation means (bold italics)</a></li>
+<li><a href="#action">The heart of it: least action</a></li>
+<li><a href="#robot">Why this is the robotics through-line</a></li>
+<li><a href="#refs">References</a></li>
+<li><a href="#reqs">Appendix · Originating requests (verbatim)</a></li>
+</ol>
+</div>
+
+<!-- ============================ TAXONOMY ============================ -->
+<h2 id="tax">1 · The taxonomy &amp; inheritance chart</h2>
+<p>Chips grouped inside a box are <b>siblings under one topic</b> (a taxonomy). An <b>arrow →</b> between chips is an
+<b>ancestral / lineage relationship</b> — one equation <i>generalizes</i>, <i>derives from</i>, or <i>reduces to</i>
+another. Three genuine lineages run through the subject: the <b>classical-mechanics reformulations</b>, the
+<b>potential-PDE generalization chain</b>, and the <b>relativistic/gauge quantum chain</b>.</p>
+
+<figure>
+<!-- Taxonomy + inheritance. Colorblind-safe: grouping (containment) + arrowheads + word labels carry meaning;
+     the blue/orange/green group bars are redundant reinforcement, never the sole cue. No fill patterns.
+     All class names prefixed (t*) so the SVG <style> cannot leak onto the page's .note/.focus boxes. -->
+<svg viewBox="0 0 900 838" role="img" aria-label="Taxonomy of the principal equations of mathematical physics, each chip showing its equation, with ancestral lineage arrows">
+  <defs>
+    <marker id="tah" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto">
+      <path d="M0,0 L7,3 L0,6 Z" fill="#5a6473"/>
+    </marker>
+  </defs>
+  <style>
+    .troot{font:700 14px -apple-system,Arial;fill:#0b4fc0}
+    .thdr{font:700 13.5px -apple-system,Arial}
+    .tfam{font:700 12px -apple-system,Arial;fill:#1a1f29}
+    .tsub{font:italic 11px -apple-system,Arial;fill:#5a6473}
+    .tname{font:700 11px -apple-system,Arial;fill:#1a1f29}
+    .teq{font:11px ui-monospace,Menlo,monospace;fill:#22303f}
+    .tchip{fill:#fff;stroke:#c6ccd6;stroke-width:1}
+    .trel{font:italic 11.5px -apple-system,Arial;fill:#b8560a}
+    .tcap{font:italic 11px -apple-system,Arial;fill:#5a6473}
+    .tarw{stroke:#5a6473;stroke-width:1.6;fill:none}
+  </style>
+
+  <text x="450" y="26" text-anchor="middle" class="troot">Differential Equations of Mathematical Physics</text>
+
+  <!-- ========================= GROUP A ========================= -->
+  <rect x="16" y="40" width="868" height="322" rx="10" fill="#eaf1fe" stroke="#bcd3fb"/>
+  <rect x="16" y="40" width="6" height="322" fill="#1f6feb"/>
+  <text x="34" y="62" class="thdr" fill="#0b4fc0">A · Deterministic / classical — mechanics &amp; ODEs</text>
+
+  <!-- A1 classical mechanics lineage -->
+  <text x="28" y="100" class="tfam">Classical</text>
+  <text x="28" y="115" class="tfam">mechanics</text>
+  <text x="28" y="130" class="tsub">(reformulations)</text>
+  <rect x="176" y="84" width="150" height="40" rx="6" class="tchip"/>
+  <text x="184" y="101" class="tname">Newton</text><text x="184" y="117" class="teq">F = m·ẍ</text>
+  <rect x="360" y="84" width="150" height="40" rx="6" class="tchip"/>
+  <text x="368" y="101" class="tname">Lagrange</text><text x="368" y="117" class="teq">d/dt(∂L/∂q̇)=∂L/∂q</text>
+  <rect x="544" y="84" width="150" height="40" rx="6" class="tchip"/>
+  <text x="552" y="101" class="tname">Hamilton</text><text x="552" y="117" class="teq">q̇=∂H/∂p, ṗ=−∂H/∂q</text>
+  <rect x="728" y="84" width="150" height="40" rx="6" class="tchip"/>
+  <text x="736" y="101" class="tname">Hamilton–Jacobi</text><text x="736" y="117" class="teq">∂S/∂t + H = 0</text>
+  <line x1="328" y1="104" x2="356" y2="104" class="tarw" marker-end="url(#tah)"/>
+  <text x="342" y="78" text-anchor="middle" class="trel">→ energy</text>
+  <line x1="512" y1="104" x2="542" y2="104" class="tarw" marker-end="url(#tah)"/>
+  <text x="527" y="78" text-anchor="middle" class="trel">phase space</text>
+  <line x1="696" y1="104" x2="726" y2="104" class="tarw" marker-end="url(#tah)"/>
+  <text x="711" y="78" text-anchor="middle" class="trel">action field</text>
+
+  <!-- A2 basic ODEs -->
+  <text x="28" y="174" class="tfam">Basic ODE models</text>
+  <rect x="176" y="150" width="210" height="40" rx="6" class="tchip"/>
+  <text x="184" y="167" class="tname">Radioactive decay</text><text x="184" y="183" class="teq">dN/dt = −λN</text>
+  <rect x="434" y="150" width="210" height="40" rx="6" class="tchip"/>
+  <text x="442" y="167" class="tname">Logistic growth</text><text x="442" y="183" class="teq">dN/dt = rN(1−N/K)</text>
+  <line x1="388" y1="170" x2="432" y2="170" class="tarw" marker-end="url(#tah)"/>
+  <text x="410" y="144" text-anchor="middle" class="trel">+ saturation</text>
+  <text x="662" y="174" class="tcap">decay + a crowding brake</text>
+
+  <!-- A3 dynamical systems -->
+  <text x="28" y="230" class="tfam">Dynamical systems</text>
+  <rect x="176" y="206" width="400" height="40" rx="6" class="tchip"/>
+  <text x="184" y="223" class="tname">Lorenz system</text><text x="184" y="239" class="teq">ẋ=σ(y−x),  ẏ=x(ρ−z)−y,  ż=xy−βz</text>
+  <text x="592" y="230" class="tcap">→ deterministic chaos (nonlinear)</text>
+
+  <!-- A4 fluid mechanics -->
+  <text x="28" y="286" class="tfam">Fluid mechanics</text>
+  <rect x="176" y="262" width="420" height="40" rx="6" class="tchip"/>
+  <text x="184" y="279" class="tname">Navier–Stokes</text><text x="184" y="295" class="teq">ρ(∂v/∂t + v·∇v) = −∇p + μ∇²v + f</text>
+  <text x="612" y="286" class="tcap">⇠ from Newton's 2nd law</text>
+
+  <!-- A5 general relativity -->
+  <text x="28" y="342" class="tfam">General relativity</text>
+  <rect x="176" y="318" width="210" height="40" rx="6" class="tchip"/>
+  <text x="184" y="335" class="tname">Einstein field eqs</text><text x="184" y="351" class="teq">Gμν = 8πG·Tμν</text>
+  <rect x="434" y="318" width="210" height="40" rx="6" class="tchip"/>
+  <text x="442" y="335" class="tname">Friedmann</text><text x="442" y="351" class="teq">(ȧ/a)² = 8πGρ/3 − k/a²</text>
+  <line x1="388" y1="338" x2="432" y2="338" class="tarw" marker-end="url(#tah)"/>
+  <text x="410" y="312" text-anchor="middle" class="trel">whole universe</text>
+  <text x="662" y="342" class="tcap">+ geodesic equation</text>
+
+  <!-- ========================= GROUP B ========================= -->
+  <rect x="16" y="374" width="868" height="254" rx="10" fill="#fdeede" stroke="#f2c896"/>
+  <rect x="16" y="374" width="6" height="254" fill="#e8710a"/>
+  <text x="34" y="396" class="thdr" fill="#b8560a">B · Fields, waves &amp; conservation — second-order PDEs</text>
+
+  <!-- B1 transport PDEs (siblings) -->
+  <text x="28" y="438" class="tfam">Transport PDEs</text>
+  <rect x="176" y="414" width="210" height="40" rx="6" class="tchip"/>
+  <text x="184" y="431" class="tname">Heat / diffusion</text><text x="184" y="447" class="teq">∂u/∂t = α∇²u</text>
+  <rect x="434" y="414" width="210" height="40" rx="6" class="tchip"/>
+  <text x="442" y="431" class="tname">Wave</text><text x="442" y="447" class="teq">∂²u/∂t² = c²∇²u</text>
+  <text x="662" y="431" class="tcap">siblings: same ∇²,</text>
+  <text x="662" y="446" class="tcap">different time-order</text>
+
+  <!-- B2 potential PDEs generalization chain -->
+  <text x="28" y="490" class="tfam">Potential PDEs</text>
+  <text x="28" y="505" class="tsub">(generalization chain)</text>
+  <rect x="176" y="470" width="170" height="40" rx="6" class="tchip"/>
+  <text x="184" y="487" class="tname">Laplace</text><text x="184" y="503" class="teq">∇²u = 0</text>
+  <rect x="388" y="470" width="170" height="40" rx="6" class="tchip"/>
+  <text x="396" y="487" class="tname">Poisson</text><text x="396" y="503" class="teq">∇²u = f</text>
+  <rect x="600" y="470" width="200" height="40" rx="6" class="tchip"/>
+  <text x="608" y="487" class="tname">Helmholtz</text><text x="608" y="503" class="teq">∇²u + k²u = 0</text>
+  <line x1="348" y1="490" x2="386" y2="490" class="tarw" marker-end="url(#tah)"/>
+  <text x="367" y="464" text-anchor="middle" class="trel">+ source</text>
+  <line x1="560" y1="490" x2="598" y2="490" class="tarw" marker-end="url(#tah)"/>
+  <text x="579" y="464" text-anchor="middle" class="trel">+ k²u</text>
+
+  <!-- B3 conservation -->
+  <text x="28" y="550" class="tfam">Conservation</text>
+  <rect x="176" y="526" width="260" height="40" rx="6" class="tchip"/>
+  <text x="184" y="543" class="tname">Continuity equation</text><text x="184" y="559" class="teq">∂ρ/∂t + ∇·J = 0</text>
+  <text x="452" y="550" class="tcap">conservation of mass / charge / probability</text>
+
+  <!-- B4 electromagnetism -->
+  <text x="28" y="606" class="tfam">Electromagnetism</text>
+  <rect x="176" y="582" width="250" height="40" rx="6" class="tchip"/>
+  <text x="184" y="599" class="tname">Maxwell × 4</text><text x="184" y="615" class="teq">∇·E, ∇·B=0, ∇×E, ∇×B</text>
+  <rect x="474" y="582" width="200" height="40" rx="6" class="tchip"/>
+  <text x="482" y="599" class="tname">→ light</text><text x="482" y="615" class="teq">∂²E/∂t² = c²∇²E</text>
+  <line x1="428" y1="602" x2="472" y2="602" class="tarw" marker-end="url(#tah)"/>
+  <text x="450" y="576" text-anchor="middle" class="trel">implies</text>
+
+  <!-- ========================= GROUP C ========================= -->
+  <rect x="16" y="640" width="868" height="194" rx="10" fill="#e6f5f0" stroke="#b6e2d5"/>
+  <rect x="16" y="640" width="6" height="194" fill="#009E73"/>
+  <text x="34" y="662" class="thdr" fill="#046b50">C · Statistical mechanics &amp; quantum</text>
+
+  <!-- C1 statistical mechanics -->
+  <text x="28" y="704" class="tfam">Statistical mechanics</text>
+  <rect x="200" y="680" width="380" height="40" rx="6" class="tchip"/>
+  <text x="208" y="697" class="tname">Boltzmann transport</text><text x="208" y="713" class="teq">∂f/∂t + v·∇ₓf + F·∇ᵥf = C[f]</text>
+  <text x="596" y="704" class="tcap">micro → macro bridge</text>
+
+  <!-- C2 quantum lineage -->
+  <text x="28" y="759" class="tfam">Quantum lineage</text>
+  <text x="28" y="774" class="tsub">(relativistic → gauge)</text>
+  <rect x="176" y="736" width="150" height="40" rx="6" class="tchip"/>
+  <text x="184" y="753" class="tname">Schrödinger</text><text x="184" y="769" class="teq">iħ ∂ψ/∂t = Ĥψ</text>
+  <rect x="360" y="736" width="150" height="40" rx="6" class="tchip"/>
+  <text x="368" y="753" class="tname">Klein–Gordon</text><text x="368" y="769" class="teq">(□ + m²)φ = 0</text>
+  <rect x="544" y="736" width="150" height="40" rx="6" class="tchip"/>
+  <text x="552" y="753" class="tname">Dirac</text><text x="552" y="769" class="teq">(iγ·∂ − m)ψ = 0</text>
+  <rect x="728" y="736" width="150" height="40" rx="6" class="tchip"/>
+  <text x="736" y="753" class="tname">Yang–Mills</text><text x="736" y="769" class="teq">Dμ Fμν = Jν</text>
+  <line x1="328" y1="756" x2="356" y2="756" class="tarw" marker-end="url(#tah)"/>
+  <text x="342" y="730" text-anchor="middle" class="trel">relativistic</text>
+  <line x1="512" y1="756" x2="542" y2="756" class="tarw" marker-end="url(#tah)"/>
+  <text x="527" y="730" text-anchor="middle" class="trel">spin-½</text>
+  <line x1="696" y1="756" x2="726" y2="756" class="tarw" marker-end="url(#tah)"/>
+  <text x="711" y="730" text-anchor="middle" class="trel">gauge</text>
+
+  <!-- Legend -->
+  <text x="20" y="812" class="tfam">How to read it:</text>
+  <rect x="150" y="801" width="60" height="17" rx="4" class="tchip"/>
+  <text x="220" y="813" class="tcap">chips grouped in one box = siblings under a topic (taxonomy)</text>
+  <line x1="596" y1="808" x2="626" y2="808" class="tarw" marker-end="url(#tah)"/>
+  <text x="634" y="812" class="tcap">= generalizes / derives from / reduces to (lineage)</text>
+</svg>
+<figcaption>Taxonomy of the principal equations, each chip now showing its equation, with the three ancestral chains as labeled arrows. Grouping = siblings; arrows = inheritance. Blue/orange/green group bars are redundant reinforcement — the words, equations and arrows carry the meaning.<a href="#g1" class="cite">[1]</a></figcaption>
+</figure>
+
+<!-- ============================ MAP ============================ -->
+<h2 id="map">2 · The nine families at a glance</h2>
+<p>The same nine families as a compact equation cheat-sheet.</p>
+
+<figure>
+<!-- Map of the nine families. Colorblind-safe: blue = deterministic/classical spine, orange = statistical/quantum/field;
+     every card carries a text label, color redundant. No patterns. -->
+<svg viewBox="0 0 900 560" role="img" aria-label="The nine families of principal equations as cards">
+  <style>
+    .card{fill:#fff;stroke:#d7dce4;stroke-width:1.2}
+    .fh{font:700 13px -apple-system,Arial;fill:#1a1f29}
+    .eq{font:12px ui-monospace,Menlo,monospace;fill:#33405a}
+    .kk{font:11.5px -apple-system,Arial;fill:#5a6473}
+    .bB{fill:#1f6feb} .bO{fill:#e8710a}
+    .lg{font:12px -apple-system,Arial;fill:#1a1f29}
+  </style>
+  <text x="450" y="24" text-anchor="middle" style="font:700 14px -apple-system,Arial;fill:#0b4fc0">Goal: an equation of motion / evolution you can solve → predict the trajectory or field</text>
+  <rect x="300" y="36" width="14" height="14" class="bB"/><text x="320" y="48" class="lg">deterministic / classical</text>
+  <rect x="520" y="36" width="14" height="14" class="bO"/><text x="540" y="48" class="lg">statistical · quantum · fields</text>
+
+  <rect x="24"  y="66" width="200" height="118" class="card" rx="9"/><rect x="24" y="66" width="6" height="118" class="bB"/>
+  <text x="40" y="86" class="fh">1 · Classical mechanics</text>
+  <text x="40" y="106" class="eq">F = m·d²x/dt²</text><text x="40" y="124" class="eq">SHO: ẍ = −ω²x</text>
+  <text x="40" y="142" class="eq">Euler–Lagrange · Hamilton</text><text x="40" y="160" class="eq">Hamilton–Jacobi (action S)</text>
+  <text x="40" y="177" class="kk">forces → energy → phase space</text>
+
+  <rect x="248" y="66" width="200" height="118" class="card" rx="9"/><rect x="248" y="66" width="6" height="118" class="bB"/>
+  <text x="264" y="86" class="fh">2 · Basic ODE models</text>
+  <text x="264" y="108" class="eq">dN/dt = −λN  (decay)</text><text x="264" y="130" class="eq">dN/dt = rN(1−N/K)</text>
+  <text x="264" y="150" class="kk">exponential; logistic = decay</text><text x="264" y="166" class="kk">with a saturation brake</text>
+
+  <rect x="472" y="66" width="200" height="118" class="card" rx="9"/><rect x="472" y="66" width="6" height="118" class="bB"/>
+  <text x="488" y="86" class="fh">3 · Diffusion &amp; waves</text>
+  <text x="488" y="106" class="eq">∂u/∂t = α∇²u  (heat)</text><text x="488" y="124" class="eq">∂²u/∂t² = c²∇²u  (wave)</text>
+  <text x="488" y="142" class="eq">∇²u = 0 (Laplace); = f (Poisson)</text><text x="488" y="160" class="eq">∇²u + k²u = 0 (Helmholtz)</text>
+  <text x="488" y="177" class="kk">1st deriv smooths · 2nd deriv travels</text>
+
+  <rect x="696" y="66" width="180" height="118" class="card" rx="9"/><rect x="696" y="66" width="6" height="118" class="bB"/>
+  <text x="712" y="86" class="fh">4 · Dynamical systems</text>
+  <text x="712" y="108" class="eq">Lorenz ẋ,ẏ,ż</text><text x="712" y="130" class="kk">convection rolls;</text>
+  <text x="712" y="148" class="kk">nonlinear terms →</text><text x="712" y="166" class="kk">chaos (butterfly effect)</text>
+
+  <rect x="24"  y="200" width="200" height="112" class="card" rx="9"/><rect x="24" y="200" width="6" height="112" class="bB"/>
+  <text x="40" y="220" class="fh">5 · Classical fields</text>
+  <text x="40" y="242" class="eq">∂ρ/∂t + ∇·J = 0</text><text x="40" y="262" class="kk">continuity = "stuff is</text>
+  <text x="40" y="280" class="kk">conserved as it flows"</text><text x="40" y="300" class="kk">(+source/sink term)</text>
+
+  <rect x="248" y="200" width="200" height="112" class="card" rx="9"/><rect x="248" y="200" width="6" height="112" class="bO"/>
+  <text x="264" y="220" class="fh">6 · Electromagnetism</text>
+  <text x="264" y="242" class="eq">Maxwell ×4</text><text x="264" y="262" class="kk">Gauss(E), Gauss(B),</text>
+  <text x="264" y="280" class="kk">Faraday, Ampère–Maxwell</text><text x="264" y="300" class="kk">E↔B feedback → light</text>
+
+  <rect x="472" y="200" width="200" height="112" class="card" rx="9"/><rect x="472" y="200" width="6" height="112" class="bB"/>
+  <text x="488" y="220" class="fh">7 · Fluid mechanics</text>
+  <text x="488" y="242" class="eq">Navier–Stokes</text><text x="488" y="262" class="kk">accel = pressure +</text>
+  <text x="488" y="280" class="kk">viscous friction + forces;</text><text x="488" y="300" class="kk">∇·v = 0 ⇒ incompressible</text>
+
+  <rect x="696" y="200" width="180" height="112" class="card" rx="9"/><rect x="696" y="200" width="6" height="112" class="bO"/>
+  <text x="712" y="220" class="fh">8 · Statistical mech.</text>
+  <text x="712" y="242" class="eq">Boltzmann transport</text><text x="712" y="262" class="kk">distribution f(x,v,t);</text>
+  <text x="712" y="280" class="kk">bridges micro ↔ macro</text><text x="712" y="298" class="kk">(the ML-adjacent one)</text>
+
+  <rect x="24"  y="328" width="410" height="118" class="card" rx="9"/><rect x="24" y="328" width="6" height="118" class="bO"/>
+  <text x="40" y="348" class="fh">9 · Quantum mechanics</text>
+  <text x="40" y="370" class="eq">iħ ∂ψ/∂t = Ĥψ   (Schrödinger)</text>
+  <text x="40" y="390" class="eq">(□ + m²)φ = 0   (Klein–Gordon, spin-0)</text>
+  <text x="40" y="410" class="eq">(iγ·∂ − m)ψ = 0   (Dirac, spin-½ → antimatter)</text>
+  <text x="40" y="430" class="eq">Yang–Mills   (Standard Model — "many prerequisites")</text>
+
+  <rect x="458" y="328" width="418" height="118" class="card" rx="9"/><rect x="458" y="328" width="6" height="118" class="bB"/>
+  <text x="474" y="348" class="fh">10 · General relativity</text>
+  <text x="474" y="370" class="eq">Gμν = 8πG·Tμν   (Einstein field eqs.)</text>
+  <text x="474" y="390" class="kk">"matter tells spacetime how to curve;</text>
+  <text x="474" y="408" class="kk">spacetime tells matter how to move" (geodesic)</text>
+  <text x="474" y="428" class="eq">Friedmann   (cosmic expansion, H)</text>
+
+  <rect x="24" y="466" width="852" height="70" fill="#eaf1fe" stroke="#bcd3fb" rx="9"/><rect x="24" y="466" width="6" height="70" class="bB"/>
+  <text x="44" y="490" style="font:700 13px -apple-system,Arial;fill:#0b4fc0">Robotics spine (inside family 1):</text>
+  <text x="44" y="512" class="eq">Newton (forces) → Lagrange (energy L = T − V) → Hamilton (phase space q,p) → Hamilton–Jacobi (action field S)</text>
+  <text x="44" y="529" class="kk">Same chain underlies Drake's dynamics engine AND this project's HNN / port-Hamiltonian builds.</text>
+</svg>
+<figcaption>The nine families, ~20 principal equations<a href="#g1" class="cite">[1]</a>. Blue = deterministic/classical spine, orange = statistical/quantum/field.</figcaption>
+</figure>
+
+<!-- ============================ MEANINGS ============================ -->
+<h2 id="mean">3 · What each equation means</h2>
+<p>The guide's real teaching move is <b>one intuition per equation</b><a href="#g1" class="cite">[1]</a>. The succinct
+meaning is in <b><i>bold italics</i></b>; the equation and elaboration follow.</p>
+
+<h3>Family 1 · Classical mechanics</h3>
+<div class="mean"><span class="eqn">F = m·d²x/dt²  (Newton)</span>
+<span class="say"><b><i>A force is whatever curves a trajectory — and a second derivative simply measures that curvature.</i></b></span>
+No force → straight, steady motion; a force bends the path, speeding up or slowing down.</div>
+<div class="mean"><span class="eqn">ẍ = −ω²x  (simple harmonic oscillator)</span>
+<span class="say"><b><i>The farther you're displaced from equilibrium, the harder you're pulled back — so the system trades kinetic for potential energy, forever.</i></b></span>
+The teaching sandbox: a spring, a small-angle pendulum, a vibrating molecule.</div>
+<div class="mean"><span class="eqn">d/dt(∂L/∂q̇) − ∂L/∂q = 0  (Euler–Lagrange, L = T − V)</span>
+<span class="say"><b><i>When forces get too many to track, switch from forces to energy: nature follows the path that makes the action stationary.</i></b></span></div>
+<div class="mean"><span class="eqn">q̇ = ∂H/∂p,  ṗ = −∂H/∂q  (Hamilton)</span>
+<span class="say"><b><i>Redraw motion in phase space (position vs. momentum) and hidden structure appears — conservation, periodicity, stability, chaos.</i></b></span></div>
+<div class="mean"><span class="eqn">H(q, ∂S/∂q) + ∂S/∂t = 0  (Hamilton–Jacobi)</span>
+<span class="say"><b><i>Turn the action into a field S(q,t) whose slopes already encode the whole motion — stop tracking the particle, find the field.</i></b></span></div>
+
+<h3>Family 2 · Basic ODE models</h3>
+<div class="mean"><span class="eqn">dN/dt = −λN  (radioactive decay)</span>
+<span class="say"><b><i>Constant fractional loss → the exponential, the one function that is its own derivative.</i></b></span></div>
+<div class="mean"><span class="eqn">dN/dt = rN(1 − N/K)  (logistic growth)</span>
+<span class="say"><b><i>Decay's cousin with a crowding brake: explosion while resources are ample, saturation once they run out.</i></b></span></div>
+
+<h3>Family 3 · Diffusion &amp; waves</h3>
+<div class="mean"><span class="eqn">∂u/∂t = α∇²u  (heat / diffusion)</span>
+<span class="say"><b><i>The velocity of the field is proportional to its spatial curvature — one time-derivative, so it smooths and loses sharpness.</i></b></span></div>
+<div class="mean"><span class="eqn">∂²u/∂t² = c²∇²u  (wave)</span>
+<span class="say"><b><i>The acceleration of the field is proportional to its curvature — two time-derivatives, so it travels and keeps its shape.</i></b></span></div>
+<div class="mean"><span class="eqn">∇²u = 0 (Laplace) · ∇²u = f (Poisson) · ∇²u + k²u = 0 (Helmholtz)</span>
+<span class="say"><b><i>No sources, shape set by the boundary (Laplace); add sources (Poisson); add a fixed frequency and you get the spatial snapshot of a wave (Helmholtz).</i></b></span></div>
+
+<h3>Family 4 · Dynamical systems</h3>
+<div class="mean"><span class="eqn">Lorenz: ẋ,ẏ,ż (convection)</span>
+<span class="say"><b><i>Nonlinear cross-terms make tiny changes in the start explode into wildly different outcomes — deterministic chaos, the butterfly effect.</i></b></span></div>
+
+<h3>Family 5 · Classical fields</h3>
+<div class="mean"><span class="eqn">∂ρ/∂t + ∇·J = 0  (continuity)</span>
+<span class="say"><b><i>The amount inside a region changes only because stuff flows in or out — conservation, unless you add a source or sink.</i></b></span></div>
+
+<h3>Family 6 · Electromagnetism</h3>
+<div class="mean"><span class="eqn">Maxwell × 4</span>
+<span class="say"><b><i>Charges source the electric field; there are no magnetic monopoles; a changing B makes a circulating E, and a changing E makes B — that feedback loop is self-propagating light.</i></b></span></div>
+
+<h3>Family 7 · Fluid mechanics</h3>
+<div class="mean"><span class="eqn">Navier–Stokes</span>
+<span class="say"><b><i>Newton's second law for a fluid parcel — acceleration = pressure + viscous friction + body forces — with incompressibility standing in for mass conservation.</i></b></span></div>
+
+<h3>Family 8 · Statistical mechanics</h3>
+<div class="mean"><span class="eqn">Boltzmann transport, f(x,v,t)</span>
+<span class="say"><b><i>Don't chase a million particles — track how the whole cloud is distributed in position and velocity, and how that distribution flows.</i></b></span>
+The micro→macro bridge (and the doorway to the spin-glass story in the main report).</div>
+
+<h3>Family 9 · Quantum mechanics</h3>
+<div class="mean"><span class="eqn">iħ ∂ψ/∂t = Ĥψ  (Schrödinger)</span>
+<span class="say"><b><i>Replace the trajectory with a wavefunction giving only a probability — ψ itself has no physical meaning; only |ψ|² does.</i></b></span></div>
+<div class="mean"><span class="eqn">(□ + m²)φ = 0  (Klein–Gordon)</span>
+<span class="say"><b><i>Schrödinger made relativistic for a spin-0 particle (curvature in space and time together).</i></b></span></div>
+<div class="mean"><span class="eqn">(iγ·∂ − m)ψ = 0  (Dirac)</span>
+<span class="say"><b><i>Relativistic spin-½ — and antimatter falls out of the structure for free, predicted before it was found.</i></b></span></div>
+<div class="mean"><span class="eqn">Yang–Mills</span>
+<span class="say"><b><i>The Standard Model's gauge equation — so much prerequisite that even the video defers it.</i></b></span></div>
+
+<h3>Family 10 · General relativity</h3>
+<div class="mean"><span class="eqn">Gμν = 8πG·Tμν  (Einstein field eqs.)</span>
+<span class="say"><b><i>Matter-energy tells spacetime how to curve; curvature tells matter how to move (the geodesic equation).</i></b></span></div>
+<div class="mean"><span class="eqn">Friedmann</span>
+<span class="say"><b><i>The Einstein equations applied to a uniform universe — the scale factor's growth is cosmic expansion.</i></b></span></div>
+
+<!-- ============================ ACTION ============================ -->
+<h2 id="action">4 · The heart of it: least action</h2>
+<div class="note">
+Of all conceivable paths from A to B, compute the action <code>S = ∫(T−V)dt</code> for each. Plot S over the "spectrum
+of all paths" and you get a curve; the real path sits at a <b>stationary point</b> (δS = 0), usually a minimum<a href="#g1" class="cite">[1]</a>.
+This least-action principle is the exact conceptual rhyme with the spin-glass / machine-learning story in the main
+report: <b>a landscape over a space of configurations, and physics (or learning) picks out special points on it.</b>
+</div>
+
+<!-- ============================ ROBOTICS ============================ -->
+<h2 id="robot">5 · Why this is the robotics through-line</h2>
+<div class="focus">
+The spine of the whole guide — <b>Newton → Lagrange → Hamilton → Hamilton-Jacobi</b> — <i>is</i> the mathematics of
+robot dynamics. It is exactly what <a href="research-landscape-report-2026-07-07.html#s4">Drake</a> computes (the
+physics-based layer of the robotics stack) and exactly the backbone of this project's own <code>hnn-conservative</code>
+and <code>port-hamiltonian-pendulum</code> builds. Lagrangian/Hamiltonian mechanics is the shared substrate of classical
+robotics <i>and</i> physics-first ML — the reason a "Principal Equations" reference like this one is worth growing into
+its own sub-project. (Observation only; not a proposal.)
+</div>
+
+<!-- ============================ REFERENCES ============================ -->
+<h2 id="refs">References</h2>
+<ol class="refs">
+<li id="g1"><b>Mathematical-physics "principal equations" video</b> — <a href="https://youtu.be/tOC8vfVAnus">youtu.be/tOC8vfVAnus</a> (auto-captions; this guide is reconstructed from the transcript). The $150 companion PDF is <i>not</i> purchased.</li>
+</ol>
+
+<h2 id="reqs">Appendix · Originating requests (verbatim)</h2>
+<p>The requests that shaped <i>this guide</i>, quoted exactly (typos and all). Report-level requests live in the
+<a href="research-landscape-report-2026-07-07.html#reqs">report's appendix</a>; the full log is in
+<a href="research-notes-organized-2026-07-07.md">research-notes-organized</a>.</p>
+
+<blockquote style="background:var(--blue-bg);border-left:4px solid var(--blue);border-radius:0 8px 8px 0;padding:10px 16px;margin:12px 0;color:#22303f;">
+<b class="small" style="color:var(--blue-dk)">Create this standalone guide (taxonomy/inheritance SVG; move content; bold-italic meanings)</b><br>
+The diagram captioned as, model size / number of parameters, has overlapping labels. Please include a statement if Robospaces can run on my M1 iMac. I want you to work out a separate HTML doc for the $150 guide to physics. In it I would like to see an SVG chart that shows the inheritance and/or comparison (as siblings under a general area or topic of physics if not a ancestoral equation). Alternatatively, you may find that a taxonomy is a better form for this elucidation. Please move all the content to that guide from the current HTML and put in cross links. The succinct wording of what each equation means is very important: best put it in bold italics.
+</blockquote>
+
+<blockquote style="background:var(--blue-bg);border-left:4px solid var(--blue);border-radius:0 8px 8px 0;padding:10px 16px;margin:12px 0;color:#22303f;">
+<b class="small" style="color:var(--blue-dk)">Fix small fonts; equations on every chip; clearer arrow labels; enlarge</b><br>
+In the $150 Guide, there are a couple places where the font is too small: (1) "... standalone reconstruction..." (2) "Of all conceivable paths from A to B...". Don't why you're prone to shrink the font there. In taxonomy/inheritance chart, the annotation you put over implies arrow is rather crowded and it's difficult to see at a glance what to what the annotation is referring, e.g., "generalization chain...", "+saturation brake". Also on that chart, as you did in many instances in section B, you actually gave the equation. I'd like the same throughtout the chart. I realize this may tend to crowd the chart and you'll need to enlarge it.
+</blockquote>
+
+<hr>
+<p class="small">Research-only · <code>research/</code> · not a physics-first proposal. See also:
+<a href="research-landscape-report-2026-07-07.html">Research Landscape report</a> (this guide is its §1) ·
+<a href="research-notes-organized-2026-07-07.md">organized guide</a> ·
+<a href="research-notes-verbatim-2026-07-07.md">verbatim notes</a>.</p>
+
+</div>
+</body>
+</html>

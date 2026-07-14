@@ -56,6 +56,15 @@ const explorations: Exploration[] = [
       "Educational interactive demo illustrating a unified programming paradigm bridging neural and symbolic AI.",
   },
   {
+    // Description deliberately avoids the phrasing that explorations/page.test.tsx probes for
+    // (notably /educational interactive demo illustrating/i) — that file uses singular getByText,
+    // so an overlapping description throws "found multiple elements".
+    href: "/explorations/math-physics-guide",
+    title: "Principal Equations of Mathematical Physics",
+    description:
+      "A guided tour of the differential equations physics runs on, organized by topic — with the ancestral and sibling relationships between them drawn out, and each equation's meaning stated plainly.",
+  },
+  {
     href: "/explorations/safer-ai",
     title: "Safer AI",
     description:

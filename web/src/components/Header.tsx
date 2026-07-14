@@ -6,6 +6,15 @@ import { useState } from "react";
 const baseNavLinks = [
   { href: "/", label: "Home" },
   { href: "/hire-me", label: "Hire Me" },
+  {
+    href: "/machine-learning",
+    label: "Machine Learning",
+    children: [
+      { href: "/computer-diagnostics", label: "Computer Diagnostics" },
+      { href: "/computer-diagnostics/physics-of-lora", label: "The Physics of LoRA" },
+    ],
+  },
+  { href: "/robotics", label: "Robotics" },
   { href: "/dance-menu", label: "Dance Menu" },
   { href: "/song-dedication", label: "Song Dedication" },
   { href: "/photo-fun", label: "Photo Fun" },
@@ -18,6 +27,8 @@ const baseNavLinks = [
       { href: "/explorations/dance-instruction", label: "Dance Instruction" },
       { href: "/explorations/uber-level-ai-skills", label: "Uber Level AI Skills" },
       { href: "/explorations/tensor-logic", label: "Tensor Logic" },
+      { href: "/explorations/math-physics-guide", label: "Principal Equations" },
+      { href: "/explorations/safer-ai", label: "Safer AI" },
     ],
   },
 ];
