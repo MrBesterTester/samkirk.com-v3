@@ -26,6 +26,7 @@
 
 import { spawn, execSync, type ChildProcess } from "child_process";
 import { resolve, relative } from "path";
+import { fileURLToPath } from "url";
 import { readdirSync, readFileSync, existsSync, mkdirSync, writeFileSync, statSync } from "fs";
 import { config } from "dotenv";
 
@@ -60,6 +61,12 @@ interface SuiteResult {
   passed: number;
   /** Number of tests that failed */
   failed: number;
+  /**
+   * Number of test FILES that failed, including suite-level aborts that fail
+   * zero individual tests. A throw in beforeAll kills the file before its tests
+   * run, so they are counted nowhere -- never infer health from `failed` alone.
+   */
+  failedFiles: number;
   /** Number of tests skipped */
   skipped: number;
   /** Duration in milliseconds */
@@ -262,6 +269,7 @@ function filterSuites(
         status: "skipped",
         passed: 0,
         failed: 0,
+        failedFiles: 0,
         skipped: 0,
         durationMs: 0,
         skipReason: "Not selected",
@@ -278,6 +286,7 @@ function filterSuites(
           status: "skipped",
           passed: 0,
           failed: 0,
+          failedFiles: 0,
           skipped: 0,
           durationMs: 0,
           skipReason: "--no-gcp flag set",
@@ -292,6 +301,7 @@ function filterSuites(
           status: "skipped",
           passed: 0,
           failed: 0,
+          failedFiles: 0,
           skipped: 0,
           durationMs: 0,
           skipReason: "GCP credentials not detected",
@@ -318,14 +328,16 @@ function stripAnsi(text: string): string {
 }
 
 /** Parse Vitest output for test counts */
-function parseVitestOutput(output: string): {
+export function parseVitestOutput(output: string): {
   passed: number;
   failed: number;
   skipped: number;
+  failedFiles: number;
 } {
   let passed = 0;
   let failed = 0;
   let skipped = 0;
+  let failedFiles = 0;
 
   // Find the "Tests" summary line (e.g. "Tests  1228 passed | 3 skipped (1231)")
   const testsLine = output.match(/Tests\s+(.+)\(\d+\)/);
@@ -339,7 +351,16 @@ function parseVitestOutput(output: string): {
     if (skippedMatch) skipped = parseInt(skippedMatch[1], 10);
   }
 
-  return { passed, failed, skipped };
+  // Find the "Test Files" line (e.g. "Test Files  1 failed | 41 passed (42)").
+  // A suite-level abort fails the FILE while failing zero individual tests --
+  // without this, such a run reports "0 failed" and reads as green.
+  const filesLine = output.match(/Test Files\s+(.+)\(\d+\)/);
+  if (filesLine) {
+    const failedFilesMatch = filesLine[1].match(/(\d+)\s+failed/);
+    if (failedFilesMatch) failedFiles = parseInt(failedFilesMatch[1], 10);
+  }
+
+  return { passed, failed, skipped, failedFiles };
 }
 
 /** Parse Playwright output for test counts */
@@ -347,6 +368,7 @@ function parsePlaywrightOutput(output: string): {
   passed: number;
   failed: number;
   skipped: number;
+  failedFiles: number;
 } {
   let passed = 0;
   let failed = 0;
@@ -361,7 +383,8 @@ function parsePlaywrightOutput(output: string): {
   if (failedMatch) failed = parseInt(failedMatch[1], 10);
   if (skippedMatch) skipped = parseInt(skippedMatch[1], 10);
 
-  return { passed, failed, skipped };
+  // Playwright has no file-level abort concept in its summary line.
+  return { passed, failed, skipped, failedFiles: 0 };
 }
 
 /** Parse custom script output (e2e-real-llm, smoke-gcp) for pass/fail counts */
@@ -369,19 +392,20 @@ function parseCustomScriptOutput(output: string): {
   passed: number;
   failed: number;
   skipped: number;
+  failedFiles: number;
 } {
   // Count ✓ and ✗ prefixes in the output
   const passedLines = (output.match(/^✓/gm) || []).length;
   const failedLines = (output.match(/^✗/gm) || []).length;
 
-  return { passed: passedLines, failed: failedLines, skipped: 0 };
+  return { passed: passedLines, failed: failedLines, skipped: 0, failedFiles: 0 };
 }
 
 /** Parse suite output based on suite name */
 function parseSuiteOutput(
   suiteName: string,
   output: string,
-): { passed: number; failed: number; skipped: number } {
+): { passed: number; failed: number; skipped: number; failedFiles: number } {
   const cleanOutput = stripAnsi(output);
   if (suiteName === "Unit Tests") {
     return parseVitestOutput(cleanOutput);
@@ -593,6 +617,7 @@ function runSuite(suite: Suite, verbose: boolean): Promise<SuiteResult> {
         status,
         passed: counts.passed,
         failed: counts.failed,
+        failedFiles: counts.failedFiles,
         skipped: counts.skipped,
         durationMs,
         output,
@@ -608,6 +633,7 @@ function runSuite(suite: Suite, verbose: boolean): Promise<SuiteResult> {
         status: "failed",
         passed: 0,
         failed: 0,
+        failedFiles: 0,
         skipped: 0,
         durationMs,
         output: err.message,
@@ -716,9 +742,11 @@ function printSummaryTable(results: SuiteResult[]): void {
   const COL_STATUS = 10;
   const COL_PASS = 8;
   const COL_FAIL = 8;
+  const COL_FILES = 7;
   const COL_SKIP = 8;
   const COL_TIME = 10;
-  const TOTAL_WIDTH = COL_NAME + COL_STATUS + COL_PASS + COL_FAIL + COL_SKIP + COL_TIME + 5;
+  const TOTAL_WIDTH =
+    COL_NAME + COL_STATUS + COL_PASS + COL_FAIL + COL_FILES + COL_SKIP + COL_TIME + 6;
 
   console.log("");
   console.log("=".repeat(TOTAL_WIDTH));
@@ -736,6 +764,8 @@ function printSummaryTable(results: SuiteResult[]): void {
     padLeft("Passed", COL_PASS) +
     " " +
     padLeft("Failed", COL_FAIL) +
+    " " +
+    padLeft("Files!", COL_FILES) +
     " " +
     padLeft("Skip", COL_SKIP) +
     " " +
@@ -764,6 +794,11 @@ function printSummaryTable(results: SuiteResult[]): void {
       ) +
       " " +
       colorize(
+        padLeft(String(result.failedFiles), COL_FILES),
+        result.failedFiles > 0 ? ANSI.red : ANSI.dim,
+      ) +
+      " " +
+      colorize(
         padLeft(String(result.skipped), COL_SKIP),
         result.skipped > 0 ? ANSI.yellow : ANSI.dim,
       ) +
@@ -785,6 +820,7 @@ function printSummaryTable(results: SuiteResult[]): void {
   // Totals row
   const totalPassed = results.reduce((sum, r) => sum + r.passed, 0);
   const totalFailed = results.reduce((sum, r) => sum + r.failed, 0);
+  const totalFailedFiles = results.reduce((sum, r) => sum + r.failedFiles, 0);
   const totalSkipped = results.reduce((sum, r) => sum + r.skipped, 0);
   const totalTime = results.reduce((sum, r) => sum + r.durationMs, 0);
 
@@ -801,6 +837,11 @@ function printSummaryTable(results: SuiteResult[]): void {
     ) +
     " " +
     colorize(
+      padLeft(String(totalFailedFiles), COL_FILES),
+      totalFailedFiles > 0 ? ANSI.red : ANSI.dim,
+    ) +
+    " " +
+    colorize(
       padLeft(String(totalSkipped), COL_SKIP),
       totalSkipped > 0 ? ANSI.yellow : ANSI.dim,
     ) +
@@ -809,6 +850,35 @@ function printSummaryTable(results: SuiteResult[]): void {
 
   console.log(totalRow);
   console.log("=".repeat(TOTAL_WIDTH));
+
+  // A suite-level abort (a throw in beforeAll) fails the FILE while failing
+  // zero individual tests -- its tests never run, so they are counted nowhere.
+  // On 2026-07-14 that produced "FAILED / 1309 passed / 0 failed", which read
+  // as green and passed a ship gate. A number in a column was missable; say it.
+  if (totalFailedFiles > 0) {
+    console.log("");
+    console.log(
+      colorize(
+        `✗ ${totalFailedFiles} test file(s) FAILED TO COMPLETE (see the Files! column)`,
+        ANSI.red + ANSI.bold,
+      ),
+    );
+    console.log(
+      colorize(
+        "  Tests in an aborted file never run, so they count as neither passed",
+        ANSI.red,
+      ),
+    );
+    console.log(
+      colorize(
+        `  nor failed. The Passed total (${totalPassed}) is an UNDERCOUNT, not a`,
+        ANSI.red,
+      ),
+    );
+    console.log(
+      colorize("  clean bill of health. Read the raw logs.", ANSI.red),
+    );
+  }
 }
 
 // ============================================================================
@@ -997,26 +1067,40 @@ function writeArchive(opts: ArchiveOptions): void {
     "",
     "## Summary",
     "",
-    "| Suite | Status | Passed | Failed | Skipped | Duration |",
-    "|-------|--------|--------|--------|---------|----------|",
+    "| Suite | Status | Passed | Failed | Files Failed | Skipped | Duration |",
+    "|-------|--------|--------|--------|--------------|---------|----------|",
   ];
 
   for (const r of opts.results) {
     const status = r.status.toUpperCase();
     const duration = formatDuration(r.durationMs);
     summaryLines.push(
-      `| ${r.name} | ${status} | ${r.passed} | ${r.failed} | ${r.skipped} | ${duration} |`,
+      `| ${r.name} | ${status} | ${r.passed} | ${r.failed} | ${r.failedFiles} | ${r.skipped} | ${duration} |`,
     );
   }
 
   // Totals row
   const totalPassed = opts.results.reduce((sum, r) => sum + r.passed, 0);
   const totalFailed = opts.results.reduce((sum, r) => sum + r.failed, 0);
+  const totalFailedFiles = opts.results.reduce((sum, r) => sum + r.failedFiles, 0);
   const totalSkipped = opts.results.reduce((sum, r) => sum + r.skipped, 0);
   const totalDuration = opts.results.reduce((sum, r) => sum + r.durationMs, 0);
   summaryLines.push(
-    `| **Total** | | **${totalPassed}** | **${totalFailed}** | **${totalSkipped}** | **${formatDuration(totalDuration)}** |`,
+    `| **Total** | | **${totalPassed}** | **${totalFailed}** | **${totalFailedFiles}** | **${totalSkipped}** | **${formatDuration(totalDuration)}** |`,
   );
+
+  // A suite-level abort fails zero individual tests, so a run can read
+  // "0 failed" while a whole file never executed. On 2026-07-14 that row
+  // passed a ship gate. Say it in words -- a number in a column is missable.
+  if (totalFailedFiles > 0) {
+    summaryLines.push(
+      "",
+      `> **${totalFailedFiles} test file(s) failed to complete.** Tests inside an aborted`,
+      "> file never run, so they are counted as neither passed nor failed. The",
+      "> `Passed` column above is therefore an undercount, not a clean bill of",
+      "> health. Read the raw logs before trusting any total on this run.",
+    );
+  }
 
   // Test index section
   summaryLines.push("");
@@ -1217,8 +1301,16 @@ async function main(): Promise<void> {
   }
 }
 
-main().catch((err: unknown) => {
-  const message = err instanceof Error ? err.message : String(err);
-  log(`Unexpected error: ${message}`, false);
-  process.exit(1);
-});
+// Only run when invoked directly -- importing this module (e.g. from
+// test-all.test.ts) must not spawn the whole suite.
+const isEntrypoint =
+  process.argv[1] !== undefined &&
+  resolve(fileURLToPath(import.meta.url)) === resolve(process.argv[1]);
+
+if (isEntrypoint) {
+  main().catch((err: unknown) => {
+    const message = err instanceof Error ? err.message : String(err);
+    log(`Unexpected error: ${message}`, false);
+    process.exit(1);
+  });
+}
