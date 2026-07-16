@@ -368,7 +368,7 @@ Analyze how well Sam fits this role. Respond with JSON only (no markdown):
     model: modelName,
     generationConfig: {
       temperature: 0.3,
-      maxOutputTokens: 4096,
+      maxOutputTokens: 16384, // A9: thinking counts against this; 4096 truncated the JSON,
     },
   });
 
@@ -654,7 +654,7 @@ Generate a tailored 2-page professional resume as specified. Remember:
     model: modelName,
     generationConfig: {
       temperature: 0.4,
-      maxOutputTokens: 4096,
+      maxOutputTokens: 16384, // A9: thinking counts against this; 4096 truncated the JSON,
     },
   });
 

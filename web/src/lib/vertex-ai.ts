@@ -149,6 +149,44 @@ export class GenerationError extends Error {
   }
 }
 
+/**
+ * Thrown when the model stopped because it hit the output-token ceiling
+ * (finishReason MAX_TOKENS) rather than finishing its answer. The returned text
+ * is a fragment. Distinct from GenerationError so callers -- and logs -- can
+ * tell "the model was cut off" from "the model failed", and never mistake a
+ * truncated fragment for malformed JSON (see A9, 2026-07-15).
+ */
+export class TruncatedResponseError extends GenerationError {
+  readonly reason = "MAX_TOKENS";
+
+  constructor(message: string) {
+    super(message);
+    this.name = "TruncatedResponseError";
+  }
+}
+
+/**
+ * Guard: fail loudly when a response was truncated at the token limit.
+ *
+ * generateContent used to return finishReason and no caller read it, so a
+ * MAX_TOKENS truncation flowed into JSON.parse and surfaced as "Failed to parse
+ * LLM response as JSON" -- blaming the JSON for what was really an exhausted
+ * budget. Call this before handing text downstream.
+ */
+export function assertResponseComplete(
+  finishReason: string | undefined,
+  outputTextLength: number,
+): void {
+  if (finishReason === "MAX_TOKENS") {
+    throw new TruncatedResponseError(
+      `Model response was truncated at the output-token limit ` +
+        `(finishReason=MAX_TOKENS, ${outputTextLength} chars produced). ` +
+        `This is NOT a JSON parse error -- raise maxOutputTokens or lower the ` +
+        `thinking budget. Thinking tokens count against maxOutputTokens.`,
+    );
+  }
+}
+
 // ============================================================================
 // Singleton Client
 // ============================================================================
@@ -325,6 +363,13 @@ export async function generateContent(
 
   const generatedText = textParts.map((p) => p.text).join("");
 
+  // A MAX_TOKENS finish means this text is a fragment. Fail here rather than
+  // let a caller parse a truncated string and blame the JSON (A9).
+  assertResponseComplete(
+    candidate.finishReason ? String(candidate.finishReason) : undefined,
+    generatedText.length,
+  );
+
   // Extract usage metadata
   const usageMetadata = response.usageMetadata;
   const inputTokens = usageMetadata?.promptTokenCount ?? estimateTokensFromText(prompt);
@@ -457,6 +502,11 @@ export async function generateContentWithHistory(
   }
 
   const generatedText = textParts.map((p) => p.text).join("");
+
+  // NOTE: no truncation guard on this (streaming/interview) path yet. Interview
+  // is confirmed working and returns conversational text where a MAX_TOKENS cut
+  // is degraded-but-usable, not broken JSON. Adding a throwing guard here needs
+  // its own verification of interview's real finishReason first (A9 follow-up).
 
   // Estimate tokens from full conversation
   const fullPrompt = [...history.map((m) => m.text), newMessage].join("\n\n");

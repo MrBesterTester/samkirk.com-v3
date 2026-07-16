@@ -715,7 +715,12 @@ export async function generateResume(
   const llmResult = await generateContent(prompt, {
     systemInstruction: RESUME_GENERATION_SYSTEM_PROMPT,
     temperature: 0.4, // Slightly higher than fit analysis for more creative writing
-    maxOutputTokens: 4096,
+    // gemini-2.5-flash thinks before it writes, and thinking tokens count
+    // against maxOutputTokens. At 4096, a ~8.7K-token prompt drove ~3900
+    // thinking tokens and left ~160 for output -- the JSON came back truncated
+    // and parsing blamed the JSON (A9, measured 2026-07-15). 16384 leaves room
+    // for both; a full resume needs ~1000 output tokens.
+    maxOutputTokens: 16384,
   });
 
   // 4. Parse the response

@@ -537,7 +537,10 @@ export async function generateFitReport(state: FitFlowState): Promise<FitReport>
   const llmResult = await generateContent(prompt, {
     systemInstruction: FIT_ANALYSIS_SYSTEM_PROMPT,
     temperature: 0.3, // Lower temperature for more consistent structured output
-    maxOutputTokens: 2048,
+    // gemini-2.5-flash thinking counts against maxOutputTokens (A9). At 2048 --
+    // the smallest budget of any tool -- thinking exhausted it before the JSON
+    // finished. 16384 leaves room for thinking plus the analysis output.
+    maxOutputTokens: 16384,
   });
 
   // 4. Parse the response
