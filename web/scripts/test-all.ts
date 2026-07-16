@@ -191,11 +191,31 @@ function parseArgs(): Args {
 // GCP Credential Detection
 // ============================================================================
 
-/** Check if GCP credentials are available via env vars */
-function detectGcp(): boolean {
+/**
+ * Whether GCP is actually usable -- not merely configured.
+ *
+ * The previous version checked only that two env vars were non-empty strings.
+ * On 2026-07-14 that returned true against a refresh token that had been dead
+ * since March: summary.md recorded `gcp_available: true` while every GCP call
+ * failed on invalid_grant. A configured name is not a working credential, and
+ * attempting a token is the only honest answer to "is GCP available?".
+ */
+export async function detectGcp(): Promise<boolean> {
   const projectId = process.env["GCP_PROJECT_ID"];
   const bucket = process.env["GCS_PUBLIC_BUCKET"];
-  return Boolean(projectId && bucket);
+  if (!projectId || !bucket) return false;
+
+  try {
+    const { GoogleAuth } = await import("google-auth-library");
+    const auth = new GoogleAuth({
+      scopes: ["https://www.googleapis.com/auth/devstorage.read_write"],
+    });
+    const client = await auth.getClient();
+    const token = await client.getAccessToken();
+    return Boolean(token?.token);
+  } catch {
+    return false;
+  }
 }
 
 // ============================================================================
@@ -1179,7 +1199,9 @@ function writeArchive(opts: ArchiveOptions): void {
 
 async function main(): Promise<void> {
   const args = parseArgs();
-  const gcpAvailable = detectGcp();
+  // Must be awaited -- an unawaited Promise is always truthy, which would
+  // reintroduce the exact bug this function was rewritten to fix.
+  const gcpAvailable = await detectGcp();
 
   // Header
   console.log("");

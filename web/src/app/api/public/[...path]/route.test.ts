@@ -13,16 +13,38 @@ import type { Bucket } from "@google-cloud/storage";
 config({ path: resolve(process.cwd(), ".env.local") });
 
 /**
- * Check if GCP credentials are available without throwing.
+ * Whether GCP is actually reachable -- not merely named in .env.local.
+ *
+ * The previous version checked only that two env vars were non-empty strings.
+ * That is why this file ABORTED on 2026-07-14 instead of skipping: the vars
+ * were set, so beforeAll charged into a live GCS write holding a refresh token
+ * that had been dead since March, and threw. A suite-level abort fails the FILE
+ * while failing zero individual tests -- so these tests vanished from the count
+ * entirely, and the run still reported "1309 passed | 0 failed". That read as
+ * green and shipped.
+ *
+ * Attempting a token is the only honest answer. When it fails, gcpAvailable is
+ * false, beforeAll bails early, and the tests below report as SKIPPED -- which
+ * is visible in the count, unlike an abort.
  */
-function hasGcpCredentials(): boolean {
-  return !!(
-    process.env.GCP_PROJECT_ID &&
-    process.env.GCS_PUBLIC_BUCKET
-  );
+async function hasGcpCredentials(): Promise<boolean> {
+  if (!process.env.GCP_PROJECT_ID || !process.env.GCS_PUBLIC_BUCKET) {
+    return false;
+  }
+  try {
+    const { GoogleAuth } = await import("google-auth-library");
+    const auth = new GoogleAuth({
+      scopes: ["https://www.googleapis.com/auth/devstorage.read_write"],
+    });
+    const client = await auth.getClient();
+    const token = await client.getAccessToken();
+    return Boolean(token?.token);
+  } catch {
+    return false;
+  }
 }
 
-const gcpAvailable = hasGcpCredentials();
+const gcpAvailable = await hasGcpCredentials();
 
 describe("Public Proxy API Integration", () => {
   let bucket: Bucket;

@@ -6,8 +6,8 @@
  * individual tests. The runner reported "FAILED / 1309 passed / 0 failed" -- a
  * row that reads as green -- and that report passed a ship gate.
  */
-import { describe, it, expect } from "vitest";
-import { parseVitestOutput } from "./test-all";
+import { describe, it, expect, afterEach } from "vitest";
+import { parseVitestOutput, detectGcp } from "./test-all";
 
 describe("parseVitestOutput", () => {
   it("counts a normal green run", () => {
@@ -54,5 +54,32 @@ describe("parseVitestOutput", () => {
       skipped: 0,
       failedFiles: 0,
     });
+  });
+});
+
+describe("detectGcp", () => {
+  const saved = { ...process.env };
+
+  afterEach(() => {
+    process.env = { ...saved };
+  });
+
+  it("returns false when the env vars are absent", async () => {
+    delete process.env.GCP_PROJECT_ID;
+    delete process.env.GCS_PUBLIC_BUCKET;
+    await expect(detectGcp()).resolves.toBe(false);
+  });
+
+  it("returns false when env vars are set but the credential is dead", async () => {
+    // This is the 2026-07-14 state: .env.local named a project, so the old
+    // name-check returned true and summary.md recorded `gcp_available: true`
+    // -- while every GCP call failed on invalid_grant. An env var being a
+    // non-empty string says nothing about whether the credential works.
+    process.env.GCP_PROJECT_ID = "samkirk-v3";
+    process.env.GCS_PUBLIC_BUCKET = "samkirk-v3-public";
+    process.env.GOOGLE_APPLICATION_CREDENTIALS = "/nonexistent/creds.json";
+    process.env.CLOUDSDK_CONFIG = "/nonexistent/gcloud";
+
+    await expect(detectGcp()).resolves.toBe(false);
   });
 });
