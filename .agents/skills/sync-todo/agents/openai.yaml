@@ -1,0 +1,4 @@
+interface:
+  display_name: "Sync Todo"
+  short_description: "Help with Sync Todo tasks"
+  default_prompt: "Use $sync-todo to help with this task."

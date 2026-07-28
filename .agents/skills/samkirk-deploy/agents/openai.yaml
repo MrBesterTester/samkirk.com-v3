@@ -1,0 +1,4 @@
+interface:
+  display_name: "Samkirk Deploy"
+  short_description: "Operate the tested CI and Vercel pipeline"
+  default_prompt: "Use $samkirk-deploy to ship, monitor, authenticate, or restart this application safely."

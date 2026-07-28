@@ -1,8 +1,6 @@
 ---
 name: do-work
-description: Task queue - add requests or process pending work
-argument-hint: run | list | (task to capture) | verify | cleanup | version | changelog
-upstream: https://raw.githubusercontent.com/bladnman/do-work/main/SKILL.md
+description: Capture requests into the samkirk-v3 do-work queue, process or list pending work, verify request coverage, clean the archive, or inspect versions. Use when the user asks to do work, queue a task, run or list the queue, verify capture, or clean completed REQs.
 ---
 
 # Do-Work Skill
@@ -167,4 +165,3 @@ Follow the detailed instructions in:
 - [cleanup action](./actions/cleanup.md) - Archive consolidation and UR closure
 - [list action](./actions/list.md) - Queue status overview
 - [version action](./actions/version.md) - Version, updates & changelog
-

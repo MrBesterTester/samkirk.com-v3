@@ -1,0 +1,4 @@
+interface:
+  display_name: "Do Work Finish Then Stop"
+  short_description: "Help with Do Work Finish Then Stop tasks"
+  default_prompt: "Use $do-work-finish-then-stop to help with this task."

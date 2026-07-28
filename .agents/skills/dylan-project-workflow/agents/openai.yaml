@@ -1,0 +1,4 @@
+interface:
+  display_name: "Dylan Project Workflow"
+  short_description: "Run the spec, blueprint, and TODO workflow"
+  default_prompt: "Use $dylan-project-workflow to create or execute the next planning artifact."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Ingest Todo"
+  short_description: "Help with Ingest Todo tasks"
+  default_prompt: "Use $ingest-todo to help with this task."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Do Work"
+  short_description: "Help with Do Work tasks and workflows"
+  default_prompt: "Use $do-work to help with this task."
