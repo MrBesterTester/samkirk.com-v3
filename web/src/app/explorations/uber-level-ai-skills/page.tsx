@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { StaticHtmlViewer } from "@/components";
+import { DownloadLink } from "@/components/TrackedLink";
 import { SITE_URL, OG_IMAGE } from "@/lib/seo";
 
 export const metadata: Metadata = {
@@ -31,9 +32,10 @@ export default function UberLevelAiSkillsPage() {
       </p>
 
       <div className="mt-6">
-        <a
+        <DownloadLink
           href="/static/uber-level-ai-skills.html"
-          download="uber-level-ai-skills.html"
+          downloadName="uber-level-ai-skills.html"
+          artifactId="uber-level-ai-skills"
           className="inline-flex items-center gap-2 rounded-lg border border-border bg-primary px-4 py-2 text-sm font-medium text-text-secondary shadow-sm transition-colors hover:border-accent hover:bg-secondary"
         >
           <svg
@@ -50,7 +52,7 @@ export default function UberLevelAiSkillsPage() {
             />
           </svg>
           Download HTML
-        </a>
+        </DownloadLink>
       </div>
 
       <div className="mt-12">

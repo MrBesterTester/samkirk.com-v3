@@ -6,6 +6,26 @@ import type {
   JobInputData,
   ChatMessage,
 } from "@/components/hire-me";
+import {
+  trackJobLoaded,
+  trackToolRunStarted,
+  trackToolRunCompleted,
+  trackToolRunFailed,
+  trackChatMessage,
+  trackToolDownload,
+  trackToolReset,
+  type ToolRun,
+} from "@/lib/analytics";
+
+/**
+ * The download entry types use the tool's internal vocabulary; analytics uses
+ * `ToolRun`. Keep the mapping explicit so the two can diverge safely.
+ */
+const DOWNLOAD_TYPE_TO_RUN: Record<"fit" | "resume" | "interview", ToolRun> = {
+  fit: "fit_report",
+  resume: "resume",
+  interview: "interview",
+};
 
 // ============================================================================
 // Types
@@ -385,6 +405,8 @@ export function useHireMe(): UseHireMeReturn {
         },
       };
 
+      trackToolRunCompleted("fit_report");
+
       setState((prev) => ({
         ...prev,
         messages: [...prev.messages, reportMessage],
@@ -423,6 +445,7 @@ export function useHireMe(): UseHireMeReturn {
       };
 
       persistJobContext(mode, data);
+      trackJobLoaded();
 
       setState((prev) => ({
         ...prev,
@@ -452,6 +475,8 @@ export function useHireMe(): UseHireMeReturn {
     // Guards
     if (!jobContext || !jobContext.loaded) return;
     if (fitFlow.active || resumeFlow.active) return;
+
+    trackToolRunStarted("fit_report");
 
     setState((prev) => ({
       ...prev,
@@ -538,6 +563,7 @@ export function useHireMe(): UseHireMeReturn {
       const message =
         err instanceof Error ? err.message : "An unexpected error occurred";
       addMessage(makeErrorMessage(message));
+      trackToolRunFailed("fit_report", message);
       setState((prev) => ({
         ...prev,
         isLoading: false,
@@ -641,6 +667,8 @@ export function useHireMe(): UseHireMeReturn {
             },
           };
 
+          trackToolRunCompleted("fit_report");
+
           setState((prev) => ({
             ...prev,
             messages: [...prev.messages, reportMessage],
@@ -689,6 +717,8 @@ export function useHireMe(): UseHireMeReturn {
     if (!jobContext || !jobContext.loaded) return;
     if (fitFlow.active || resumeFlow.active) return;
 
+    trackToolRunStarted("resume");
+
     setState((prev) => ({
       ...prev,
       isLoading: true,
@@ -728,6 +758,8 @@ export function useHireMe(): UseHireMeReturn {
         skillsCount: result.resume.skillsCount,
       };
 
+      trackToolRunCompleted("resume");
+
       setState((prev) => ({
         ...prev,
         messages: [...prev.messages, previewMessage],
@@ -749,6 +781,7 @@ export function useHireMe(): UseHireMeReturn {
       const message =
         err instanceof Error ? err.message : "An unexpected error occurred";
       addMessage(makeErrorMessage(message));
+      trackToolRunFailed("resume", message);
       setState((prev) => ({
         ...prev,
         isLoading: false,
@@ -768,6 +801,9 @@ export function useHireMe(): UseHireMeReturn {
       // Push user message immediately
       const userMsg = makeUserMessage(text);
       addMessage(userMsg);
+      trackChatMessage(
+        state.messages.filter((m) => m.type === "user").length + 1,
+      );
 
       setState((prev) => ({
         ...prev,
@@ -843,13 +879,14 @@ export function useHireMe(): UseHireMeReturn {
         }));
       }
     },
-    [state.conversationId, state.downloads, addMessage],
+    [state.conversationId, state.downloads, state.messages, addMessage],
   );
 
   // ------------------------------------------------------------------
   // newConversation
   // ------------------------------------------------------------------
   const newConversation = useCallback(() => {
+    trackToolReset();
     setState((prev) => ({
       ...prev,
       messages: [],
@@ -875,6 +912,8 @@ export function useHireMe(): UseHireMeReturn {
   // download
   // ------------------------------------------------------------------
   const download = useCallback(async (submissionId: string, type: DownloadEntry["type"]) => {
+    trackToolDownload(DOWNLOAD_TYPE_TO_RUN[type]);
+
     // Client-side fallback filenames by type
     const fallbackNames: Record<DownloadEntry["type"], string> = {
       fit: `fit-report-${submissionId}.zip`,

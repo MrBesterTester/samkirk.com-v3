@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { trackNavClick } from "@/lib/analytics";
 
 const baseNavLinks = [
   { href: "/", label: "Home" },
@@ -48,6 +49,7 @@ export function Header() {
         <Link
           href="/"
           className="text-xl font-bold tracking-tight text-text-primary"
+          onClick={() => trackNavClick("Sam Kirk (wordmark)", "/", "header_desktop")}
         >
           Sam Kirk
           <span className="hidden sm:inline text-base font-normal text-text-muted">
@@ -62,6 +64,7 @@ export function Header() {
               <Link
                 href={link.href}
                 className="inline-block rounded-md px-3 py-2 text-center text-sm font-medium text-text-secondary transition-colors hover:bg-secondary hover:text-text-primary"
+                onClick={() => trackNavClick(link.label, link.href, "header_desktop")}
               >
                 {link.label}
               </Link>
@@ -72,6 +75,9 @@ export function Header() {
                       <Link
                         href={child.href}
                         className="block rounded-md px-3 py-2 text-sm text-text-secondary transition-colors hover:bg-secondary hover:text-text-primary"
+                        onClick={() =>
+                          trackNavClick(child.label, child.href, "header_desktop")
+                        }
                       >
                         {child.label}
                       </Link>
@@ -124,7 +130,10 @@ export function Header() {
                 <Link
                   href={link.href}
                   className="block rounded-md px-3 py-3 text-base font-medium text-text-secondary transition-colors hover:bg-secondary hover:text-text-primary"
-                  onClick={() => setMobileMenuOpen(false)}
+                  onClick={() => {
+                    trackNavClick(link.label, link.href, "header_mobile");
+                    setMobileMenuOpen(false);
+                  }}
                 >
                   {link.label}
                 </Link>
@@ -135,7 +144,10 @@ export function Header() {
                         <Link
                           href={child.href}
                           className="block rounded-md px-3 py-3 text-sm text-text-secondary transition-colors hover:bg-secondary hover:text-text-primary"
-                          onClick={() => setMobileMenuOpen(false)}
+                          onClick={() => {
+                            trackNavClick(child.label, child.href, "header_mobile");
+                            setMobileMenuOpen(false);
+                          }}
                         >
                           {child.label}
                         </Link>

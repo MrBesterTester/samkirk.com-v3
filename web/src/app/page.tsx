@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Link from "next/link";
+import { CtaLink, ContactLink } from "@/components/TrackedLink";
 
 export default function Home() {
   return (
@@ -48,14 +48,13 @@ export default function Home() {
           Schedule an introductory call — no obligation, no pitch.
         </p>
         <div className="mt-4">
-          <a
+          <ContactLink
             href="https://calendar.app.google/8H2wFxaahHkoTeM6A"
-            target="_blank"
-            rel="noopener noreferrer"
+            method="calendar"
             className="inline-block rounded-lg bg-accent px-6 py-3 text-base font-semibold text-white shadow-sm transition-colors hover:bg-accent-hover"
           >
             Book a Call &rarr;
-          </a>
+          </ContactLink>
         </div>
       </section>
 
@@ -81,12 +80,14 @@ export default function Home() {
           or, in the meantime&hellip;
         </div>
         <div className="mt-2 text-center">
-          <Link
+          <CtaLink
             href="/hire-me"
+            ctaId="home_interview_me_now"
+            label="Interview me NOW"
             className="inline-block rounded-lg bg-accent px-6 py-3 text-base font-semibold text-white shadow-sm transition-colors hover:bg-accent-hover"
           >
             Interview me NOW &rarr;
-          </Link>
+          </CtaLink>
         </div>
       </section>
 
@@ -113,12 +114,14 @@ export default function Home() {
               doesn&apos;t require massive infrastructure
             </li>
           </ul>
-          <Link
+          <CtaLink
             href="/computer-diagnostics"
+            ctaId="home_computer_diagnostics"
+            label="Learn more"
             className="mt-2 inline-block font-medium text-accent hover:text-accent-hover"
           >
             Learn more &rarr;
-          </Link>
+          </CtaLink>
         </section>
 
         <section>
@@ -187,12 +190,14 @@ export default function Home() {
           <p className="mt-1 text-text-secondary">
             Side projects, experiments, and things I&apos;m building for fun — the workshop behind the portfolio.
           </p>
-          <Link
+          <CtaLink
             href="/explorations"
+            ctaId="home_explorations"
+            label="Browse explorations"
             className="mt-2 inline-block font-medium text-accent hover:text-accent-hover"
           >
             Browse explorations &rarr;
-          </Link>
+          </CtaLink>
         </section>
 
         <section>
@@ -205,12 +210,14 @@ export default function Home() {
           <ul className="mt-1 list-disc pl-5 text-sm text-text-muted">
             <li>Curated with Claude Cowork</li>
           </ul>
-          <Link
+          <CtaLink
             href="/dance-menu"
+            ctaId="home_dance_menu"
+            label="View this week's menu"
             className="mt-2 inline-block font-medium text-accent hover:text-accent-hover"
           >
             View this week&apos;s menu &rarr;
-          </Link>
+          </CtaLink>
         </section>
 
         <section>
@@ -223,12 +230,14 @@ export default function Home() {
           <ul className="mt-1 list-disc pl-5 text-sm text-text-muted">
             <li>Lyrics done in ChatGPT; sound track done on www.udio.com.</li>
           </ul>
-          <Link
+          <CtaLink
             href="/song-dedication"
+            ctaId="home_song_dedication"
+            label="Song dedication"
             className="mt-2 inline-block font-medium text-accent hover:text-accent-hover"
           >
             Listen and read the dedication &rarr;
-          </Link>
+          </CtaLink>
         </section>
       </div>
     </div>

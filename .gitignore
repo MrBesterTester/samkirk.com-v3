@@ -21,3 +21,8 @@ do-work/archive/test-runs/*/*.log
 
 # Security reports (local-only)
 docs/SECURITY-*
+
+# SEO reporting skills — Python bytecode and the resolved GA4 property ID cache
+__pycache__/
+*.pyc
+.claude/skills/check-analytics/scripts/.property-id

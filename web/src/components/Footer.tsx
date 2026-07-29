@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { trackContactClick } from "@/lib/analytics";
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
@@ -21,13 +24,17 @@ export function Footer() {
             target="_blank"
             rel="noopener noreferrer"
             className="text-sm text-text-secondary transition-colors hover:text-text-primary"
+            onClick={() => trackContactClick("linkedin")}
           >
             LinkedIn
           </a>
           <div className="flex gap-6">
+            {/* mailto: is not covered by GA4 Enhanced Measurement's outbound-click
+                tracking, so it needs an explicit event. */}
             <Link
               href="mailto:sam@samkirk.com"
               className="text-sm text-text-secondary transition-colors hover:text-text-primary"
+              onClick={() => trackContactClick("email")}
             >
               sam@samkirk.com
             </Link>
