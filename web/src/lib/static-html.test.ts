@@ -1,5 +1,10 @@
 import { describe, it, expect } from "vitest";
-import { parseStaticHtml, scopeCss, scopeSelectorList } from "./static-html";
+import {
+  parseStaticHtml,
+  scopeCss,
+  scopeSelectorList,
+  dedupeLeadingHeading,
+} from "./static-html";
 
 const SCOPE = ".static-html-content";
 
@@ -158,6 +163,64 @@ describe("static-html", () => {
       );
       expect(css).toContain("h1{color:red}");
       expect(css).toContain("p{margin:0}");
+    });
+  });
+
+
+  describe("dedupeLeadingHeading", () => {
+    it("drops the leading h1 when it exactly repeats the page heading", () => {
+      const out = dedupeLeadingHeading(
+        "<h1>The Physics of LoRA</h1><p>body</p>",
+        "The Physics of LoRA"
+      );
+      expect(out).toBe("<p>body</p>");
+    });
+
+    it("keeps a leading h1 that adds information", () => {
+      const body = "<h1>Leveson's System-Safety Framework Applied to Claude Models</h1><p>x</p>";
+      expect(dedupeLeadingHeading(body, "Safer AI")).toBe(body);
+    });
+
+    it("ignores punctuation, case, and spacing when comparing", () => {
+      const out = dedupeLeadingHeading(
+        "<h1>  the   PHYSICS of LoRA!  </h1><p>x</p>",
+        "The Physics of LoRA"
+      );
+      expect(out).toBe("<p>x</p>");
+    });
+
+    it("matches through inline markup inside the heading", () => {
+      const out = dedupeLeadingHeading(
+        "<h1><span>Pocket</span> Flow</h1><p>x</p>",
+        "Pocket Flow"
+      );
+      expect(out).toBe("<p>x</p>");
+    });
+
+    it("only ever removes the first heading", () => {
+      const out = dedupeLeadingHeading(
+        "<h1>Dup</h1><p>a</p><h1>Dup</h1><p>b</p>",
+        "Dup"
+      );
+      expect(out).toBe("<p>a</p><h1>Dup</h1><p>b</p>");
+    });
+
+    it("is a no-op without a page heading", () => {
+      const body = "<h1>Anything</h1><p>x</p>";
+      expect(dedupeLeadingHeading(body, undefined)).toBe(body);
+      expect(dedupeLeadingHeading(body, "   ")).toBe(body);
+    });
+
+    it("leaves a body with no h1 untouched", () => {
+      const body = "<h2>Sub</h2><p>x</p>";
+      expect(dedupeLeadingHeading(body, "Sub")).toBe(body);
+    });
+
+    it("does not remove a near-match that differs in words", () => {
+      const body = "<h1>Hardware Diagnostics LLM Fine-Tuning</h1><p>x</p>";
+      expect(
+        dedupeLeadingHeading(body, "Computer Diagnostics via LLM Fine-Tuning")
+      ).toBe(body);
     });
   });
 

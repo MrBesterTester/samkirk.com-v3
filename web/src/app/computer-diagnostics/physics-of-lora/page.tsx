@@ -41,6 +41,7 @@ export default function PhysicsOfLoraPage() {
       <div className="mt-12">
         <StaticHtmlContent
           src="physics-of-lora.html"
+          pageHeading="The Physics of LoRA"
           title="The Physics of LoRA"
           katex
         />

@@ -150,6 +150,45 @@ export function parseStaticHtml(raw: string): ParsedStaticHtml {
 }
 
 /**
+ * Normalise heading text for comparison: strip tags and entities, lowercase,
+ * and reduce to alphanumerics so punctuation and spacing differences do not
+ * defeat a match.
+ */
+function normalizeHeading(html: string): string {
+  return html
+    .replace(/<[^>]+>/g, " ")
+    .replace(/&[a-z]+;|&#\d+;/gi, " ")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "");
+}
+
+/**
+ * Remove the document's own leading `<h1>` when it merely repeats the heading
+ * the page already displays.
+ *
+ * Most of these documents open with a heading that *adds* information — the
+ * "Safer AI" page embeds "Leveson's System-Safety Framework Applied to Claude
+ * Models" — so only an exact match is dropped. Anything else is left alone;
+ * deleting it would lose real content for the sake of a cosmetic rule.
+ */
+export function dedupeLeadingHeading(bodyHtml: string, pageHeading?: string): string {
+  if (!pageHeading) return bodyHtml;
+  const target = normalizeHeading(pageHeading);
+  if (!target) return bodyHtml;
+
+  let done = false;
+  return bodyHtml.replace(/<h1[^>]*>[\s\S]*?<\/h1>\s*/i, (match) => {
+    if (done) return match;
+    const inner = match.replace(/^<h1[^>]*>/i, "").replace(/<\/h1>\s*$/i, "");
+    if (normalizeHeading(inner) === target) {
+      done = true;
+      return "";
+    }
+    return match;
+  });
+}
+
+/**
  * Reject anything that is not a plain filename, so a caller cannot walk out of
  * the static directory.
  */
@@ -170,9 +209,16 @@ export type LoadedStaticHtml = ParsedStaticHtml & {
  * Called from server components, so the file is read at build time for static
  * routes — no runtime cost and no client-side fetch.
  */
-export async function loadStaticHtml(fileName: string): Promise<LoadedStaticHtml> {
+export async function loadStaticHtml(
+  fileName: string,
+  pageHeading?: string,
+): Promise<LoadedStaticHtml> {
   assertSafeName(fileName);
   const raw = await readFile(path.join(STATIC_DIR, fileName), "utf8");
   const parsed = parseStaticHtml(raw);
-  return { ...parsed, scopedCss: scopeCss(parsed.css) };
+  return {
+    ...parsed,
+    bodyHtml: dedupeLeadingHeading(parsed.bodyHtml, pageHeading),
+    scopedCss: scopeCss(parsed.css),
+  };
 }

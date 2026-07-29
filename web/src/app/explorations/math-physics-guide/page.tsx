@@ -41,6 +41,7 @@ export default function MathPhysicsGuidePage() {
       <div className="mt-12">
         <StaticHtmlContent
           src="math-physics-guide.html"
+          pageHeading="The Principal Equations of Mathematical Physics"
           title="The Principal Equations of Mathematical Physics — reconstructed guide"
         />
       </div>

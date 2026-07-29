@@ -57,6 +57,7 @@ export default function CategoryTheoryPage() {
       <div className="mt-12">
         <StaticHtmlContent
           src="category-theory.html"
+          pageHeading="Category Theory"
           title="Category Theory content"
           katex
         />

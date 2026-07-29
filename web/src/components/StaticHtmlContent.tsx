@@ -27,10 +27,21 @@ export type StaticHtmlContentProps = {
    * math should set this — it pulls in a stylesheet and two scripts.
    */
   katex?: boolean;
+  /**
+   * The heading the page already shows. When the embedded document opens with
+   * the same heading, that duplicate is dropped so the title is not printed
+   * twice. Headings that differ are always kept.
+   */
+  pageHeading?: string;
 };
 
-export async function StaticHtmlContent({ src, title, katex = false }: StaticHtmlContentProps) {
-  const { bodyHtml, scopedCss } = await loadStaticHtml(src);
+export async function StaticHtmlContent({
+  src,
+  title,
+  katex = false,
+  pageHeading,
+}: StaticHtmlContentProps) {
+  const { bodyHtml, scopedCss } = await loadStaticHtml(src, pageHeading);
 
   return (
     <section aria-label={title}>

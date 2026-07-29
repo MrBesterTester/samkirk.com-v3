@@ -58,6 +58,7 @@ export default function UberLevelAiSkillsPage() {
       <div className="mt-12">
         <StaticHtmlContent
           src="uber-level-ai-skills.html"
+          pageHeading="Uber Level AI Skills"
           title="Uber Level AI Skills content"
         />
       </div>

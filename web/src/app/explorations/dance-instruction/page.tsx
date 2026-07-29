@@ -60,6 +60,7 @@ export default function DanceInstructionPage() {
       <div className="mt-12">
         <StaticHtmlContent
           src="dance-instruction.html"
+          pageHeading="Dance Instruction"
           title="Dance Instruction content"
         />
       </div>

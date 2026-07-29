@@ -70,6 +70,7 @@ export default function SaferAIPage() {
       <div className="mt-12">
         <StaticHtmlContent
           src="safer-ai.html"
+          pageHeading="Safer AI"
           title="Leveson's System-Safety Framework Applied to Claude Models — Research Project Proposal"
         />
       </div>

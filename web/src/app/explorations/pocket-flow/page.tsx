@@ -35,6 +35,7 @@ export default function PocketFlowPage() {
       <div className="mt-12">
         <StaticHtmlContent
           src="pocket-flow.html"
+          pageHeading="Pocket Flow"
           title="Pocket Flow content"
         />
       </div>

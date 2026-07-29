@@ -17,6 +17,7 @@ export default function ComputerDiagnosticsPage() {
       <div className="mt-12">
         <StaticHtmlContent
           src="computer-diagnostics-feature.html"
+          pageHeading="Computer Diagnostics via LLM Fine-Tuning"
           title="Hardware Diagnostics LLM Fine-Tuning — Project Feature"
         />
       </div>
