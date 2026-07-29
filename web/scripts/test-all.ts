@@ -440,31 +440,6 @@ function parseSuiteOutput(
 // Prerequisite Checks
 // ============================================================================
 
-/** Check if Chrome is running (macOS). E2E suites hang silently without it. */
-function isChromeRunning(): boolean {
-  try {
-    execSync("pgrep -q 'Google Chrome'", { stdio: "ignore" });
-    return true;
-  } catch {
-    return false;
-  }
-}
-
-/** Fail fast if any E2E suite is about to run but Chrome isn't up. */
-function checkChromePrerequisite(suitesToRun: Suite[]): void {
-  const needsChrome = suitesToRun.some(
-    (s) => s.name === "E2E Tests" || s.name === "E2E Real LLM",
-  );
-  if (!needsChrome) return;
-
-  if (!isChromeRunning()) {
-    log("Google Chrome is not running — E2E tests require it", false);
-    log("Launch Chrome and try again, or run: open -a 'Google Chrome'", false);
-    process.exit(1);
-  }
-  log("Chrome is running", true);
-}
-
 /**
  * Kill any existing dev server on port 3000 so Playwright can start its own
  * with the correct E2E environment variables (E2E_TESTING, NEXT_PUBLIC_E2E_TESTING).
@@ -1245,9 +1220,6 @@ async function main(): Promise<void> {
     printSummaryTable(skipped);
     process.exit(0);
   }
-
-  // Pre-flight: ensure Chrome is running if E2E suites are selected
-  checkChromePrerequisite(toRun);
 
   // Pre-flight: kill existing dev server so Playwright starts its own with E2E env
   killDevServerForE2E(toRun);
