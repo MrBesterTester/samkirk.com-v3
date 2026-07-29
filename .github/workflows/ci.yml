@@ -207,6 +207,13 @@ jobs:
         env:
           PLAYWRIGHT_BASE_URL: ${{ needs.deploy.outputs.url }}
           VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
+          # The session-init test is gated on GCP_PROJECT_ID so developers without
+          # a local GCP setup are not blocked by it. That guard reads .env.local,
+          # which does not exist on a runner, so without this the one test that
+          # exercises a server-side API silently skips. Not a secret — the project
+          # id appears in docs/GCP-DEPLOY.md. Production authenticates with its own
+          # service account, so the endpoint is reachable regardless.
+          GCP_PROJECT_ID: samkirk-v3
 
       - name: Upload Playwright report on failure
         if: failure()
