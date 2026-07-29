@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { StaticHtmlViewer } from "@/components";
+import { StaticHtmlContent } from "@/components";
 import { DownloadLink } from "@/components/TrackedLink";
 import { SITE_URL, OG_IMAGE } from "@/lib/seo";
 
@@ -68,10 +68,9 @@ export default function SaferAIPage() {
       </div>
 
       <div className="mt-12">
-        <StaticHtmlViewer
+        <StaticHtmlContent
           src="safer-ai.html"
           title="Leveson's System-Safety Framework Applied to Claude Models — Research Project Proposal"
-          minHeight={800}
         />
       </div>
     </div>

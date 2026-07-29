@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { StaticHtmlViewer } from "@/components";
+import { StaticHtmlContent } from "@/components";
 import { SITE_URL, OG_IMAGE } from "@/lib/seo";
 
 const DESCRIPTION =
@@ -39,10 +39,9 @@ export default function MathPhysicsGuidePage() {
       </p>
 
       <div className="mt-12">
-        <StaticHtmlViewer
+        <StaticHtmlContent
           src="math-physics-guide.html"
           title="The Principal Equations of Mathematical Physics — reconstructed guide"
-          minHeight={800}
         />
       </div>
     </div>

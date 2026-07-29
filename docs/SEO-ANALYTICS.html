@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SEO &amp; Analytics — samkirk.com</title>
+<style>
+/* Colorblind-safe: blue/orange axis, never red-vs-green; color is never the sole cue.
+   No background patterning anywhere — highlighting is a solid accent border + pale tint. */
+:root{
+  --blue:#1f6feb; --blue-dk:#0b4fc0; --blue-bg:#eaf1fe;
+  --orange:#e8710a; --orange-dk:#b8560a; --orange-bg:#fdeede;
+  --ink:#1a1f29; --muted:#5a6473; --line:#d7dce4; --paper:#ffffff;
+}
+*{box-sizing:border-box}
+body{
+  margin:0 auto; max-width:960px; padding:40px 24px 80px;
+  font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+  color:var(--ink); background:var(--paper);
+}
+h1{font-size:2rem; line-height:1.2; margin:0 0 4px; letter-spacing:-.02em}
+h2{font-size:1.35rem; margin:44px 0 12px; padding-bottom:6px; border-bottom:2px solid var(--line); color:var(--blue-dk)}
+h3{font-size:1.08rem; margin:28px 0 8px; color:var(--ink)}
+h4{font-size:1rem; margin:22px 0 8px; color:var(--blue-dk)}
+.stamp{color:var(--muted); font-size:.9rem; margin:0 0 28px}
+a{color:var(--blue-dk)}
+code{font:13px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace; background:#f4f6fa; padding:1px 5px; border-radius:4px}
+pre{background:#f4f6fa; border:1px solid var(--line); border-radius:8px; padding:12px 14px; overflow-x:auto}
+pre code{background:none; padding:0}
+table{border-collapse:collapse; width:100%; margin:14px 0; font-size:.94rem; display:block; overflow-x:auto}
+th,td{border:1px solid var(--line); padding:7px 11px; text-align:left; vertical-align:top}
+th{background:var(--blue-bg); color:#1c2a3a; font-weight:600}
+td.num{text-align:right; font-variant-numeric:tabular-nums}
+/* Highlight recipe: accent border carries the signal, text sits on a near-white tint. */
+.callout{background:var(--orange-bg); border:1px solid #f2c896; border-left:4px solid var(--orange);
+  border-radius:0 8px 8px 0; padding:12px 16px; margin:18px 0}
+.callout b{color:var(--orange-dk)}
+.note{background:var(--blue-bg); border:1px solid #c3d8fb; border-left:4px solid var(--blue);
+  border-radius:0 8px 8px 0; padding:12px 16px; margin:18px 0; color:#22303f}
+.note b{color:var(--blue-dk)}
+blockquote{background:var(--blue-bg); border-left:4px solid var(--blue); color:#22303f;
+  margin:14px 0; padding:10px 16px; border-radius:0 8px 8px 0}
+blockquote p{margin:6px 0}
+nav.toc{border:1px solid var(--line); border-radius:8px; padding:14px 20px; background:#fbfcfe}
+nav.toc ol{margin:6px 0; padding-left:22px}
+nav.toc li{margin:3px 0}
+.chip{display:inline-block; padding:1px 9px; border-radius:999px; color:#fff; font-size:.74rem;
+  font-weight:700; letter-spacing:.04em; vertical-align:middle}
+.chip-blue{background:var(--blue)} .chip-orange{background:var(--orange)}
+figure{margin:22px 0}
+figcaption{color:var(--muted); font-size:.87rem; margin-top:8px}
+hr{border:0; border-top:1px solid var(--line); margin:34px 0}
+ul,ol{padding-left:22px}
+.small{font-size:.9rem; color:var(--muted)}
+</style>
+</head>
+<body>
+
+<h1>SEO &amp; Analytics — samkirk.com</h1>
+<p class="stamp">Last updated: 2026-07-29 11:31 PDT · Working document</p>
+
+<div class="note">
+<b>Goal.</b> Increase organic search traffic to samkirk.com. Everything here is either a
+measurement capability that shows where traffic is or is not coming from, or a change made
+in response to that measurement. The measurement is not the goal — it is the feedback loop
+that keeps the SEO work from being guesswork.
+</div>
+
+<nav class="toc">
+<b>Contents</b>
+<ol>
+  <li><a href="#requests">Originating requests (verbatim)</a></li>
+  <li><a href="#which-tool">Which tool answers which question</a></li>
+  <li><a href="#verification">Search Console verification status</a></li>
+  <li><a href="#built">What was built</a></li>
+  <li><a href="#hazards">GA4 account hazards</a></li>
+  <li><a href="#baseline">Baseline (2026-07-29)</a></li>
+  <li><a href="#rankable">What is actually rankable</a></li>
+  <li><a href="#ahrefs">On Ahrefs free</a></li>
+  <li><a href="#next">Next steps</a></li>
+</ol>
+</nav>
+
+<h2 id="requests">Originating requests (verbatim)</h2>
+<blockquote>
+<p>I would now like to consider upgrading the search activity analysis on samkirk.com using my current Google account to get finer details of what's being clicked on. My understanding is that this takes additional instrumentation in the code so that the web page click can report back to Google Analytics exactly what was clicked on.</p>
+<p>I would also like to know if the free service at https://ahrefs.com/free can actually tell me what users were searching for when they happened to click on my website. Is this something that Google Analytics cannot do?</p>
+</blockquote>
+<blockquote>
+<p>My main intent is to improve the number of visitors I get to my website, i.e., what I understand to be Search Engine Optimization (SEO). check if Search Console is verified, then build the instrumentation. I will also need some workflows in the form of skills to check the analytics and the search console.</p>
+</blockquote>
+<blockquote>
+<p>Please keep the SEO analytics report in HTML format from hereon. and then open it up in Safari. And then fix the iframe issue.</p>
+</blockquote>
+
+<h2 id="which-tool">Which tool answers which question</h2>
+<p>The single most important distinction in this effort — conflating these two wastes a lot of time.</p>
+<table>
+<thead><tr><th>Question</th><th>Tool</th><th>Why</th></tr></thead>
+<tbody>
+<tr><td>What did people type into Google before clicking?</td><td><b>Search Console</b></td><td>Google's own server-side query log. Exact, free.</td></tr>
+<tr><td>What did they do once they arrived?</td><td><b>Google Analytics 4</b></td><td>On-site behavior: pages, clicks, funnel completion.</td></tr>
+<tr><td>What terms <i>could</i> I rank for, and how hard?</td><td>Ahrefs free</td><td>Estimated from Ahrefs' own SERP crawl — not real visitors.</td></tr>
+</tbody>
+</table>
+<div class="callout">
+<b>GA4 structurally cannot report search queries.</b> Google stripped query terms out of the
+HTTP referrer in 2011 (the "(not provided)" change) and finished the job in 2013. No amount
+of instrumentation recovers this, because the data never reaches the page. This is not a
+configuration gap.
+</div>
+
+<h2 id="verification">Search Console verification status</h2>
+<p><b>Verified</b>, as a domain property — confirmed live via API on 2026-07-29
+(<code>sc-domain:samkirk.com</code>, permission <code>siteFullUser</code>).</p>
+<p>Two <code>google-site-verification</code> TXT records are published on the apex domain.
+Domain-property verification via DNS covers every subdomain automatically, so
+<code>photo-fun.samkirk.com</code> is included without separate setup.</p>
+
+<h2 id="built">What was built</h2>
+<h3>Custom event instrumentation</h3>
+<p>GA4's Enhanced Measurement already covers <code>page_view</code>, <code>scroll</code>,
+outbound link clicks, and <code>download=</code> file downloads with zero code. What was added
+covers <b>only what Enhanced Measurement cannot see</b>, so the two never double-count.</p>
+<table>
+<thead><tr><th>File</th><th>Role</th></tr></thead>
+<tbody>
+<tr><td><code>web/src/lib/analytics.ts</code></td><td>Single source of truth: 11 typed events. No-ops safely when gtag is absent.</td></tr>
+<tr><td><code>web/src/lib/analytics.test.ts</code></td><td>21 unit tests — truncation, undefined-stripping, no-gtag path.</td></tr>
+<tr><td><code>web/src/components/TrackedLink.tsx</code></td><td><code>CtaLink</code>/<code>ContactLink</code>/<code>DownloadLink</code> — keeps server components server-rendered.</td></tr>
+<tr><td><code>Header.tsx</code>, <code>Footer.tsx</code></td><td>Nav clicks (desktop/mobile distinguished); LinkedIn + mailto.</td></tr>
+<tr><td><code>app/page.tsx</code></td><td>Home CTAs including the consultation booking link.</td></tr>
+<tr><td><code>hooks/useHireMe.ts</code></td><td>The full /hire-me funnel, instrumented at the single hook chokepoint.</td></tr>
+<tr><td>4 × <code>explorations/*/page.tsx</code></td><td>Artifact downloads, keyed by stable <code>artifactId</code>.</td></tr>
+</tbody>
+</table>
+<p class="small">Events: <code>nav_click</code>, <code>cta_click</code>, <code>contact_click</code>,
+<code>artifact_download</code>, <code>tool_job_loaded</code>, <code>tool_run_started</code>,
+<code>tool_run_completed</code>, <code>tool_run_failed</code>, <code>tool_chat_message</code>,
+<code>tool_download</code>, <code>tool_reset</code>.</p>
+
+<h3>Reporting skills</h3>
+<p>Two project skills, pure-stdlib Python against the REST APIs — no pip dependencies.</p>
+<table>
+<thead><tr><th>Skill</th><th>Commands</th></tr></thead>
+<tbody>
+<tr><td><code>check-search-console</code></td><td>queries, pages, opportunities, zero-click, countries, devices, sites</td></tr>
+<tr><td><code>check-analytics</code></td><td>overview, sources, pages, events, clicks, funnel, failures, properties</td></tr>
+</tbody>
+</table>
+<p>Both impersonate the service account <code>seo-reporting@samkirk-v3.iam.gserviceaccount.com</code>.
+No key file is stored; tokens are minted on demand via the IAM Credentials API. This route was
+required because Google <b>blocks</b> non-Cloud sensitive scopes on the shared Cloud SDK OAuth
+client — <code>gcloud auth application-default login --scopes=…webmasters.readonly</code> fails
+with "This app is blocked".</p>
+<p><b>Resolved IDs:</b> GA4 property <code>525472559</code>, account <code>376572742</code>,
+measurement ID <code>G-QPGLH8V5MM</code>. All 7 custom dimensions registered 2026-07-29.</p>
+
+<h2 id="hazards">GA4 account hazards</h2>
+<h3>Three GA accounts, two sharing a name</h3>
+<table>
+<thead><tr><th>Account ID</th><th>Name</th><th>Contains</th><th>Use it?</th></tr></thead>
+<tbody>
+<tr><td><code>376572742</code></td><td>sam@samkirk.com</td><td>The live <code>samkirk.com</code> property (525472559)</td><td><span class="chip chip-blue">YES</span></td></tr>
+<tr><td><code>18083060</code></td><td>samkirk.com</td><td>Dormant 2010 Universal Analytics shell, zero GA4 properties</td><td><span class="chip chip-orange">NO</span></td></tr>
+<tr><td><code>363539902</code></td><td>MrBesterTester</td><td>VillaMaduBali property, no data</td><td><span class="chip chip-orange">NO</span></td></tr>
+</tbody>
+</table>
+<p>The <b>account ID in the picker is the only reliable way to tell them apart.</b> Granting on
+<code>18083060</code> appears to succeed and then reports nothing, because it has no properties.</p>
+
+<div class="callout">
+<b>Removing the last administrator locks you out.</b> Granting the service account Administrator
+at the <i>account</i> level and then deleting the only human administrator removed all human
+access to <code>18083060</code>. Recovery worked only because the service account itself held
+admin and could re-grant access through the API. Two rules follow: grant the service account
+<b>Viewer on the property</b>, never Administrator on the account; and keep <b>at least two
+administrators</b> on any GA account that matters.
+</div>
+
+<p>Recovery procedure — note <code>accessBindings</code> is <b>v1alpha</b>, not v1beta:</p>
+<pre><code>TOKEN=$(gcloud auth print-access-token \
+  --impersonate-service-account=seo-reporting@samkirk-v3.iam.gserviceaccount.com \
+  --scopes=https://www.googleapis.com/auth/analytics.manage.users)
+
+curl -s -X POST -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" \
+  -d '{"user":"sam@samkirk.com","roles":["predefinedRoles/admin"]}' \
+  https://analyticsadmin.googleapis.com/v1alpha/accounts/&lt;ACCOUNT_ID&gt;/accessBindings</code></pre>
+
+<h2 id="baseline">Baseline (2026-07-29)</h2>
+<p>First real data. 90-day window, <code>sc-domain:samkirk.com</code>.</p>
+
+<h3>By page — the reliable view</h3>
+<table>
+<thead><tr><th>Page</th><th>Clicks</th><th>Impressions</th><th>CTR</th><th>Position</th></tr></thead>
+<tbody>
+<tr><td><code>/</code></td><td class="num">6</td><td class="num">262</td><td class="num">2.3%</td><td class="num">14.9</td></tr>
+<tr><td><code>/hire-me</code></td><td class="num">1</td><td class="num">16</td><td class="num">6.2%</td><td class="num"><b>4.6</b></td></tr>
+<tr><td><code>photo-fun.samkirk.com</code></td><td class="num">0</td><td class="num">41</td><td class="num">0.0%</td><td class="num">39.9</td></tr>
+<tr><td><code>/explorations</code></td><td class="num">0</td><td class="num">25</td><td class="num">0.0%</td><td class="num">11.5</td></tr>
+<tr><td><code>/dance-menu</code></td><td class="num">0</td><td class="num">2</td><td class="num">0.0%</td><td class="num">1.5</td></tr>
+</tbody>
+</table>
+
+<div class="callout">
+<b>7 clicks / 350 impressions — not zero.</b> The query-dimension report totals only 126
+impressions and 0 clicks because Search Console <b>withholds low-volume queries</b> for privacy,
+and clicks on withheld queries vanish from that view. Always read <i>page-level</i> figures for
+totals; treat the query list as a sample.
+</div>
+
+<figure>
+<!-- Color-blind-safe: bars carry direct value labels and page names; the blue/orange split is
+     reinforced by the "page 1" / "not winnable" text labels, never by hue alone. No fill patterns. -->
+<svg viewBox="0 0 900 300" width="100%" role="img" aria-label="Impressions and average search position by page, 90 days">
+  <text x="0" y="16" font-size="13" font-weight="700" fill="#1a1f29">Impressions by page, with average position (90 days)</text>
+  <line x1="210" y1="34" x2="210" y2="252" stroke="#d7dce4" stroke-width="1"/>
+
+  <!-- / -->
+  <text x="204" y="62" font-size="12.5" text-anchor="end" fill="#1a1f29">/</text>
+  <rect x="210" y="48" width="600" height="22" fill="#1f6feb"/>
+  <text x="820" y="63" font-size="12" fill="#1a1f29">262 impr · 6 clicks · pos 14.9</text>
+
+  <!-- photo-fun -->
+  <text x="204" y="106" font-size="12.5" text-anchor="end" fill="#1a1f29">photo-fun.samkirk.com</text>
+  <rect x="210" y="92" width="94" height="22" fill="#e8710a"/>
+  <text x="314" y="107" font-size="12" fill="#1a1f29">41 impr · 0 clicks · pos 39.9 — not winnable</text>
+
+  <!-- explorations -->
+  <text x="204" y="150" font-size="12.5" text-anchor="end" fill="#1a1f29">/explorations</text>
+  <rect x="210" y="136" width="57" height="22" fill="#1f6feb"/>
+  <text x="277" y="151" font-size="12" fill="#1a1f29">25 impr · 0 clicks · pos 11.5 — page-1 border</text>
+
+  <!-- hire-me -->
+  <text x="204" y="194" font-size="12.5" text-anchor="end" fill="#1a1f29">/hire-me</text>
+  <rect x="210" y="180" width="37" height="22" fill="#1f6feb"/>
+  <text x="257" y="195" font-size="12" fill="#1a1f29">16 impr · 1 click · pos 4.6 — already page 1</text>
+
+  <!-- dance-menu -->
+  <text x="204" y="238" font-size="12.5" text-anchor="end" fill="#1a1f29">/dance-menu</text>
+  <rect x="210" y="224" width="5" height="22" fill="#1f6feb"/>
+  <text x="225" y="239" font-size="12" fill="#1a1f29">2 impr · 0 clicks · pos 1.5 — ranks #1 for a term nobody searches</text>
+
+  <!-- legend: solid swatches + words -->
+  <rect x="210" y="272" width="12" height="12" fill="#1f6feb"/>
+  <text x="228" y="283" font-size="11.5" fill="#5a6473">samkirk.com pages</text>
+  <rect x="360" y="272" width="12" height="12" fill="#e8710a"/>
+  <text x="378" y="283" font-size="11.5" fill="#5a6473">photo-fun subdomain — generic competition</text>
+</svg>
+<figcaption>Bar length is impressions; every bar is labelled with its own values, so the chart
+reads correctly in grayscale.</figcaption>
+</figure>
+
+<h3>Queries visible</h3>
+<table>
+<thead><tr><th>Query</th><th>Impressions</th><th>Position</th></tr></thead>
+<tbody>
+<tr><td>sam kirk</td><td class="num">38</td><td class="num">32.9</td></tr>
+<tr><td>samuel kirk</td><td class="num">25</td><td class="num">26.7</td></tr>
+<tr><td>sean kirk ai</td><td class="num">12</td><td class="num">17.6</td></tr>
+<tr><td>photofuneditor</td><td class="num">11</td><td class="num">53.1</td></tr>
+</tbody>
+</table>
+<p class="small"><code>sean kirk ai</code> / <code>sean kirk empromptu</code> are a different
+person — Google surfacing samkirk.com as a near-miss on a similar name.</p>
+
+<h3>GA4, 28 days</h3>
+<p>34 active users · 86 sessions · 129 page views · 37.2% engagement rate.
+Top pages: <code>/dance-menu</code> (50 views, 8 users), <code>/</code> (41 views, 23 users),
+<code>/robotics</code> (9 views).</p>
+
+<h2 id="rankable">What is actually rankable</h2>
+
+<h3>The blocking defect: real content sits inside an iframe</h3>
+<p><code>StaticHtmlViewer</code> renders each exploration's substance in an <b>iframe</b> from
+<code>/static/*.html</code>. Google does not credit iframe content to the parent page, so what
+actually ranks is only the wrapper copy.</p>
+<table>
+<thead><tr><th>Page</th><th>Words Google sees</th><th>Real content, uncredited</th></tr></thead>
+<tbody>
+<tr><td><code>/explorations/dance-instruction</code></td><td class="num">220</td><td class="num">106 KB</td></tr>
+<tr><td><code>/explorations/safer-ai</code></td><td class="num">367</td><td class="num">76 KB</td></tr>
+<tr><td><code>/explorations/category-theory</code></td><td class="num">193</td><td class="num">51 KB</td></tr>
+<tr><td><code>/computer-diagnostics/physics-of-lora</code></td><td class="num">181</td><td class="num">50 KB</td></tr>
+<tr><td><code>/explorations/math-physics-guide</code></td><td class="num">212</td><td class="num">33 KB</td></tr>
+</tbody>
+</table>
+<p>Every one read to Google as a thin stub — the content already existed and was genuinely
+distinctive, it was simply invisible to the crawler.</p>
+
+<h4><span class="chip chip-blue">FIXED</span> 2026-07-29 — content is now server-rendered</h4>
+<p><code>StaticHtmlContent</code> (a server component) replaces <code>StaticHtmlViewer</code> on all
+eight affected pages. The document is read from <code>public/static</code> at build time and inlined,
+so the markup ships in the initial HTML. Each document's own stylesheet is rewritten by
+<code>lib/static-html.ts</code> so every selector is confined to a wrapper class — without that, its
+bare <code>body</code>, <code>*</code>, and <code>h1</code> rules would restyle the whole site.</p>
+<table>
+<thead><tr><th>Page</th><th>Crawlable words before</th><th>After</th><th>Gain</th></tr></thead>
+<tbody>
+<tr><td><code>/explorations/dance-instruction</code></td><td class="num">220</td><td class="num">8,639</td><td class="num">39×</td></tr>
+<tr><td><code>/explorations/safer-ai</code></td><td class="num">367</td><td class="num">8,387</td><td class="num">23×</td></tr>
+<tr><td><code>/computer-diagnostics/physics-of-lora</code></td><td class="num">181</td><td class="num">3,038</td><td class="num">17×</td></tr>
+<tr><td><code>/explorations/uber-level-ai-skills</code></td><td class="num">220</td><td class="num">2,098</td><td class="num">10×</td></tr>
+<tr><td><code>/explorations/math-physics-guide</code></td><td class="num">212</td><td class="num">1,937</td><td class="num">9×</td></tr>
+<tr><td><code>/explorations/category-theory</code></td><td class="num">193</td><td class="num">1,529</td><td class="num">8×</td></tr>
+<tr><td><code>/computer-diagnostics</code></td><td class="num">519</td><td class="num">1,655</td><td class="num">3×</td></tr>
+</tbody>
+</table>
+<p class="small">Verified: 0 iframes remain on any converted page; 0 CSS selectors escaped the
+wrapper scope; all pages still statically prerendered; 1,366 unit tests pass (26 new for the CSS
+scoper). KaTeX is loaded only on the two documents containing math.</p>
+<p>All eight <code>/static/*.html</code> files now also carry
+<code>&lt;link rel="canonical"&gt;</code> pointing at their parent page, so the standalone copies no
+longer compete with the pages that embed them.</p>
+<p>Compounding it, the <code>/static/*.html</code> files <b>are</b> crawlable (robots.txt only
+disallows <code>/admin/</code> and <code>/api/</code>), carry their own <code>&lt;title&gt;</code>,
+have <b>no meta description and no canonical</b>, and are <b>absent from the sitemap</b>. They are
+orphan pages that can be indexed in competition with their own parent, splitting whatever signal exists.</p>
+
+<h3><span class="chip chip-blue">PURSUE</span> Worth the effort</h3>
+<ul>
+<li><b>LoRA fine-tuning on Apple Silicon</b> — Llama 3.2 3B on an M1 iMac, 252 physics-grounded
+Q&amp;A pairs, 27.5% validation-loss reduction. Very few people publish consumer-hardware
+fine-tuning results with real numbers.</li>
+<li><b>Tensor logic</b> — Domingos, arXiv 2510.12269. New enough that little competing content exists.</li>
+<li><b>Leveson STPA applied to LLM safety</b> — narrow academic niche.</li>
+<li><b>Category theory via everyday objects</b> — distinctive teaching angle.</li>
+<li><b>SF Bay Area social dance playlists</b> — <code>/dance-menu</code> already ranks 1.5 and is
+the most-visited page, but draws 2 impressions: it ranks for a term nobody searches. Real local
+queries are the opening.</li>
+</ul>
+
+<h3><span class="chip chip-orange">SKIP</span> Not worth the effort</h3>
+<ul>
+<li><b>"photo fun" and photo-editor variants</b> — 41 impressions at position 39.9, competing
+against Canva, Fotor, Adobe Express. Unwinnable; drop it.</li>
+<li><b>Generic "sam kirk"</b> — position 27–33 is an <i>entity authority</i> problem, not a
+metadata problem. Google has no strong reason to prefer this Sam Kirk over others. It improves
+through external links and consistent identity, slowly. No title rewrite moves position 33 to
+position 5.</li>
+</ul>
+
+<h2 id="ahrefs">On Ahrefs free</h2>
+<p>Ahrefs Webmaster Tools (free tier) gives verified site owners Site Explorer limited to 1K
+keywords/backlinks visible at once, Site Audit with 5K crawl credits per month, and Web Analytics.
+Own sites only — no competitor lookups.</p>
+<p>It reports keywords the site <b>ranks for</b>, derived from Ahrefs' own crawl of Google's
+results plus clickstream modelling, with search volume and keyword difficulty attached. That is an
+<b>estimate about the search results page</b>, not a record of actual visitors — so it does not
+answer "what were users searching when they clicked my site". Search Console does, exactly and for free.</p>
+<div class="note">
+<b>Recommendation: yes, create the free account.</b> Search Console only reports terms already
+earning impressions — it is structurally blind to terms the site does not yet rank for, and it
+reports neither search volume nor difficulty. Ahrefs Webmaster Tools supplies estimated volume and
+keyword difficulty alongside the rankings, which is exactly what is needed to choose <i>which</i>
+candidate topic to invest in.
+</div>
+<p><b>Setup cost is genuinely small.</b> Verification can be done by connecting the existing Google
+Search Console property rather than adding DNS records or uploading files — a few minutes, and the
+GSC side is already verified. No payment method is required for the free tier.</p>
+<p><b>What it will and will not answer.</b> It reports volume and difficulty for queries the site
+<i>already ranks for</i> — useful for deciding whether the striking-distance terms are worth
+chasing. It is weaker for terms with no ranking at all; for those, Ahrefs' standalone free Keyword
+Difficulty Checker and Keyword Generator accept arbitrary terms without an account, which covers
+the "should I write about LoRA fine-tuning on Apple Silicon?" question.</p>
+<p><b>Treat every number as an estimate.</b> Ahrefs positions and traffic figures come from its own
+index and clickstream modelling. Where the two disagree, Search Console is ground truth — it is
+Google's own log. Use Ahrefs for <i>relative</i> comparison between candidate terms, not for
+absolute traffic forecasts.</p>
+
+<h2 id="next">Next steps</h2>
+<ol>
+<li><s>Setup</s> — done 2026-07-29. Both APIs live; 7 custom dimensions registered.</li>
+<li><s>Baseline</s> — captured above.</li>
+<li><s>Fix the iframe defect</s> — done 2026-07-29. 7 pages went from ~200-word stubs to
+1,500–8,600 crawlable words; canonicals added to the standalone copies.</li>
+<li><b>Deploy</b> — the instrumentation and the iframe fix are committed locally but not pushed.
+Nothing reaches production, and no custom events flow, until they are.</li>
+<li><b>Create the Ahrefs Webmaster Tools free account</b> and verify via the Search Console
+connection — see the recommendation above.</li>
+<li><b>Re-measure after ~4 weeks.</b> Organic search moves slowly; do not read week-to-week noise as signal.</li>
+</ol>
+
+<hr>
+<p class="small">Reporting commands:
+<code>python3 .claude/skills/check-search-console/scripts/gsc.py queries --days 90</code> ·
+<code>python3 .claude/skills/check-analytics/scripts/ga4.py funnel</code></p>
+
+</body>
+</html>

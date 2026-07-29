@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { StaticHtmlViewer } from "@/components";
+import { StaticHtmlContent } from "@/components";
 import { SITE_URL, OG_IMAGE } from "@/lib/seo";
 
 export const metadata: Metadata = {
@@ -39,10 +39,10 @@ export default function PhysicsOfLoraPage() {
       </p>
 
       <div className="mt-12">
-        <StaticHtmlViewer
+        <StaticHtmlContent
           src="physics-of-lora.html"
           title="The Physics of LoRA"
-          minHeight={800}
+          katex
         />
       </div>
     </div>

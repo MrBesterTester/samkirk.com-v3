@@ -107,6 +107,9 @@ Keep at least two administrators on any GA account that matters.
 seo-reporting@samkirk-v3.iam.gserviceaccount.com
 ```
 
+**Resolved IDs** (account `sam@samkirk.com`): property **525472559**, account
+**376572742**, measurement ID `G-QPGLH8V5MM`.
+
 Verify with `ga4.py properties`. Override the account name with the
 `SEO_SERVICE_ACCOUNT` environment variable if it is ever recreated.
 
@@ -120,8 +123,18 @@ GA4 collects custom event parameters immediately, but will not let you *report*
 on them until each is registered as a custom dimension. This is a one-time
 click-through in the GA4 UI, not something the API can do:
 
-[Open GA4 Custom definitions](https://analytics.google.com/analytics/web/#/admin/customdefinitions)
-→ **Create custom dimension** → scope **Event**, for each parameter below.
+Navigate: **Admin → Data display → Custom definitions → Create custom dimension**,
+scope **Event**. Note it lives under *Data display*, not directly under Admin —
+the `#/admin/customdefinitions` deep link renders an empty pane.
+
+Direct link (property 525472559):
+[Custom definitions](https://analytics.google.com/analytics/web/?authuser=1#/a376572742p525472559/admin/customdefinitions)
+
+The **Event parameter** field is a combobox that also accepts typed values — the
+parameter need not have been seen in live data yet, so these can be registered
+before the instrumentation deploys.
+
+**Status: all 7 registered on 2026-07-29.**
 
 | Dimension name | Event parameter | Used by |
 |---|---|---|

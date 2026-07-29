@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { StaticHtmlViewer } from "@/components";
+import { StaticHtmlContent } from "@/components";
 import { SITE_URL, OG_IMAGE } from "@/lib/seo";
 
 export const metadata: Metadata = {
@@ -33,10 +33,9 @@ export default function PocketFlowPage() {
       </p>
 
       <div className="mt-12">
-        <StaticHtmlViewer
+        <StaticHtmlContent
           src="pocket-flow.html"
           title="Pocket Flow content"
-          minHeight={600}
         />
       </div>
     </div>

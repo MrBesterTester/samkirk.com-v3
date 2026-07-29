@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { StaticHtmlViewer } from "@/components";
+import { StaticHtmlContent } from "@/components";
 import { DownloadLink } from "@/components/TrackedLink";
 import { SITE_URL, OG_IMAGE } from "@/lib/seo";
 
@@ -58,10 +58,9 @@ export default function DanceInstructionPage() {
       </div>
 
       <div className="mt-12">
-        <StaticHtmlViewer
+        <StaticHtmlContent
           src="dance-instruction.html"
           title="Dance Instruction content"
-          minHeight={600}
         />
       </div>
     </div>

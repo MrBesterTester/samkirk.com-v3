@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { StaticHtmlViewer } from "@/components";
+import { StaticHtmlContent } from "@/components";
 import { DownloadLink } from "@/components/TrackedLink";
 import { SITE_URL, OG_IMAGE } from "@/lib/seo";
 
@@ -56,10 +56,9 @@ export default function UberLevelAiSkillsPage() {
       </div>
 
       <div className="mt-12">
-        <StaticHtmlViewer
+        <StaticHtmlContent
           src="uber-level-ai-skills.html"
           title="Uber Level AI Skills content"
-          minHeight={700}
         />
       </div>
     </div>

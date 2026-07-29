@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { StaticHtmlViewer } from "@/components";
+import { StaticHtmlContent } from "@/components";
 import { DownloadLink } from "@/components/TrackedLink";
 import { SITE_URL, OG_IMAGE } from "@/lib/seo";
 
@@ -55,10 +55,10 @@ export default function CategoryTheoryPage() {
       </div>
 
       <div className="mt-12">
-        <StaticHtmlViewer
+        <StaticHtmlContent
           src="category-theory.html"
           title="Category Theory content"
-          minHeight={600}
+          katex
         />
       </div>
     </div>

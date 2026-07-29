@@ -1,6 +1,8 @@
 export { Header } from "./Header";
 export { Footer } from "./Footer";
 export { StaticHtmlViewer } from "./StaticHtmlViewer";
+export { StaticHtmlContent } from "./StaticHtmlContent";
+export type { StaticHtmlContentProps } from "./StaticHtmlContent";
 export { AdminSignOut } from "./AdminSignOut";
 export { ReCaptcha, CaptchaGate } from "./ReCaptcha";
 export type { ReCaptchaProps, CaptchaGateProps } from "./ReCaptcha";

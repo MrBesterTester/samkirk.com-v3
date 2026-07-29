@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { StaticHtmlViewer } from "@/components";
+import { StaticHtmlContent } from "@/components";
 
 export default function ComputerDiagnosticsPage() {
   return (
@@ -15,10 +15,9 @@ export default function ComputerDiagnosticsPage() {
       </p>
 
       <div className="mt-12">
-        <StaticHtmlViewer
+        <StaticHtmlContent
           src="computer-diagnostics-feature.html"
           title="Hardware Diagnostics LLM Fine-Tuning — Project Feature"
-          minHeight={800}
         />
       </div>
 
