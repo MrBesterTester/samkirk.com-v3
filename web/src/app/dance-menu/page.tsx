@@ -220,8 +220,6 @@ export default function DanceMenuPage() {
                   key={format.extension}
                   href={format.url}
                   download
-                  target="_blank"
-                  rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 rounded-lg border border-border bg-primary px-4 py-2 text-sm font-medium text-text-secondary shadow-sm transition-colors hover:bg-secondary hover:border-accent"
                 >
                   {getFormatIcon(format.extension)}

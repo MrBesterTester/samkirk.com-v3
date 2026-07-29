@@ -47,6 +47,16 @@ export async function GET(
     // Set caching headers (public, 1 hour)
     headers.set("Cache-Control", "public, max-age=3600");
 
+    // Force a download with an explicit filename. Without this the browser
+    // derives the name from the URL and reconciles it against the response
+    // content type, which mangles the extension (e.g. "…html.txt") whenever
+    // the two disagree.
+    const filename = pathSegments[pathSegments.length - 1];
+    headers.set(
+      "Content-Disposition",
+      `attachment; filename="${filename.replace(/"/g, "")}"`
+    );
+
     // Convert Buffer to Uint8Array for compatibility with Response body
     return new NextResponse(new Uint8Array(content), {
       status: 200,
