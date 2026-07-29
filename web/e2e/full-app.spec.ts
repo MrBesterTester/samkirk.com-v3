@@ -42,7 +42,9 @@ test.describe("Public Pages - Render Correctly", () => {
   test("hire-me page loads with unified interface", async ({ page }) => {
     await page.goto("/hire-me");
 
-    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+    // .first() — pages that server-render a static write-up have a second <h1>
+    // from the embedded document; the page's own heading is always first in DOM order.
+    await expect(page.getByRole("heading", { level: 1 }).first()).toBeVisible();
 
     // Should show the unified "Interview me NOW" heading
     await expect(page.getByRole("heading", { name: "Interview me NOW" })).toBeVisible();
@@ -59,7 +61,9 @@ test.describe("Public Pages - Render Correctly", () => {
   test("dance menu page loads", async ({ page }) => {
     await page.goto("/dance-menu");
 
-    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+    // .first() — pages that server-render a static write-up have a second <h1>
+    // from the embedded document; the page's own heading is always first in DOM order.
+    await expect(page.getByRole("heading", { level: 1 }).first()).toBeVisible();
     // Page should show menu content or "no menu" message
     const body = await page.textContent("body");
     expect(body).toBeTruthy();
@@ -68,13 +72,17 @@ test.describe("Public Pages - Render Correctly", () => {
   test("song dedication page loads", async ({ page }) => {
     await page.goto("/song-dedication");
 
-    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+    // .first() — pages that server-render a static write-up have a second <h1>
+    // from the embedded document; the page's own heading is always first in DOM order.
+    await expect(page.getByRole("heading", { level: 1 }).first()).toBeVisible();
   });
 
   test("explorations hub page loads", async ({ page }) => {
     await page.goto("/explorations");
 
-    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+    // .first() — pages that server-render a static write-up have a second <h1>
+    // from the embedded document; the page's own heading is always first in DOM order.
+    await expect(page.getByRole("heading", { level: 1 }).first()).toBeVisible();
 
     // Should have links to exploration topics
     await expect(page.getByRole("link", { name: /category theory/i })).toBeVisible();
@@ -84,39 +92,53 @@ test.describe("Public Pages - Render Correctly", () => {
 test.describe("Machine Learning & Robotics Pages - Render Correctly", () => {
   test("machine learning page loads", async ({ page }) => {
     await page.goto("/machine-learning");
-    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+    // .first() — pages that server-render a static write-up have a second <h1>
+    // from the embedded document; the page's own heading is always first in DOM order.
+    await expect(page.getByRole("heading", { level: 1 }).first()).toBeVisible();
   });
 
   test("robotics page loads", async ({ page }) => {
     await page.goto("/robotics");
-    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+    // .first() — pages that server-render a static write-up have a second <h1>
+    // from the embedded document; the page's own heading is always first in DOM order.
+    await expect(page.getByRole("heading", { level: 1 }).first()).toBeVisible();
   });
 });
 
 test.describe("Exploration Pages - Render Correctly", () => {
   test("math physics guide page loads", async ({ page }) => {
     await page.goto("/explorations/math-physics-guide");
-    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+    // .first() — pages that server-render a static write-up have a second <h1>
+    // from the embedded document; the page's own heading is always first in DOM order.
+    await expect(page.getByRole("heading", { level: 1 }).first()).toBeVisible();
   });
 
   test("category theory page loads", async ({ page }) => {
     await page.goto("/explorations/category-theory");
-    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+    // .first() — pages that server-render a static write-up have a second <h1>
+    // from the embedded document; the page's own heading is always first in DOM order.
+    await expect(page.getByRole("heading", { level: 1 }).first()).toBeVisible();
   });
 
   test("pocket flow page loads", async ({ page }) => {
     await page.goto("/explorations/pocket-flow");
-    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+    // .first() — pages that server-render a static write-up have a second <h1>
+    // from the embedded document; the page's own heading is always first in DOM order.
+    await expect(page.getByRole("heading", { level: 1 }).first()).toBeVisible();
   });
 
   test("dance instruction page loads", async ({ page }) => {
     await page.goto("/explorations/dance-instruction");
-    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+    // .first() — pages that server-render a static write-up have a second <h1>
+    // from the embedded document; the page's own heading is always first in DOM order.
+    await expect(page.getByRole("heading", { level: 1 }).first()).toBeVisible();
   });
 
   test("uber level ai skills page loads", async ({ page }) => {
     await page.goto("/explorations/uber-level-ai-skills");
-    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+    // .first() — pages that server-render a static write-up have a second <h1>
+    // from the embedded document; the page's own heading is always first in DOM order.
+    await expect(page.getByRole("heading", { level: 1 }).first()).toBeVisible();
   });
 });
 
