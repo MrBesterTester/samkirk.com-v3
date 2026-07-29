@@ -104,8 +104,42 @@ function getFormatIcon(extension: string): React.ReactElement {
   }
 }
 
+/**
+ * Download a menu file without letting the browser issue its own request.
+ *
+ * A plain `<a download href>` makes the browser re-request the URL outside the
+ * page context. That request does not carry the Vercel bot-challenge cookie, so
+ * the edge answers with the "Security Checkpoint" HTML page and the browser
+ * saves *that* under the menu's name (e.g. "sams-dance-menu.txt.html").
+ *
+ * Fetching from inside the page reuses the authenticated context, so we get the
+ * real bytes and hand them to the browser as a blob it never has to fetch.
+ */
+async function downloadFile(url: string): Promise<void> {
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error(`Download failed (${response.status})`);
+  }
+
+  const blob = await response.blob();
+  const objectUrl = URL.createObjectURL(blob);
+
+  try {
+    const anchor = document.createElement("a");
+    anchor.href = objectUrl;
+    anchor.download = url.split("/").pop() || "download";
+    document.body.appendChild(anchor);
+    anchor.click();
+    anchor.remove();
+  } finally {
+    // Revoke on the next tick so the browser has started reading the blob.
+    setTimeout(() => URL.revokeObjectURL(objectUrl), 0);
+  }
+}
+
 export default function DanceMenuPage() {
   const [loadState, setLoadState] = useState<LoadState>({ status: "loading" });
+  const [downloadError, setDownloadError] = useState<string | null>(null);
 
   useEffect(() => {
     async function fetchMenu() {
@@ -220,6 +254,18 @@ export default function DanceMenuPage() {
                   key={format.extension}
                   href={format.url}
                   download
+                  onClick={(event) => {
+                    // Prefer the in-page fetch; fall back to the plain link.
+                    event.preventDefault();
+                    setDownloadError(null);
+                    downloadFile(format.url).catch((error: unknown) => {
+                      setDownloadError(
+                        error instanceof Error
+                          ? error.message
+                          : "Download failed"
+                      );
+                    });
+                  }}
                   className="inline-flex items-center gap-2 rounded-lg border border-border bg-primary px-4 py-2 text-sm font-medium text-text-secondary shadow-sm transition-colors hover:bg-secondary hover:border-accent"
                 >
                   {getFormatIcon(format.extension)}
@@ -227,6 +273,11 @@ export default function DanceMenuPage() {
                 </a>
               ))}
             </div>
+            {downloadError && (
+              <p className="mt-3 text-sm text-red-700 dark:text-red-300">
+                {downloadError}
+              </p>
+            )}
           </div>
 
           {/* HTML Content Display */}
