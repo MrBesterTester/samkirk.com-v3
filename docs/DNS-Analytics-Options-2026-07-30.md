@@ -1,6 +1,6 @@
 # DNS-Level Analytics for samkirk.com — Does Microsoft Offer Anything?
 
-**Created:** July 29, 2026 10:45 PST | **Revised:** July 30, 2026 11:57 PST — added [Publishing DKIM and DMARC](#publishing-dkim-and-dmarc-for-samkirkcom) and [Vercel Analytics + Speed Insights](#vercel-analytics--speed-insights-for-later) | **Domain:** samkirk.com | **Authoritative DNS (Domain Name System):** Microsoft 365 (`ns1–ns4.bdm.microsoftonline.com`) | **Hosting:** Vercel
+**Created:** July 30, 2026 10:45 PST | **Revised:** July 30, 2026 11:57 PST — added [Publishing DKIM and DMARC](#publishing-dkim-and-dmarc-for-samkirkcom) and [Vercel Analytics + Speed Insights](#vercel-analytics--speed-insights-for-later) | **Domain:** samkirk.com | **Authoritative DNS (Domain Name System):** Microsoft 365 (`ns1–ns4.bdm.microsoftonline.com`) | **Hosting:** Vercel
 
 **Short answer: No.** Microsoft's DNS for samkirk.com has no analytics surface at all, and even the Microsoft product that *does* have DNS metrics offers far less than Cloudflare — and nothing that GA4 (Google Analytics 4) and Search Console aren't already covering better. There is, however, a genuinely useful gap-filler that isn't Microsoft or Cloudflare: **Vercel Analytics**. See [What Would Actually Add Signal](#what-would-actually-add-signal).
 
@@ -30,7 +30,7 @@
 
 > Yes, work up the DMARC and DKIM setup, adding to the doc in samkirk-v3 as background task.  I understand that DNS analytics isn't worthwhile so let's forget about that.  Please now coach on the registration migration so we can get that done and over with. Please also include the Vercel Analytics + Speed insights for later.
 
-*(Recorded here per the second half of that request — this is the samkirk-v3 side of a conversation that started in MyFinancialAdvisor over the Network Solutions → Porkbun registrar migration. The registrar/fee half stays there; see `~/Projects/ClaudeProjects/MyFinancialAdvisor/Porkbun-Migration-Guide-2026-07-29.md`.)*
+*(Recorded here per the second half of that request — this is the samkirk-v3 side of a conversation that started in MyFinancialAdvisor over the Network Solutions → Porkbun registrar migration. The registrar/fee half stays there; see `~/Projects/ClaudeProjects/MyFinancialAdvisor/Porkbun-Migration-Guide-2026-07-30.md`.)*
 
 ---
 
@@ -38,7 +38,7 @@
 
 While evaluating registrars for the samkirk.com transfer, Cloudflare Registrar came up and was **rejected** — it mandates Cloudflare authoritative DNS, which would force samkirk.com off Microsoft DNS and put Exchange mail at risk. Porkbun was selected instead precisely because it preserves the Microsoft nameservers.
 
-That raised a fair follow-up: Cloudflare is known for free DNS analytics. If we're declining Cloudflare, are we leaving analytics on the table — and does Microsoft offer an equivalent that would add something on top of the GA4 click instrumentation and Search Console reporting shipped in this repo today (`bf3c93d`, `bbb51ad`)?
+That raised a fair follow-up: Cloudflare is known for free DNS analytics. If we're declining Cloudflare, are we leaving analytics on the table — and does Microsoft offer an equivalent that would add something on top of the GA4 click instrumentation and Search Console reporting shipped in this repo on July 29, 2026 (`bf3c93d`, `bbb51ad`)?
 
 ---
 
