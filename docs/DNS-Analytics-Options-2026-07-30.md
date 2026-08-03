@@ -220,6 +220,14 @@ Note the rotation mechanics: a rotation takes **four days (96 hours)** to take e
 
 ### 3. Publish DMARC
 
+> **⏸️ DEFERRED — decided 2026-08-03.** Sam declined to set DMARC up at this time: *"Too complicated and it involves a 3rd party."* Nothing is broken by the deferral — SPF and DKIM both pass and align as of 2026-08-03, which is what governs whether his mail is delivered. DMARC is anti-impersonation protection, and it only becomes protective at `p=reject`, which requires 1–3 months of monitoring first.
+>
+> **When revisiting, lead with the no-third-party option.** The aggregator was the sticking point, and it is optional: `rua=mailto:sak@samkirk.com` publishes a fully valid record with reports staying entirely in Sam's own mailbox. The tradeoff is raw gzipped XML instead of a readable weekly digest — worse ergonomics, identical protection. Do not re-pitch Postmark unless he asks.
+>
+> Verified 2026-08-03 for whenever this resumes: Postmark DMARC Digests free tier is live — no account, no credit card, email + domain only, weekly digest, top 10 sources, 7-day history; paid tier $14/mo/domain.
+
+
+
 The record is a **TXT** record at hostname `_dmarc` in the samkirk.com zone (fully qualified: `_dmarc.samkirk.com`).
 
 Unlike DKIM, Microsoft provides **no admin portal or PowerShell cmdlet to manage DMARC for custom domains** — you add it as a plain custom TXT record. For samkirk.com that means: *Microsoft 365 admin center → Settings → Domains → samkirk.com → DNS records → Add record* → Type **TXT**, TXT name `_dmarc`, TTL 1 hour.
