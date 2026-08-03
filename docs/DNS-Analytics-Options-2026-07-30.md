@@ -126,16 +126,41 @@ That is a real complement to what shipped today rather than a duplicate of it. F
 
 **DKIM (DomainKeys Identified Mail)** attaches a cryptographic signature to every outbound message, and publishes the matching public key in DNS so receivers can verify the message really came from your domain and wasn't altered. **DMARC (Domain-based Message Authentication, Reporting and Conformance)** is the policy layer on top: it tells receivers what to do when a message claiming to be from samkirk.com fails both SPF and DKIM, and it asks them to send you reports about it.
 
+> ## ✅ DKIM PUBLISHED AND VERIFIED — 2026-08-03
+>
+> Done the same afternoon the Porkbun transfer completed. Two CNAMEs plus the portal toggle; about 30 minutes.
+>
+> | Record | Value |
+> |---|---|
+> | `selector1._domainkey.samkirk.com` | CNAME → `selector1-samkirk-com._domainkey.samkirk.onmicrosoft.com` |
+> | `selector2._domainkey.samkirk.com` | CNAME → `selector2-samkirk-com._domainkey.samkirk.onmicrosoft.com` |
+>
+> **Legacy target format** (samkirk.com predates the May 2025 change). Records created in *Microsoft 365 admin center → Settings → Domains → samkirk.com → DNS records*; Microsoft Defender portal reports **Status = Valid**. Resolution confirmed both via public resolvers and directly against `ns1.bdm.microsoftonline.com` — propagation was effectively instant, since Microsoft hosts the zone.
+>
+> **Verified by real mail.** Test `sam@samkirk.com` → `samuelakirk@me.com`, iCloud headers at 16:21 PDT:
+>
+> ```
+> dkim=pass header.d=samkirk.com header.i=@samkirk.com
+> DKIM-Signature: v=1; a=rsa-sha256; d=samkirk.com; s=selector1
+> spf=pass smtp.mailfrom=sam@samkirk.com
+> ```
+>
+> Compare the 15:53 test earlier the same day, before enablement: `dkim=pass header.d=samkirk.onmicrosoft.com`. **SPF and DKIM now both pass *and* align with the From domain**, so forwarded mail retains authentication — which was the whole point.
+>
+> **Key size is 1024-bit** (Microsoft's default; the `p=MIGfMA0G…` prefix identifies it). Accepted everywhere and fine at this volume. Rotating to 2048 is optional and takes ~8 days across both selectors — see the key-size note below.
+>
+> **DMARC remains unpublished — deliberately, and it is the next step.** iCloud still reports `dmarc=none` and `bimi=skipped reason="insufficient dmarc"`. Microsoft's own inbound evaluation already reads `dmarc=pass action=none header.from=samkirk.com`, so a `p=none` record would pass immediately. Section 3 below is unchanged and still the plan.
+
 ### Current state (verified by `dig`, July 29–30, 2026)
 
 | Record | Present? | Value |
 |---|---|---|
 | SPF (`TXT` at apex) | **Yes** | `v=spf1 include:spf.protection.outlook.com -all` |
-| DKIM `selector1._domainkey` CNAME | **No** | *(empty)* |
-| DKIM `selector2._domainkey` CNAME | **No** | *(empty)* |
+| DKIM `selector1._domainkey` CNAME | ~~No~~ **YES as of 2026-08-03** | → `selector1-samkirk-com._domainkey.samkirk.onmicrosoft.com` |
+| DKIM `selector2._domainkey` CNAME | ~~No~~ **YES as of 2026-08-03** | → `selector2-samkirk-com._domainkey.samkirk.onmicrosoft.com` |
 | DMARC (`TXT` at `_dmarc`) | **No** | *(empty)* |
 
-So one of three legs is up. SPF alone does not give DMARC alignment for forwarded mail, and it gives receivers nothing to report on.
+So **two of three legs are up** as of 2026-08-03 (SPF and DKIM); only DMARC remains. SPF alone does not give DMARC alignment for forwarded mail, and it gives receivers nothing to report on.
 
 ### The registrar migration does not gate any of this
 
