@@ -365,7 +365,7 @@ def cmd_clicks(args) -> None:
     prop = resolve_property(args.property)
     print(f"Click detail — property {prop}  ({window_note(args.days)})\n")
 
-    for event, param in (("nav_click", "linkText"), ("cta_click", "ctaId")):
+    for event, param in (("nav_click", "link_text"), ("cta_click", "cta_id")):
         print(f"  {event}:")
         rows = run_report(
             prop,
@@ -441,7 +441,7 @@ def cmd_failures(args) -> None:
     print(f"Tool failures — property {prop}  ({window_note(args.days)})\n")
     rows = run_report(
         prop,
-        ["customEvent:reason", "customEvent:runType"],
+        ["customEvent:reason", "customEvent:run_type"],
         ["eventCount"],
         args.days,
         limit=args.limit,

@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>/hire-me Conversion Plan — and the photo-fun Backlink</title>
+<style>
+/* Colorblind-safe: blue/orange axis, never red-vs-green; color is never the sole
+   cue (every coded thing also carries a text label); no background patterning. */
+:root{
+  --blue:#1f6feb; --blue-dk:#0b4fc0; --blue-bg:#eaf1fe;
+  --orange:#e8710a; --orange-dk:#b8560a; --orange-bg:#fdeede;
+  --ink:#1a1f29; --muted:#5a6473; --line:#d7dce4;
+  --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+body{
+  margin:0 auto; padding:48px 28px 96px; max-width:56rem;
+  font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+  color:var(--ink); background:#fff;
+}
+h1{font-size:1.95rem; line-height:1.25; margin:0 0 6px; letter-spacing:-.02em}
+h2{font-size:1.3rem; margin:52px 0 14px; padding-bottom:7px; border-bottom:2px solid var(--line); color:var(--blue-dk)}
+h3{font-size:1.02rem; margin:28px 0 10px; color:var(--ink)}
+p,li{margin:0 0 12px}
+ul,ol{padding-left:24px}
+li{margin-bottom:7px}
+a{color:var(--blue-dk)}
+code{font-family:var(--mono); font-size:.87em; background:#f2f4f8; padding:2px 5px; border-radius:4px}
+pre{background:#f7f8fa; border:1px solid var(--line); border-left:4px solid var(--blue);
+    border-radius:0 6px 6px 0; padding:13px 16px; overflow-x:auto; font-family:var(--mono); font-size:.85rem}
+pre code{background:none; padding:0}
+
+.stamp{color:var(--muted); font-size:.88rem; margin:0 0 4px}
+.status{display:inline-block; margin-top:10px; padding:3px 11px; border-radius:999px;
+        background:var(--blue-bg); color:var(--blue-dk); font-size:.8rem; font-weight:600;
+        border:1px solid #b9d0fb}
+
+/* Highlight recipe: strong color in the border, text on a near-white tint. */
+.callout{background:var(--orange-bg); border:1px solid #f2c896; border-left:4px solid var(--orange);
+         border-radius:0 8px 8px 0; padding:16px 20px; margin:20px 0}
+.callout .lbl{display:block; font-size:.76rem; font-weight:700; letter-spacing:.09em;
+              text-transform:uppercase; color:var(--orange-dk); margin-bottom:7px}
+.callout p:last-child{margin-bottom:0}
+.note{background:var(--blue-bg); border-left:4px solid var(--blue); border-radius:0 8px 8px 0;
+      padding:14px 18px; margin:20px 0; color:#22303f}
+.note .lbl{display:block; font-size:.76rem; font-weight:700; letter-spacing:.09em;
+           text-transform:uppercase; color:var(--blue-dk); margin-bottom:7px}
+.note p:last-child{margin-bottom:0}
+
+nav.toc{background:#f7f8fa; border:1px solid var(--line); border-radius:8px; padding:18px 24px; margin:28px 0 8px}
+nav.toc h2{margin:0 0 10px; font-size:.8rem; letter-spacing:.09em; text-transform:uppercase;
+           border:0; padding:0; color:var(--muted)}
+nav.toc ol{margin:0; padding-left:20px; columns:2; column-gap:34px}
+nav.toc li{margin-bottom:5px; break-inside:avoid}
+
+table{border-collapse:collapse; width:100%; margin:18px 0; font-size:.92rem}
+th{background:var(--blue-bg); color:#1c2a3a; text-align:left; font-weight:600;
+   padding:9px 12px; border:1px solid var(--line)}
+td{padding:9px 12px; border:1px solid var(--line); vertical-align:top}
+tbody tr:nth-child(even) td{background:#fafbfc}
+.num{text-align:right; font-family:var(--mono); font-variant-numeric:tabular-nums; white-space:nowrap}
+/* Drop severity carries an orange accent, but the sign and value in the text are
+   what actually communicate it — readable with no color at all. */
+.sev{color:var(--orange-dk); font-weight:700}
+tfoot td{font-weight:700; background:var(--blue-bg)}
+
+/* Class tags on findings — the word itself is the cue; color is decoration. */
+.tag{display:inline-block; padding:1px 8px; border-radius:999px; font-size:.74rem;
+     font-weight:700; letter-spacing:.04em; white-space:nowrap; border:1px solid}
+.tag-bug{background:var(--orange-bg); color:var(--orange-dk); border-color:#f2c896}
+.tag-gap{background:var(--blue-bg); color:var(--blue-dk); border-color:#b9d0fb}
+
+figure{margin:26px 0}
+figcaption{font-size:.85rem; color:var(--muted); margin-top:9px}
+.wrap{overflow-x:auto}
+
+@media (max-width:640px){
+  body{padding:32px 18px 72px}
+  nav.toc ol{columns:1}
+}
+@media print{
+  body{padding:0; max-width:none; font-size:11pt}
+  h2{page-break-after:avoid}
+  table,figure,pre,.callout,.note{page-break-inside:avoid}
+  nav.toc{page-break-after:always}
+}
+</style>
+</head>
+<body>
+
+<h1>/hire-me Conversion Plan — and the photo-fun Backlink</h1>
+<p class="stamp">Created 2026-07-29 PST · Revised 2026-08-06 PST (run-completion gap root-caused; traffic re-baselined against bot filtering)</p>
+<p class="stamp">Project: <code>samkirk-v3</code> · Source: <code>docs/conversion-plan-2026-08-06.md</code></p>
+<p><span class="status">Status: proposed — next step approved, not yet executed</span></p>
+
+<div class="note">
+  <span class="lbl">Revision note — 2026-08-06</span>
+  <p>This supersedes <code>conversion-plan-2026-07-29.md</code>. Two things changed since the
+    07-30 revision: the 8 → 2 run-completion loss has been traced to specific code paths
+    (§4, new), and a traffic spike in the intervening week turned out to be datacenter
+    noise, which revises the reading of the funnel's first stage (§3).</p>
+  <p>Nothing in Plans A–D has shipped.</p>
+</div>
+
+<nav class="toc">
+  <h2>Contents</h2>
+  <ol>
+    <li><a href="#next-step">Next step</a></li>
+    <li><a href="#context">Context</a></li>
+    <li><a href="#data">What the data actually says</a></li>
+    <li><a href="#bots">Correction — the first funnel stage is mostly bots</a></li>
+    <li><a href="#rootcause">Root cause of the run-completion gap</a></li>
+    <li><a href="#captcha">Correction to the original captcha diagnosis</a></li>
+    <li><a href="#landing">The landing experience, as built</a></li>
+    <li><a href="#plan-a">Plan A — instrument first</a></li>
+    <li><a href="#plan-b">Plan B — time-to-first-value</a></li>
+    <li><a href="#plan-c">Plan C — defer the captcha gate</a></li>
+    <li><a href="#plan-d">Plan D — the photo-fun PR</a></li>
+    <li><a href="#sequencing">Sequencing</a></li>
+    <li><a href="#verification">Verification</a></li>
+    <li><a href="#files">Files to be modified</a></li>
+  </ol>
+</nav>
+
+<h2 id="next-step">0. Next step</h2>
+
+<div class="callout">
+  <span class="lbl">Approved — awaiting go-ahead to push</span>
+  <p><strong>Open the PR against <code>MrBesterTester/photo-fun5</code> — backlink <em>and</em> GA tag together.</strong></p>
+  <p>Both changes land in one pull request:</p>
+  <ol>
+    <li>A crawlable footer backlink to <code>https://samkirk.com</code>, in real
+      <code>&lt;a href&gt;</code> markup on the app shell so it appears on every view.</li>
+    <li>The GA4 tag <code>G-QPGLH8V5MM</code> in <code>index.html</code>, registered as a
+      second data stream on property 525472559.</li>
+  </ol>
+  <p>Doing both at once because they touch adjacent files in a repo whose working copy is
+    not on this machine, and photo-fun is the only asset earning non-branded search
+    impressions. Splitting them across two round trips to a laptop that isn't reachable
+    buys nothing.</p>
+  <p><strong>Requires explicit approval to push to a remote before execution.</strong>
+    The repo is public and is not an agent/advisor project, so the no-remote rule does not
+    apply here — but pushing is still an outward-facing action that needs a go-ahead.</p>
+</div>
+
+<div class="note">
+  <span class="lbl">2026-08-06 note</span>
+  <p>§4 turned up a genuine silent-error bug (A1 in the fix table) that costs nothing to fix
+    and is not blocked on anyone's approval. Consider taking that one ahead of the PR; the
+    sequencing in §11 reflects this.</p>
+</div>
+
+<h3>Prerequisite — getting <code>photo-fun5</code> current</h3>
+
+<p>The open question was whether <code>origin/main</code> on GitHub matches the working copy
+on the MacBook Pro, since the PR has to branch from something current.</p>
+
+<div class="note">
+  <p><strong>Originating request (verbatim):</strong></p>
+  <p style="margin-bottom:0">I think there's a plan in ../MyIT-Agent on how to link the  two computers, though maybe just scp-ing  from my MacBook to my  iMac here will be sufficient.</p>
+</div>
+
+<p>Two findings:</p>
+<ol>
+  <li><strong>There is no machine-linking plan in <code>MyIT-agent</code>.</strong> The three
+    files that mention SSH / file-sharing terms are
+    <code>macbook-pro-15-2018-profile-2026-06-30.md</code> (hardware profile — dock, ports,
+    macOS Sequoia 15.7.7), <code>imac-backup-drive-2026-06-03.md</code> (Time Machine and the
+    WD My Passport, not host-to-host access), and
+    <code>iterm2-setup-2026-04-03.md</code>. Nothing covers reaching one Mac from the
+    other.</li>
+  <li><strong>Neither linking nor <code>scp</code> is needed.</strong> <code>photo-fun5</code>
+    already has a GitHub remote — that <em>is</em> the transport. Copying a working tree
+    between machines would create a second untracked copy of a git repo, which is strictly
+    worse than letting git do it.</li>
+</ol>
+
+<p>The actual prerequisite, run <strong>on the MacBook Pro</strong>:</p>
+
+<pre><code>git -C &lt;path-to-photo-fun5&gt; status --short --branch</code></pre>
+
+<ul>
+  <li><strong>Clean and up to date</strong> → nothing to do; I branch from
+    <code>origin/main</code>.</li>
+  <li><strong>Unpushed commits</strong> → <code>git push origin main</code>.</li>
+  <li><strong>Uncommitted work in progress</strong> → commit it, or push it as a WIP branch
+    (<code>git push -u origin wip-&lt;name&gt;</code>) and tell me which branch to base the PR
+    on.</li>
+</ul>
+
+<p>Once <code>origin/main</code> reflects the laptop, I need no access to that machine at all
+— the PR is two small file changes I can make from a fresh clone here.</p>
+
+<h2 id="context">1. Context</h2>
+
+<p>samkirk.com has two separate problems, and this plan addresses only the second.</p>
+
+<p><strong>Acquisition</strong> is near zero: 76 search impressions and 2 organic sessions in
+28 days, average position 16–45, and no query anywhere in the 5–20 striking-distance band.
+There is nothing to optimize yet — that is a months-long content play.</p>
+
+<p><strong>Conversion</strong> is the tractable one. GA4 shows 12 generation runs started in
+28 days, 3 completed, and <strong>zero</strong> downloads. Traffic that arrived by
+hand-delivered link — 220 of 242 sessions were direct — still did not convert. Fixing
+acquisition before conversion would pour more visitors into a funnel that currently leaks
+100%.</p>
+
+<p>The intended outcome of this plan: a <code>/hire-me</code> page where a hiring manager
+reaches something of value in one click instead of six, plus enough instrumentation to tell
+<em>why</em> the ones who leave are leaving. Secondarily, a crawlable link and working
+analytics on <code>photo-fun.samkirk.com</code>.</p>
+
+<h2 id="data">2. What the data actually says</h2>
+
+<h3>GA4 funnel, users not events, 2026-07-09 → 2026-08-06</h3>
+
+<div class="wrap">
+<table>
+  <thead><tr><th>Stage</th><th class="num">Users</th><th>Drop</th></tr></thead>
+  <tbody>
+    <tr><td>Visited <code>/hire-me</code></td><td class="num">105</td><td>—</td></tr>
+    <tr><td>Loaded a job description</td><td class="num">10</td><td><span class="sev">−90%</span></td></tr>
+    <tr><td>Started a generation run</td><td class="num">10</td><td>−0%</td></tr>
+    <tr><td>Run completed</td><td class="num">2</td><td><span class="sev">−80%</span></td></tr>
+    <tr><td>Downloaded the .zip</td><td class="num">0</td><td><span class="sev">−100%</span></td></tr>
+  </tbody>
+</table>
+</div>
+
+<div class="callout">
+  <span class="lbl">Read this table with §3 in hand</span>
+  <p>The first drop is <strong>not real</strong>. The denominator is inflated by datacenter
+    traffic. The 10 → 2 → 0 tail <em>is</em> real, and is the subject of §4.</p>
+</div>
+
+<h3>Run events broken out by <code>run_type</code></h3>
+
+<p>This is the breakdown the previous revision did not have, and it splits the "8 → 2" loss
+into two unrelated failures:</p>
+
+<div class="wrap">
+<table>
+  <thead><tr><th><code>run_type</code></th><th class="num">Started</th><th class="num">Completed</th><th class="num">Failed</th><th class="num">Dark</th></tr></thead>
+  <tbody>
+    <tr><td><code>fit_report</code></td><td class="num">6</td><td class="num">2</td><td class="num">0</td><td class="num"><span class="sev">4</span></td></tr>
+    <tr><td><code>resume</code></td><td class="num">6</td><td class="num">1</td><td class="num">0</td><td class="num"><span class="sev">5</span></td></tr>
+  </tbody>
+  <tfoot><tr><td>Total</td><td class="num">12</td><td class="num">3</td><td class="num">0</td><td class="num">9</td></tr></tfoot>
+</table>
+</div>
+
+<p>Nine of twelve runs emitted no terminal event of any kind. Not a completion, not a
+failure. The two run types get there by different routes (§4).</p>
+
+<h3>Supporting signals</h3>
+
+<ul>
+  <li><code>/hire-me</code> average time on page: <strong>4 seconds</strong> (109 views) —
+    down from 12s, consistent with the bot influx. By contrast <code>/robotics</code> is
+    2172s and <code>/dance-menu</code> is 971s.</li>
+  <li>Site-wide engagement rate: <strong>19.0%</strong>.</li>
+  <li><code>nav_click</code>: 15 events from <strong>5 users</strong>.
+    <code>cta_click</code>: 2 from <strong>1 user</strong>.</li>
+  <li><code>tool_run_failed</code>: <strong>zero events</strong>, again.</li>
+  <li><code>tool_download</code>: <strong>zero events</strong>. This zero is trustworthy —
+    <code>trackToolDownload</code> fires at the <em>top</em> of <code>download()</code>
+    (<code>useHireMe.ts:915</code>), before the fetch, so it records click intent rather than
+    delivery success. Nobody clicked.</li>
+  <li><code>contact_click</code>: still absent from the event list entirely.</li>
+</ul>
+
+<h3>Search Console, 2026-07-08 → 2026-08-04</h3>
+
+<div class="wrap">
+<table>
+  <thead><tr><th>Landing page</th><th class="num">Clicks</th><th class="num">Impr</th><th class="num">CTR</th><th class="num">Position</th></tr></thead>
+  <tbody>
+    <tr><td><code>samkirk.com/</code></td><td class="num">1</td><td class="num">99</td><td class="num">1.0%</td><td class="num">16.5</td></tr>
+    <tr><td><code>/explorations</code></td><td class="num">1</td><td class="num">11</td><td class="num">9.1%</td><td class="num">22.4</td></tr>
+    <tr><td><code>photo-fun.samkirk.com/</code></td><td class="num">0</td><td class="num">49</td><td class="num">0.0%</td><td class="num">44.7</td></tr>
+    <tr><td><code>/hire-me</code></td><td class="num">0</td><td class="num">4</td><td class="num">0.0%</td><td class="num">4.5</td></tr>
+  </tbody>
+</table>
+</div>
+
+<p>Top queries total <strong>76 impressions, 0 clicks</strong> across 15 queries. Query-level
+rows sum to fewer clicks than page-level rows because Google withholds low-volume queries;
+the page table is the more complete count.</p>
+
+<p>Two observations worth carrying forward:</p>
+
+<ul>
+  <li><strong>The site does not rank for Sam's own name.</strong> <code>samuel kirk</code>
+    sits at position 23.8, <code>sam kirk</code> at 30.8, <code>who is sam kirk</code> at
+    15.0 — all page 2–3. A recruiter who is told the name and searches it does not reliably
+    find the site.</li>
+  <li><strong><code>/hire-me</code> ranks at position 4.5 but draws 4 impressions.</strong>
+    The one page that converts is well-placed for a query nobody issues.</li>
+  <li>Remaining query volume is <code>photo fun*</code> variants (chasing a generic app name)
+    plus <code>sean kirk ai</code> and <code>david kirk nvidia</code> — different people.</li>
+</ul>
+
+<h2 id="bots">3. Correction — the first funnel stage is mostly bots</h2>
+
+<p>The previous revision treated <strong>80 → 8</strong> as the headline problem and
+attributed it to time-to-first-value. That reading needs qualifying: most of the denominator
+is not human.</p>
+
+<p>Evidence, from the same 28-day window:</p>
+
+<div class="wrap">
+<table>
+  <thead><tr><th>Signal</th><th>Value</th><th>Why it matters</th></tr></thead>
+  <tbody>
+    <tr><td><code>(direct)/(none)</code></td><td>220 sessions, 188 users, <strong>14.5% engaged</strong></td><td>Real direct traffic engages; this does not</td></tr>
+    <tr><td>Fremont, CA</td><td>141 sessions, <strong>140 users</strong></td><td>~1 session per user — no returns</td></tr>
+    <tr><td>Flint Hill, VA</td><td>24 sessions, <strong>24 users</strong></td><td>Same 1:1 signature</td></tr>
+    <tr><td><code>/hire-me</code> dwell</td><td><strong>4s</strong> across 105 users</td><td>Not reading</td></tr>
+    <tr><td>Organic sessions</td><td><strong>2</strong></td><td>GSC independently confirms near-zero search arrival</td></tr>
+  </tbody>
+</table>
+</div>
+
+<div class="callout">
+  <span class="lbl">Do not misread the Fremont cluster</span>
+  <p>Fremont is also where Sam lives, and the coincidence invites a wrong conclusion. It is
+    <strong>not him</strong>: Sam would appear as <em>one</em> user with many sessions, and
+    this is <em>140 users with one session each</em>. Fremont is a major colocation hub
+    (Hurricane Electric's FMT facilities), so datacenter egress geolocating there is the
+    ordinary explanation.</p>
+</div>
+
+<p><strong>Flint Hill</strong> is a village in Rappahannock County, Virginia — rural,
+roughly 60 miles west of Washington DC, population in the low hundreds, no datacenter
+presence. Its 24 sessions are 100% Windows + Chrome + desktop, 100%
+<code>(direct)/(none)</code>, spread one or two apiece across thirteen different landing
+pages including <code>/admin/login</code>. That even spread across the whole sitemap is a
+crawl pattern, not human browsing. The city label itself is almost certainly a geolocation
+fallback for a Virginia address range — note that <code>Ashburn, Virginia</code>, the
+canonical AWS <code>us-east-1</code> tell, appears separately in the same table.</p>
+
+<p>Netting out Fremont and Flint Hill leaves roughly <strong>29 plausibly-human users</strong>
+for the month. Against that denominator, 10 job-descriptions-loaded is not a 90% collapse —
+it is something closer to a third of real visitors taking the first step, which is
+unremarkable.</p>
+
+<p><strong>Consequence for this plan:</strong> Plan B (§8) loses its claim to being the
+largest expected win. It is still worth doing — the landing copy is genuinely too long and
+the six-click path is real — but it should no longer be sequenced ahead of the
+run-completion work on the strength of a 90% number that is mostly noise.</p>
+
+<h3>What the Vercel logs could and could not confirm</h3>
+
+<p>The obvious next step was to pull client IPs from Vercel and identify the operator. That
+is <strong>not available on this project</strong>:</p>
+
+<div class="wrap">
+<table>
+  <thead><tr><th>Check</th><th>Result</th></tr></thead>
+  <tbody>
+    <tr><td>Plan</td><td><strong>Hobby</strong></td></tr>
+    <tr><td><code>vercel logs</code> live tail</td><td>Connected, returned no rows</td></tr>
+    <tr><td>Deployment events API</td><td>Build <code>stdout</code> only — no proxy records, no <code>clientIp</code> field</td></tr>
+    <tr><td>Log drains</td><td><code>[]</code> — none configured; Hobby cannot create them</td></tr>
+    <tr><td>Observability logs API</td><td><code>404 not_found</code></td></tr>
+  </tbody>
+</table>
+</div>
+
+<p>Request-level logs with client IPs are an Observability/Pro feature. There is a second
+problem underneath the plan limit: the pages this traffic hit are static and served from the
+edge, so they generate <em>no runtime log entries at all</em> even on a paid plan. Upgrading
+would not retroactively produce these — the traffic is weeks old and nothing captured it.</p>
+
+<div class="callout">
+  <span class="lbl">What the firewall config does say</span>
+  <p>Both managed rules are <strong>on</strong>: <code>ai_bots</code> is set to
+    <strong>deny</strong> and <code>bot_protection</code> to <strong>challenge</strong>. Yet
+    164 of these clients loaded pages and executed <code>gtag.js</code> — which is the only
+    reason GA4 saw them at all.</p>
+  <p>A plain scripted crawler never runs JavaScript and would be invisible to GA4. So this
+    traffic runs a real JavaScript engine <em>and</em> passes Vercel's bot challenge, which
+    narrows it from "ordinary crawler" to headless browser automation. Combined with the
+    <code>/admin/login</code> hit, that is worth attention on security grounds independent of
+    what it does to the analytics.</p>
+</div>
+
+<p>Options, if this is worth pursuing later: a <code>middleware.ts</code> reading
+<code>x-forwarded-for</code> catches it going forward and works on Hobby (scope it to
+<code>/admin/*</code> and <code>/api/tools/*</code> rather than site-wide, to avoid
+accumulating visitor IPs); custom WAF rules on <code>/admin/login</code> stop the probing
+without identifying anyone; a plan upgrade gives real request logs from that point on.</p>
+
+<p><strong>The bot attribution remains inferred, not proven.</strong> GA4 exposes no IP or
+ASN, so it rests on the geography, the 1:1 user-to-session ratio, the uniform client
+fingerprint, and the sitemap-walk pattern taken together.</p>
+
+<h2 id="rootcause">4. Root cause of the run-completion gap</h2>
+
+<p>Nine of twelve runs ended in silence. The code says this happens two different ways, and
+only one of them is a bug.</p>
+
+<h3>4a. <code>fit_report</code> — the flow parks on an unanswered question, by design</h3>
+
+<p><code>triggerFit</code> fires <code>trackToolRunStarted("fit_report")</code> at
+<code>useHireMe.ts:479</code>, then branches on the server's response:</p>
+
+<ul>
+  <li><strong><code>status === "ready"</code></strong> → calls <code>generateFitReport</code>,
+    which fires <code>trackToolRunCompleted</code> at line 408. Terminal. Fine.</li>
+  <li><strong><code>status === "question"</code></strong> → appends a
+    <code>fit-question</code> message and sets <code>active: true, isLoading: false</code>
+    (lines 530–553). <strong>The run now waits for a human, indefinitely, with no terminal
+    event pending.</strong></li>
+</ul>
+
+<p>Completion for that branch only arrives via <code>answerFitQuestion</code> reaching
+<code>status === "complete"</code> at line 670. The flow allows up to
+<code>MAX_FIT_QUESTIONS = 5</code> rounds, so a visitor may face five sequential clarifying
+questions before seeing anything.</p>
+
+<p>A visitor who is asked a question and closes the tab therefore produces
+<code>tool_run_started</code> and nothing else — forever. This is not a crash; it is a
+structural dead end in the measurement. Four <code>fit_report</code> runs are sitting in
+it.</p>
+
+<h3>4b. <code>answerFitQuestion</code> has no failure instrumentation — a real bug</h3>
+
+<p>The three run-driving functions handle their catch blocks inconsistently:</p>
+
+<div class="wrap">
+<table>
+  <thead><tr><th>Function</th><th>Catch block</th><th>Fires <code>trackToolRunFailed</code>?</th></tr></thead>
+  <tbody>
+    <tr><td><code>triggerFit</code></td><td>line 562</td><td>Yes — line 566</td></tr>
+    <tr><td><code>triggerResume</code></td><td>line 780</td><td>Yes — line 784</td></tr>
+    <tr><td><code>answerFitQuestion</code></td><td>line 692</td><td><span class="sev">No</span></td></tr>
+  </tbody>
+</table>
+</div>
+
+<p><code>answerFitQuestion</code>'s catch shows the user an error message and resets state,
+but emits no analytics event. Every error in the question round-trip — the longest and most
+LLM-dependent stretch of the fit flow — is invisible. If the fit flow has been breaking for
+real users, the current data physically cannot show it.</p>
+
+<p>This is the one item here that is a defect rather than a measurement gap, and it is a
+three-line fix.</p>
+
+<h3>4c. <code>resume</code> — abandonment while the request is in flight</h3>
+
+<p><code>triggerResume</code> is single-shot: one <code>POST /api/tools/resume</code>, then
+either <code>trackToolRunCompleted</code> at line 761 or <code>trackToolRunFailed</code> at
+line 784. Every path that <em>settles</em> is instrumented.</p>
+
+<p>Yet 6 started and 1 completed, with zero failures. The only way to get there is for the
+promise never to settle in a live page — the visitor navigated away or closed the tab while
+the request was outstanding.</p>
+
+<p>Two contributing conditions:</p>
+
+<ul>
+  <li><strong>No <code>maxDuration</code> is set</strong> on any route under
+    <code>web/src/app/api/tools/</code>, so the platform default governs. A server-side
+    timeout would surface as a non-OK response and <em>would</em> be caught and reported as a
+    failure — the absence of failures says these runs are not timing out server-side.</li>
+  <li><strong>No <code>AbortController</code></strong> anywhere in <code>useHireMe.ts</code>,
+    so there is no client-side cancel path and no unmount hook to fire a terminal event.</li>
+</ul>
+
+<p>Five resume runs are in this state. Combined with 4a, that accounts for all nine.</p>
+
+<h3>4d. Duration is still never recorded</h3>
+
+<p><code>trackToolRunCompleted(run, durationMs?)</code> supports a
+<code>duration_seconds</code> parameter (<code>analytics.ts:158–163</code>) and
+<code>analytics.test.ts:156</code> covers it — but <strong>all three call sites omit
+it</strong> (lines 408, 670, 761). The latency hypothesis for 4c therefore cannot be tested
+against the three runs that <em>did</em> succeed. This gap was identified in the 07-29
+revision and has not been closed.</p>
+
+<h3>Summary</h3>
+
+<div class="wrap">
+<table>
+  <thead><tr><th>Loss</th><th class="num">Runs</th><th>Mechanism</th><th>Class</th></tr></thead>
+  <tbody>
+    <tr><td>Fit run parks on unanswered question</td><td class="num">4</td><td>No terminal event by design</td><td><span class="tag tag-gap">Measurement gap</span></td></tr>
+    <tr><td>Fit question round-trip errors</td><td class="num">unknown</td><td>Catch block emits nothing</td><td><span class="tag tag-bug">Defect</span></td></tr>
+    <tr><td>Resume abandoned in flight</td><td class="num">5</td><td>Promise never settles</td><td><span class="tag tag-gap">Measurement gap</span></td></tr>
+    <tr><td>Completed-run duration</td><td class="num">3</td><td><code>durationMs</code> never passed</td><td><span class="tag tag-gap">Measurement gap</span></td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2 id="captcha">5. Correction to the original captcha diagnosis</h2>
+
+<p><em>Retained from the 07-30 revision; still valid.</em></p>
+
+<p>The reCAPTCHA gate was initially named as the primary cause of the first-stage drop. The
+code and the funnel together say that is <strong>wrong</strong>.</p>
+
+<p><code>JobContextBar</code> is rendered <strong>outside</strong> <code>ToolGate</code> in
+<code>hire-me/page.tsx</code>. Pasting a job posting therefore does not require passing the
+captcha. And the funnel shows <code>tool_job_loaded</code> = 10 →
+<code>tool_run_started</code> = 10, a <strong>0% drop</strong> — every single visitor who
+loaded a job also passed the captcha and started a run. The gate stopped nobody, in two
+consecutive measurement windows.</p>
+
+<p>The captcha still deserves to move (§9) — it is friction shown before any value is
+demonstrated — but it is hygiene, not a fix for anything the data shows.</p>
+
+<h2 id="landing">6. The landing experience, as built</h2>
+
+<p>A first-time visitor to <code>/hire-me</code> sees, top to bottom:</p>
+
+<ol>
+  <li><code>&lt;h1&gt;</code> "Interview me NOW".</li>
+  <li>Roughly 120 words of operational detail before any control: accepted input formats
+    (<code>.docx</code>, <code>.html</code>, <code>.txt</code>, <code>.md</code>), "Sorry, no
+    <code>.pdf</code> inputs", and a full paragraph about <code>.zip</code> packages,
+    traceability, and choosing an output folder after unzipping.</li>
+  <li>A small collapsed bar — "Add a job posting to enable fit analysis and custom resume" —
+    with a secondary-looking <strong>Add Job</strong> button. <code>JobContextBar</code>
+    initialises to <code>barState = "collapsed-empty"</code>, so the input is not even
+    visible yet.</li>
+  <li>A reCAPTCHA v2 checkbox panel: "Verify to use Hire Me Tools".</li>
+</ol>
+
+<p>Clicks to first value: <strong>Add Job → choose mode → paste → submit → pass captcha →
+Analyze My Fit.</strong> Six interactions, fronted by a paragraph about unzipping files and a
+bot challenge, for a visitor who has not yet been shown anything worth the effort.</p>
+
+<p>Add to that the finding in §4a: a visitor who gets through all six may then be asked up to
+five clarifying questions before any output appears.</p>
+
+<h2 id="plan-a">7. Plan A — instrument the dark stretch first</h2>
+
+<p>Any copy or layout change shipped now would be unfalsifiable. Instrument first, ship
+changes second. The list below supersedes the 07-29 version; items A1–A3 are new and come
+directly from §4.</p>
+
+<div class="wrap">
+<table>
+  <thead><tr><th>#</th><th>Change</th><th>File</th><th>Class</th></tr></thead>
+  <tbody>
+    <tr><td><strong>A1</strong></td><td>Fire <code>trackToolRunFailed(run, reason)</code> in <code>answerFitQuestion</code>'s catch, matching the other two handlers</td><td><code>useHireMe.ts:692</code></td><td><span class="tag tag-bug">Bug fix</span></td></tr>
+    <tr><td><strong>A2</strong></td><td>On unmount / <code>beforeunload</code> with <code>fitFlow.active</code>, fire <code>tool_run_failed</code> with <code>reason: "abandoned_at_question"</code></td><td><code>useHireMe.ts</code></td><td><span class="tag tag-gap">Measurement</span></td></tr>
+    <tr><td><strong>A3</strong></td><td>Same for an in-flight <code>resumeFlow</code>, <code>reason: "abandoned_in_flight"</code></td><td><code>useHireMe.ts</code></td><td><span class="tag tag-gap">Measurement</span></td></tr>
+    <tr><td><strong>A4</strong></td><td>Capture a start timestamp and pass <code>durationMs</code> at all three completion sites</td><td><code>useHireMe.ts</code> 408, 670, 761</td><td><span class="tag tag-gap">Measurement</span></td></tr>
+    <tr><td><strong>A5</strong></td><td>Set an explicit <code>maxDuration</code> on the tools routes so a slow run fails visibly instead of hanging</td><td><code>api/tools/**/route.ts</code></td><td><span class="tag tag-gap">Hygiene</span></td></tr>
+  </tbody>
+</table>
+</div>
+
+<p>Plus the funnel-visibility events from the original plan:</p>
+
+<div class="wrap">
+<table>
+  <thead><tr><th>New event</th><th>Fired when</th><th>Answers</th></tr></thead>
+  <tbody>
+    <tr><td><code>tool_gate_shown</code></td><td><code>ToolGate</code> resolves to <code>captcha</code></td><td>How many even see the challenge</td></tr>
+    <tr><td><code>tool_gate_passed</code></td><td><code>CaptchaGate</code> verifies</td><td>Captcha pass rate</td></tr>
+    <tr><td><code>tool_gate_failed</code></td><td>Verification errors out</td><td>Whether the gate breaks for anyone</td></tr>
+    <tr><td><code>tool_job_input_opened</code></td><td><code>handleExpand</code> in <code>JobContextBar</code></td><td>Intent to start — separates "did not care" from "tried and gave up"</td></tr>
+    <tr><td><code>tool_fit_question_shown</code></td><td>A <code>fit-question</code> message is appended</td><td><strong>How often the flow parks</strong>, and at which round</td></tr>
+    <tr><td><code>tool_fit_question_answered</code></td><td><code>answerFitQuestion</code> submits</td><td>The park → answer rate, directly</td></tr>
+  </tbody>
+</table>
+</div>
+
+<p><code>tool_fit_question_shown</code> / <code>_answered</code> are the pair that make §4a
+measurable rather than inferred. Carry the question number as a parameter so it is possible
+to see whether people quit at round 1 or round 4.</p>
+
+<div class="callout">
+  <span class="lbl">Not retroactive</span>
+  <p>Each new event parameter must be registered as a <strong>custom dimension</strong> in GA4
+    before it will report, and registration only captures data collected afterwards — do it in
+    the same sitting as the deploy.</p>
+</div>
+
+<h2 id="plan-b">8. Plan B — reduce time-to-first-value</h2>
+
+<div class="note">
+  <span class="lbl">Priority lowered — see §3</span>
+  <p>The 90% first-stage drop that justified putting this first is mostly datacenter traffic.</p>
+</div>
+
+<p>The goal is one visible, valuable action above the fold.</p>
+
+<ol>
+  <li><strong>Cut the intro to two sentences.</strong> Keep what the tool does; delete the
+    formats list, the "no <code>.pdf</code>" apology, and the entire <code>.zip</code>
+    /unzipping paragraph. Those are answers to questions a visitor has not asked yet — move
+    them next to the download button where they become relevant, or into a collapsed "How
+    downloads work" disclosure.</li>
+  <li><strong>Open the job input by default.</strong> Change <code>JobContextBar</code>'s
+    initial <code>barState</code> from <code>"collapsed-empty"</code> to
+    <code>"expanded"</code> when no job is stored. This removes a whole click and makes the
+    primary action self-evident. The collapsed state remains correct for the loaded
+    case.</li>
+  <li><strong>Promote the primary action.</strong> "Add Job" is styled as a small secondary
+    button; the paste textarea should be the visual centre of the page.</li>
+  <li><strong>Offer a zero-input path.</strong> The tool currently does nothing until a job
+    posting is supplied. A "Just chat about my experience" entry point — already supported by
+    <code>sendMessage</code> — lets a curious visitor get value with no input at all.</li>
+  <li><strong>Reconsider the five-question ceiling.</strong> <code>MAX_FIT_QUESTIONS = 5</code>
+    is the in-flow equivalent of the six-click intro. Once A1–A3 land and the park rate is
+    visible, this number should be revisited on evidence.</li>
+</ol>
+
+<p>Items 4 and 5 are genuine changes in behaviour rather than fixes; flagged as such rather
+than folded in silently.</p>
+
+<h3>Home page — drop the "Book a Call" CTA</h3>
+
+<p>The same problem exists one level up, on <code>/</code>. The first call to action a
+visitor meets is not the tool — it is a consulting pitch.</p>
+
+<p><strong>What it is today.</strong> <code>page.tsx</code> lines 41–59: a full-width bordered
+section, "Book a Free 30-Min Consultation," with a <code>ContactLink</code> to a Google
+Calendar booking page rendering a <strong>Book a Call →</strong> button. It sits <em>above</em>
+the "Hiring Manager?" section, so it outranks the <strong>Interview me NOW →</strong> CTA
+that leads into the actual funnel.</p>
+
+<p><strong>Why it goes.</strong> In two consecutive 28-day windows,
+<strong><code>contact_click</code> does not appear in the event list at all</strong> — not
+once. That single event covers the calendar link, LinkedIn, and the mailto, so zero clicks on
+any of them. Over the same period <code>cta_click</code> fired twice, both
+<code>home_interview_me_now</code>. The most valuable position on the home page is held by a
+CTA with no recorded use, ahead of the one that does get used.</p>
+
+<p><strong>The change.</strong> Delete the entire booking <code>&lt;section&gt;</code>.
+"Interview me NOW" becomes the single primary CTA, and the "Hiring Manager?" block moves up to
+sit directly under the hero.</p>
+
+<p>Notes for whoever implements it:</p>
+
+<ul>
+  <li><strong>Keep <code>ContactLink</code> and the <code>"calendar"</code> member of
+    <code>ContactMethod</code>.</strong> <code>Footer.tsx</code> still uses
+    <code>ContactLink</code> for LinkedIn and the mailto, and <code>ContactMethod</code> is a
+    closed set backing the registered <code>method</code> custom dimension in GA4. Removing the
+    member gains nothing and risks the historical dimension mapping.</li>
+  <li><strong>No test churn.</strong> Neither <code>page.test.tsx</code> nor anything under
+    <code>web/e2e/</code> references "Book a Call" or "Consultation", so nothing should go
+    red.</li>
+</ul>
+
+<div class="callout">
+  <span class="lbl">Tradeoff, stated plainly</span>
+  <p>This removes the only direct-booking path from the home page. Contact remains reachable
+    via the footer's LinkedIn and <code>sam@samkirk.com</code> links. If the booking link should
+    survive in some form, the alternative is to <strong>demote</strong> it — move it below the
+    hire-me CTA or into the footer — rather than delete it. Dropping outright is what was asked
+    for and is what the zero-click data supports; the demote option is recorded here so the
+    choice is visible rather than assumed.</p>
+</div>
+
+<h2 id="plan-c">9. Plan C — defer the captcha gate</h2>
+
+<p>Chosen approach: keep reCAPTCHA v2 checkbox (per the conclusion in
+<code>docs/SECURITY-comparison-report.md</code> that v3's score thresholds and low-score
+fallbacks are harder to get right, and that explicit friction is a feature when gating
+expensive LLM calls) — but stop showing it on page load.</p>
+
+<p>In <code>ToolGate.tsx</code>, add an <code>activateOn</code> prop so the gate renders its
+children immediately and only interposes the challenge when a guarded action is first invoked.
+<code>/hire-me</code> then wraps the <em>generate</em> and <em>send</em> handlers rather than
+the whole chat panel.</p>
+
+<p>This preserves the server-side protection exactly as-is — <code>/api/session/init</code> and
+<code>/api/captcha/verify</code> are untouched, and no expensive call can be made before
+verification. It changes only <em>when</em> the challenge appears. The LLM cost surface does not
+widen.</p>
+
+<div class="callout">
+  <span class="lbl">Additional argument as of 2026-08-06</span>
+  <p>§3 established that a large share of inbound requests are automated, and that some of them
+    already clear the existing bot challenge. The captcha is the thing keeping those requests
+    away from the LLM endpoints, which raises the cost of getting the deferral wrong.
+    <code>activateOn</code> must gate the <em>action</em>, not merely hide the widget.</p>
+</div>
+
+<h2 id="plan-d">10. Plan D — the photo-fun PR</h2>
+
+<p>photo-fun is the only part of the domain earning non-branded impressions: 49 of 76 total, on
+queries like <code>photo fun</code>, <code>photo fun editor</code>, <code>photofun.ai</code>.
+Those visitors currently land on a page with no route back to samkirk.com and no analytics at
+all.</p>
+
+<p>Verified state of <code>MrBesterTester/photo-fun5</code> (public, last pushed 2026-03-26 —
+the active repo; <code>MrBesterTester/photo-fun</code> is a Dec 2025 predecessor):</p>
+
+<ul>
+  <li><strong>No link to samkirk.com in any application source.</strong> The 14 code-search hits
+    are all in <code>README.md</code>, <code>docs/</code>, and <code>do-work/</code> — none in
+    <code>App.tsx</code>, <code>components/</code>, or <code>index.html</code>.</li>
+  <li><strong>No analytics of any kind.</strong> The single <code>gtag</code> hit is an unrelated
+    <code>package-lock.json</code> string. Those impressions land on an entirely unmeasured
+    page.</li>
+  <li><code>index.html</code> has <code>&lt;title&gt;Photo Fun - Expert AI Editor&lt;/title&gt;</code>
+    and <strong>no meta description and no canonical link</strong>.</li>
+</ul>
+
+<h3>The PR contents</h3>
+
+<div class="wrap">
+<table>
+  <thead><tr><th>Change</th><th>File</th><th>Detail</th></tr></thead>
+  <tbody>
+    <tr><td>Backlink</td><td><code>App.tsx</code></td><td>Persistent footer link, real <code>&lt;a href="https://samkirk.com"&gt;</code> markup — not a JS-only handler, so a crawler can follow it. Appears on every view via the app shell.</td></tr>
+    <tr><td>GA tag</td><td><code>index.html</code></td><td>Standard <code>gtag.js</code> snippet for <code>G-QPGLH8V5MM</code>, added as a second data stream on property 525472559 so subdomain traffic reports into the same property <code>check-analytics</code> already reads.</td></tr>
+  </tbody>
+</table>
+</div>
+
+<p>The app is Vite + React 19 loaded through an importmap from <code>esm.sh</code>, with
+Tailwind from CDN — so the GA snippet goes in <code>index.html</code> directly rather than
+through a framework integration. There is no Next.js <code>Script</code> component here.</p>
+
+<p>Note that GA4 does not need cross-domain configuration for this: <code>samkirk.com</code> and
+<code>photo-fun.samkirk.com</code> share a registrable domain, so subdomain traffic is tracked
+as one property by default without a <code>linker</code> config.</p>
+
+<p>One consequence to expect: adding this stream will pull photo-fun's traffic — including
+whatever share of it is automated — into the same property the funnel is measured in. Segment by
+hostname when reading the funnel afterwards.</p>
+
+<h3>Deliberately out of scope</h3>
+
+<p>Repositioning photo-fun as a portfolio piece, and the title/meta/canonical indexing fixes. The
+indexing gaps are recorded above so they are not lost — average position 44.7 is poor, and the
+missing meta description and canonical are the likely reason, but that is a separate change from
+this PR.</p>
+
+<h2 id="sequencing">11. Sequencing</h2>
+
+<p>Revised 2026-08-06. The ordering changed: A1 moved to the front because it is a defect, and
+Plan B moved back because §3 undercut its justification.</p>
+
+<ol>
+  <li><strong>A1 — the <code>answerFitQuestion</code> failure event.</strong> A three-line bug
+    fix, no approval needed, and until it lands the fit flow's error rate is unknowable.</li>
+  <li><strong>Plan D — the photo-fun PR.</strong> The approved next step (§0), independent of
+    everything else and unblocked.</li>
+  <li><strong>Plan A, remainder</strong> — A2–A5 plus the new events. Register the custom
+    dimensions the same day. Ship and let it collect for about a week, so there is a real
+    baseline.</li>
+  <li><strong>Plan B</strong> — copy cut, expanded-by-default input, and the
+    <code>MAX_FIT_QUESTIONS</code> review, now informed by the park-rate data A2 produces.</li>
+  <li><strong>Plan C</strong> — defer the gate. Independent of B; can ride along.</li>
+</ol>
+
+<p>Plan A genuinely must precede B and C. Shipping the copy rewrite first would leave us unable
+to say whether it worked.</p>
+
+<h2 id="verification">12. Verification</h2>
+
+<h3>For the photo-fun PR</h3>
+
+<ul>
+  <li>CI on <code>photo-fun5</code> must pass — the repo has
+    <code>.github/workflows/ci.yml</code> and a <code>.gitleaks.toml</code>.</li>
+  <li>Confirm the backlink is in the served HTML, not just the source: after deploy, view source
+    on <code>photo-fun.samkirk.com</code> and find the <code>&lt;a href&gt;</code>. A crawler must
+    see it without executing JS for it to pass link authority.</li>
+  <li>Confirm the GA tag fires: check network requests to
+    <code>google-analytics.com/g/collect</code>, then GA4 Realtime with the subdomain
+    filtered.</li>
+  <li>Note that Vercel Bot Protection is set to <strong>Challenge</strong>, so <code>curl</code>
+    gets a security checkpoint on both hosts. Verification has to happen in a real browser that
+    runs JS — a scripted fetch will report a false negative.</li>
+</ul>
+
+<h3>For the /hire-me work</h3>
+
+<ul>
+  <li><code>cd web &amp;&amp; npm test</code> — Vitest. <code>Header.test.tsx</code>,
+    <code>Footer.test.tsx</code>, and <code>ToolGate.test.tsx</code> all exist and must stay
+    green; <code>ToolGate.test.tsx</code> needs new cases for the deferred-activation path.
+    <code>analytics.test.ts</code> needs a case for the <code>answerFitQuestion</code> failure
+    path (A1) — that test is the regression guard for the defect.</li>
+  <li><code>cd web &amp;&amp; npm run test:e2e</code> — Playwright.
+    <code>e2e/fit-tool.spec.ts</code>, <code>resume-tool.spec.ts</code>,
+    <code>interview-tool.spec.ts</code>, and <code>download-buttons.spec.ts</code> all drive
+    <code>/hire-me</code> and will be sensitive to both the <code>barState</code> default and the
+    gate change. Expect to update selectors.
+    <ul>
+      <li>E2E bypasses the captcha via <code>NEXT_PUBLIC_E2E_TESTING=true</code> and the
+        <code>__E2E_TEST_CAPTCHA_TOKEN__</code> path in <code>ReCaptcha.tsx</code>. The
+        deferred-gate refactor must keep that bypass working or the whole suite goes red.</li>
+    </ul>
+  </li>
+  <li><code>cd web &amp;&amp; npm run test:all</code> — master runner. Per CLAUDE.md, run it in
+    the background.</li>
+  <li><strong>Confirm events actually arrive.</strong> Unit tests prove the helpers are called;
+    they do not prove GA4 received anything. Load <code>/hire-me</code> and check the network
+    requests to <code>google-analytics.com/g/collect</code> for the new event names, then confirm
+    in GA4 Realtime.</li>
+</ul>
+
+<p><strong>Re-measure after a week</strong>, not immediately:</p>
+
+<pre><code>python3 .claude/skills/check-analytics/scripts/ga4.py funnel --days 7</code></pre>
+
+<div class="callout">
+  <span class="lbl">The success criterion has changed</span>
+  <p>It is no longer "the first-stage ratio moves" — that number is mostly bots. It is:
+    <strong><code>tool_run_started</code> and <code>tool_run_completed</code> should
+    balance.</strong> Every started run must produce a completion or a failure. If runs still go
+    dark after A1–A3, the instrumentation is still wrong.</p>
+  <p>Only once the books balance is the completion <em>rate</em> worth optimising, and only then
+    is a non-zero download count a meaningful target.</p>
+</div>
+
+<p>Ad blockers suppress GA4 for a meaningful share of technical visitors, so treat absolute
+counts as a floor and trust the stage-to-stage ratios.</p>
+
+<h2 id="files">13. Files to be modified</h2>
+
+<h3><code>MrBesterTester/photo-fun5</code> (the PR)</h3>
+
+<div class="wrap">
+<table>
+  <thead><tr><th>File</th><th>Change</th></tr></thead>
+  <tbody>
+    <tr><td><code>App.tsx</code></td><td>Crawlable footer backlink to samkirk.com</td></tr>
+    <tr><td><code>index.html</code></td><td><code>gtag.js</code> snippet for <code>G-QPGLH8V5MM</code></td></tr>
+  </tbody>
+</table>
+</div>
+
+<h3><code>samkirk-v3</code></h3>
+
+<div class="wrap">
+<table>
+  <thead><tr><th>File</th><th>Change</th></tr></thead>
+  <tbody>
+    <tr><td><code>web/src/hooks/useHireMe.ts</code></td><td><strong>A1</strong> failure event in <code>answerFitQuestion</code> catch (~line 692); <strong>A2/A3</strong> abandonment events on unmount; <strong>A4</strong> <code>durationMs</code> at lines 408, 670, 761; fire the new fit-question events</td></tr>
+    <tr><td><code>web/src/lib/analytics.ts</code></td><td>New gate, job-input, and fit-question events; reuse existing <code>trackEvent</code>/<code>sanitizeParams</code></td></tr>
+    <tr><td><code>web/src/app/api/tools/**/route.ts</code></td><td><strong>A5</strong> explicit <code>maxDuration</code></td></tr>
+    <tr><td><code>web/src/components/ToolGate.tsx</code></td><td><code>activateOn</code> prop for deferred challenge; fire gate events</td></tr>
+    <tr><td><code>web/src/components/ReCaptcha.tsx</code></td><td>Fire pass/fail events from <code>CaptchaGate</code>; preserve E2E bypass</td></tr>
+    <tr><td><code>web/src/components/hire-me/JobContextBar.tsx</code></td><td>Default <code>barState</code> to <code>"expanded"</code>; fire open/abandon events</td></tr>
+    <tr><td><code>web/src/app/page.tsx</code></td><td>Delete the "Book a Free 30-Min Consultation" section (lines 41–59); "Interview me NOW" becomes the sole primary CTA</td></tr>
+    <tr><td><code>web/src/app/hire-me/page.tsx</code></td><td>Cut intro copy; promote primary action; zero-input chat path; move <code>ToolGate</code> to action scope</td></tr>
+    <tr><td><code>web/src/lib/analytics.test.ts</code></td><td>Regression case for the A1 failure path</td></tr>
+    <tr><td><code>web/src/components/ToolGate.test.tsx</code></td><td>Cases for deferred activation</td></tr>
+    <tr><td>GA4 UI (not a file)</td><td>Register new custom dimensions — <strong>not retroactive</strong></td></tr>
+  </tbody>
+</table>
+</div>
+
+<p>Existing utilities to reuse rather than reinvent: <code>trackEvent</code> and
+<code>sanitizeParams</code> in <code>analytics.ts</code> (already clamp to GA4's 100-char
+parameter limit and no-op safely when gtag is absent), and <code>TrackedLink.tsx</code>, which
+already wraps <code>trackCtaClick</code> / <code>trackContactClick</code> /
+<code>trackArtifactDownload</code> for link markup.</p>
+
+</body>
+</html>
