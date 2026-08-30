@@ -3,13 +3,10 @@
 *Created: 2026-07-29 PST · Revised: 2026-08-06 PST (run-completion gap root-caused; traffic re-baselined against bot filtering)*
 *Status: proposed — next step approved, not yet executed. Nothing in Plans A–D has shipped.*
 
-> **Revision note (2026-08-06).** This supersedes `conversion-plan-2026-07-29.md`.
-> Two things changed since the 07-30 revision: the 8 → 2 run-completion loss has
-> been traced to specific code paths (§4, new), and a traffic spike in the
-> intervening week turned out to be datacenter noise, which revises the reading
-> of the funnel's first stage (§3). The companion
-> `conversion-plan-2026-07-29.html` has **not** been regenerated and is one
-> revision behind.
+> **Revision note (2026-08-06).** Two things changed since the 07-30 revision:
+> the 8 → 2 run-completion loss has been traced to specific code paths (§4, new),
+> and a traffic spike in the intervening week turned out to be datacenter noise,
+> which revises the reading of the funnel's first stage (§3).
 
 ## Table of Contents
 
