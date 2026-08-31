@@ -1683,7 +1683,14 @@ Compensation: $150,000 - $200,000`;
       chunkId: `${RESUME_GEN_TEST_PREFIX}chunk_001`,
       title: "Summary",
       sourceRef: "h2:Summary",
-      content: "Experienced software engineer with 10+ years building scalable web applications and AI systems. Expert in TypeScript, React, Node.js, and GCP.",
+      // The name MUST appear in the context. The system prompt below forbids
+      // inventing information, and the required output shape demands
+      // header.name -- so a context without a name is a contradiction the
+      // model resolves differently each run, sometimes by emitting a
+      // placeholder and sometimes by omitting the field, which failed the
+      // assertion non-deterministically (diagnosed 2026-08-31). The Section 10
+      // fixture already carried the name; this one had lost it.
+      content: "Sam Kirk is an experienced software engineer with 10+ years building scalable web applications and AI systems. Expert in TypeScript, React, Node.js, and GCP.",
       version: 9997,
     },
     {
@@ -2508,9 +2515,20 @@ ${transcript
     log("Running retention cleanup logic...");
 
     // Query for expired submissions
+    // Ordered NEWEST-expired first, deliberately.
+    //
+    // This was "asc" with limit(100), i.e. the 100 oldest expired submissions.
+    // The test's own documents are created moments before it runs, so they are
+    // the newest expired docs in the collection -- at the time this was
+    // diagnosed (2026-08-31) there were 448 expired submissions and the test
+    // docs sat at roughly position 447, far outside the window. The test could
+    // never find them, so it failed no matter what the cleanup code did.
+    //
+    // Real retention should still process oldest-first; that ordering belongs
+    // in the retention endpoint, not in this fixture-scoped check.
     const expiredQuery = firestore.collection(SUBMISSIONS_COLLECTION)
       .where("expiresAt", "<=", Timestamp.now())
-      .orderBy("expiresAt", "asc")
+      .orderBy("expiresAt", "desc")
       .limit(100);
 
     const expiredSnapshot = await expiredQuery.get();
