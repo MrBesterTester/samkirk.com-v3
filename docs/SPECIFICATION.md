@@ -99,12 +99,17 @@ Additionally, the system must capture/derive these factors:
 #### Multi-turn behavior
 - The flow is **multi-turn**, allowed up to **5 follow-up questions** total.
 - If critical info is missing/unclear, ask follow-up questions.
-- For **location/onsite/commute**, if unclear and user cannot clarify, assume **worst-case** and score poorly for that criterion.
+- For **location/onsite/commute**, if the question is **never answered**, assume **worst-case** and score poorly for that criterion.
+- If the question **is answered** but the commute cannot be resolved, report **“could not determine”** — not a poor fit. Amended 2026-08-31: previously any unresolved location became worst-case, so a real office the lookup did not recognise was reported to a hiring manager as a poor location fit. A failure of our lookup must not be presented as a fact about Sam.
 
 #### Location/remote acceptance rules
 Acceptable:
 - Fully remote, or
-- Hybrid **1–2 onsite days/week** AND **max one-way commute \(\le 30 minutes\)** from **Fremont, CA**.
+- Hybrid **1–2 onsite days/week** AND **max one-way commute \(\le 45 minutes\)** from **Fremont, CA**.
+
+Raised from 30 to 45 minutes on 2026-08-31. At 30, **no Menlo Park role could score acceptable at any onsite frequency** — including Meta, ~16 miles straight over the Dumbarton Bridge, and Talis BioMedical, where Sam actually worked. The threshold contradicted a commute he had already been making, and quietly ruled out the Peninsula, where the roles he wants are.
+
+Commute time comes from the **Google Routes API** (`web/src/lib/commute.ts`), authenticated with the credentials the app already holds for Vertex AI — no separate API key. An offline table in `commute-table.ts` is the fallback when the API is unreachable; its values are measured, not estimated. The constants live in `web/src/lib/fit-flow.ts` as `MAX_COMMUTE_MINUTES` and `MAX_ONSITE_DAYS` and are interpolated into the model prompt, so this document and the prompt cannot drift apart again.
 
 If job requires higher onsite frequency or longer commute: treat as poor fit for location criterion.
 
