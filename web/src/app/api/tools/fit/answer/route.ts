@@ -14,6 +14,7 @@ import {
   type FitReport,
 } from "@/lib/fit-report";
 import { withToolProtection } from "@/lib/tool-protection";
+import { estimateCommute } from "@/lib/commute";
 
 // ============================================================================
 // Request/Response Types
@@ -190,7 +191,16 @@ export async function POST(
       answeredAt: new Date(),
     };
 
-    let updatedState = processAnswer(flowState, answer);
+    // Resolve the commute here, at the I/O boundary, so the fit-flow reducer
+    // stays synchronous and pure. A failure returns null, which the reducer
+    // records as "could not determine" rather than a poor location fit.
+    let resolvedCommuteMinutes: number | null | undefined;
+    if (answer.questionType === "commute_estimate") {
+      const commute = await estimateCommute(answer.response);
+      resolvedCommuteMinutes = commute.minutes;
+    }
+
+    let updatedState = processAnswer(flowState, answer, resolvedCommuteMinutes);
 
     if (updatedState.status === "error") {
       return NextResponse.json(

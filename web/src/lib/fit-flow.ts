@@ -672,7 +672,14 @@ export function initializeFitFlow(
  */
 export function processAnswer(
   state: FitFlowState,
-  answer: FollowUpAnswer
+  answer: FollowUpAnswer,
+  /**
+   * Commute minutes already resolved by the caller (Routes API). Passed in
+   * rather than looked up here so this reducer stays synchronous and pure --
+   * network I/O belongs at the route boundary. `null` means the caller tried
+   * and could not determine it; `undefined` means it did not try.
+   */
+  resolvedCommuteMinutes?: number | null
 ): FitFlowState {
   if (!state.pendingQuestion) {
     return {
@@ -702,7 +709,8 @@ export function processAnswer(
   const updatedExtracted = applyAnswerToExtracted(
     state.extracted,
     state.pendingQuestion.type,
-    answer.response
+    answer.response,
+    resolvedCommuteMinutes
   );
 
   return {
@@ -721,7 +729,8 @@ export function processAnswer(
 export function applyAnswerToExtracted(
   extracted: ExtractedJobFields,
   questionType: FollowUpQuestionType,
-  response: string
+  response: string,
+  resolvedCommuteMinutes?: number | null
 ): ExtractedJobFields {
   const normalizedResponse = response.toLowerCase().trim();
 
@@ -779,8 +788,11 @@ export function applyAnswerToExtracted(
     }
 
     case "commute_estimate": {
-      // For now, use simple heuristics based on common Bay Area locations
-      const commuteMinutes = estimateCommuteFromLocation(response);
+      // Prefer the caller's Routes API result; fall back to the offline table.
+      const commuteMinutes =
+        resolvedCommuteMinutes !== undefined
+          ? resolvedCommuteMinutes
+          : estimateCommuteFromLocation(response);
 
       const updated = {
         ...extracted,
@@ -896,8 +908,15 @@ export function setPendingQuestion(
 export function finalizeForReport(state: FitFlowState): FitFlowState {
   let extracted = { ...state.extracted };
 
-  // Apply worst-case for unresolved location
-  if (extracted.locationFitStatus === "unknown") {
+  // Apply worst-case only when the location question was never answered.
+  //
+  // Previously any "unknown" became worst_case, so a visitor who DID answer
+  // with a real office we simply could not resolve (Pleasanton, Dublin,
+  // Livermore, ... were all absent from the table) was reported to a hiring
+  // manager as a poor location fit. A failure of our lookup must not be
+  // presented as a fact about Sam. Answered-but-unresolved stays "unknown" and
+  // is rendered as "could not determine".
+  if (extracted.locationFitStatus === "unknown" && !extracted.locationConfirmed) {
     extracted = applyWorstCaseLocation(extracted);
   }
 
