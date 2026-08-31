@@ -91,7 +91,6 @@ figcaption{font-size:.85rem; color:var(--muted); margin-top:9px}
         <li><a href="#w2">W2 — <code>answerFitQuestion</code> reports no failures</a></li>
         <li><a href="#w3">W3 — Run duration never recorded</a></li>
         <li><a href="#w4">W4 — <code>/hire-me</code> landing page</a></li>
-        <li><a href="#w5">W5 — Move the captcha off page load</a></li>
       </ul>
     </li>
     <li><a href="#deferred">Deferred — the model migration</a></li>
@@ -216,7 +215,7 @@ months-long content play, not a tuning exercise.</p>
 
 <h2 id="donow">2. Do now</h2>
 
-<p>Ordered. W1–W3 are small and need no approval. <strong>The photo-fun work is tracked
+<p>Ordered. W1–W3 are small and need no approval; W4 is the only judgement call. <strong>The photo-fun work is tracked
 separately in <a href="#photofun">§4</a></strong> because it lives in a different repository
 and needs a push approval.</p>
 
@@ -228,7 +227,6 @@ and needs a push approval.</p>
 <tr><td><strong>W2</strong></td><td><code>answerFitQuestion</code> reports no failures</td><td><span class="tag tag-bug">BUG</span></td><td>none</td></tr>
 <tr><td><strong>W3</strong></td><td>Run duration never recorded</td><td><span class="tag tag-gap">MEASUREMENT</span></td><td>none</td></tr>
 <tr><td><strong>W4</strong></td><td><code>/hire-me</code> landing page</td><td><span class="tag tag-gap">UX</span></td><td>judgement call on the new entry point</td></tr>
-<tr><td><strong>W5</strong></td><td>Move the captcha off page load</td><td><span class="tag tag-gap">UX</span></td><td>none</td></tr>
 </tbody>
 </table>
 </div>
@@ -315,23 +313,6 @@ detail — accepted formats, "Sorry, no <code>.pdf</code> inputs", and a paragra
     questions is the in-flow equivalent of the six-click intro.</li>
 </ol>
 
-<h3 id="w5">W5 — Move the captcha off page load</h3>
-<p><code>ToolGate</code> currently wraps the whole chat panel
-(<code>hire-me/page.tsx:69</code>), so a reCAPTCHA v2 checkbox is visible before any value has
-been demonstrated.</p>
-<p>Add an <code>activateOn</code> prop to <code>ToolGate.tsx</code> so it renders children
-immediately and interposes the challenge only when a guarded action is first invoked;
-<code>/hire-me</code> then wraps the <em>generate</em> and <em>send</em> handlers rather than the
-panel.</p>
-<p>Server-side protection is unchanged — <code>/api/session/init</code> and
-<code>/api/captcha/verify</code> are untouched and no expensive call can precede verification.
-This changes only <em>when</em> the challenge appears, and the LLM cost surface does not
-widen.</p>
-<p>Keep reCAPTCHA <strong>v2</strong>: per <code>docs/SECURITY-comparison-report.md</code>, v3's
-score thresholds and low-score fallbacks are harder to get right, and explicit friction is a
-feature when gating expensive LLM calls. Expect a modest effect — this is first-impression
-hygiene, not a fix for a measured blockage.</p>
-
 <h2 id="deferred">3. Deferred — the model migration</h2>
 
 <div class="callout">
@@ -415,7 +396,27 @@ indexing gaps. Those gaps are real (position 51.1) but are a separate change.</p
     <code>method: calendar</code> — and the booking flow now has E2E coverage including a live
     booking lifecycle. The home page carries two conversion paths and both show real use; neither
     is demoted for the other.</li>
-  <li><strong>reCAPTCHA stays at v2 checkbox</strong> (see W5).</li>
+  <li><strong>The captcha stays where it is, on page load, and stays at reCAPTCHA v2
+    checkbox.</strong> <code>ToolGate</code> wraps the chat panel at
+    <code>hire-me/page.tsx:69</code>, so a first-time visitor sees the checkbox before using the
+    tool. Deferring it to first action was considered and <strong>rejected</strong>:
+    <ul>
+      <li><strong>It blocks nobody who reaches it.</strong> 10 users loaded a job and 11 started
+        a run — everyone who met the challenge cleared it.</li>
+      <li><strong>The case for moving it is unmeasured and, as scoped here, unmeasurable.</strong>
+        The claim would be that the visible checkbox deters people who never start at all. That
+        population is the 28 of 38 who did not load a job, and there is no data on them. The gate
+        events that could test it were dropped as instrumenting a non-problem — so the rationale
+        for moving the gate and the rationale for not measuring it cannot both stand.</li>
+      <li><strong>The change is not cheap.</strong> It touches <code>ToolGate.tsx</code>,
+        <code>ReCaptcha.tsx</code>, and the <code>__E2E_TEST_CAPTCHA_TOKEN__</code> bypass the
+        whole <code>/hire-me</code> E2E suite depends on — real regression risk on
+        security-adjacent code, bought with a hunch.</li>
+    </ul>
+    Revisit only if evidence appears that arrivals are abandoning at the challenge. Keeping v2
+    over v3 is unchanged: per <code>docs/SECURITY-comparison-report.md</code>, v3's score
+    thresholds and low-score fallbacks are harder to get right, and explicit friction is a
+    feature when gating expensive LLM calls.</li>
   <li><strong>Acquisition work is not scheduled.</strong> With no query in striking distance, SEO
     here is content creation over months, not metadata tuning. Conversion work is the tractable
     half.</li>
@@ -430,12 +431,9 @@ indexing gaps. Those gaps are real (position 51.1) but are a separate change.</p
 <tbody>
 <tr><td><code>web/src/lib/dance-menu-upload.ts</code></td><td><strong>W1</strong> — guard against extension-as-identity; content sanity check on <code>.txt</code></td></tr>
 <tr><td><code>web/src/hooks/useHireMe.ts</code></td><td><strong>W2</strong> failure event in the <code>answerFitQuestion</code> catch (~line 692); <strong>W3</strong> <code>durationMs</code> at lines 408, 670, 761</td></tr>
-<tr><td><code>web/src/app/hire-me/page.tsx</code></td><td><strong>W4</strong> cut intro copy, promote primary action, zero-input chat path; <strong>W5</strong> move <code>ToolGate</code> to action scope</td></tr>
+<tr><td><code>web/src/app/hire-me/page.tsx</code></td><td><strong>W4</strong> cut intro copy, promote primary action, zero-input chat path</td></tr>
 <tr><td><code>web/src/components/hire-me/JobContextBar.tsx</code></td><td><strong>W4</strong> default <code>barState</code> to <code>"expanded"</code></td></tr>
-<tr><td><code>web/src/components/ToolGate.tsx</code></td><td><strong>W5</strong> <code>activateOn</code> prop</td></tr>
-<tr><td><code>web/src/components/ReCaptcha.tsx</code></td><td><strong>W5</strong> preserve the E2E bypass through the refactor</td></tr>
 <tr><td><code>web/src/lib/analytics.test.ts</code></td><td><strong>W2</strong> regression case for the failure path</td></tr>
-<tr><td><code>web/src/components/ToolGate.test.tsx</code></td><td><strong>W5</strong> cases for deferred activation</td></tr>
 <tr><td><code>web/src/app/page.tsx</code></td><td><strong>No change</strong> — see §5</td></tr>
 <tr><td><code>web/src/lib/analytics.ts</code></td><td><strong>No new events</strong></td></tr>
 </tbody>
@@ -471,18 +469,14 @@ fixing:</p>
   the menu.</p>
 </div>
 
-<h4>W2, W3, W4, W5</h4>
+<h4>W2, W3, W4</h4>
 <ul>
   <li><code>cd web &amp;&amp; npm test</code> — Vitest.</li>
   <li><code>cd web &amp;&amp; npm run test:e2e</code> — Playwright. <code>fit-tool.spec.ts</code>,
     <code>resume-tool.spec.ts</code>, <code>interview-tool.spec.ts</code>, and
     <code>download-buttons.spec.ts</code> drive <code>/hire-me</code> and are sensitive to both
-    the <code>barState</code> default (W4) and the gate change (W5).
-    <code>home-ctas.spec.ts</code> must stay green.
+    the <code>barState</code> default (W4). <code>home-ctas.spec.ts</code> must stay green.
     <ul>
-      <li>E2E bypasses the captcha via <code>NEXT_PUBLIC_E2E_TESTING=true</code> and the
-        <code>__E2E_TEST_CAPTCHA_TOKEN__</code> path in <code>ReCaptcha.tsx</code>. The W5
-        refactor must keep that working or the whole suite goes red.</li>
       <li><code>playwright.config.ts</code> sets <code>reuseExistingServer: !CI</code>. A dev
         server already running <strong>without</strong> the E2E flags gets reused with the
         captcha bypass off — stop it and free port 3000 first.</li>

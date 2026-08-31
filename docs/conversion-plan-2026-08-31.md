@@ -14,7 +14,6 @@ This is a **plan** (how). Requirements live in [SPECIFICATION.md](SPECIFICATION.
   - [W2 — `answerFitQuestion` reports no failures](#w2--answerfitquestion-reports-no-failures)
   - [W3 — Run duration is never recorded](#w3--run-duration-is-never-recorded)
   - [W4 — `/hire-me` landing page](#w4--hire-me-landing-page)
-  - [W5 — Move the captcha off page load](#w5--move-the-captcha-off-page-load)
 - [3. Deferred — the model migration](#3-deferred--the-model-migration)
 - [4. photo-fun — backlink and GA tag](#4-photo-fun--backlink-and-ga-tag)
 - [5. Standing decisions](#5-standing-decisions)
@@ -94,7 +93,7 @@ nothing cheap to optimise — acquisition is a months-long content play, not a t
 
 ## 2. Do now
 
-Ordered. W1–W3 are small and need no approval. **The photo-fun work is tracked
+Ordered. W1–W3 are small and need no approval; W4 is the only judgement call. **The photo-fun work is tracked
 separately in [§4](#4-photo-fun--backlink-and-ga-tag)** because it lives in a different
 repository and needs a push approval.
 
@@ -104,7 +103,6 @@ repository and needs a push approval.
 | **W2** | `answerFitQuestion` reports no failures | **Bug** | none |
 | **W3** | Run duration never recorded | Measurement | none |
 | **W4** | `/hire-me` landing page | UX | judgement call on the new entry point |
-| **W5** | Move the captcha off page load | UX | none |
 
 ### W1 — Dance menu serves the wrong .txt
 
@@ -182,25 +180,6 @@ output folder after unzipping.
 5. **Reconsider `MAX_FIT_QUESTIONS = 5`.** Five sequential clarifying questions is the in-flow
    equivalent of the six-click intro.
 
-### W5 — Move the captcha off page load
-
-`ToolGate` currently wraps the whole chat panel
-([hire-me/page.tsx:69](../web/src/app/hire-me/page.tsx#L69)), so a reCAPTCHA v2 checkbox is
-visible before any value has been demonstrated.
-
-Add an `activateOn` prop to [ToolGate.tsx](../web/src/components/ToolGate.tsx) so it renders
-children immediately and interposes the challenge only when a guarded action is first invoked;
-`/hire-me` then wraps the *generate* and *send* handlers rather than the panel.
-
-Server-side protection is unchanged — `/api/session/init` and `/api/captcha/verify` are
-untouched and no expensive call can precede verification. This changes only *when* the
-challenge appears, and the LLM cost surface does not widen.
-
-Keep reCAPTCHA **v2**: per `docs/SECURITY-comparison-report.md`, v3's score thresholds and
-low-score fallbacks are harder to get right, and explicit friction is a feature when gating
-expensive LLM calls. Expect a modest effect — this is first-impression hygiene, not a fix for
-a measured blockage.
-
 ## 3. Deferred — the model migration
 
 **Deferred by decision, 2026-08-31.** Not started, not scheduled here. Recorded because it has
@@ -272,7 +251,26 @@ used — 3 `contact_click` events from 3 users, all `method: calendar` — and t
 now has E2E coverage including a live booking lifecycle. The home page carries two conversion
 paths and both show real use; neither is demoted for the other.
 
-**reCAPTCHA stays at v2 checkbox** (see W5).
+**The captcha stays where it is, on page load, and stays at reCAPTCHA v2 checkbox.**
+`ToolGate` wraps the chat panel at
+[hire-me/page.tsx:69](../web/src/app/hire-me/page.tsx#L69), so a first-time visitor sees the
+checkbox before using the tool. Deferring it to first action was considered and **rejected**:
+
+- **It blocks nobody who reaches it.** 10 users loaded a job and 11 started a run — everyone
+  who met the challenge cleared it.
+- **The case for moving it is unmeasured and, as scoped here, unmeasurable.** The claim would
+  be that the visible checkbox deters people who never start at all. That population is the 28
+  of 38 who did not load a job, and there is no data on them. The gate events that could test
+  it were dropped as instrumenting a non-problem — so the rationale for moving the gate and
+  the rationale for not measuring it cannot both stand.
+- **The change is not cheap.** It touches `ToolGate.tsx`, `ReCaptcha.tsx`, and the
+  `__E2E_TEST_CAPTCHA_TOKEN__` bypass the whole `/hire-me` E2E suite depends on — real
+  regression risk on security-adjacent code, bought with a hunch.
+
+Revisit only if evidence appears that arrivals are abandoning at the challenge. Keeping v2
+over v3 is unchanged: per `docs/SECURITY-comparison-report.md`, v3's score thresholds and
+low-score fallbacks are harder to get right, and explicit friction is a feature when gating
+expensive LLM calls.
 
 **Acquisition work is not scheduled.** With no query in striking distance, SEO here is content
 creation over months, not metadata tuning. Conversion work is the tractable half.
@@ -285,12 +283,9 @@ creation over months, not metadata tuning. Conversion work is the tractable half
 |---|---|
 | [web/src/lib/dance-menu-upload.ts](../web/src/lib/dance-menu-upload.ts) | **W1** — guard against extension-as-identity; content sanity check on `.txt` |
 | [web/src/hooks/useHireMe.ts](../web/src/hooks/useHireMe.ts) | **W2** failure event in the `answerFitQuestion` catch (~line 692); **W3** `durationMs` at lines 408, 670, 761 |
-| [web/src/app/hire-me/page.tsx](../web/src/app/hire-me/page.tsx) | **W4** cut intro copy, promote primary action, zero-input chat path; **W5** move `ToolGate` to action scope |
+| [web/src/app/hire-me/page.tsx](../web/src/app/hire-me/page.tsx) | **W4** cut intro copy, promote primary action, zero-input chat path |
 | [web/src/components/hire-me/JobContextBar.tsx](../web/src/components/hire-me/JobContextBar.tsx) | **W4** default `barState` to `"expanded"` |
-| [web/src/components/ToolGate.tsx](../web/src/components/ToolGate.tsx) | **W5** `activateOn` prop |
-| [web/src/components/ReCaptcha.tsx](../web/src/components/ReCaptcha.tsx) | **W5** preserve the E2E bypass through the refactor |
 | `web/src/lib/analytics.test.ts` | **W2** regression case for the failure path |
-| `web/src/components/ToolGate.test.tsx` | **W5** cases for deferred activation |
 | [web/src/app/page.tsx](../web/src/app/page.tsx) | **No change** — see §5 |
 | [web/src/lib/analytics.ts](../web/src/lib/analytics.ts) | **No new events** |
 
@@ -319,16 +314,12 @@ Vercel Bot Protection is set to **Challenge**, so a scripted fetch may get a sec
 checkpoint rather than the payload — verify in a real browser if so. `route.test.ts` covers
 the API; add a case asserting the `.txt` served is the menu.
 
-### W2, W3, W4, W5
+### W2, W3, W4
 
 - `cd web && npm test` — Vitest.
 - `cd web && npm run test:e2e` — Playwright. `fit-tool.spec.ts`, `resume-tool.spec.ts`,
   `interview-tool.spec.ts`, and `download-buttons.spec.ts` drive `/hire-me` and are sensitive
-  to both the `barState` default (W4) and the gate change (W5). `home-ctas.spec.ts` must stay
-  green.
-  - E2E bypasses the captcha via `NEXT_PUBLIC_E2E_TESTING=true` and the
-    `__E2E_TEST_CAPTCHA_TOKEN__` path in `ReCaptcha.tsx`. The W5 refactor must keep that
-    working or the whole suite goes red.
+  to the `barState` default (W4). `home-ctas.spec.ts` must stay green.
   - `playwright.config.ts` sets `reuseExistingServer: !CI`. A dev server already running
     **without** the E2E flags gets reused with the captcha bypass off — stop it and free port
     3000 first.
