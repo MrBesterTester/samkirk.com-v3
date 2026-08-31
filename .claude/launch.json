@@ -4,7 +4,20 @@
     {
       "name": "samkirk-web",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev"],
+      "runtimeArgs": [
+        "run",
+        "dev"
+      ],
+      "cwd": "web",
+      "port": 3000
+    },
+    {
+      "name": "samkirk-web-e2e",
+      "runtimeExecutable": "sh",
+      "runtimeArgs": [
+        "-c",
+        "E2E_TESTING=true NEXT_PUBLIC_E2E_TESTING=true npm run dev"
+      ],
       "cwd": "web",
       "port": 3000
     }

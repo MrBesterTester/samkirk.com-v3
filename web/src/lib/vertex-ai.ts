@@ -277,6 +277,37 @@ const DEFAULT_SAFETY_SETTINGS = [
  * console.log(`Cost: $${result.estimatedCostUsd.toFixed(4)}`);
  * ```
  */
+/**
+ * Billable output tokens for a response.
+ *
+ * Gemini 2.5 "thinking" models bill internal reasoning as output, reported
+ * separately as `thoughtsTokenCount`. The SDK's UsageMetadata type does not
+ * declare that field, so it is read defensively.
+ *
+ * Counting only `candidatesTokenCount` under-reported real output spend by
+ * roughly 8x on interview turns (measured 2026-08-31: 119 visible tokens
+ * against 901 thinking tokens), which silently let the $20 monthly cap in
+ * `spend-cap.ts` permit far more real spend than it recorded.
+ */
+export function billableOutputTokens(
+  usageMetadata: { candidatesTokenCount?: number } | undefined,
+  fallbackText: string
+): number {
+  if (!usageMetadata) return estimateTokensFromText(fallbackText);
+
+  const visible = usageMetadata.candidatesTokenCount ?? 0;
+  const thinking =
+    (usageMetadata as { thoughtsTokenCount?: number }).thoughtsTokenCount ?? 0;
+
+  // An empty metadata object still means "no counts" - fall back rather than
+  // record the call as free.
+  if (visible === 0 && thinking === 0) {
+    return estimateTokensFromText(fallbackText);
+  }
+
+  return visible + thinking;
+}
+
 export async function generateContent(
   prompt: string,
   options: GenerateOptions = {}
@@ -373,8 +404,7 @@ export async function generateContent(
   // Extract usage metadata
   const usageMetadata = response.usageMetadata;
   const inputTokens = usageMetadata?.promptTokenCount ?? estimateTokensFromText(prompt);
-  const outputTokens =
-    usageMetadata?.candidatesTokenCount ?? estimateTokensFromText(generatedText);
+  const outputTokens = billableOutputTokens(usageMetadata, generatedText);
   const totalTokens = inputTokens + outputTokens;
 
   // Calculate and record spend
@@ -513,8 +543,7 @@ export async function generateContentWithHistory(
   const usageMetadata = response.usageMetadata;
   const inputTokens =
     usageMetadata?.promptTokenCount ?? estimateTokensFromText(fullPrompt);
-  const outputTokens =
-    usageMetadata?.candidatesTokenCount ?? estimateTokensFromText(generatedText);
+  const outputTokens = billableOutputTokens(usageMetadata, generatedText);
   const totalTokens = inputTokens + outputTokens;
 
   // Calculate and record spend
