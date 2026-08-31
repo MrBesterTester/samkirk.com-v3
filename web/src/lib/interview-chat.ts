@@ -51,9 +51,48 @@ export const MAX_MESSAGE_LENGTH = 2000;
 export const INTERVIEW_TEMPERATURE = 0.7;
 
 /**
- * Maximum output tokens for interview responses.
+ * Maximum output tokens for interview responses (thinking + visible answer).
+ *
+ * Raised from 1024 on 2026-08-31. With thinking bounded by
+ * INTERVIEW_THINKING_BUDGET, a broad question ("walk me through Sam's entire
+ * career history") still needed 861 answer tokens and hit the old cap, so
+ * hiring managers asking the widest questions got fragments.
+ *
+ * Cost impact is small and bounded by the controls SPECIFICATION.md §10
+ * actually specifies -- 10 requests/10 min and the $20/month cap -- not by this
+ * number. At the conservative $0.00375/1K output rate the worst case is about
+ * $0.0077 more per turn, and bounding thinking already cut typical billable
+ * output from 1020 to 458.
  */
-export const INTERVIEW_MAX_TOKENS = 1024;
+export const INTERVIEW_MAX_TOKENS = 3072;
+
+/**
+ * Cap on internal reasoning tokens per interview turn.
+ *
+ * gemini-2.5-flash bills thinking as output and charges it against
+ * INTERVIEW_MAX_TOKENS. Left unbounded it consumed 901 of the 1024 available
+ * on 2026-08-31, leaving 119 for the answer, which was cut off mid-sentence
+ * and served as success. Bounding reasoning leaves room for the reply AND
+ * lowers real spend, since those 901 tokens were billed but never shown.
+ */
+export const INTERVIEW_THINKING_BUDGET = 256;
+
+/**
+ * Appended when the model runs out of output budget mid-answer.
+ *
+ * Truncation cannot be designed away: a visitor can always ask a question whose
+ * honest answer exceeds any budget (measured 2026-08-31: "walk me through Sam's
+ * entire career history" produced 861 answer tokens and still hit the cap, with
+ * thinking correctly bounded at 159).
+ *
+ * Throwing would be worse than the fragment -- the visitor would get a generic
+ * failure instead of a partial answer. So the fragment is kept and labelled,
+ * which is the one thing the previous behaviour did not do: it served
+ * "...My roles" as a finished reply with success: true.
+ */
+export const INTERVIEW_TRUNCATION_NOTICE =
+  "\n\n*(This answer was cut off because it ran long. Ask me to continue, " +
+  "or narrow the question and I'll go deeper.)*";
 
 // ============================================================================
 // E2E Test Mode
@@ -658,8 +697,25 @@ export async function processMessage(
       systemInstruction: systemPrompt,
       temperature: INTERVIEW_TEMPERATURE,
       maxOutputTokens: INTERVIEW_MAX_TOKENS,
+      thinkingBudget: INTERVIEW_THINKING_BUDGET,
     });
     assistantContent = stripChunkReferences(result.text);
+
+    // A MAX_TOKENS finish means this reply is a fragment. Never present it as
+    // complete -- see INTERVIEW_TRUNCATION_NOTICE for why it is labelled rather
+    // than thrown.
+    if (result.finishReason === "MAX_TOKENS") {
+      console.warn(
+        "[interview] response truncated at the output cap",
+        JSON.stringify({
+          conversationId: conversation.conversationId,
+          outputTokens: result.usage.outputTokens,
+          maxOutputTokens: INTERVIEW_MAX_TOKENS,
+          thinkingBudget: INTERVIEW_THINKING_BUDGET,
+        })
+      );
+      assistantContent += INTERVIEW_TRUNCATION_NOTICE;
+    }
   } catch (error) {
     if (error instanceof ContentBlockedError) {
       assistantContent = `I apologize, but I'm unable to respond to that question. Let me help you with information about ${INTERVIEW_SUBJECT_NAME}'s professional background instead. What would you like to know about my work experience, skills, or projects?`;

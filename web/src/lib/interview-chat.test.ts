@@ -76,6 +76,7 @@ import {
   type InterviewConversation,
   type ChatMessage,
   type ChatResponse,
+  INTERVIEW_TRUNCATION_NOTICE,
 } from "./interview-chat";
 import { generateContentWithHistory, ContentBlockedError } from "./vertex-ai";
 import { getResumeContext, generateCitationsFromChunks } from "./resume-context";
@@ -433,6 +434,46 @@ describe("processMessage", () => {
 
   afterEach(() => {
     vi.resetAllMocks();
+  });
+
+  describe("truncation labelling", () => {
+    /**
+     * Before 2026-08-31 a MAX_TOKENS finish was served as a finished reply with
+     * success: true -- a hiring manager asking the substantive question got
+     * "...My roles" and no indication anything was missing.
+     */
+    it("labels a reply that hit the output cap", async () => {
+      vi.mocked(generateContentWithHistory).mockResolvedValue({
+        text: "I have extensive experience in test automation. My roles",
+        usage: { inputTokens: 100, outputTokens: 1020, totalTokens: 1120 },
+        estimatedCostUsd: 0.004,
+        finishReason: "MAX_TOKENS",
+      });
+
+      const result = await processMessage(mockConversation, "Tell me everything");
+
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.message.content).toContain(INTERVIEW_TRUNCATION_NOTICE);
+        expect(result.message.content).toContain("cut off");
+      }
+    });
+
+    it("leaves a complete reply untouched", async () => {
+      vi.mocked(generateContentWithHistory).mockResolvedValue({
+        text: "I studied at the University of Louisville.",
+        usage: { inputTokens: 100, outputTokens: 50, totalTokens: 150 },
+        estimatedCostUsd: 0.001,
+        finishReason: "STOP",
+      });
+
+      const result = await processMessage(mockConversation, "Where did you study?");
+
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.message.content).not.toContain(INTERVIEW_TRUNCATION_NOTICE);
+      }
+    });
   });
 
   describe("validation", () => {

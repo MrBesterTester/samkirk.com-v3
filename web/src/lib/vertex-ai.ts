@@ -5,6 +5,7 @@ import {
   HarmCategory,
   HarmBlockThreshold,
   GenerateContentResult,
+  GenerationConfig,
   Content,
   Part,
 } from "@google-cloud/vertexai";
@@ -41,6 +42,14 @@ export interface GenerateOptions {
    * Default: 4096
    */
   maxOutputTokens?: number;
+  /**
+   * Cap on internal reasoning tokens for Gemini 2.5 "thinking" models.
+   *
+   * Thinking is billed as output and counts against `maxOutputTokens`, so an
+   * unbounded budget starves the visible answer (measured 2026-08-31: 901 of
+   * 1024 tokens spent thinking, answer truncated at 119 tokens).
+   */
+  thinkingBudget?: number;
 
   /**
    * Top-p (nucleus) sampling threshold.
@@ -455,6 +464,7 @@ export async function generateContentWithHistory(
     topP = 0.9,
     topK = 40,
     skipSpendCap = false,
+    thinkingBudget,
   } = options;
 
   // Enforce spend cap before making the call
@@ -473,7 +483,15 @@ export async function generateContentWithHistory(
       maxOutputTokens,
       topP,
       topK,
-    },
+      // EXPERIMENTAL: thinkingConfig is not declared by
+      // @google-cloud/vertexai@1.10.0's GenerationConfig, so it is cast
+      // through to the REST API. A silently ignored field would leave the
+      // truncation in place while looking fixed -- verify thoughtsTokenCount
+      // actually drops before relying on this.
+      ...(thinkingBudget !== undefined
+        ? { thinkingConfig: { thinkingBudget } }
+        : {}),
+    } as GenerationConfig,
     safetySettings: DEFAULT_SAFETY_SETTINGS,
     systemInstruction: systemInstruction
       ? { role: "system", parts: [{ text: systemInstruction }] }

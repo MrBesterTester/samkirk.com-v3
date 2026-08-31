@@ -1,7 +1,7 @@
 # Plan — Interview chat truncation and thinking-token accounting
 
 *Created: 2026-08-31 PST*
-*Status: step 1 done; steps 2–4 not started.*
+*Status: all four steps done. Truncation fixed and measured; see [Results](#results).*
 *Scope: `web/src/lib/vertex-ai.ts`, `web/src/lib/interview-chat.ts`, `web/src/lib/spend-cap.ts`.*
 
 This is a **plan** (how). The requirements it serves are in [SPECIFICATION.md §10 Abuse Prevention & Cost Control](SPECIFICATION.md).
@@ -14,6 +14,7 @@ This is a **plan** (how). The requirements it serves are in [SPECIFICATION.md §
 - [Step 2 — Cap the thinking budget](#step-2--cap-the-thinking-budget)
 - [Step 3 — Guard MAX_TOKENS on the interview path](#step-3--guard-max_tokens-on-the-interview-path)
 - [Step 4 — Raise INTERVIEW_MAX_TOKENS only if still needed](#step-4--raise-interview_max_tokens-only-if-still-needed)
+- [Results](#results)
 - [Constraint: the model is being discontinued](#constraint-the-model-is-being-discontinued)
 
 ## The defect
@@ -57,21 +58,46 @@ The $20 app-level cap was permitting up to roughly $170 of real output spend on 
 
 Covered by 4 new cases in `vertex-truncation.test.ts` (8 passing in that file).
 
-## Step 2 — Cap the thinking budget
+## Step 2 — Cap the thinking budget (DONE)
 
 Constrain reasoning directly rather than inflating the total. This reclaims answer space **and reduces real spend**, since the 901 unseen tokens stop being paid for. Preferred over Step 4.
 
-Open question: the exact Vertex parameter and a sane value, sampled across several question shapes rather than guessed.
+`INTERVIEW_THINKING_BUDGET = 256`, passed as `thinkingConfig.thinkingBudget` through a new `GenerateOptions.thinkingBudget`.
 
-## Step 3 — Guard MAX_TOKENS on the interview path
+`thinkingConfig` is **not declared** by `@google-cloud/vertexai@1.10.0`'s `GenerationConfig`, so it is cast through to the REST API. The backend honours it today — verified by measurement, not assumption. A future SDK or model that silently ignored the field would restore the truncation while looking fixed, which is why Step 3 matters independently.
+
+## Step 3 — Guard MAX_TOKENS on the interview path (DONE)
 
 A truncated answer must never reach a hiring manager as complete. `generateContent` already has `assertResponseComplete`; the history/interview path deliberately does not. With `finishReason` now verified as `MAX_TOKENS`, the precondition that comment set is satisfied.
 
-Decide between retrying with a larger budget and surfacing the truncation; throwing outright would turn a degraded answer into a failed one, which may be worse for a visitor.
+Resolved by **labelling, not throwing**. `processMessage` now reads `result.finishReason`; on `MAX_TOKENS` it logs a warning with the token counts and appends `INTERVIEW_TRUNCATION_NOTICE` to the reply.
 
-## Step 4 — Raise INTERVIEW_MAX_TOKENS only if still needed
+Throwing was rejected deliberately: it would replace a partial answer with a generic failure. The defect was never that the answer was short — it was that a fragment was presented as complete.
 
-Possibly unnecessary once Step 2 lands. If required, size it from measurements. Cost impact is small — 1024→3072 adds at most $0.0077/turn at the conservative rate, and 9,173 of 10,266 prompt tokens were cache hits, so the expensive half is already discounted.
+Truncation cannot be designed away. A visitor can always ask something whose honest answer exceeds any budget, so the guard is permanent, not a stopgap.
+
+## Step 4 — Raise INTERVIEW_MAX_TOKENS (DONE — it was needed)
+
+Predicted unnecessary; **that was wrong**, and sampling a second question shape caught it. With thinking bounded to 159, "walk me through Sam's entire career history" still produced 861 answer tokens and hit the 1024 cap.
+
+Raised to **3072**. The same question then completed at 2,879 answer tokens — 3,057 total, within 15 tokens of the new cap. So 3072 is sized from measurement but is not generous; a broader question could still truncate, which Step 3 now handles honestly.
+
+## Results
+
+Same question, before and after, measured on the running dev server:
+
+| | Before | After Step 2 | After Step 4 |
+|---|---|---|---|
+| "test automation" — finishReason | `MAX_TOKENS` | **`STOP`** | `STOP` |
+| — thinking / answer tokens | 901 / 119 | **179 / 279** | 179 / 279 |
+| — billable output | 1020 | **458** (−55%) | 458 |
+| "entire career history" — finishReason | — | `MAX_TOKENS` | **`STOP`** |
+| — thinking / answer tokens | — | 159 / 861 | **178 / 2879** |
+| — answer characters | — | 3,730 (cut) | **13,047 (complete)** |
+
+Bounding thinking made typical turns **both better and cheaper**: the answer got longer while billable output more than halved, because 901 tokens of unseen reasoning stopped being paid for.
+
+Verification: 1388 unit tests pass, `tsc` clean, eslint clean. New coverage for the truncation notice in `interview-chat.test.ts` and for thinking-token accounting in `vertex-truncation.test.ts`.
 
 ## Constraint: the model is being discontinued
 
