@@ -1,7 +1,7 @@
 # Full-Site Test Report — samkirk.com
 
 *Created: 2026-08-31 PST*
-*Status: complete — every suite green. Nothing pushed; the tree is ready to ship on Sam's say-so.*
+*Status: complete — every suite green, plus a live end-to-end booking lifecycle (§6). Nothing pushed.*
 *Scope: everything unpushed on `main`, plus the two home-page conversion buttons.*
 
 ## Table of Contents
@@ -12,7 +12,8 @@
 - [3. CAPTCHA handling](#3-captcha-handling)
 - [4. New coverage written for this request](#4-new-coverage-written-for-this-request)
 - [5. Results](#5-results)
-- [6. What is still not covered](#6-what-is-still-not-covered)
+- [6. Book a Call — full booking lifecycle, exercised live](#6-book-a-call--full-booking-lifecycle-exercised-live)
+- [7. What is still not covered](#7-what-is-still-not-covered)
 
 ## Originating request (verbatim)
 
@@ -116,7 +117,52 @@ Two notes on the numbers:
 
 The dance-menu fix is covered from both directions: `full-app.spec.ts` "dance menu page loads" passes against the live page, and the six route-level regression tests pin the CSS scoping.
 
-## 6. What is still not covered
+## 6. Book a Call — full booking lifecycle, exercised live
 
-- Clicking through to Google's booking page and completing a booking. The test verifies the URL resolves; it deliberately does not automate Google's scheduler.
+### Originating challenge (verbatim)
+
+> Picking up w/o your Fastest fix. Yes, I got an alert in Apple Calendar that sam@samkirk.com could not be refreshed. I also refreshed it manually using  the menu item (something you could do) and even include both calendars under sam@samkirk.com, refreshing again. Also, I don't see an email in my consulting email account.  I don't see what you can't just click on the  "30-minute introductory call with Sam Kirk" screen like any visitor would. Without that I think the entire function of the button would be useless, right? Also stop trying to suggest ways that circumvent testing automation and put the onus on me. I am test engineer above all else and automating tests is how made a living. Got it!
+
+The challenge was correct on the substance: a booking flow with no visitor-facing management path *would* be broken, and the earlier report stopped short of proving otherwise.
+
+### The finding: the booker's identity changes the flow
+
+| | Booking 1 — booker = calendar owner | Booking 2 — booker ≠ owner |
+|---|---|---|
+| Booker email | `sam@samkirk.com` (owner of the Consulting calendar) | `samuelakirk@me.com` |
+| Slot | Mon Aug 31, 1:45–2:15pm | Tue Sep 1, 10:00–10:30am |
+| Slot consumed | yes | yes |
+| Confirmation screen | **none** — dialog kept the filled form and offered only `Close` | **"Booking confirmed"** with a green check |
+| "Cancel your appointment" link | **absent** | **present** |
+| Confirmation email | **never sent** | sent 10:06:53 to *both* `samuelakirk@me.com` and `sam@samkirk.com` |
+
+Booking as yourself into your own appointment schedule puts Google into a degenerate path: the slot is taken, but there is no confirmation UI, no cancel affordance, and no email. That is why the first booking looked like a dead end — the test method was at fault, not the button.
+
+A real visitor is never the calendar owner, so **the visitor path works**, and the cancel link Sam expected is exactly where it should be.
+
+### Lifecycle verified end to end
+
+1. **Book** — form submitted from the live scheduler; Sep 1 10:00am disappeared from the picker.
+2. **Confirm** — "Booking confirmed · Email sent to samuelakirk@me.com", with the appointment summary.
+3. **Notify** — `Appointment booked: 30-Minute Introductory Call with Sam Kirk (E2E Test-DELET… @ Tue Sep 1, 2026 10am - 10:30am (PDT))`, from the Consulting calendar, to both addresses. **Sam is notified of real bookings.**
+4. **Cancel** — the visitor-facing "Cancel your appointment" → "Appointment cancelled · Cancellation email sent to all guests".
+5. **Notify again** — `Appointment canceled: …` delivered 10:08:06 to both addresses.
+6. **Release** — after reload the picker offers `10:00am` again. The slot returned to inventory.
+
+Aug 31 1:45pm remains held by booking 1, left in place at Sam's instruction.
+
+### Why no email reached the consulting account earlier
+
+Two separate things were mistaken for one:
+
+- **Booking 1 genuinely sent no email** — the owner-books-self path above.
+- **Apple Calendar's `sam@samkirk.com` refresh failure** is a local sync fault on the Mac. It explains why the event never appeared in Calendar.app, and is unrelated to the booking flow. Mail for that account was syncing normally throughout — the 10:06 and 10:08 messages arrived within seconds.
+
+### Automated coverage this leaves behind
+
+`web/e2e/home-ctas.spec.ts` now loads the real scheduling page and asserts the page title, the "Select an appointment time" heading, and **at least one bookable slot**. The earlier version only checked `status < 400`, which Google returns even for its "page unavailable" screen — a revoked link would have passed. The live lifecycle above is not yet a repeatable test; see §7.
+
+## 7. What is still not covered
+
+- An automated regression test that books and cancels on every run. §6 was driven manually through the browser; turning it into a repeatable Playwright test would place a real booking on every CI run, which is a deliberate trade-off not yet made.
 - Admin routes behind OAuth, which `full-app.spec.ts` documents as manual-verification-only.
