@@ -6,6 +6,11 @@ import {
   listFiles,
   PublicPaths,
 } from "@/lib/storage";
+import {
+  parseStaticHtml,
+  scopeCss,
+  STATIC_SCOPE_CLASS,
+} from "@/lib/static-html";
 
 /**
  * Response type for dance menu data.
@@ -26,6 +31,32 @@ const FORMAT_NAMES: Record<string, string> = {
   "sams-dance-menu.html": "HTML",
   "sams-dance-menu.pdf": "PDF",
 };
+
+/**
+ * Confine the uploaded menu's own stylesheet to a wrapper element.
+ *
+ * The menu is authored as a complete standalone HTML document, so its <head>
+ * carries a stylesheet written in bare element selectors (`body`, `nav ul`,
+ * `table`, …). Injected into the page as-is, those rules escape the menu and
+ * restyle the whole site: `nav ul{display:flex}` overrode the site header's
+ * `hidden md:flex`, inflating the header to roughly half a phone screen, and
+ * the document's dark `body` palette took over the page.
+ *
+ * Tailwind v4 puts its utilities in `@layer utilities`, and unlayered rules beat
+ * layered ones no matter their specificity — so the menu's plain `nav ul` won
+ * over `.hidden` without needing `!important`.
+ *
+ * This is the same treatment the standalone write-ups get through
+ * `StaticHtmlContent`; here the result is recombined into one string so the
+ * response shape stays unchanged.
+ */
+function scopeMenuHtml(raw: string): string {
+  const { bodyHtml, css } = parseStaticHtml(raw);
+  const scoped = scopeCss(css);
+  const style = scoped ? `<style>${scoped}</style>` : "";
+
+  return `${style}<div class="${STATIC_SCOPE_CLASS}">${bodyHtml}</div>`;
+}
 
 /**
  * GET /api/dance-menu
@@ -62,7 +93,7 @@ export async function GET(
 
     if (await fileExists(bucket, htmlPath)) {
       try {
-        htmlContent = await readFile(bucket, htmlPath);
+        htmlContent = scopeMenuHtml(await readFile(bucket, htmlPath));
       } catch (error) {
         console.error("Failed to read HTML content:", error);
         // Continue without HTML content
