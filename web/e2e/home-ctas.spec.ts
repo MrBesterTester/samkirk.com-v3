@@ -46,6 +46,9 @@ async function captureGaEvents(page: Page): Promise<() => Promise<GaCall[]>> {
 }
 
 test.describe("Home page — Book a Call", () => {
+  // One test in this block reaches Google's live scheduling page. It is the
+  // only external dependency in the suite, and the only way to notice that the
+  // booking link has gone dead without waiting for a client to report it.
   test("is visible with its booking copy", async ({ page }) => {
     await page.goto("/");
 
@@ -89,12 +92,23 @@ test.describe("Home page — Book a Call", () => {
     expect(contact[0][2]).toMatchObject({ method: "calendar" });
   });
 
-  test("the scheduling page is actually reachable", async ({ request }) => {
-    // The one check that catches a revoked or expired Google booking link —
-    // everything else here would still pass with a dead URL.
-    const response = await request.get(BOOKING_URL, { maxRedirects: 5 });
+  test("the scheduling page really renders a bookable calendar", async ({
+    page,
+  }) => {
+    // A status check alone is not enough: Google serves its "this page isn't
+    // available" screen with a 200, so a revoked link would still look healthy.
+    // Load the page and insist on the things only a working scheduler shows.
+    await page.goto(BOOKING_URL, { waitUntil: "domcontentloaded" });
 
-    expect(response.status(), `GET ${BOOKING_URL}`).toBeLessThan(400);
+    await expect(page).toHaveTitle(/30-Minute Introductory Call with Sam Kirk/i);
+    await expect(page.getByText(/select an appointment time/i)).toBeVisible({
+      timeout: 20_000,
+    });
+
+    // At least one slot must be offered — a scheduler with zero availability
+    // is indistinguishable, to a visitor, from a broken one.
+    const slots = page.getByRole("button", { name: /^\d{1,2}:\d{2}(am|pm)$/i });
+    expect(await slots.count()).toBeGreaterThan(0);
   });
 });
 
