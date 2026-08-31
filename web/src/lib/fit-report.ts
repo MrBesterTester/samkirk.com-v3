@@ -234,7 +234,7 @@ You MUST respond with a valid JSON object (no markdown code fences, just raw JSO
 ## Location Rules (CRITICAL)
 Sam lives in ${HOME_LOCATION}. Location fit is determined by:
 - **Well**: Fully remote OR hybrid with ≤${MAX_ONSITE_DAYS} onsite days/week AND ≤${MAX_COMMUTE_MINUTES} min commute
-- **Poorly**: Requires >2 onsite days/week OR commute >30 minutes OR unclear location (worst-case assumption)
+- **Poorly**: Requires >${MAX_ONSITE_DAYS} onsite days/week OR commute >${MAX_COMMUTE_MINUTES} minutes OR unclear location (worst-case assumption)
 
 ## Important Guidelines
 1. Be objective and factual - only cite information from the resume context

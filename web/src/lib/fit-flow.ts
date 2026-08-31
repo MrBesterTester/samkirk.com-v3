@@ -13,8 +13,16 @@ export const MAX_FOLLOW_UPS = 5;
 /** Sam's home location for commute calculations */
 export const HOME_LOCATION = "Fremont, CA" as const;
 
-/** Maximum acceptable one-way commute time in minutes */
-export const MAX_COMMUTE_MINUTES = 30;
+/**
+ * Maximum acceptable one-way commute time in minutes.
+ *
+ * Raised from 30 to 45 on 2026-08-31. At 30, every Menlo Park role scored
+ * "unacceptable" on location no matter how few onsite days -- including Meta,
+ * ~16 miles away straight over the Dumbarton Bridge, and Talis BioMedical,
+ * where Sam actually worked. The old threshold contradicted a commute he had
+ * already been making.
+ */
+export const MAX_COMMUTE_MINUTES = 45;
 
 /** Maximum acceptable onsite days per week for hybrid */
 export const MAX_ONSITE_DAYS = 2;
@@ -50,7 +58,7 @@ export type LocationType =
  * Location fit status based on rules.
  */
 export type LocationFitStatus =
-  | "acceptable"      // Fully remote OR hybrid with <= 2 days/week AND <= 30min commute
+  | "acceptable"      // Fully remote OR hybrid within MAX_ONSITE_DAYS / MAX_COMMUTE_MINUTES
   | "unacceptable"    // Does not meet requirements
   | "unknown"         // Could not determine, will assume worst-case
   | "worst_case";     // Assumed worst-case after clarification attempt
@@ -378,7 +386,15 @@ export function extractMustHaveSkills(jobText: string): string[] {
 export function extractJobTitle(jobText: string): string | null {
   // Look for common title patterns
   const titlePatterns = [
-    /^(.+?)\s*(?:at|@|-|–)\s*.+$/im,
+    // "Engineer at Acme" / "Engineer @ Acme". `at` MUST be surrounded by
+    // whitespace: without it the alternation matched the "at" inside ordinary
+    // words, so "Senior Test Automation Engineer" extracted as
+    // "Senior Test Autom", "Validation Engineer" as "Valid", and "Platform
+    // Engineer" as "Pl" (2026-08-31).
+    /^(.+?)\s+(?:at|@)\s+.+$/im,
+    // "Engineer - Acme" / "Engineer — Acme". Em dash included; it was missing
+    // before, so em-dash-separated titles fell through to the keyword pattern.
+    /^(.+?)\s*[-–—]\s*.+$/im,
     /(?:job\s*title|position|role)[\s:]+([^\n]+)/i,
     /^(.+?(?:engineer|developer|manager|designer|analyst|scientist|architect|lead|specialist|consultant|coordinator))/im,
   ];
@@ -446,7 +462,7 @@ export function analyzeJobText(jobText: string): ExtractedJobFields {
  *
  * Rules from specification:
  * - Acceptable: Fully remote
- * - Acceptable: Hybrid with <= 2 onsite days/week AND <= 30 min commute from Fremont, CA
+ * - Acceptable: Hybrid within MAX_ONSITE_DAYS and MAX_COMMUTE_MINUTES of Fremont, CA
  * - Unacceptable: Higher onsite frequency or longer commute
  * - Unknown: Cannot determine (will assume worst-case if not clarified)
  */
@@ -833,12 +849,19 @@ export function estimateCommuteFromLocation(location: string): number | null {
     { pattern: /newark|union\s*city/i, minutes: 15 },
     { pattern: /milpitas|hayward/i, minutes: 20 },
     { pattern: /san\s*jose|santa\s*clara|sunnyvale/i, minutes: 25 },
+    // Menlo Park is ~16 miles straight over the Dumbarton Bridge. It was
+    // grouped with Redwood City at 40 -- tied with Oakland, and worse than
+    // Palo Alto, which is farther along the same route. Corrected 2026-08-31.
+    { pattern: /menlo\s*park/i, minutes: 25 },
     { pattern: /palo\s*alto|mountain\s*view|cupertino/i, minutes: 35 },
-    { pattern: /redwood\s*city|menlo\s*park/i, minutes: 40 },
+    { pattern: /redwood\s*city/i, minutes: 40 },
     { pattern: /san\s*mateo|foster\s*city/i, minutes: 45 },
     { pattern: /oakland|berkeley|alameda/i, minutes: 40 },
-    { pattern: /san\s*francisco|sf\b/i, minutes: 55 },
+    // MUST precede the bare San Francisco pattern: /san\s*francisco/ also
+    // matches "South San Francisco", so this entry was unreachable and South
+    // SF scored 55 instead of 50. Fixed 2026-08-31.
     { pattern: /south\s*san\s*francisco|daly\s*city/i, minutes: 50 },
+    { pattern: /san\s*francisco|sf\b/i, minutes: 55 },
   ];
 
   for (const { pattern, minutes } of commuteEstimates) {

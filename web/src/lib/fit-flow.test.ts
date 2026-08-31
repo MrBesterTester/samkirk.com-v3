@@ -78,8 +78,10 @@ describe("fit-flow constants", () => {
     expect(HOME_LOCATION).toBe("Fremont, CA");
   });
 
-  it("MAX_COMMUTE_MINUTES is 30", () => {
-    expect(MAX_COMMUTE_MINUTES).toBe(30);
+  it("MAX_COMMUTE_MINUTES is 45", () => {
+    // Raised from 30 on 2026-08-31: at 30 no Menlo Park role could ever score
+    // acceptable, contradicting a commute Sam had already been making.
+    expect(MAX_COMMUTE_MINUTES).toBe(45);
   });
 
   it("MAX_ONSITE_DAYS is 2", () => {
@@ -262,7 +264,7 @@ describe("evaluateLocationFit", () => {
     it("returns unacceptable for long commute", () => {
       const extracted = createInitialExtractedFields();
       extracted.locationType = "onsite";
-      extracted.estimatedCommuteMinutes = 45;
+      extracted.estimatedCommuteMinutes = 55;
 
       expect(evaluateLocationFit(extracted)).toBe("unacceptable");
     });
@@ -308,7 +310,7 @@ describe("evaluateLocationFit", () => {
       const extracted = createInitialExtractedFields();
       extracted.locationType = "hybrid";
       extracted.onsiteDaysPerWeek = 1;
-      extracted.estimatedCommuteMinutes = 45;
+      extracted.estimatedCommuteMinutes = 55;
 
       expect(evaluateLocationFit(extracted)).toBe("unacceptable");
     });
@@ -1167,5 +1169,30 @@ describe("analyzeJobText", () => {
     expect(extracted.seniority).toBe("senior");
     expect(extracted.locationType).toBe("fully_remote");
     expect(extracted.locationFitStatus).toBe("acceptable");
+  });
+});
+
+describe("extractJobTitle - the 'at' substring regression", () => {
+  /**
+   * 2026-08-31: the separator alternation allowed zero whitespace around
+   * `at`, so it matched the "at" inside ordinary words. A live fit report was
+   * headed "Job: Senior Test Autom".
+   */
+  it.each([
+    ["Senior Test Automation Engineer — GenAI Platform", "Senior Test Automation Engineer"],
+    ["Senior Data Engineer — X", "Senior Data Engineer"],
+    ["Platform Engineer - Y", "Platform Engineer"],
+    ["Validation Engineer", "Validation Engineer"],
+    ["Integration Lead", "Integration Lead"],
+    ["QA Automation Architect", "QA Automation Architect"],
+  ])("keeps the whole title in %j", (input, expected) => {
+    expect(extractJobTitle(input)).toBe(expected);
+  });
+
+  it.each([
+    ["Staff Engineer at Acme Corp", "Staff Engineer"],
+    ["Test Lead @ Globex", "Test Lead"],
+  ])("still splits on a real separator in %j", (input, expected) => {
+    expect(extractJobTitle(input)).toBe(expected);
   });
 });

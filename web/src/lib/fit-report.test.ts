@@ -157,7 +157,7 @@ function createValidLLMResponse(): string {
 describe("FIT_ANALYSIS_SYSTEM_PROMPT", () => {
   it("should include location rules", () => {
     expect(FIT_ANALYSIS_SYSTEM_PROMPT).toContain("Fremont, CA");
-    expect(FIT_ANALYSIS_SYSTEM_PROMPT).toContain("30 min commute");
+    expect(FIT_ANALYSIS_SYSTEM_PROMPT).toContain("45 min commute");
     expect(FIT_ANALYSIS_SYSTEM_PROMPT).toContain("2 onsite days/week");
   });
 
