@@ -303,5 +303,18 @@ The following must exist as static `.html` pages included in the build:
   - 10 requests/10 minutes enforced with contact gate afterward.
   - $20/month cap blocks all tools; budget emails go to `sam@samkirk.com`.
 - Retention:
-  - Stored submissions auto-delete after 90 days.
+  - Stored submissions are deleted after 90 days. **Cleanup is manual by decision (2026-08-31)** — see [Retention: manual by decision](#retention-manual-by-decision).
 
+## Retention: manual by decision
+
+The 90-day rule stands; only the trigger is manual.
+
+`runRetentionCleanup()` in `web/src/lib/retention.ts` and `POST /api/maintenance/retention` are implemented and deployed. Nothing was ever scheduled to call them, so no cleanup had run since the project began.
+
+**Discovered 2026-08-31.** 448 of 521 submissions were past expiry — 444 from 2026-02 and 4 from 2026-03, the period when the tools were being built. Deleted manually along with 1,710 GCS artifact files; the 73 active submissions were untouched.
+
+**Why manual.** A Vercel cron would run on Vercel's servers rather than the iMac, which is the right place for it. But wiring it up needs a `crons` entry in `web/vercel.json` *and* a code change: the endpoint authenticates on a `secret` in the POST body, while Vercel cron sends a GET with an `Authorization: Bearer` header. At current volume — 73 submissions, a trickle per month, most of it Sam's own testing — that is machinery for a problem that does not exist.
+
+**How to run it manually.** Query Firestore for `submissions` whose `expiresAt` has passed; for each, delete the files under its `artifactGcsPrefix` from the private bucket, then delete the document. Guard every deletion on that document's own `expiresAt` so active submissions cannot be swept up. Note `MAX_DELETIONS_PER_RUN` is 100, which is why the 448 backlog was cleared with a direct script rather than repeated endpoint calls.
+
+**Revisit if** real traffic grows enough that submissions accumulate faster than occasional attention, or if the retention promise becomes externally binding rather than self-imposed.
