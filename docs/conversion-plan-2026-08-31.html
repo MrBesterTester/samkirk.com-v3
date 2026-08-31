@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>samkirk.com — Status and Work Outstanding</title>
+<style>
+/* Colorblind-safe: blue/orange axis, never red-vs-green; color is never the sole
+   cue (every coded thing also carries a text label); no background patterning. */
+:root{
+  --blue:#1f6feb; --blue-dk:#0b4fc0; --blue-bg:#eaf1fe;
+  --orange:#e8710a; --orange-dk:#b8560a; --orange-bg:#fdeede;
+  --ink:#1a1f29; --muted:#5a6473; --line:#d7dce4;
+  --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+body{margin:0 auto; padding:48px 28px 96px; max-width:56rem;
+  font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+  color:var(--ink); background:#fff;}
+h1{font-size:1.95rem; line-height:1.25; margin:0 0 6px; letter-spacing:-.02em}
+h2{font-size:1.3rem; margin:52px 0 14px; padding-bottom:7px; border-bottom:2px solid var(--line); color:var(--blue-dk)}
+h3{font-size:1.05rem; margin:30px 0 10px; color:var(--ink)}
+h4{font-size:.95rem; margin:22px 0 8px; color:var(--muted); text-transform:uppercase; letter-spacing:.06em}
+p,li{margin:0 0 12px}
+ul,ol{padding-left:24px}
+li{margin-bottom:7px}
+a{color:var(--blue-dk)}
+code{font-family:var(--mono); font-size:.87em; background:#f2f4f8; padding:2px 5px; border-radius:4px}
+pre{background:#f7f8fa; border:1px solid var(--line); border-left:4px solid var(--blue);
+    border-radius:0 6px 6px 0; padding:13px 16px; overflow-x:auto; font-family:var(--mono); font-size:.85rem}
+pre code{background:none; padding:0}
+.stamp{color:var(--muted); font-size:.88rem; margin:0 0 4px}
+.status{display:inline-block; margin-top:10px; padding:3px 11px; border-radius:999px;
+        background:var(--blue-bg); color:var(--blue-dk); font-size:.8rem; font-weight:600; border:1px solid #b9d0fb}
+/* Highlight recipe: strong color in the border, text on a near-white tint. */
+.callout{background:var(--orange-bg); border:1px solid #f2c896; border-left:4px solid var(--orange);
+         border-radius:0 8px 8px 0; padding:16px 20px; margin:20px 0}
+.callout .lbl{display:block; font-size:.76rem; font-weight:700; letter-spacing:.09em;
+              text-transform:uppercase; color:var(--orange-dk); margin-bottom:7px}
+.callout p:last-child,.callout ul:last-child,.callout ol:last-child{margin-bottom:0}
+.note{background:var(--blue-bg); border-left:4px solid var(--blue); border-radius:0 8px 8px 0;
+      padding:14px 18px; margin:20px 0; color:#22303f}
+.note .lbl{display:block; font-size:.76rem; font-weight:700; letter-spacing:.09em;
+           text-transform:uppercase; color:var(--blue-dk); margin-bottom:7px}
+.note p:last-child,.note ul:last-child{margin-bottom:0}
+nav.toc{background:#f7f8fa; border:1px solid var(--line); border-radius:8px; padding:18px 24px; margin:28px 0 8px}
+nav.toc h2{margin:0 0 10px; font-size:.8rem; letter-spacing:.09em; text-transform:uppercase; border:0; padding:0; color:var(--muted)}
+nav.toc ol{margin:0; padding-left:20px; columns:2; column-gap:34px}
+nav.toc li{margin-bottom:5px; break-inside:avoid}
+nav.toc ul{padding-left:16px; margin:5px 0 0; list-style:none}
+nav.toc ul li{font-size:.92rem; color:var(--muted)}
+table{border-collapse:collapse; width:100%; margin:18px 0; font-size:.92rem}
+th{background:var(--blue-bg); color:#1c2a3a; text-align:left; font-weight:600; padding:9px 12px; border:1px solid var(--line)}
+td{padding:9px 12px; border:1px solid var(--line); vertical-align:top}
+tbody tr:nth-child(even) td{background:#fafbfc}
+.num{text-align:right; font-family:var(--mono); font-variant-numeric:tabular-nums; white-space:nowrap}
+/* Class tags — the word itself is the cue; color is decoration. */
+.tag{display:inline-block; padding:1px 8px; border-radius:999px; font-size:.74rem;
+     font-weight:700; letter-spacing:.04em; white-space:nowrap; border:1px solid}
+.tag-bug{background:var(--orange-bg); color:var(--orange-dk); border-color:#f2c896}
+.tag-gap{background:var(--blue-bg); color:var(--blue-dk); border-color:#b9d0fb}
+figure{margin:26px 0}
+figcaption{font-size:.85rem; color:var(--muted); margin-top:9px}
+.wrap{overflow-x:auto}
+@media (max-width:640px){ body{padding:32px 18px 72px} nav.toc ol{columns:1} }
+@media print{
+  body{padding:0; max-width:none; font-size:11pt}
+  h2{page-break-after:avoid}
+  table,figure,pre,.callout,.note{page-break-inside:avoid}
+  nav.toc{page-break-after:always}
+}
+</style>
+</head>
+<body>
+
+<h1>samkirk.com — Status and Work Outstanding</h1>
+<p class="stamp">Created 2026-07-29 PST · Revised 2026-08-31 PST</p>
+<p class="stamp">Project: <code>samkirk-v3</code> · Source: <code>docs/conversion-plan-2026-08-31.md</code></p>
+<p><span class="status">Current — state of the site today, and work still to do</span></p>
+
+<p>This is a <strong>plan</strong> (how). Requirements live in <code>SPECIFICATION.md</code>.</p>
+
+<nav class="toc">
+  <h2>Contents</h2>
+  <ol>
+    <li><a href="#verbatim">Originating request (verbatim)</a></li>
+    <li><a href="#status">Where things stand</a></li>
+    <li><a href="#donow">Do now</a>
+      <ul>
+        <li><a href="#w1">W1 — Dance menu serves the wrong .txt</a></li>
+        <li><a href="#w2">W2 — <code>answerFitQuestion</code> reports no failures</a></li>
+        <li><a href="#w3">W3 — Run duration never recorded</a></li>
+        <li><a href="#w4">W4 — <code>/hire-me</code> landing page</a></li>
+        <li><a href="#w5">W5 — Move the captcha off page load</a></li>
+      </ul>
+    </li>
+    <li><a href="#deferred">Deferred — the model migration</a></li>
+    <li><a href="#photofun">photo-fun — backlink and GA tag</a></li>
+    <li><a href="#standing">Standing decisions</a></li>
+    <li><a href="#files">Files</a></li>
+    <li><a href="#verification">Verification</a></li>
+  </ol>
+</nav>
+
+<h2 id="verbatim">Originating request (verbatim)</h2>
+<div class="note">
+  <p style="margin-bottom:0">remove the correction history and leave standing only current status and what needs to be done now. Also add a bug I just found: the download of the .txt file for the dance menu downloads the notes, not the menu. Also defer any changes to the new Google model and make it clear what's left for right now.</p>
+</div>
+
+<h2 id="status">1. Where things stand</h2>
+
+<h3>Traffic — GA4, 2026-08-03 → 2026-08-31</h3>
+<div class="wrap">
+<table>
+<tbody>
+<tr><th>Active users</th><td class="num">99</td></tr>
+<tr><th>Sessions</th><td class="num">120</td></tr>
+<tr><th>Page views</th><td class="num">160</td></tr>
+<tr><th>Engagement rate</th><td class="num">30.0%</td></tr>
+<tr><th>Avg session duration</th><td class="num">96s</td></tr>
+</tbody>
+</table>
+</div>
+
+<p>Sources: <code>(direct)</code> 102 sessions · <code>(not set)</code> 26 · YouTube referral 4 ·
+<strong>google/organic 3</strong> · <strong>linkedin.com referral 3</strong> ·
+<strong>bing/organic 1</strong>. Organic search and LinkedIn are new but tiny.</p>
+
+<div class="callout">
+  <span class="lbl">A large share of the denominator is not human</span>
+  <p>Direct traffic geolocates heavily to Fremont with a ~1:1 user-to-session ratio — the
+    signature of datacenter egress, not returning readers (Fremont is a major colocation hub).
+    GA4 exposes no IP or ASN, so this is inferred from geography, the 1:1 ratio, and engagement
+    together. Treat visitor counts as an upper bound and trust stage-to-stage ratios over
+    absolutes.</p>
+</div>
+
+<h3>The <code>/hire-me</code> funnel</h3>
+
+<figure>
+<!-- Color-blind-safe: single-hue bars; every stage carries its own text label and printed
+     value, so the figure reads correctly in grayscale and with no color at all. The zero
+     stage is an outlined placeholder plus its printed 0. No fill patterns anywhere. -->
+<svg viewBox="0 0 700 250" width="100%" role="img"
+     aria-label="Funnel: 38 users visited /hire-me, 10 loaded a job description, 11 started a run, 3 completed, 0 downloaded.">
+  <g font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif">
+    <text x="0" y="14" font-size="12" font-weight="700" fill="#5a6473">HIRE-ME FUNNEL — USERS, 2026-08-03 → 08-31</text>
+
+    <text x="0" y="52" font-size="13.5" fill="#1a1f29">Visited /hire-me</text>
+    <rect x="215" y="39" width="400" height="19" rx="3" fill="#1f6feb"/>
+    <text x="623" y="53" font-size="13" font-weight="700" fill="#1a1f29">38</text>
+
+    <text x="0" y="95" font-size="13.5" fill="#1a1f29">Loaded a job description</text>
+    <rect x="215" y="82" width="105" height="19" rx="3" fill="#1f6feb"/>
+    <text x="328" y="96" font-size="13" font-weight="700" fill="#1a1f29">10</text>
+
+    <text x="0" y="138" font-size="13.5" fill="#1a1f29">Started a generation run</text>
+    <rect x="215" y="125" width="116" height="19" rx="3" fill="#1f6feb"/>
+    <text x="339" y="139" font-size="13" font-weight="700" fill="#1a1f29">11</text>
+    <text x="372" y="139" font-size="12" font-weight="700" fill="#b8560a">more runs than jobs — anomaly</text>
+
+    <text x="0" y="181" font-size="13.5" fill="#1a1f29">Run completed</text>
+    <rect x="215" y="168" width="32" height="19" rx="3" fill="#1f6feb"/>
+    <text x="255" y="182" font-size="13" font-weight="700" fill="#1a1f29">3</text>
+
+    <text x="0" y="224" font-size="13.5" fill="#1a1f29">Downloaded the .zip</text>
+    <rect x="215" y="211" width="32" height="19" rx="3" fill="none" stroke="#9aa4b2" stroke-width="1" stroke-dasharray="2 2"/>
+    <text x="255" y="225" font-size="13" font-weight="700" fill="#1a1f29">0</text>
+    <text x="288" y="225" font-size="12" font-weight="700" fill="#b8560a">nobody has clicked download</text>
+  </g>
+</svg>
+<figcaption>Users, not events — one person doing two runs counts once per stage.</figcaption>
+</figure>
+
+<p><code>/hire-me</code> holds attention — <strong>161s average</strong> across 38 views.
+Downloads remain at zero, and <code>tool_download</code> fires at the <em>top</em> of
+<code>download()</code> before the fetch, so that zero is click intent, not delivery failure:
+nobody has clicked.</p>
+
+<div class="callout">
+  <span class="lbl">Unresolved anomaly</span>
+  <p>11 users started a run but only 10 loaded a job description. More runs than jobs should not
+    be possible. Either the <code>sessionStorage</code> restore path in
+    <code>JobContextBar</code> bypasses <code>trackJobLoaded</code>, or a run can start without
+    a job.</p>
+</div>
+
+<h3>Engagement</h3>
+<p><code>cta_click</code> 13 events / 12 users — 12 <code>home_interview_me_now</code>, 1
+<code>home_explorations</code>. <code>nav_click</code> 25 / 7 users, dominated by Dance Menu
+(16). <code>contact_click</code> 3 / 3 users, <strong>all <code>method: calendar</code></strong>
+— the 90-day total is also 3, so all are recent.</p>
+
+<h3>Search — Search Console, 2026-08-02 → 2026-08-29</h3>
+<p>49 impressions, 1 click (on <code>/explorations</code>, 20% CTR). Homepage 57 impressions at
+position 18.1. <code>photo-fun.samkirk.com</code> 40 impressions at position <strong>51.1</strong>.
+Query mix is name variants plus photo-fun variants. <strong>No query anywhere in the 5–20
+striking-distance band</strong>, so there is nothing cheap to optimise — acquisition is a
+months-long content play, not a tuning exercise.</p>
+
+<h3>What is working</h3>
+<ul>
+  <li><strong>Interview truncation is fixed.</strong> Thinking bounded to 256 tokens,
+    <code>finishReason</code> read in <code>processMessage</code>,
+    <code>INTERVIEW_MAX_TOKENS</code> at 3072. Answers went from 3,730 characters cut off to
+    13,047 complete, while billable output more than halved.</li>
+  <li><strong>Spend accounting is fixed.</strong> <code>billableOutputTokens()</code> sums
+    <code>thoughtsTokenCount</code> into billable output, closing an ≈8.6× under-count that had
+    been letting the $20 cap permit roughly $170 of real output spend.</li>
+  <li><strong>CAPTCHA protection is live and does not block anyone.</strong>
+    <code>withToolProtection()</code> wraps all five tool routes. Every user who loaded a job
+    also started a run.</li>
+  <li><strong>Both home-page conversion buttons are covered by E2E</strong>, including a live
+    booking lifecycle, in <code>web/e2e/home-ctas.spec.ts</code>.</li>
+</ul>
+
+<h2 id="donow">2. Do now</h2>
+
+<p>Ordered. W1–W3 are small and need no approval. <strong>The photo-fun work is tracked
+separately in <a href="#photofun">§4</a></strong> because it lives in a different repository
+and needs a push approval.</p>
+
+<div class="wrap">
+<table>
+<thead><tr><th>#</th><th>Item</th><th>Type</th><th>Approval</th></tr></thead>
+<tbody>
+<tr><td><strong>W1</strong></td><td>Dance menu serves the wrong <code>.txt</code></td><td><span class="tag tag-bug">BUG</span></td><td>none</td></tr>
+<tr><td><strong>W2</strong></td><td><code>answerFitQuestion</code> reports no failures</td><td><span class="tag tag-bug">BUG</span></td><td>none</td></tr>
+<tr><td><strong>W3</strong></td><td>Run duration never recorded</td><td><span class="tag tag-gap">MEASUREMENT</span></td><td>none</td></tr>
+<tr><td><strong>W4</strong></td><td><code>/hire-me</code> landing page</td><td><span class="tag tag-gap">UX</span></td><td>judgement call on the new entry point</td></tr>
+<tr><td><strong>W5</strong></td><td>Move the captcha off page load</td><td><span class="tag tag-gap">UX</span></td><td>none</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3 id="w1">W1 — Dance menu serves the wrong .txt</h3>
+
+<p><strong>Symptom.</strong> Downloading the Plain Text format from <code>/dance-menu</code>
+yields the <em>notes</em>, not the menu.</p>
+
+<p><strong>Mechanism.</strong> The upload keys entirely on file extension. Every uploaded file
+is renamed to a standard name by extension — <code>STANDARD_FILENAMES[ext]</code> at
+<code>dance-menu-upload.ts:269</code>, where <code>.txt</code> maps to
+<code>sams-dance-menu.txt</code> (line 55). Content validation (lines 188–211) only checks the
+<code>%PDF</code> magic bytes for PDFs and UTF-8 decodability for everything else.
+<strong>Nothing checks that a <code>.txt</code> is the menu.</strong> Whatever <code>.txt</code>
+is in the bundle becomes the published plain-text menu, and <code>/api/dance-menu</code> then
+serves it under the "Plain Text" label (<code>route.ts:30</code>).</p>
+
+<p>Duplicate extensions <em>are</em> rejected (<code>DUPLICATE_EXTENSION</code>, line 242), so
+two <code>.txt</code> files cannot be uploaded together. The bundle's single <code>.txt</code>
+was the notes file.</p>
+
+<div class="callout">
+  <span class="lbl">Confirm before fixing</span>
+  <p>Read what is actually in the bucket at <code>sams-dance-menu.txt</code>. That determines
+    which fix applies:</p>
+  <ul>
+    <li><strong>Wrong file uploaded:</strong> re-upload the correct bundle, then add a guard so
+      it cannot recur silently — a content sanity check on <code>.txt</code>, or surfacing each
+      file's first line in the admin UI for confirmation before publish.</li>
+    <li><strong>Right file uploaded, wrong one served:</strong> the defect is in the storage or
+      listing path, and <code>.md</code> / <code>.html</code> / <code>.pdf</code> should be
+      checked for the same problem.</li>
+  </ul>
+</div>
+
+<p>Either way the underlying weakness is real and worth closing: <strong>extension is treated
+as identity.</strong> A file named <code>notes.txt</code> and a file named
+<code>menu.txt</code> are indistinguishable to this code.</p>
+
+<h3 id="w2">W2 — <code>answerFitQuestion</code> reports no failures</h3>
+<div class="wrap">
+<table>
+<thead><tr><th>Function</th><th>Fires <code>trackToolRunFailed</code>?</th></tr></thead>
+<tbody>
+<tr><td><code>triggerFit</code></td><td>✅ line 566</td></tr>
+<tr><td><code>triggerResume</code></td><td>✅ line 784</td></tr>
+<tr><td><code>answerFitQuestion</code></td><td>❌ <strong>no</strong> — catch at line 692</td></tr>
+</tbody>
+</table>
+</div>
+<p>The catch shows the user an error and resets state but emits no analytics event, so every
+error in the fit question round-trip is invisible. Three-line fix; add a regression case to
+<code>analytics.test.ts</code>.</p>
+
+<h3 id="w3">W3 — Run duration is never recorded</h3>
+<p><code>trackToolRunCompleted(run, durationMs?)</code> supports a <code>duration_seconds</code>
+parameter (<code>analytics.ts:158–163</code>) and <code>analytics.test.ts:156</code> covers it,
+but all three call sites omit it — lines 408, 670, 761. Capture a start timestamp alongside
+<code>trackToolRunStarted</code> and pass the elapsed time. Two lines, and it makes completed-run
+latency visible for the first time.</p>
+
+<h3 id="w4">W4 — <code>/hire-me</code> landing page</h3>
+<p>Six interactions stand between arrival and value: <strong>Add Job → choose mode → paste →
+submit → pass captcha → Analyze My Fit.</strong> Ahead of them sit ~120 words of operational
+detail — accepted formats, "Sorry, no <code>.pdf</code> inputs", and a paragraph about
+<code>.zip</code> packages and choosing an output folder after unzipping.</p>
+<ol>
+  <li><strong>Cut the intro to two sentences.</strong> Move the formats and <code>.zip</code>
+    explanation next to the download button where they become relevant, or into a collapsed
+    disclosure.</li>
+  <li><strong>Open the job input by default.</strong> <code>JobContextBar</code> initialises to
+    <code>barState = "collapsed-empty"</code>; make it <code>"expanded"</code> when no job is
+    stored. Removes a click and makes the primary action self-evident. The collapsed state stays
+    correct once loaded.</li>
+  <li><strong>Promote the primary action.</strong> "Add Job" is styled as a small secondary
+    button; the paste textarea should be the visual centre.</li>
+  <li><strong>Offer a zero-input path.</strong> The tool does nothing until a job posting is
+    supplied. A "Just chat about my experience" entry point — already supported by
+    <code>sendMessage</code> — lets a curious visitor get value with no input. This is a
+    <strong>behaviour change, not a fix</strong>, and the one item here that warrants a decision
+    rather than just implementation.</li>
+  <li><strong>Reconsider <code>MAX_FIT_QUESTIONS = 5</code>.</strong> Five sequential clarifying
+    questions is the in-flow equivalent of the six-click intro.</li>
+</ol>
+
+<h3 id="w5">W5 — Move the captcha off page load</h3>
+<p><code>ToolGate</code> currently wraps the whole chat panel
+(<code>hire-me/page.tsx:69</code>), so a reCAPTCHA v2 checkbox is visible before any value has
+been demonstrated.</p>
+<p>Add an <code>activateOn</code> prop to <code>ToolGate.tsx</code> so it renders children
+immediately and interposes the challenge only when a guarded action is first invoked;
+<code>/hire-me</code> then wraps the <em>generate</em> and <em>send</em> handlers rather than the
+panel.</p>
+<p>Server-side protection is unchanged — <code>/api/session/init</code> and
+<code>/api/captcha/verify</code> are untouched and no expensive call can precede verification.
+This changes only <em>when</em> the challenge appears, and the LLM cost surface does not
+widen.</p>
+<p>Keep reCAPTCHA <strong>v2</strong>: per <code>docs/SECURITY-comparison-report.md</code>, v3's
+score thresholds and low-score fallbacks are harder to get right, and explicit friction is a
+feature when gating expensive LLM calls. Expect a modest effect — this is first-impression
+hygiene, not a fix for a measured blockage.</p>
+
+<h2 id="deferred">3. Deferred — the model migration</h2>
+
+<div class="callout">
+  <span class="lbl">Deferred by decision, 2026-08-31 — external deadline 2026-10-20</span>
+  <p>Not started, not scheduled here. Recorded because it has a hard external date.</p>
+  <p><strong>Gemini 2.5 Flash, Flash-Lite and Pro endpoints are discontinued 2026-10-20.</strong>
+    Google notified <code>sam@samkirk.com</code> on 2026-07-29. <code>web/.env.local:10</code>
+    sets <code>VERTEX_AI_MODEL=gemini-2.5-flash</code>, consumed at <code>vertex-ai.ts:343</code>
+    and <code>:480</code>. All three <code>/hire-me</code> tools route through Vertex, so on that
+    date they stop working.</p>
+</div>
+
+<p><strong>Nothing in §2 depends on it and it needs no work today.</strong> What it will need
+when taken up:</p>
+<ul>
+  <li><strong>Re-measure, do not carry over.</strong> <code>INTERVIEW_THINKING_BUDGET = 256</code>
+    and <code>INTERVIEW_MAX_TOKENS = 3072</code> were fitted to <code>gemini-2.5-flash</code> by
+    measurement, and the career-history question landed within 15 tokens of the cap. Both numbers
+    are model-specific.</li>
+  <li><strong>Confirm <code>thinkingConfig</code> is honoured.</strong> It is not declared by
+    <code>@google-cloud/vertexai@1.10.0</code> and is cast through to the REST API. A model that
+    silently ignores it restores the truncation while appearing fixed.</li>
+  <li><strong>Confirm <code>billableOutputTokens()</code> still sums correctly.</strong> A model
+    reporting thinking tokens under a different field, or not at all, silently under-counts the
+    spend cap again.</li>
+</ul>
+<p>Method and measurements: <code>docs/interview-truncation-plan-2026-08-31.md</code>.</p>
+
+<h2 id="photofun">4. photo-fun — backlink and GA tag</h2>
+<p>photo-fun earns the only non-branded search impressions the domain has (~40 of 49), and those
+visitors land on a page with no route back to samkirk.com and no analytics at all.</p>
+
+<p>Verified state of <code>MrBesterTester/photo-fun5</code> (public, the active repo):</p>
+<ul>
+  <li><strong>No link to samkirk.com in any application source</strong> — the code-search hits
+    are all in <code>README.md</code>, <code>docs/</code>, and <code>do-work/</code>, none in
+    <code>App.tsx</code>, <code>components/</code>, or <code>index.html</code>.</li>
+  <li><strong>No analytics of any kind.</strong></li>
+  <li><code>index.html</code> has <code>&lt;title&gt;Photo Fun - Expert AI Editor&lt;/title&gt;</code>,
+    no meta description, no canonical.</li>
+</ul>
+
+<p>One PR, two changes:</p>
+<div class="wrap">
+<table>
+<thead><tr><th>Change</th><th>File</th><th>Detail</th></tr></thead>
+<tbody>
+<tr><td>Backlink</td><td><code>App.tsx</code></td><td>Persistent footer link in real <code>&lt;a href="https://samkirk.com"&gt;</code> markup — not a JS-only handler, so a crawler can follow it</td></tr>
+<tr><td>GA tag</td><td><code>index.html</code></td><td><code>gtag.js</code> for <code>G-QPGLH8V5MM</code>, as a second data stream on property 525472559</td></tr>
+</tbody>
+</table>
+</div>
+
+<p>The app is Vite + React 19 via an <code>esm.sh</code> importmap with Tailwind from CDN, so the
+snippet goes into <code>index.html</code> directly. No cross-domain config is needed:
+<code>samkirk.com</code> and <code>photo-fun.samkirk.com</code> share a registrable domain, so
+subdomain traffic reports into one property without a <code>linker</code>.</p>
+
+<p><strong>Prerequisite.</strong> The working copy is on the MacBook Pro. No file copying is
+needed — the GitHub remote is the transport. On that machine:</p>
+
+<pre><code>git -C &lt;path-to-photo-fun5&gt; status --short --branch</code></pre>
+
+<p>Clean and current → branch from <code>origin/main</code>. Unpushed commits →
+<code>git push origin main</code>. Uncommitted work → commit or push a WIP branch and name it.</p>
+
+<div class="callout">
+  <span class="lbl">Needs approval</span>
+  <p><strong>Requires explicit approval to push.</strong> The repo is public and is not an
+    agent/advisor project, so the no-remote rule does not apply — but pushing is
+    outward-facing.</p>
+</div>
+
+<p>Out of scope: repositioning photo-fun as a portfolio piece, and its title/meta/canonical
+indexing gaps. Those gaps are real (position 51.1) but are a separate change.</p>
+
+<h2 id="standing">5. Standing decisions</h2>
+<ul>
+  <li><strong>The "Book a Call" CTA stays on the home page</strong>, above the "Hiring Manager?"
+    section. It is used — 3 <code>contact_click</code> events from 3 users, all
+    <code>method: calendar</code> — and the booking flow now has E2E coverage including a live
+    booking lifecycle. The home page carries two conversion paths and both show real use; neither
+    is demoted for the other.</li>
+  <li><strong>reCAPTCHA stays at v2 checkbox</strong> (see W5).</li>
+  <li><strong>Acquisition work is not scheduled.</strong> With no query in striking distance, SEO
+    here is content creation over months, not metadata tuning. Conversion work is the tractable
+    half.</li>
+</ul>
+
+<h2 id="files">6. Files</h2>
+
+<h4><code>samkirk-v3</code></h4>
+<div class="wrap">
+<table>
+<thead><tr><th>File</th><th>Change</th></tr></thead>
+<tbody>
+<tr><td><code>web/src/lib/dance-menu-upload.ts</code></td><td><strong>W1</strong> — guard against extension-as-identity; content sanity check on <code>.txt</code></td></tr>
+<tr><td><code>web/src/hooks/useHireMe.ts</code></td><td><strong>W2</strong> failure event in the <code>answerFitQuestion</code> catch (~line 692); <strong>W3</strong> <code>durationMs</code> at lines 408, 670, 761</td></tr>
+<tr><td><code>web/src/app/hire-me/page.tsx</code></td><td><strong>W4</strong> cut intro copy, promote primary action, zero-input chat path; <strong>W5</strong> move <code>ToolGate</code> to action scope</td></tr>
+<tr><td><code>web/src/components/hire-me/JobContextBar.tsx</code></td><td><strong>W4</strong> default <code>barState</code> to <code>"expanded"</code></td></tr>
+<tr><td><code>web/src/components/ToolGate.tsx</code></td><td><strong>W5</strong> <code>activateOn</code> prop</td></tr>
+<tr><td><code>web/src/components/ReCaptcha.tsx</code></td><td><strong>W5</strong> preserve the E2E bypass through the refactor</td></tr>
+<tr><td><code>web/src/lib/analytics.test.ts</code></td><td><strong>W2</strong> regression case for the failure path</td></tr>
+<tr><td><code>web/src/components/ToolGate.test.tsx</code></td><td><strong>W5</strong> cases for deferred activation</td></tr>
+<tr><td><code>web/src/app/page.tsx</code></td><td><strong>No change</strong> — see §5</td></tr>
+<tr><td><code>web/src/lib/analytics.ts</code></td><td><strong>No new events</strong></td></tr>
+</tbody>
+</table>
+</div>
+
+<h4><code>MrBesterTester/photo-fun5</code></h4>
+<div class="wrap">
+<table>
+<thead><tr><th>File</th><th>Change</th></tr></thead>
+<tbody>
+<tr><td><code>App.tsx</code></td><td><strong>§4</strong> crawlable footer backlink</td></tr>
+<tr><td><code>index.html</code></td><td><strong>§4</strong> <code>gtag.js</code> for <code>G-QPGLH8V5MM</code></td></tr>
+</tbody>
+</table>
+</div>
+
+<p>Reuse rather than reinvent: <code>trackEvent</code> and <code>sanitizeParams</code> in
+<code>analytics.ts</code> already clamp to GA4's 100-char parameter limit and no-op safely when
+gtag is absent; <code>TrackedLink.tsx</code> already wraps <code>trackCtaClick</code> /
+<code>trackContactClick</code> / <code>trackArtifactDownload</code>.</p>
+
+<h2 id="verification">7. Verification</h2>
+
+<h4>W1 — dance menu</h4>
+<p>Read what is actually stored before changing code, then confirm the served file after
+fixing:</p>
+<pre><code>curl -s https://samkirk.com/api/dance-menu | python3 -m json.tool</code></pre>
+<div class="note">
+  <p>Vercel Bot Protection is set to <strong>Challenge</strong>, so a scripted fetch may get a
+  security checkpoint rather than the payload — verify in a real browser if so.
+  <code>route.test.ts</code> covers the API; add a case asserting the <code>.txt</code> served is
+  the menu.</p>
+</div>
+
+<h4>W2, W3, W4, W5</h4>
+<ul>
+  <li><code>cd web &amp;&amp; npm test</code> — Vitest.</li>
+  <li><code>cd web &amp;&amp; npm run test:e2e</code> — Playwright. <code>fit-tool.spec.ts</code>,
+    <code>resume-tool.spec.ts</code>, <code>interview-tool.spec.ts</code>, and
+    <code>download-buttons.spec.ts</code> drive <code>/hire-me</code> and are sensitive to both
+    the <code>barState</code> default (W4) and the gate change (W5).
+    <code>home-ctas.spec.ts</code> must stay green.
+    <ul>
+      <li>E2E bypasses the captcha via <code>NEXT_PUBLIC_E2E_TESTING=true</code> and the
+        <code>__E2E_TEST_CAPTCHA_TOKEN__</code> path in <code>ReCaptcha.tsx</code>. The W5
+        refactor must keep that working or the whole suite goes red.</li>
+      <li><code>playwright.config.ts</code> sets <code>reuseExistingServer: !CI</code>. A dev
+        server already running <strong>without</strong> the E2E flags gets reused with the
+        captcha bypass off — stop it and free port 3000 first.</li>
+    </ul>
+  </li>
+  <li><code>cd web &amp;&amp; npm run test:all</code> — master runner. Per CLAUDE.md, run it in
+    the background.</li>
+</ul>
+
+<h4>§4 — photo-fun</h4>
+<p>CI on <code>photo-fun5</code> must pass. After deploy, view source on
+<code>photo-fun.samkirk.com</code> and find the <code>&lt;a href&gt;</code> — a crawler must see
+it without executing JS. Confirm the GA tag fires via
+<code>google-analytics.com/g/collect</code>, then GA4 Realtime.</p>
+
+<h4>Measuring the effect</h4>
+<p>Re-measure after about a week, not immediately:</p>
+<pre><code>python3 .claude/skills/check-analytics/scripts/ga4.py funnel --days 7</code></pre>
+<div class="callout">
+  <span class="lbl">The success criterion</span>
+  <p>It is <strong>not</strong> the first-stage ratio — that denominator is mostly bots. It is
+    that <strong><code>tool_run_started</code> and <code>tool_run_completed</code> balance</strong>:
+    every started run should produce a completion or a failure. Only once the books balance is the
+    completion <em>rate</em> worth optimising, and only then is a non-zero download count a
+    meaningful target.</p>
+</div>
+<p>Ad blockers suppress GA4 for a meaningful share of technical visitors — treat absolute counts
+as a floor and trust ratios.</p>
+
+</body>
+</html>
