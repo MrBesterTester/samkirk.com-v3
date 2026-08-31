@@ -1,5 +1,7 @@
 import "server-only";
 
+import { lookupFallbackCommute } from "./commute-table";
+
 import { z } from "zod";
 import type { JobIngestionResult } from "./job-ingestion";
 
@@ -853,38 +855,9 @@ export function applyAnswerToExtracted(
  * In a real implementation, this would use a maps API.
  */
 export function estimateCommuteFromLocation(location: string): number | null {
-  const normalizedLocation = location.toLowerCase();
-
-  // Bay Area approximate commute times from Fremont, CA
-  const commuteEstimates: Array<{ pattern: RegExp; minutes: number }> = [
-    { pattern: /fremont/i, minutes: 10 },
-    { pattern: /newark|union\s*city/i, minutes: 15 },
-    { pattern: /milpitas|hayward/i, minutes: 20 },
-    { pattern: /san\s*jose|santa\s*clara|sunnyvale/i, minutes: 25 },
-    // Menlo Park is ~16 miles straight over the Dumbarton Bridge. It was
-    // grouped with Redwood City at 40 -- tied with Oakland, and worse than
-    // Palo Alto, which is farther along the same route. Corrected 2026-08-31.
-    { pattern: /menlo\s*park/i, minutes: 25 },
-    { pattern: /palo\s*alto|mountain\s*view|cupertino/i, minutes: 35 },
-    { pattern: /redwood\s*city/i, minutes: 40 },
-    { pattern: /san\s*mateo|foster\s*city/i, minutes: 45 },
-    { pattern: /oakland|berkeley|alameda/i, minutes: 40 },
-    // MUST precede the bare San Francisco pattern: /san\s*francisco/ also
-    // matches "South San Francisco", so this entry was unreachable and South
-    // SF scored 55 instead of 50. Fixed 2026-08-31.
-    { pattern: /south\s*san\s*francisco|daly\s*city/i, minutes: 50 },
-    { pattern: /san\s*francisco|sf\b/i, minutes: 55 },
-  ];
-
-  for (const { pattern, minutes } of commuteEstimates) {
-    if (pattern.test(normalizedLocation)) {
-      return minutes;
-    }
-  }
-
-  // If we can't estimate, return null (will need clarification or worst-case)
-  return null;
+  return lookupFallbackCommute(location);
 }
+
 
 /**
  * Set a pending question on the state.

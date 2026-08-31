@@ -1,4 +1,5 @@
 import { describe, it, expect } from "vitest";
+import { lookupFallbackCommute } from "./commute-table";
 import {
   // Constants
   MAX_FOLLOW_UPS,
@@ -816,35 +817,23 @@ describe("applyAnswerToExtracted", () => {
 // ============================================================================
 
 describe("estimateCommuteFromLocation", () => {
-  it("estimates short commute for Fremont", () => {
-    expect(estimateCommuteFromLocation("Fremont, CA")).toBe(10);
+  /**
+   * The table itself now lives in commute-table.ts and is covered by
+   * commute.test.ts. Duplicating its values here is what allowed Menlo Park to
+   * be recorded as 25 minutes in one file and 28 in another (2026-08-31), so
+   * this only checks that fit-flow delegates to the shared source.
+   */
+  it("delegates to the shared commute table", () => {
+    expect(estimateCommuteFromLocation("Menlo Park, CA")).toBe(
+      lookupFallbackCommute("Menlo Park, CA")
+    );
+    expect(estimateCommuteFromLocation("Pleasanton, CA")).toBe(
+      lookupFallbackCommute("Pleasanton, CA")
+    );
   });
 
-  it("estimates short commute for nearby cities", () => {
-    expect(estimateCommuteFromLocation("Newark, CA")).toBe(15);
-    expect(estimateCommuteFromLocation("Milpitas")).toBe(20);
-  });
-
-  it("estimates medium commute for South Bay", () => {
-    expect(estimateCommuteFromLocation("San Jose")).toBe(25);
-    expect(estimateCommuteFromLocation("Santa Clara, CA")).toBe(25);
-    expect(estimateCommuteFromLocation("Palo Alto")).toBe(35);
-  });
-
-  it("estimates longer commute for Peninsula/SF", () => {
-    expect(estimateCommuteFromLocation("San Mateo")).toBe(45);
-    expect(estimateCommuteFromLocation("San Francisco, CA")).toBe(55);
-  });
-
-  it("estimates commute for East Bay", () => {
-    expect(estimateCommuteFromLocation("Oakland")).toBe(40);
-    expect(estimateCommuteFromLocation("Berkeley, CA")).toBe(40);
-  });
-
-  it("returns null for unknown locations", () => {
+  it("returns null for somewhere outside the Bay Area", () => {
     expect(estimateCommuteFromLocation("Seattle, WA")).toBeNull();
-    expect(estimateCommuteFromLocation("New York")).toBeNull();
-    expect(estimateCommuteFromLocation("Unknown location")).toBeNull();
   });
 });
 

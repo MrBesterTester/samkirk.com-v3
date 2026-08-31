@@ -3,6 +3,7 @@ import "server-only";
 import { GoogleAuth } from "google-auth-library";
 import { getGcpCredentials } from "./gcp-credentials";
 import { getEnv } from "./env";
+import { lookupFallbackCommute } from "./commute-table";
 
 /**
  * Commute-time lookup from Sam's home to a prospective office.
@@ -24,6 +25,8 @@ import { getEnv } from "./env";
  * created, stored or rotated.
  */
 
+export { FALLBACK_COMMUTE_MINUTES, lookupFallbackCommute } from "./commute-table";
+
 /** Sam's home, the origin for every lookup. */
 export const COMMUTE_ORIGIN = "Fremont, CA" as const;
 
@@ -33,33 +36,6 @@ const ROUTES_ENDPOINT =
 /** Give up on a slow lookup rather than stall the fit flow. */
 export const ROUTES_TIMEOUT_MS = 5000;
 
-/**
- * Offline fallback, used only when the Routes API cannot be reached.
- *
- * Values are the real driving times measured on 2026-08-31, not the original
- * estimates. Order matters: the South San Francisco entry MUST precede the
- * bare San Francisco pattern, which would otherwise match it.
- */
-export const FALLBACK_COMMUTE_MINUTES: ReadonlyArray<{
-  pattern: RegExp;
-  minutes: number;
-}> = [
-  { pattern: /fremont/i, minutes: 10 },
-  { pattern: /newark|union\s*city/i, minutes: 14 },
-  { pattern: /milpitas|hayward/i, minutes: 18 },
-  { pattern: /pleasanton/i, minutes: 24 },
-  { pattern: /san\s*jose|santa\s*clara/i, minutes: 26 },
-  { pattern: /sunnyvale|dublin/i, minutes: 27 },
-  { pattern: /menlo\s*park/i, minutes: 28 },
-  { pattern: /palo\s*alto|redwood\s*city/i, minutes: 27 },
-  { pattern: /mountain\s*view|cupertino/i, minutes: 29 },
-  { pattern: /san\s*mateo|foster\s*city|san\s*ramon/i, minutes: 30 },
-  { pattern: /oakland|alameda|livermore/i, minutes: 31 },
-  { pattern: /emeryville/i, minutes: 35 },
-  { pattern: /south\s*san\s*francisco|daly\s*city/i, minutes: 39 },
-  { pattern: /berkeley/i, minutes: 40 },
-  { pattern: /san\s*francisco|sf\b/i, minutes: 47 },
-];
 
 export type CommuteSource = "routes_api" | "fallback_table" | "unknown";
 
@@ -80,18 +56,7 @@ export function resetCommuteCache(): void {
   cache.clear();
 }
 
-/**
- * Look the location up in the offline table.
- *
- * Exported so the fit flow keeps working with no network and so the table can
- * be tested independently of the API.
- */
-export function lookupFallbackCommute(location: string): number | null {
-  for (const { pattern, minutes } of FALLBACK_COMMUTE_MINUTES) {
-    if (pattern.test(location)) return minutes;
-  }
-  return null;
-}
+
 
 async function fetchAccessToken(): Promise<string | null> {
   try {
