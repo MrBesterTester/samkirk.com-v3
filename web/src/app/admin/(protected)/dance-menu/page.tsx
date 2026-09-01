@@ -2,6 +2,8 @@
 
 import { useState, useRef, useCallback } from "react";
 
+import { previewOf } from "@/lib/file-preview";
+
 type UploadState =
   | { status: "idle" }
   | { status: "uploading" }
@@ -11,6 +13,23 @@ type UploadState =
 interface SelectedFile {
   file: File;
   extension: string;
+  /** First meaningful line of the file, or "" when it cannot be previewed. */
+  preview: string;
+}
+
+/**
+ * Bytes read from the head of each file to build its preview. Enough to reach
+ * an HTML <title>, small enough that a 10MB upload is never read into memory.
+ */
+const PREVIEW_BYTES = 8192;
+
+async function readPreview(file: File, extension: string): Promise<string> {
+  if (extension === ".pdf") return "";
+  try {
+    return previewOf(await file.slice(0, PREVIEW_BYTES).text(), extension);
+  } catch {
+    return ""; // an unreadable file simply gets no preview
+  }
 }
 
 const REQUIRED_EXTENSIONS = [".txt", ".html"];
@@ -51,7 +70,7 @@ export default function AdminDanceMenuPage() {
     return REQUIRED_EXTENSIONS.filter((ext) => !selectedExts.includes(ext));
   }, [selectedFiles]);
 
-  const handleFilesSelect = useCallback((files: FileList | null) => {
+  const handleFilesSelect = useCallback(async (files: FileList | null) => {
     if (!files) return;
 
     setUploadState({ status: "idle" });
@@ -74,13 +93,22 @@ export default function AdminDanceMenuPage() {
         continue;
       }
 
+      // Preview the content so the wrong file is visible before it publishes.
+      // The upload renames by extension alone, so nothing downstream can tell
+      // a menu from a notes file.
+      const selected: SelectedFile = {
+        file,
+        extension: ext,
+        preview: await readPreview(file, ext),
+      };
+
       // Check for duplicate extension
       const existingIndex = newFiles.findIndex((f) => f.extension === ext);
       if (existingIndex !== -1) {
         // Replace existing file with same extension
-        newFiles[existingIndex] = { file, extension: ext };
+        newFiles[existingIndex] = selected;
       } else {
-        newFiles.push({ file, extension: ext });
+        newFiles.push(selected);
       }
     }
 
@@ -123,14 +151,14 @@ export default function AdminDanceMenuPage() {
       e.preventDefault();
       e.stopPropagation();
       setDragActive(false);
-      handleFilesSelect(e.dataTransfer.files);
+      void handleFilesSelect(e.dataTransfer.files);
     },
     [handleFilesSelect]
   );
 
   const handleInputChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      handleFilesSelect(e.target.files);
+      void handleFilesSelect(e.target.files);
       // Reset input to allow selecting the same file again
       if (fileInputRef.current) {
         fileInputRef.current.value = "";
@@ -370,6 +398,18 @@ export default function AdminDanceMenuPage() {
                       {formatFileSize(selected.file.size)} •{" "}
                       {getFormatDisplayName(selected.extension)}
                     </p>
+                    {selected.preview ? (
+                      <p
+                        className="mt-1 max-w-md truncate text-xs italic text-zinc-600 dark:text-zinc-300"
+                        title={selected.preview}
+                      >
+                        &ldquo;{selected.preview}&rdquo;
+                      </p>
+                    ) : (
+                      <p className="mt-1 text-xs text-zinc-400 dark:text-zinc-500">
+                        No preview available
+                      </p>
+                    )}
                   </div>
                 </div>
                 <button
