@@ -286,6 +286,39 @@ export function useHireMe(): UseHireMeReturn {
   // Track whether we already restored from storage (fire once on mount)
   const restoredRef = useRef(false);
 
+  /**
+   * Wall-clock start of each in-flight run, keyed by run type.
+   *
+   * A fit run spans more than one request — triggerFit, then any number of
+   * question round-trips — so the start cannot live inside a single call. A ref
+   * rather than state because nothing renders from it and it must not trigger
+   * an update mid-run.
+   */
+  const runStartedAt = useRef<Partial<Record<ToolRun, number>>>({});
+
+  /** Record the start of a run and emit `tool_run_started`. */
+  const markRunStarted = useCallback((run: ToolRun) => {
+    runStartedAt.current[run] = Date.now();
+    trackToolRunStarted(run);
+  }, []);
+
+  /**
+   * Emit `tool_run_completed` with how long the run took.
+   *
+   * For a fit run that asked questions this includes the time the visitor spent
+   * answering them — that wait is part of how long the run took *them*, which
+   * is the number worth having. Duration is omitted rather than guessed if no
+   * start was recorded.
+   */
+  const markRunCompleted = useCallback((run: ToolRun) => {
+    const startedAt = runStartedAt.current[run];
+    delete runStartedAt.current[run];
+    trackToolRunCompleted(
+      run,
+      startedAt === undefined ? undefined : Date.now() - startedAt,
+    );
+  }, []);
+
   // ------------------------------------------------------------------
   // Session storage restore
   // ------------------------------------------------------------------
@@ -405,7 +438,7 @@ export function useHireMe(): UseHireMeReturn {
         },
       };
 
-      trackToolRunCompleted("fit_report");
+      markRunCompleted("fit_report");
 
       setState((prev) => ({
         ...prev,
@@ -427,7 +460,7 @@ export function useHireMe(): UseHireMeReturn {
         isLoading: false,
       }));
     },
-    [addMessage],
+    [addMessage, markRunCompleted],
   );
 
   // ------------------------------------------------------------------
@@ -476,7 +509,7 @@ export function useHireMe(): UseHireMeReturn {
     if (!jobContext || !jobContext.loaded) return;
     if (fitFlow.active || resumeFlow.active) return;
 
-    trackToolRunStarted("fit_report");
+    markRunStarted("fit_report");
 
     setState((prev) => ({
       ...prev,
@@ -574,7 +607,7 @@ export function useHireMe(): UseHireMeReturn {
         },
       }));
     }
-  }, [state, addMessage, generateFitReport]);
+  }, [state, addMessage, generateFitReport, markRunStarted]);
 
   // ------------------------------------------------------------------
   // answerFitQuestion
@@ -667,7 +700,7 @@ export function useHireMe(): UseHireMeReturn {
             },
           };
 
-          trackToolRunCompleted("fit_report");
+          markRunCompleted("fit_report");
 
           setState((prev) => ({
             ...prev,
@@ -705,7 +738,7 @@ export function useHireMe(): UseHireMeReturn {
         }));
       }
     },
-    [state, addMessage],
+    [state, addMessage, markRunCompleted],
   );
 
   // ------------------------------------------------------------------
@@ -718,7 +751,7 @@ export function useHireMe(): UseHireMeReturn {
     if (!jobContext || !jobContext.loaded) return;
     if (fitFlow.active || resumeFlow.active) return;
 
-    trackToolRunStarted("resume");
+    markRunStarted("resume");
 
     setState((prev) => ({
       ...prev,
@@ -759,7 +792,7 @@ export function useHireMe(): UseHireMeReturn {
         skillsCount: result.resume.skillsCount,
       };
 
-      trackToolRunCompleted("resume");
+      markRunCompleted("resume");
 
       setState((prev) => ({
         ...prev,
@@ -792,7 +825,7 @@ export function useHireMe(): UseHireMeReturn {
         },
       }));
     }
-  }, [state, addMessage]);
+  }, [state, addMessage, markRunStarted, markRunCompleted]);
 
   // ------------------------------------------------------------------
   // sendMessage (interview / free chat)

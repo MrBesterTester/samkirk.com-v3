@@ -145,4 +145,147 @@ describe("useHireMe", () => {
       expect(gtagEvents(gtag, "tool_run_failed")).toHaveLength(0);
     });
   });
+
+  describe("run duration", () => {
+    /**
+     * The clock is pinned so elapsed time is exact rather than "however long
+     * the test took". Every run below starts at T0 and finishes at T0 + 7s.
+     */
+    const T0 = 1_700_000_000_000;
+
+    it("records how long a fit run took, across the question round-trip", async () => {
+      const now = vi.spyOn(Date, "now").mockReturnValue(T0);
+
+      const fetchMock = vi
+        .fn()
+        .mockResolvedValueOnce(fitStartQuestionResponse())
+        .mockResolvedValueOnce(
+          new Response(
+            JSON.stringify({
+              success: true,
+              status: "complete",
+              report: {
+                overallScore: "Well",
+                recommendation: "Strong fit.",
+                categories: [],
+                unknowns: [],
+              },
+            }),
+            { status: 200 },
+          ),
+        );
+      vi.stubGlobal("fetch", fetchMock);
+
+      const { result } = renderHook(() => useHireMe());
+
+      act(() => {
+        result.current.loadJob("paste", { text: "A job posting." });
+      });
+      await act(async () => {
+        await result.current.triggerFit();
+      });
+
+      now.mockReturnValue(T0 + 7_000);
+
+      await act(async () => {
+        await result.current.answerFitQuestion("q-1", "Up to 45 minutes.");
+      });
+
+      // The run is measured from triggerFit, so this spans the question the
+      // visitor answered — that wait is part of how long the run took them.
+      expect(gtagEvents(gtag, "tool_run_completed")[0][2]).toMatchObject({
+        run_type: "fit_report",
+        duration_seconds: 7,
+      });
+    });
+
+    it("records how long a fit run took when no questions are asked", async () => {
+      const now = vi.spyOn(Date, "now").mockReturnValue(T0);
+
+      const fetchMock = vi
+        .fn()
+        .mockResolvedValueOnce(
+          new Response(
+            JSON.stringify({
+              success: true,
+              submissionId: "sub-1",
+              status: "ready",
+              extracted: {
+                title: "Staff Engineer",
+                company: "Acme",
+                seniority: "staff",
+                locationType: "hybrid",
+              },
+            }),
+            { status: 200, headers: { "X-Fit-Flow-State": "flow-state-1" } },
+          ),
+        )
+        .mockImplementationOnce(async () => {
+          // The generate call is where the wall-clock actually goes.
+          now.mockReturnValue(T0 + 7_000);
+          return new Response(
+            JSON.stringify({
+              success: true,
+              report: {
+                overallScore: "Well",
+                recommendation: "Strong fit.",
+                categories: [],
+                unknowns: [],
+              },
+            }),
+            { status: 200 },
+          );
+        });
+      vi.stubGlobal("fetch", fetchMock);
+
+      const { result } = renderHook(() => useHireMe());
+
+      act(() => {
+        result.current.loadJob("paste", { text: "A job posting." });
+      });
+      await act(async () => {
+        await result.current.triggerFit();
+      });
+
+      expect(gtagEvents(gtag, "tool_run_completed")[0][2]).toMatchObject({
+        run_type: "fit_report",
+        duration_seconds: 7,
+      });
+    });
+
+    it("records how long a resume run took", async () => {
+      const now = vi.spyOn(Date, "now").mockReturnValue(T0);
+
+      const fetchMock = vi.fn().mockImplementationOnce(async () => {
+        now.mockReturnValue(T0 + 7_000);
+        return new Response(
+          JSON.stringify({
+            success: true,
+            submissionId: "sub-1",
+            resume: {
+              header: { name: "Sam Kirk", title: "Staff Engineer" },
+              summary: "Decades of test engineering.",
+              wordCount: 400,
+            },
+          }),
+          { status: 200 },
+        );
+      });
+      vi.stubGlobal("fetch", fetchMock);
+
+      const { result } = renderHook(() => useHireMe());
+
+      act(() => {
+        result.current.loadJob("paste", { text: "A job posting." });
+      });
+      await act(async () => {
+        await result.current.triggerResume();
+      });
+
+      expect(gtagEvents(gtag, "tool_run_completed")[0][2]).toMatchObject({
+        run_type: "resume",
+        duration_seconds: 7,
+      });
+    });
+  });
 });
