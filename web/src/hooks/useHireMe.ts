@@ -693,6 +693,7 @@ export function useHireMe(): UseHireMeReturn {
         const message =
           err instanceof Error ? err.message : "An unexpected error occurred";
         addMessage(makeErrorMessage(message));
+        trackToolRunFailed("fit_report", message);
         setState((prev) => ({
           ...prev,
           isLoading: false,
