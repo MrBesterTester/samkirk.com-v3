@@ -87,10 +87,10 @@ figcaption{font-size:.85rem; color:var(--muted); margin-top:9px}
     <li><a href="#status">Where things stand</a></li>
     <li><a href="#donow">Do now</a>
       <ul>
-        <li><a href="#w1">W1 — Dance menu serves the wrong .txt</a></li>
-        <li><a href="#w2">W2 — <code>answerFitQuestion</code> reports no failures</a></li>
-        <li><a href="#w3">W3 — Run duration never recorded</a></li>
-        <li><a href="#w4">W4 — <code>/hire-me</code> landing page</a></li>
+        <li><a href="#w1">W1 — <code>answerFitQuestion</code> reports no failures</a></li>
+        <li><a href="#w2">W2 — <code>/hire-me</code> landing page</a></li>
+        <li><a href="#w3">W3 — Dance menu: extension is treated as identity</a></li>
+        <li><a href="#w4">W4 — Run duration never recorded</a></li>
       </ul>
     </li>
     <li><a href="#deferred">Deferred — the model migration</a></li>
@@ -215,59 +215,31 @@ months-long content play, not a tuning exercise.</p>
 
 <h2 id="donow">2. Do now</h2>
 
-<p>Ordered. W1–W3 are small and need no approval; W4 is the only judgement call. <strong>The photo-fun work is tracked
-separately in <a href="#photofun">§4</a></strong> because it lives in a different repository
-and needs a push approval.</p>
+<p><strong>Listed in descending priority.</strong> W1 is three lines and unlocks the funnel's
+biggest unknown: of 11 runs started, 8 never reported an outcome. W2 has the highest ceiling but
+is the largest change and carries the one real decision. W3 is preventive — its symptom has
+cleared, but the weakness that produced it has not. W4 is genuine and informs nothing currently
+blocked.</p>
+
+<p><strong>Nothing on this list is a live user-facing defect any more.</strong></p>
+
+<p><strong>The photo-fun work is tracked separately in <a href="#photofun">§4</a></strong>
+because it lives in a different repository and needs a push approval — not because it ranks
+below this list.</p>
 
 <div class="wrap">
 <table>
 <thead><tr><th>#</th><th>Item</th><th>Type</th><th>Approval</th></tr></thead>
 <tbody>
-<tr><td><strong>W1</strong></td><td>Dance menu serves the wrong <code>.txt</code></td><td><span class="tag tag-bug">BUG</span></td><td>none</td></tr>
-<tr><td><strong>W2</strong></td><td><code>answerFitQuestion</code> reports no failures</td><td><span class="tag tag-bug">BUG</span></td><td>none</td></tr>
-<tr><td><strong>W3</strong></td><td>Run duration never recorded</td><td><span class="tag tag-gap">MEASUREMENT</span></td><td>none</td></tr>
-<tr><td><strong>W4</strong></td><td><code>/hire-me</code> landing page</td><td><span class="tag tag-gap">UX</span></td><td>judgement call on the new entry point</td></tr>
+<tr><td><strong>W1</strong></td><td><code>answerFitQuestion</code> reports no failures</td><td><span class="tag tag-bug">BUG</span></td><td>none</td></tr>
+<tr><td><strong>W2</strong></td><td><code>/hire-me</code> landing page</td><td><span class="tag tag-gap">UX</span></td><td>judgement call on the new entry point</td></tr>
+<tr><td><strong>W3</strong></td><td>Dance menu: extension treated as identity</td><td><span class="tag tag-gap">HARDENING</span></td><td>none</td></tr>
+<tr><td><strong>W4</strong></td><td>Run duration never recorded</td><td><span class="tag tag-gap">MEASUREMENT</span></td><td>none</td></tr>
 </tbody>
 </table>
 </div>
 
-<h3 id="w1">W1 — Dance menu serves the wrong .txt</h3>
-
-<p><strong>Symptom.</strong> Downloading the Plain Text format from <code>/dance-menu</code>
-yields the <em>notes</em>, not the menu.</p>
-
-<p><strong>Mechanism.</strong> The upload keys entirely on file extension. Every uploaded file
-is renamed to a standard name by extension — <code>STANDARD_FILENAMES[ext]</code> at
-<code>dance-menu-upload.ts:269</code>, where <code>.txt</code> maps to
-<code>sams-dance-menu.txt</code> (line 55). Content validation (lines 188–211) only checks the
-<code>%PDF</code> magic bytes for PDFs and UTF-8 decodability for everything else.
-<strong>Nothing checks that a <code>.txt</code> is the menu.</strong> Whatever <code>.txt</code>
-is in the bundle becomes the published plain-text menu, and <code>/api/dance-menu</code> then
-serves it under the "Plain Text" label (<code>route.ts:30</code>).</p>
-
-<p>Duplicate extensions <em>are</em> rejected (<code>DUPLICATE_EXTENSION</code>, line 242), so
-two <code>.txt</code> files cannot be uploaded together. The bundle's single <code>.txt</code>
-was the notes file.</p>
-
-<div class="callout">
-  <span class="lbl">Confirm before fixing</span>
-  <p>Read what is actually in the bucket at <code>sams-dance-menu.txt</code>. That determines
-    which fix applies:</p>
-  <ul>
-    <li><strong>Wrong file uploaded:</strong> re-upload the correct bundle, then add a guard so
-      it cannot recur silently — a content sanity check on <code>.txt</code>, or surfacing each
-      file's first line in the admin UI for confirmation before publish.</li>
-    <li><strong>Right file uploaded, wrong one served:</strong> the defect is in the storage or
-      listing path, and <code>.md</code> / <code>.html</code> / <code>.pdf</code> should be
-      checked for the same problem.</li>
-  </ul>
-</div>
-
-<p>Either way the underlying weakness is real and worth closing: <strong>extension is treated
-as identity.</strong> A file named <code>notes.txt</code> and a file named
-<code>menu.txt</code> are indistinguishable to this code.</p>
-
-<h3 id="w2">W2 — <code>answerFitQuestion</code> reports no failures</h3>
+<h3 id="w1">W1 — <code>answerFitQuestion</code> reports no failures</h3>
 <div class="wrap">
 <table>
 <thead><tr><th>Function</th><th>Fires <code>trackToolRunFailed</code>?</th></tr></thead>
@@ -282,14 +254,17 @@ as identity.</strong> A file named <code>notes.txt</code> and a file named
 error in the fit question round-trip is invisible. Three-line fix; add a regression case to
 <code>analytics.test.ts</code>.</p>
 
-<h3 id="w3">W3 — Run duration is never recorded</h3>
-<p><code>trackToolRunCompleted(run, durationMs?)</code> supports a <code>duration_seconds</code>
-parameter (<code>analytics.ts:158–163</code>) and <code>analytics.test.ts:156</code> covers it,
-but all three call sites omit it — lines 408, 670, 761. Capture a start timestamp alongside
-<code>trackToolRunStarted</code> and pass the elapsed time. Two lines, and it makes completed-run
-latency visible for the first time.</p>
+<div class="callout">
+  <span class="lbl">Comparable priority — <a href="#photofun">§4 photo-fun</a></span>
+  <p><strong><a href="#photofun">§4 — photo-fun</a> belongs at about this priority.</strong> It
+    sits outside the W-list only because it lives in another repository and needs a push
+    approval, not because it matters less. photo-fun draws the only non-branded search
+    impressions the domain has — roughly 40 of 49 — and every one of those visitors currently
+    lands on a dead end: no route back to samkirk.com, and no analytics recording that they came
+    at all. Ranked on value it would sit here, between W1 and W2.</p>
+</div>
 
-<h3 id="w4">W4 — <code>/hire-me</code> landing page</h3>
+<h3 id="w2">W2 — <code>/hire-me</code> landing page</h3>
 <p>Six interactions stand between arrival and value: <strong>Add Job → choose mode → paste →
 submit → pass captcha → Analyze My Fit.</strong> Ahead of them sit ~120 words of operational
 detail — accepted formats, "Sorry, no <code>.pdf</code> inputs", and a paragraph about
@@ -312,6 +287,50 @@ detail — accepted formats, "Sorry, no <code>.pdf</code> inputs", and a paragra
   <li><strong>Reconsider <code>MAX_FIT_QUESTIONS = 5</code>.</strong> Five sequential clarifying
     questions is the in-flow equivalent of the six-click intro.</li>
 </ol>
+
+<h3 id="w3">W3 — Dance menu: extension is treated as identity</h3>
+
+<div class="callout">
+  <span class="lbl">Status — symptom gone, weakness intact</span>
+  <p>The Plain Text download from <code>/dance-menu</code> was serving the <em>notes</em> instead
+    of the menu. It no longer does. <strong>No dance-menu code changed</strong> — the last change
+    to the upload logic predates the report, and the working tree is clean — so the stored file
+    changed, not the program. The wrong <code>.txt</code> was published; the right one now is.</p>
+  <p>That makes this preventive work rather than a live defect, which is why it sits below W1 and
+    W2 rather than at the top.</p>
+</div>
+
+<p><strong>Why it can recur.</strong> The upload keys entirely on file extension. Every uploaded
+file is renamed to a standard name by extension — <code>STANDARD_FILENAMES[ext]</code> at
+<code>dance-menu-upload.ts:269</code>, where <code>.txt</code> maps to
+<code>sams-dance-menu.txt</code> (line 55). Content validation (lines 188–211) only checks the
+<code>%PDF</code> magic bytes for PDFs and UTF-8 decodability for everything else.
+<strong>Nothing checks that a <code>.txt</code> is the menu.</strong> Whatever <code>.txt</code>
+is in the bundle becomes the published plain-text menu, and <code>/api/dance-menu</code> serves
+it under the "Plain Text" label (<code>route.ts:30</code>).</p>
+
+<p>A file named <code>notes.txt</code> and a file named <code>menu.txt</code> are
+indistinguishable to this code. The next mis-picked file publishes the same way — silently, with
+no error and nothing in the admin UI to show which file went where.</p>
+
+<p><strong>The fix.</strong> Make the wrong file visible before it publishes, rather than trying
+to validate menu-ness automatically:</p>
+<ul>
+  <li>Surface each uploaded file's first line (or first ~100 characters) in the admin UI for
+    confirmation before publish. Cheap, and it catches every variant of this mistake.</li>
+  <li>Optionally a content sanity check on <code>.txt</code>, but keep it advisory. A hard rule
+    about what a menu "looks like" will eventually reject a legitimate menu.</li>
+</ul>
+
+<p>Worth doing because <code>/dance-menu</code> is the most-navigated part of the site — 16 of 25
+nav clicks and 99s average dwell — so a wrong file there reaches the most engaged audience.</p>
+
+<h3 id="w4">W4 — Run duration is never recorded</h3>
+<p><code>trackToolRunCompleted(run, durationMs?)</code> supports a <code>duration_seconds</code>
+parameter (<code>analytics.ts:158–163</code>) and <code>analytics.test.ts:156</code> covers it,
+but all three call sites omit it — lines 408, 670, 761. Capture a start timestamp alongside
+<code>trackToolRunStarted</code> and pass the elapsed time. Two lines, and it makes completed-run
+latency visible for the first time.</p>
 
 <h2 id="deferred">3. Deferred — the model migration</h2>
 
@@ -429,11 +448,11 @@ indexing gaps. Those gaps are real (position 51.1) but are a separate change.</p
 <table>
 <thead><tr><th>File</th><th>Change</th></tr></thead>
 <tbody>
-<tr><td><code>web/src/lib/dance-menu-upload.ts</code></td><td><strong>W1</strong> — guard against extension-as-identity; content sanity check on <code>.txt</code></td></tr>
-<tr><td><code>web/src/hooks/useHireMe.ts</code></td><td><strong>W2</strong> failure event in the <code>answerFitQuestion</code> catch (~line 692); <strong>W3</strong> <code>durationMs</code> at lines 408, 670, 761</td></tr>
-<tr><td><code>web/src/app/hire-me/page.tsx</code></td><td><strong>W4</strong> cut intro copy, promote primary action, zero-input chat path</td></tr>
-<tr><td><code>web/src/components/hire-me/JobContextBar.tsx</code></td><td><strong>W4</strong> default <code>barState</code> to <code>"expanded"</code></td></tr>
-<tr><td><code>web/src/lib/analytics.test.ts</code></td><td><strong>W2</strong> regression case for the failure path</td></tr>
+<tr><td><code>web/src/lib/dance-menu-upload.ts</code></td><td><strong>W3</strong> — surface each file's first line in the admin UI before publish; optional advisory <code>.txt</code> check</td></tr>
+<tr><td><code>web/src/hooks/useHireMe.ts</code></td><td><strong>W1</strong> failure event in the <code>answerFitQuestion</code> catch (~line 692); <strong>W4</strong> <code>durationMs</code> at lines 408, 670, 761</td></tr>
+<tr><td><code>web/src/app/hire-me/page.tsx</code></td><td><strong>W2</strong> cut intro copy, promote primary action, zero-input chat path</td></tr>
+<tr><td><code>web/src/components/hire-me/JobContextBar.tsx</code></td><td><strong>W2</strong> default <code>barState</code> to <code>"expanded"</code></td></tr>
+<tr><td><code>web/src/lib/analytics.test.ts</code></td><td><strong>W1</strong> regression case for the failure path</td></tr>
 <tr><td><code>web/src/app/page.tsx</code></td><td><strong>No change</strong> — see §5</td></tr>
 <tr><td><code>web/src/lib/analytics.ts</code></td><td><strong>No new events</strong></td></tr>
 </tbody>
@@ -458,9 +477,9 @@ gtag is absent; <code>TrackedLink.tsx</code> already wraps <code>trackCtaClick</
 
 <h2 id="verification">7. Verification</h2>
 
-<h4>W1 — dance menu</h4>
-<p>Read what is actually stored before changing code, then confirm the served file after
-fixing:</p>
+<h4>W3 — dance menu</h4>
+<p>The symptom has cleared, so this is regression cover rather than diagnosis — confirm the
+served <code>.txt</code> is the menu, and keep it confirmed:</p>
 <pre><code>curl -s https://samkirk.com/api/dance-menu | python3 -m json.tool</code></pre>
 <div class="note">
   <p>Vercel Bot Protection is set to <strong>Challenge</strong>, so a scripted fetch may get a
@@ -469,13 +488,13 @@ fixing:</p>
   the menu.</p>
 </div>
 
-<h4>W2, W3, W4</h4>
+<h4>W1, W2, W4</h4>
 <ul>
   <li><code>cd web &amp;&amp; npm test</code> — Vitest.</li>
   <li><code>cd web &amp;&amp; npm run test:e2e</code> — Playwright. <code>fit-tool.spec.ts</code>,
     <code>resume-tool.spec.ts</code>, <code>interview-tool.spec.ts</code>, and
     <code>download-buttons.spec.ts</code> drive <code>/hire-me</code> and are sensitive to both
-    the <code>barState</code> default (W4). <code>home-ctas.spec.ts</code> must stay green.
+    the <code>barState</code> default (W2). <code>home-ctas.spec.ts</code> must stay green.
     <ul>
       <li><code>playwright.config.ts</code> sets <code>reuseExistingServer: !CI</code>. A dev
         server already running <strong>without</strong> the E2E flags gets reused with the

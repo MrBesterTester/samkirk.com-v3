@@ -10,10 +10,10 @@ This is a **plan** (how). Requirements live in [SPECIFICATION.md](SPECIFICATION.
 - [Originating request (verbatim)](#originating-request-verbatim)
 - [1. Where things stand](#1-where-things-stand)
 - [2. Do now](#2-do-now)
-  - [W1 — Dance menu serves the wrong .txt](#w1--dance-menu-serves-the-wrong-txt)
-  - [W2 — `answerFitQuestion` reports no failures](#w2--answerfitquestion-reports-no-failures)
-  - [W3 — Run duration is never recorded](#w3--run-duration-is-never-recorded)
-  - [W4 — `/hire-me` landing page](#w4--hire-me-landing-page)
+  - [W1 — `answerFitQuestion` reports no failures](#w1--answerfitquestion-reports-no-failures)
+  - [W2 — `/hire-me` landing page](#w2--hire-me-landing-page)
+  - [W3 — Dance menu: extension is treated as identity](#w3--dance-menu-extension-is-treated-as-identity)
+  - [W4 — Run duration is never recorded](#w4--run-duration-is-never-recorded)
 - [3. Deferred — the model migration](#3-deferred--the-model-migration)
 - [4. photo-fun — backlink and GA tag](#4-photo-fun--backlink-and-ga-tag)
 - [5. Standing decisions](#5-standing-decisions)
@@ -93,52 +93,25 @@ nothing cheap to optimise — acquisition is a months-long content play, not a t
 
 ## 2. Do now
 
-Ordered. W1–W3 are small and need no approval; W4 is the only judgement call. **The photo-fun work is tracked
-separately in [§4](#4-photo-fun--backlink-and-ga-tag)** because it lives in a different
-repository and needs a push approval.
+**Listed in descending priority.** W1 is three lines and unlocks the funnel's biggest unknown:
+of 11 runs started, 8 never reported an outcome. W2 has the highest ceiling but is the largest
+change and carries the one real decision. W3 is preventive — its symptom has cleared, but the
+weakness that produced it has not. W4 is genuine and informs nothing currently blocked.
+
+**Nothing on this list is a live user-facing defect any more.**
+
+**The photo-fun work is tracked separately in
+[§4](#4-photo-fun--backlink-and-ga-tag)** because it lives in a different repository and needs
+a push approval — not because it ranks below this list.
 
 | # | Item | Type | Approval |
 |---|---|---|---|
-| **W1** | Dance menu serves the wrong `.txt` | **Bug** | none |
-| **W2** | `answerFitQuestion` reports no failures | **Bug** | none |
-| **W3** | Run duration never recorded | Measurement | none |
-| **W4** | `/hire-me` landing page | UX | judgement call on the new entry point |
+| **W1** | `answerFitQuestion` reports no failures | **Bug** | none |
+| **W2** | `/hire-me` landing page | UX | judgement call on the new entry point |
+| **W3** | Dance menu: extension treated as identity | Hardening | none |
+| **W4** | Run duration never recorded | Measurement | none |
 
-### W1 — Dance menu serves the wrong .txt
-
-**Symptom.** Downloading the Plain Text format from `/dance-menu` yields the *notes*, not the
-menu.
-
-**Mechanism.** The upload keys entirely on file extension. Every uploaded file is renamed to a
-standard name by extension — `STANDARD_FILENAMES[ext]` at
-[dance-menu-upload.ts:269](../web/src/lib/dance-menu-upload.ts#L269), where `.txt` maps to
-`sams-dance-menu.txt` ([line 55](../web/src/lib/dance-menu-upload.ts#L55)). Content validation
-([lines 188–211](../web/src/lib/dance-menu-upload.ts#L188)) only checks the `%PDF` magic bytes
-for PDFs and UTF-8 decodability for everything else. **Nothing checks that a `.txt` is the
-menu.** Whatever `.txt` is in the bundle becomes the published plain-text menu, and
-`/api/dance-menu` then serves it under the "Plain Text" label
-([route.ts:30](../web/src/app/api/dance-menu/route.ts#L30)).
-
-Duplicate extensions *are* rejected (`DUPLICATE_EXTENSION`,
-[line 242](../web/src/lib/dance-menu-upload.ts#L242)), so two `.txt` files cannot be uploaded
-together. The bundle's single `.txt` was the notes file.
-
-**First step is to confirm which it is** — a bad upload or a code defect — by reading what is
-actually in the bucket at `sams-dance-menu.txt`. That determines the fix:
-
-- **If the wrong file was uploaded:** re-upload the correct bundle. Then add a guard so it
-  cannot recur silently — the cheapest is a content sanity check on `.txt` (does it look like
-  the menu?), or surfacing each file's first line in the admin UI for confirmation before
-  publish.
-- **If the right file was uploaded and the wrong one is being served:** the defect is in the
-  storage or listing path, and the `.md`/`.html`/`.pdf` formats should be checked for the
-  same problem.
-
-Either way the underlying weakness is real and worth closing: **extension is treated as
-identity.** A file named `notes.txt` and a file named `menu.txt` are indistinguishable to this
-code.
-
-### W2 — `answerFitQuestion` reports no failures
+### W1 — `answerFitQuestion` reports no failures
 
 | Function | Fires `trackToolRunFailed`? |
 |---|---|
@@ -150,16 +123,14 @@ The catch shows the user an error and resets state but emits no analytics event,
 error in the fit question round-trip is invisible. Three-line fix; add a regression case to
 `analytics.test.ts`.
 
-### W3 — Run duration is never recorded
+> **[§4 — photo-fun](#4-photo-fun--backlink-and-ga-tag) belongs at about this priority.** It
+> sits outside the W-list only because it lives in another repository and needs a push
+> approval, not because it matters less. photo-fun draws the only non-branded search
+> impressions the domain has — roughly 40 of 49 — and every one of those visitors currently
+> lands on a dead end: no route back to samkirk.com, and no analytics recording that they came
+> at all. Ranked on value it would sit here, between W1 and W2.
 
-`trackToolRunCompleted(run, durationMs?)` supports a `duration_seconds` parameter
-([analytics.ts:158–163](../web/src/lib/analytics.ts#L158)) and `analytics.test.ts:156` covers
-it, but all three call sites omit it — lines [408](../web/src/hooks/useHireMe.ts#L408),
-[670](../web/src/hooks/useHireMe.ts#L670), [761](../web/src/hooks/useHireMe.ts#L761). Capture
-a start timestamp alongside `trackToolRunStarted` and pass the elapsed time. Two lines, and it
-makes completed-run latency visible for the first time.
-
-### W4 — `/hire-me` landing page
+### W2 — `/hire-me` landing page
 
 Six interactions stand between arrival and value: **Add Job → choose mode → paste → submit →
 pass captcha → Analyze My Fit.** Ahead of them sit ~120 words of operational detail — accepted
@@ -179,6 +150,52 @@ output folder after unzipping.
    item here that warrants a decision rather than just implementation.
 5. **Reconsider `MAX_FIT_QUESTIONS = 5`.** Five sequential clarifying questions is the in-flow
    equivalent of the six-click intro.
+
+### W3 — Dance menu: extension is treated as identity
+
+**Status: the symptom is gone. The weakness is not.**
+
+The Plain Text download from `/dance-menu` was serving the *notes* instead of the menu. It no
+longer does. **No dance-menu code changed** — the last change to the upload logic predates the
+report, and the working tree is clean — so the stored file changed, not the program. The wrong
+`.txt` was published; the right one now is.
+
+That makes this preventive work rather than a live defect, which is why it sits below W1 and
+W2 rather than at the top.
+
+**Why it can recur.** The upload keys entirely on file extension. Every uploaded file is
+renamed to a standard name by extension — `STANDARD_FILENAMES[ext]` at
+[dance-menu-upload.ts:269](../web/src/lib/dance-menu-upload.ts#L269), where `.txt` maps to
+`sams-dance-menu.txt` ([line 55](../web/src/lib/dance-menu-upload.ts#L55)). Content validation
+([lines 188–211](../web/src/lib/dance-menu-upload.ts#L188)) only checks the `%PDF` magic bytes
+for PDFs and UTF-8 decodability for everything else. **Nothing checks that a `.txt` is the
+menu.** Whatever `.txt` is in the bundle becomes the published plain-text menu, and
+`/api/dance-menu` serves it under the "Plain Text" label
+([route.ts:30](../web/src/app/api/dance-menu/route.ts#L30)).
+
+A file named `notes.txt` and a file named `menu.txt` are indistinguishable to this code. The
+next mis-picked file publishes the same way — silently, with no error and nothing in the admin
+UI to show which file went where.
+
+**The fix.** Make the wrong file visible before it publishes, rather than trying to validate
+menu-ness automatically:
+
+- Surface each uploaded file's first line (or first ~100 characters) in the admin UI for
+  confirmation before publish. Cheap, and it catches every variant of this mistake.
+- Optionally a content sanity check on `.txt`, but keep it advisory. A hard rule about what a
+  menu "looks like" will eventually reject a legitimate menu.
+
+Worth doing because `/dance-menu` is the most-navigated part of the site — 16 of 25 nav clicks
+and 99s average dwell — so a wrong file there reaches the most engaged audience.
+
+### W4 — Run duration is never recorded
+
+`trackToolRunCompleted(run, durationMs?)` supports a `duration_seconds` parameter
+([analytics.ts:158–163](../web/src/lib/analytics.ts#L158)) and `analytics.test.ts:156` covers
+it, but all three call sites omit it — lines [408](../web/src/hooks/useHireMe.ts#L408),
+[670](../web/src/hooks/useHireMe.ts#L670), [761](../web/src/hooks/useHireMe.ts#L761). Capture
+a start timestamp alongside `trackToolRunStarted` and pass the elapsed time. Two lines, and it
+makes completed-run latency visible for the first time.
 
 ## 3. Deferred — the model migration
 
@@ -281,11 +298,11 @@ creation over months, not metadata tuning. Conversion work is the tractable half
 
 | File | Change |
 |---|---|
-| [web/src/lib/dance-menu-upload.ts](../web/src/lib/dance-menu-upload.ts) | **W1** — guard against extension-as-identity; content sanity check on `.txt` |
-| [web/src/hooks/useHireMe.ts](../web/src/hooks/useHireMe.ts) | **W2** failure event in the `answerFitQuestion` catch (~line 692); **W3** `durationMs` at lines 408, 670, 761 |
-| [web/src/app/hire-me/page.tsx](../web/src/app/hire-me/page.tsx) | **W4** cut intro copy, promote primary action, zero-input chat path |
-| [web/src/components/hire-me/JobContextBar.tsx](../web/src/components/hire-me/JobContextBar.tsx) | **W4** default `barState` to `"expanded"` |
-| `web/src/lib/analytics.test.ts` | **W2** regression case for the failure path |
+| [web/src/lib/dance-menu-upload.ts](../web/src/lib/dance-menu-upload.ts) | **W3** — surface each file's first line in the admin UI before publish; optional advisory `.txt` check |
+| [web/src/hooks/useHireMe.ts](../web/src/hooks/useHireMe.ts) | **W1** failure event in the `answerFitQuestion` catch (~line 692); **W4** `durationMs` at lines 408, 670, 761 |
+| [web/src/app/hire-me/page.tsx](../web/src/app/hire-me/page.tsx) | **W2** cut intro copy, promote primary action, zero-input chat path |
+| [web/src/components/hire-me/JobContextBar.tsx](../web/src/components/hire-me/JobContextBar.tsx) | **W2** default `barState` to `"expanded"` |
+| `web/src/lib/analytics.test.ts` | **W1** regression case for the failure path |
 | [web/src/app/page.tsx](../web/src/app/page.tsx) | **No change** — see §5 |
 | [web/src/lib/analytics.ts](../web/src/lib/analytics.ts) | **No new events** |
 
@@ -302,9 +319,10 @@ already wraps `trackCtaClick` / `trackContactClick` / `trackArtifactDownload`.
 
 ## 7. Verification
 
-### W1 — dance menu
+### W3 — dance menu
 
-Read what is actually stored before changing code, then confirm the served file after fixing:
+The symptom has cleared, so this is regression cover rather than diagnosis — confirm the
+served `.txt` is the menu, and keep it confirmed:
 
 ```bash
 curl -s https://samkirk.com/api/dance-menu | python3 -m json.tool
@@ -314,12 +332,12 @@ Vercel Bot Protection is set to **Challenge**, so a scripted fetch may get a sec
 checkpoint rather than the payload — verify in a real browser if so. `route.test.ts` covers
 the API; add a case asserting the `.txt` served is the menu.
 
-### W2, W3, W4
+### W1, W2, W4
 
 - `cd web && npm test` — Vitest.
 - `cd web && npm run test:e2e` — Playwright. `fit-tool.spec.ts`, `resume-tool.spec.ts`,
   `interview-tool.spec.ts`, and `download-buttons.spec.ts` drive `/hire-me` and are sensitive
-  to the `barState` default (W4). `home-ctas.spec.ts` must stay green.
+  to the `barState` default (W2). `home-ctas.spec.ts` must stay green.
   - `playwright.config.ts` sets `reuseExistingServer: !CI`. A dev server already running
     **without** the E2E flags gets reused with the captcha bypass off — stop it and free port
     3000 first.
