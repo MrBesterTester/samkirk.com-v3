@@ -6,33 +6,33 @@
 
 ---
 
-**Interviewer:** *(2:04:54 PM)*
+**Interviewer:** *(6:50:01 PM)*
 
 What programming languages do you know?
 
 ---
 
-**Sam Kirk:** *(2:04:54 PM)*
+**Sam Kirk:** *(6:50:01 PM)*
 
-I have a strong background in several programming languages, accumulated over my 45+ years in Silicon Valley. My primary languages include C, which I've used for over 15 years across many companies like Sun Microsystems, Teradyne, and IBM/ROLM. I also have extensive experience with Python, totaling over 8 years, from LTX-Credence to my current consulting work.
+I have a strong command of several programming languages, accumulated over my 45+ years in the industry. My primary languages include Python, which I've used for over 8 years across multiple roles, and C, with more than 15 years of experience. More recently, I've also gained over 4 years of experience with TypeScript and 1+ year with Rust, particularly in my current consulting work.
 
-More recently, I've gained significant experience with TypeScript, using it for over 4 years in my current consulting projects for full-stack web development. I've also worked with Rust for over a year on backend development. Additionally, I have C++ experience from my time at LTX-Credence and extensive assembly language experience (68K/8080) from earlier roles at Motorola, IBM/ROLM, and TRW/Vidar. Other languages I've used include Perl and Java for specific projects.
+Beyond these core languages, I have experience with C++ from my time at LTX-Credence, and I've worked extensively with assembly languages like 68K and 8080 during my early career at companies like Motorola, IBM/ROLM, and TRW/Vidar. I also have experience with Perl, Java (specifically with Flexstar), and MacPascal for specialized applications.
 
 ---
 
-**Interviewer:** *(2:04:54 PM)*
+**Interviewer:** *(6:50:01 PM)*
 
 Tell me about your most recent role.
 
 ---
 
-**Sam Kirk:** *(2:04:54 PM)*
+**Sam Kirk:** *(6:50:01 PM)*
 
-My most recent role is Chief Consulting Engineer at my own consultancy, Samuel A. Kirk Consulting, which I've been running since March 2022 in Fremont, CA. In this capacity, I focus on AI-assisted software development and applying generative AI to testing and documentation.
+Since March 2022, I have been working as the Chief Consulting Engineer at my own firm, Samuel A. Kirk Consulting. In this role, I've been deeply immersed in AI-assisted software development, specifically focusing on applying generative AI to testing and documentation.
 
-My work involves full-stack development using technologies like TypeScript, Python, and Rust, along with modern web frameworks such as React, Next.js, and Tailwind CSS. I leverage various AI tools, including Cursor, Claude Code, ChatGPT, and Perplexity.ai, for research, planning, technical due diligence, and code generation.
+My work involves full-stack development, leveraging tools like Cursor and Claude Code, and building products that address real-world problems. I've undertaken a self-study, graduate-level course in genAI application to software development, with a strong emphasis on creating up-to-date documentation that is readable by both chatbots and developers. I've also become proficient in prompt engineering, utilizing tools such as Perplexity.ai for research, Claude Code for development, and ChatGPT for general tasks and second opinions.
 
-A significant part of my recent work includes developing AI-powered tools for hiring managers, such as "How Do I Fit?", a "Custom Resume Generator," and "Interview Me NOW," all built with Vertex AI. I also created a personal portfolio website, samkirk.com, and an AI-powered photo transformation app called "Photo Fun." This role has allowed me to deepen my expertise in applying cutting-edge AI techniques to solve real-world problems in software development and testing.
+A significant part of my recent work includes developing my personal portfolio website, samkirk.com, which features AI-powered tools for hiring managers like "How Do I Fit?", "Custom Resume Generator," and "Interview Me NOW." I've also built an AI-powered photo transformation app called "Photo Fun" and an interactive educational demo for "Tensor Logic" with a Rust/Axum backend. My technology stack in this role primarily includes TypeScript, Python, Rust, React, Next.js, and various Google Cloud AI services like Vertex AI and Google Gemini.
 
 ---
 
