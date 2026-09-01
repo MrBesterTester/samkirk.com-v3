@@ -143,8 +143,11 @@ test.describe("Home page — Interview me NOW", () => {
 
     // Stops here on purpose: the controls being present and enabled is the
     // contract this button owes. Sending a message would spend an LLM call.
-    await expect(page.getByRole("button", { name: "Add Job" })).toBeVisible();
-    await expect(page.getByRole("textbox").first()).toBeEnabled();
+    const jobInput = page.locator(
+      'textarea[placeholder*="Paste the full job posting"]'
+    );
+    await expect(jobInput).toBeVisible();
+    await expect(jobInput).toBeEnabled();
   });
 
   test("emits the cta_click event with a stable id", async ({ page }) => {

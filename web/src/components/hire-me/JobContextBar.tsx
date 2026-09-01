@@ -54,7 +54,10 @@ export function JobContextBar({
   jobTitle,
   jobCompany,
 }: JobContextBarProps) {
-  const [barState, setBarState] = useState<BarState>("collapsed-empty");
+  // Open by default. A first-time visitor should meet the input itself, not a
+  // button that reveals it. The mount effect below collapses this to
+  // "collapsed-loaded" when a job is already in sessionStorage.
+  const [barState, setBarState] = useState<BarState>("expanded");
   const [inputMode, setInputMode] = useState<InputMode>("paste");
   const [pasteText, setPasteText] = useState("");
   const [urlText, setUrlText] = useState("");

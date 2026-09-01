@@ -28,30 +28,29 @@ export default function HireMePage() {
         Interview me NOW
       </h1>
       <p className="mt-4 text-lg text-text-secondary">
-        These tools help you, the hiring manager, quickly evaluate whether I am
-        a good fit for your job opportunity:
+        Paste a job posting below and I&apos;ll analyse how well I fit it, or
+        generate a resume tailored to it. No posting to hand? Just ask me
+        anything about my experience in the chat.
       </p>
-      <ul className="mt-3 ml-6 space-y-2 list-disc text-lg text-text-secondary">
-        <li>Evaluate my fitness: strong, average and weak aspects</li>
-        <li>Generate a tailored resume</li>
-      </ul>
-      <p className="mt-2 text-lg text-text-secondary">
-        Or just have a casual chat about my professional experience.
-      </p>
-      <ul className="mt-3 ml-6 space-y-2 list-disc text-lg text-text-secondary">
-        <li>
-          File inputs can be in .docx, .html, .txt, or .md format.
-          <ul className="mt-1 ml-5 space-y-1 list-[circle]">
-            <li>You can also paste or link in your job description. (Sorry, no .pdf inputs.)</li>
-          </ul>
-        </li>
-        <li>
-          Downloads are a complete .zip package with both inputs and outputs of
-          your session for traceability. Typically, you&apos;ll select the output
-          folder after it&apos;s unzipped and choose your file in the formats of .txt,
-          .md and .html.
-        </li>
-      </ul>
+
+      {/* The operational detail people only need once they are actually using
+          the tool. Kept available, but out of the way of the first action. */}
+      <details className="mt-4 text-sm text-text-secondary">
+        <summary className="cursor-pointer font-medium text-text-primary hover:text-accent">
+          Accepted formats and what you get back
+        </summary>
+        <ul className="mt-3 ml-6 space-y-2 list-disc">
+          <li>
+            Paste the text, link to the posting, or upload a file in .docx,
+            .html, .txt, or .md format. (Sorry, no .pdf inputs.)
+          </li>
+          <li>
+            Downloads are a complete .zip package containing both the inputs and
+            the outputs of your session, for traceability. Unzip it and open the
+            output folder to find your file in .txt, .md and .html.
+          </li>
+        </ul>
+      </details>
 
       {/* Job Context Bar — outside ToolGate */}
       <div className="mt-8">

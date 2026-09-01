@@ -58,8 +58,6 @@ async function loadJobViaPaste(page: Page, text: string) {
     timeout: 15000,
   });
 
-  await page.getByRole("button", { name: "Add Job" }).click();
-
   const textarea = page.locator(
     'textarea[placeholder*="Paste the full job posting"]'
   );

@@ -13,7 +13,6 @@ import { verifyZipContents } from "./helpers/zip-verify";
  *
  * The unified /hire-me page combines all three tools (fit, resume, interview)
  * into a single chat-based interface. The flow is:
- * 1. Click "Add Job" to expand the JobContextBar
  * 2. Enter job posting text (paste/URL/file)
  * 3. Click "Load Job"
  * 4. Click "Analyze My Fit" preset chip
@@ -67,9 +66,6 @@ async function loadJobViaPaste(page: import("@playwright/test").Page, text: stri
     timeout: 15000,
   });
 
-  // Click "Add Job" to expand the JobContextBar
-  await page.getByRole("button", { name: "Add Job" }).click();
-
   // The paste textarea should now be visible
   const textarea = page.locator('textarea[placeholder*="Paste the full job posting"]');
   await expect(textarea).toBeVisible({ timeout: 5000 });
@@ -97,9 +93,6 @@ async function loadJobViaUrl(page: import("@playwright/test").Page, url: string)
   await expect(page.getByText(/I'm here to answer questions/i)).toBeVisible({
     timeout: 15000,
   });
-
-  // Click "Add Job" to expand the JobContextBar
-  await page.getByRole("button", { name: "Add Job" }).click();
 
   // Switch to URL mode tab
   await page.getByRole("button", { name: "Enter URL" }).click();
@@ -129,9 +122,6 @@ async function loadJobViaFile(page: import("@playwright/test").Page, filePath: s
   await expect(page.getByText(/I'm here to answer questions/i)).toBeVisible({
     timeout: 15000,
   });
-
-  // Click "Add Job" to expand the JobContextBar
-  await page.getByRole("button", { name: "Add Job" }).click();
 
   // Switch to file upload mode tab
   await page.getByRole("button", { name: "Upload File" }).click();
@@ -425,9 +415,6 @@ test.describe("Fit Tool Happy Path", () => {
       timeout: 15000,
     });
 
-    // Click "Add Job" to expand
-    await page.getByRole("button", { name: "Add Job" }).click();
-
     // Verify all three mode tabs are visible
     await expect(page.getByRole("button", { name: "Paste Text" })).toBeVisible();
     await expect(page.getByRole("button", { name: "Enter URL" })).toBeVisible();
@@ -441,9 +428,7 @@ test.describe("Fit Tool Happy Path", () => {
     });
 
     // Expand job bar
-    await page.getByRole("button", { name: "Add Job" }).click();
-
-    // Switch to URL mode
+      // Switch to URL mode
     await page.getByRole("button", { name: "Enter URL" }).click();
 
     // Verify URL input is visible
@@ -457,9 +442,7 @@ test.describe("Fit Tool Happy Path", () => {
     });
 
     // Expand job bar
-    await page.getByRole("button", { name: "Add Job" }).click();
-
-    // The Load Job button should be disabled when textarea is empty
+      // The Load Job button should be disabled when textarea is empty
     const loadButton = page.getByRole("button", { name: "Load Job" });
     await expect(loadButton).toBeDisabled();
 

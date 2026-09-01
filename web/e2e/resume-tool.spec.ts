@@ -13,7 +13,6 @@ import { verifyZipContents } from "./helpers/zip-verify";
  *
  * The unified /hire-me page combines all three tools (fit, resume, interview)
  * into a single chat-based interface. The flow is:
- * 1. Click "Add Job" to expand the JobContextBar
  * 2. Enter job posting text (paste/URL/file)
  * 3. Click "Load Job"
  * 4. Click "Generate Resume" preset chip
@@ -63,9 +62,6 @@ async function loadJobViaPaste(page: import("@playwright/test").Page, text: stri
     timeout: 15000,
   });
 
-  // Expand JobContextBar
-  await page.getByRole("button", { name: "Add Job" }).click();
-
   // Fill in the job posting text
   const textarea = page.locator('textarea[placeholder*="Paste the full job posting"]');
   await expect(textarea).toBeVisible({ timeout: 5000 });
@@ -89,7 +85,6 @@ async function loadJobViaUrl(page: import("@playwright/test").Page, url: string)
     timeout: 15000,
   });
 
-  await page.getByRole("button", { name: "Add Job" }).click();
   await page.getByRole("button", { name: "Enter URL" }).click();
 
   const urlInput = page.locator('input[type="url"]');
@@ -112,7 +107,6 @@ async function loadJobViaFile(page: import("@playwright/test").Page, filePath: s
     timeout: 15000,
   });
 
-  await page.getByRole("button", { name: "Add Job" }).click();
   await page.getByRole("button", { name: "Upload File" }).click();
 
   const fileInput = page.locator('input[type="file"]');
@@ -232,9 +226,7 @@ test.describe("Resume Tool Happy Path", () => {
       timeout: 15000,
     });
 
-    await page.getByRole("button", { name: "Add Job" }).click();
-
-    // Switch to URL mode
+      // Switch to URL mode
     await page.getByRole("button", { name: "Enter URL" }).click();
 
     // Verify URL input is visible
@@ -247,9 +239,7 @@ test.describe("Resume Tool Happy Path", () => {
       timeout: 15000,
     });
 
-    await page.getByRole("button", { name: "Add Job" }).click();
-
-    // Load Job should be disabled when empty
+      // Load Job should be disabled when empty
     const loadButton = page.getByRole("button", { name: "Load Job" });
     await expect(loadButton).toBeDisabled();
 

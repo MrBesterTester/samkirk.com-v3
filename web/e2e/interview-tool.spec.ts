@@ -31,7 +31,7 @@ test.describe("Interview Tool - UI", () => {
 
     // Description text
     await expect(
-      page.getByText(/help you, the hiring manager, quickly evaluate/i)
+      page.getByText(/Paste a job posting below/i)
     ).toBeVisible();
   });
 
@@ -62,13 +62,15 @@ test.describe("Interview Tool - UI", () => {
     ).toBeVisible();
   });
 
-  test("displays Add Job button for job context", async ({ page }) => {
+  test("opens the job input without a preliminary click", async ({ page }) => {
     await expect(
       page.getByText(/I'm here to answer questions/i)
     ).toBeVisible({ timeout: 15000 });
 
-    // The "Add Job" button should be visible in the JobContextBar
-    await expect(page.getByRole("button", { name: "Add Job" })).toBeVisible();
+    // The job input is open on arrival — no click needed to reach it
+    await expect(
+      page.locator('textarea[placeholder*="Paste the full job posting"]')
+    ).toBeVisible();
   });
 });
 

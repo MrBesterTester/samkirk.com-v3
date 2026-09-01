@@ -49,12 +49,14 @@ test.describe("Public Pages - Render Correctly", () => {
     // Should show the unified "Interview me NOW" heading
     await expect(page.getByRole("heading", { name: "Interview me NOW" })).toBeVisible();
 
-    // Should have the "Add Job" button for job context
-    await expect(page.getByRole("button", { name: "Add Job" })).toBeVisible();
+    // The job input is open on arrival — no click needed to reach it
+    await expect(
+      page.locator('textarea[placeholder*="Paste the full job posting"]')
+    ).toBeVisible();
 
     // Description text should be visible
     await expect(
-      page.getByText(/help you, the hiring manager, quickly evaluate/i)
+      page.getByText(/Paste a job posting below/i)
     ).toBeVisible();
   });
 
