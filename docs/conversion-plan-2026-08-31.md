@@ -1,7 +1,7 @@
 # samkirk.com — Status and Work Outstanding
 
-*Created: 2026-07-29 PST · Revised: 2026-08-31 PST*
-*Status: current. Everything below is either the state of the site today or work still to do.*
+*Created: 2026-07-29 PST · Revised: 2026-09-02 PST*
+*Status: current. W1–W4 shipped; W5 is done but uncommitted and undeployed.*
 
 This is a **plan** (how). Requirements live in [SPECIFICATION.md](SPECIFICATION.md).
 
@@ -10,6 +10,7 @@ This is a **plan** (how). Requirements live in [SPECIFICATION.md](SPECIFICATION.
 - [Originating request (verbatim)](#originating-request-verbatim)
 - [1. Where things stand](#1-where-things-stand)
 - [2. Do now](#2-do-now)
+  - [W5 — GA4 tag loaded outside production](#w5--ga4-tag-loaded-outside-production)
   - [W1 — `answerFitQuestion` reports no failures](#w1--answerfitquestion-reports-no-failures)
   - [W2 — `/hire-me` landing page](#w2--hire-me-landing-page)
   - [W3 — Dance menu: extension is treated as identity](#w3--dance-menu-extension-is-treated-as-identity)
@@ -28,55 +29,84 @@ This is a **plan** (how). Requirements live in [SPECIFICATION.md](SPECIFICATION.
 
 ## 1. Where things stand
 
-### Traffic — GA4, 2026-08-03 → 2026-08-31
+### The numbers were measuring us
+
+Until 2026-09-02 the GA4 tag loaded on **every** environment — `layout.tsx` gated only on the
+measurement ID being set, which it always is. So every `npm run dev` page load and every
+Playwright run reported into the production property. Playwright opens a fresh browser context
+per test, which GA4 counts as a brand-new user.
+
+Split by hostname for 2026-08-05 → 2026-09-02:
+
+| Hostname | Users | Sessions | Views |
+|---|---|---|---|
+| **localhost** | **297** | 300 | 337 |
+| samkirk.com | 46 | 74 | 130 |
+| Vercel preview URL | 4 | 4 | 7 |
+
+**310 of 347 users arrived on a single day, 2026-08-31** — the day the E2E suite was run
+repeatedly. The page mix confirms it: 36 views of a 404 page (`full-app.spec.ts` has 404
+tests), plus `/admin/login`, `/dance-menu/admin`, `/hire-me/fit`, `/hire-me/resume`. That is
+the test inventory, not a visitor's browsing.
+
+This also corrects an earlier reading in this plan. The Fremont cluster was attributed to
+datacenter egress, with the argument that it could not be Sam because it showed many users
+with one session each rather than one user with many. That reasoning was wrong — an E2E suite
+produces exactly that signature. The city × hostname split is unambiguous: **Fremont /
+localhost, 297 users, 300 sessions.** It was this machine.
+
+Google's emailed report for Aug 6 – Sep 2 ("347 active users, ▲80.73%") is therefore an
+artifact of our own testing, not growth.
+
+### Real traffic — production only, 2026-08-05 → 2026-09-02
 
 | Metric | Value |
 |---|---|
-| Active users | 99 |
-| Sessions | 120 |
-| Page views | 160 |
-| Engagement rate | 30.0% |
-| Avg session duration | 96s |
+| Active users | **46** |
+| Sessions | 74 |
+| Page views | 130 |
+| Engagement rate | **59.5%** |
 
-Sources: `(direct)` 102 sessions · `(not set)` 26 · YouTube referral 4 · **google/organic 3** ·
-**linkedin.com referral 3** · **bing/organic 1**. Organic search and LinkedIn are new but tiny.
+| Page | Views | Users |
+|---|---|---|
+| `/` | 47 | 23 |
+| `/dance-menu` | 39 | 9 |
+| `/hire-me` | **7** | **7** |
+| `/song-dedication` | 6 | 3 |
 
-**A large share of the denominator is not human.** Direct traffic geolocates heavily to
-Fremont with a ~1:1 user-to-session ratio — the signature of datacenter egress, not returning
-readers (Fremont is a major colocation hub). GA4 exposes no IP or ASN, so this is inferred
-from geography, the 1:1 ratio, and engagement together. Treat visitor counts as an upper
-bound and trust stage-to-stage ratios over absolutes.
+Sources: `(direct)` 62 sessions · google/organic 6 · YouTube referral 4 · bing/organic 1 ·
+linkedin.com referral 1.
 
-### The `/hire-me` funnel
+The engagement rate is roughly triple what the blended number showed — real visitors engage
+far better than the property has been reporting.
 
-| Stage | Users |
-|---|---|
-| Visited `/hire-me` | 38 |
-| Loaded a job description | 10 |
-| Started a generation run | 11 |
-| Run completed | 3 |
-| Downloaded the .zip | **0** |
+### The `/hire-me` funnel — production only
 
-`/hire-me` holds attention — **161s average** across 38 views. Downloads remain at zero, and
-`tool_download` fires at the *top* of `download()` before the fetch, so that zero is click
-intent, not delivery failure: nobody has clicked.
+| Event | Production | localhost |
+|---|---|---|
+| `tool_job_loaded` | **0** | 62 |
+| `tool_run_started` | **0** | 74 |
+| `tool_run_completed` | **0** | 20 |
+| `tool_chat_message` | **0** | 53 |
+| `tool_download` | **0** | 0 |
+| `contact_click` | **0** | 9 |
+| `cta_click` | 4 (3 users) | 28 |
+| `nav_click` | 33 (7 users) | 0 |
 
-**Anomaly:** 11 users started a run but only 10 loaded a job description. More runs than jobs
-should not be possible. Either the `sessionStorage` restore path in `JobContextBar` bypasses
-`trackJobLoaded`, or a run can start without a job. Unresolved.
+**No real visitor has ever used the /hire-me tool.** Every generation run in every earlier
+version of this document — the 11 started, the 3 completed, the 8 that went dark — was
+localhost. `/hire-me` has had 7 production views at 23s.
 
-### Engagement
-
-`cta_click` 13 events / 12 users — 12 `home_interview_me_now`, 1 `home_explorations`.
-`nav_click` 25 / 7 users, dominated by Dance Menu (16). `contact_click` 3 / 3 users, **all
-`method: calendar`** — the 90-day total is also 3, so all are recent.
+That does not make W1–W4 wrong: the code defects they fixed were real, found by reading code
+rather than by reading these numbers. It does mean the funnel cannot yet be used to judge
+whether the fixes helped, because there is no traffic in it.
 
 ### Search — Search Console, 2026-08-02 → 2026-08-29
 
 49 impressions, 1 click (on `/explorations`, 20% CTR). Homepage 57 impressions at position
 18.1. `photo-fun.samkirk.com` 40 impressions at position **51.1**. Query mix is name variants
-plus photo-fun variants. **No query anywhere in the 5–20 striking-distance band**, so there is
-nothing cheap to optimise — acquisition is a months-long content play, not a tuning exercise.
+plus photo-fun variants. **No query anywhere in the 5–20 striking-distance band.** Search
+Console is unaffected by the tag problem — it measures Google's index, not our page loads.
 
 ### What is working
 
@@ -90,26 +120,50 @@ nothing cheap to optimise — acquisition is a months-long content play, not a t
   five tool routes. Every user who loaded a job also started a run.
 - **Both home-page conversion buttons are covered by E2E**, including a live booking
   lifecycle, in `web/e2e/home-ctas.spec.ts`.
+- **W1–W4 shipped 2026-09-02** (`653f244`): fit-answer failures are reported, the job input
+  opens on arrival with a two-sentence intro, the dance-menu upload previews file contents
+  before publishing, and run duration is recorded.
 
 ## 2. Do now
 
-**Listed in descending priority.** W1 is three lines and unlocks the funnel's biggest unknown:
-of 11 runs started, 8 never reported an outcome. W2 has the highest ceiling but is the largest
-change and carries the one real decision. W3 is preventive — its symptom has cleared, but the
-weakness that produced it has not. W4 is genuine and informs nothing currently blocked.
+**W1–W4 are done and shipped** (`653f244`, 2026-09-02). They are kept below as the record of
+what changed and why; none needs further work.
 
-**Nothing on this list is a live user-facing defect any more.**
+**W5 is new and is the only open item in this repository.** It is not on the site — it is the
+reason none of the numbers above could be trusted.
 
 **The photo-fun work is tracked separately in
 [§4](#4-photo-fun--backlink-and-ga-tag)** because it lives in a different repository and needs
 a push approval — not because it ranks below this list.
 
-| # | Item | Type | Approval |
+| # | Item | Type | Status |
 |---|---|---|---|
-| **W1** | `answerFitQuestion` reports no failures | **Bug** | none |
-| **W2** | `/hire-me` landing page | UX | judgement call on the new entry point |
-| **W3** | Dance menu: extension treated as identity | Hardening | none |
-| **W4** | Run duration never recorded | Measurement | none |
+| **W5** | GA4 tag loads outside production | **Bug** | **done, uncommitted — not deployed** |
+| W1 | `answerFitQuestion` reports no failures | Bug | shipped `653f244` |
+| W2 | `/hire-me` landing page | UX | shipped `653f244` |
+| W3 | Dance menu: extension treated as identity | Hardening | shipped `653f244` |
+| W4 | Run duration never recorded | Measurement | shipped `653f244` |
+
+### W5 — GA4 tag loaded outside production
+
+`layout.tsx` gated the gtag snippet only on the measurement ID being configured, which it
+always is. Development and preview traffic therefore reported into the production property —
+86% of the last 28 days' "users" (§1).
+
+**The fix.** A pure `shouldLoadAnalytics()` in
+[analytics-gate.ts](../web/src/lib/analytics-gate.ts), used by `layout.tsx`. It loads the tag
+only when a real measurement ID is set **and** `VERCEL_ENV === "production"` **and** the E2E
+flag is absent. Six unit tests cover the matrix; verified in a live browser that on localhost
+`window.gtag` is undefined, `dataLayer` is absent, and no tag-manager script is requested.
+
+`e2e/home-ctas.spec.ts` needed its GA harness reworked: it previously read `dataLayer` because
+the real snippet replaced any stub it installed. With the tag gated off, `trackEvent` no-ops,
+so the harness now installs its own `gtag` stub — which it could not do before. It still
+pushes into `dataLayer`, so it keeps working if pointed at a build where the real tag loads.
+
+**Known residue.** The CI `smoke-test` job runs against the production deployment, so its page
+loads still register. That is a handful per deploy rather than hundreds, and distinguishing it
+would mean threading the bypass secret into the gate. Recorded, not fixed.
 
 ### W1 — `answerFitQuestion` reports no failures
 
@@ -263,10 +317,16 @@ indexing gaps. Those gaps are real (position 51.1) but are a separate change.
 
 ## 5. Standing decisions
 
-**The "Book a Call" CTA stays on the home page**, above the "Hiring Manager?" section. It is
-used — 3 `contact_click` events from 3 users, all `method: calendar` — and the booking flow
-now has E2E coverage including a live booking lifecycle. The home page carries two conversion
-paths and both show real use; neither is demoted for the other.
+**The "Book a Call" CTA stays on the home page**, above the "Hiring Manager?" section. The
+decision stands on the work invested in it and the E2E coverage it now carries, including a
+live booking lifecycle.
+
+**The click evidence that was cited for it does not survive §1.** All 9 `contact_click` events
+in the window are localhost — our own E2E test clicking the booking button. Production
+`contact_click` is **0**. The earlier reversal cited "3 users, all `method: calendar`" as
+proof the CTA was used; that was our test suite. Production has 4 `cta_click` events from 3
+users and no contact clicks at all, so neither home-page CTA has demonstrated real use yet.
+Keeping the CTA is a judgement about the site's purpose, not a conclusion from data.
 
 **The captcha stays where it is, on page load, and stays at reCAPTCHA v2 checkbox.**
 `ToolGate` wraps the chat panel at
@@ -298,6 +358,7 @@ creation over months, not metadata tuning. Conversion work is the tractable half
 
 | File | Change |
 |---|---|
+| [web/src/lib/analytics-gate.ts](../web/src/lib/analytics-gate.ts) | **W5** — `shouldLoadAnalytics()`; consumed by `layout.tsx`; harness reworked in `e2e/home-ctas.spec.ts` |
 | [web/src/lib/dance-menu-upload.ts](../web/src/lib/dance-menu-upload.ts) | **W3** — surface each file's first line in the admin UI before publish; optional advisory `.txt` check |
 | [web/src/hooks/useHireMe.ts](../web/src/hooks/useHireMe.ts) | **W1** failure event in the `answerFitQuestion` catch (~line 692); **W4** `durationMs` at lines 408, 670, 761 |
 | [web/src/app/hire-me/page.tsx](../web/src/app/hire-me/page.tsx) | **W2** cut intro copy, promote primary action, zero-input chat path |
@@ -348,6 +409,18 @@ the API; add a case asserting the `.txt` served is the menu.
 CI on `photo-fun5` must pass. After deploy, view source on `photo-fun.samkirk.com` and find
 the `<a href>` — a crawler must see it without executing JS. Confirm the GA tag fires via
 `google-analytics.com/g/collect`, then GA4 Realtime.
+
+### Re-measuring after W5
+
+Every GA4 query must be read production-only until enough clean data accumulates. Filter on
+hostname; the skill's commands do not do this yet:
+
+```python
+{"filter": {"fieldName": "hostName", "stringFilter": {"value": "samkirk.com"}}}
+```
+
+Historic data cannot be cleaned retroactively — GA4 has no delete. Treat everything before
+2026-09-02 as blended, and do not compare across that boundary without splitting by hostname.
 
 ### Measuring the effect
 

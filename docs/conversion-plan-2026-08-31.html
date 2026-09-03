@@ -74,9 +74,9 @@ figcaption{font-size:.85rem; color:var(--muted); margin-top:9px}
 <body>
 
 <h1>samkirk.com — Status and Work Outstanding</h1>
-<p class="stamp">Created 2026-07-29 PST · Revised 2026-08-31 PST</p>
+<p class="stamp">Created 2026-07-29 PST · Revised 2026-09-02 PST</p>
 <p class="stamp">Project: <code>samkirk-v3</code> · Source: <code>docs/conversion-plan-2026-08-31.md</code></p>
-<p><span class="status">Current — state of the site today, and work still to do</span></p>
+<p><span class="status">W1–W4 shipped · W5 done but uncommitted and undeployed</span></p>
 
 <p>This is a <strong>plan</strong> (how). Requirements live in <code>SPECIFICATION.md</code>.</p>
 
@@ -87,6 +87,7 @@ figcaption{font-size:.85rem; color:var(--muted); margin-top:9px}
     <li><a href="#status">Where things stand</a></li>
     <li><a href="#donow">Do now</a>
       <ul>
+        <li><a href="#w5">W5 — GA4 tag loaded outside production</a></li>
         <li><a href="#w1">W1 — <code>answerFitQuestion</code> reports no failures</a></li>
         <li><a href="#w2">W2 — <code>/hire-me</code> landing page</a></li>
         <li><a href="#w3">W3 — Dance menu: extension is treated as identity</a></li>
@@ -108,94 +109,106 @@ figcaption{font-size:.85rem; color:var(--muted); margin-top:9px}
 
 <h2 id="status">1. Where things stand</h2>
 
-<h3>Traffic — GA4, 2026-08-03 → 2026-08-31</h3>
+<div class="callout">
+  <span class="lbl">The numbers were measuring us</span>
+  <p>Until 2026-09-02 the GA4 tag loaded on <strong>every</strong> environment —
+    <code>layout.tsx</code> gated only on the measurement ID being set, which it always is. So
+    every <code>npm run dev</code> page load and every Playwright run reported into the
+    production property. Playwright opens a fresh browser context per test, which GA4 counts as
+    a brand-new user.</p>
+</div>
+
+<h3>Traffic by hostname, 2026-08-05 → 2026-09-02</h3>
 <div class="wrap">
 <table>
+<thead><tr><th>Hostname</th><th class="num">Users</th><th class="num">Sessions</th><th class="num">Views</th></tr></thead>
 <tbody>
-<tr><th>Active users</th><td class="num">99</td></tr>
-<tr><th>Sessions</th><td class="num">120</td></tr>
-<tr><th>Page views</th><td class="num">160</td></tr>
-<tr><th>Engagement rate</th><td class="num">30.0%</td></tr>
-<tr><th>Avg session duration</th><td class="num">96s</td></tr>
+<tr><td><strong>localhost</strong></td><td class="num"><strong>297</strong></td><td class="num">300</td><td class="num">337</td></tr>
+<tr><td>samkirk.com</td><td class="num">46</td><td class="num">74</td><td class="num">130</td></tr>
+<tr><td>Vercel preview URL</td><td class="num">4</td><td class="num">4</td><td class="num">7</td></tr>
 </tbody>
 </table>
 </div>
 
-<p>Sources: <code>(direct)</code> 102 sessions · <code>(not set)</code> 26 · YouTube referral 4 ·
-<strong>google/organic 3</strong> · <strong>linkedin.com referral 3</strong> ·
-<strong>bing/organic 1</strong>. Organic search and LinkedIn are new but tiny.</p>
+<p><strong>310 of 347 users arrived on a single day, 2026-08-31</strong> — the day the E2E
+suite was run repeatedly. The page mix confirms it: 36 views of a 404 page
+(<code>full-app.spec.ts</code> has 404 tests), plus <code>/admin/login</code>,
+<code>/dance-menu/admin</code>, <code>/hire-me/fit</code>, <code>/hire-me/resume</code>. That is
+the test inventory, not a visitor's browsing.</p>
 
-<div class="callout">
-  <span class="lbl">A large share of the denominator is not human</span>
-  <p>Direct traffic geolocates heavily to Fremont with a ~1:1 user-to-session ratio — the
-    signature of datacenter egress, not returning readers (Fremont is a major colocation hub).
-    GA4 exposes no IP or ASN, so this is inferred from geography, the 1:1 ratio, and engagement
-    together. Treat visitor counts as an upper bound and trust stage-to-stage ratios over
-    absolutes.</p>
+<div class="note">
+  <span class="lbl">Correction to an earlier reading</span>
+  <p>The Fremont cluster was attributed to datacenter egress, with the argument that it could
+    not be Sam because it showed many users with one session each rather than one user with
+    many. That reasoning was wrong — an E2E suite produces exactly that signature. The city ×
+    hostname split is unambiguous: <strong>Fremont / localhost, 297 users, 300 sessions.</strong>
+    It was this machine.</p>
+  <p>Google's emailed report for Aug 6 – Sep 2 ("347 active users, ▲80.73%") is therefore an
+    artifact of our own testing, not growth.</p>
 </div>
 
-<h3>The <code>/hire-me</code> funnel</h3>
-
-<figure>
-<!-- Color-blind-safe: single-hue bars; every stage carries its own text label and printed
-     value, so the figure reads correctly in grayscale and with no color at all. The zero
-     stage is an outlined placeholder plus its printed 0. No fill patterns anywhere. -->
-<svg viewBox="0 0 700 250" width="100%" role="img"
-     aria-label="Funnel: 38 users visited /hire-me, 10 loaded a job description, 11 started a run, 3 completed, 0 downloaded.">
-  <g font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif">
-    <text x="0" y="14" font-size="12" font-weight="700" fill="#5a6473">HIRE-ME FUNNEL — USERS, 2026-08-03 → 08-31</text>
-
-    <text x="0" y="52" font-size="13.5" fill="#1a1f29">Visited /hire-me</text>
-    <rect x="215" y="39" width="400" height="19" rx="3" fill="#1f6feb"/>
-    <text x="623" y="53" font-size="13" font-weight="700" fill="#1a1f29">38</text>
-
-    <text x="0" y="95" font-size="13.5" fill="#1a1f29">Loaded a job description</text>
-    <rect x="215" y="82" width="105" height="19" rx="3" fill="#1f6feb"/>
-    <text x="328" y="96" font-size="13" font-weight="700" fill="#1a1f29">10</text>
-
-    <text x="0" y="138" font-size="13.5" fill="#1a1f29">Started a generation run</text>
-    <rect x="215" y="125" width="116" height="19" rx="3" fill="#1f6feb"/>
-    <text x="339" y="139" font-size="13" font-weight="700" fill="#1a1f29">11</text>
-    <text x="372" y="139" font-size="12" font-weight="700" fill="#b8560a">more runs than jobs — anomaly</text>
-
-    <text x="0" y="181" font-size="13.5" fill="#1a1f29">Run completed</text>
-    <rect x="215" y="168" width="32" height="19" rx="3" fill="#1f6feb"/>
-    <text x="255" y="182" font-size="13" font-weight="700" fill="#1a1f29">3</text>
-
-    <text x="0" y="224" font-size="13.5" fill="#1a1f29">Downloaded the .zip</text>
-    <rect x="215" y="211" width="32" height="19" rx="3" fill="none" stroke="#9aa4b2" stroke-width="1" stroke-dasharray="2 2"/>
-    <text x="255" y="225" font-size="13" font-weight="700" fill="#1a1f29">0</text>
-    <text x="288" y="225" font-size="12" font-weight="700" fill="#b8560a">nobody has clicked download</text>
-  </g>
-</svg>
-<figcaption>Users, not events — one person doing two runs counts once per stage.</figcaption>
-</figure>
-
-<p><code>/hire-me</code> holds attention — <strong>161s average</strong> across 38 views.
-Downloads remain at zero, and <code>tool_download</code> fires at the <em>top</em> of
-<code>download()</code> before the fetch, so that zero is click intent, not delivery failure:
-nobody has clicked.</p>
-
-<div class="callout">
-  <span class="lbl">Unresolved anomaly</span>
-  <p>11 users started a run but only 10 loaded a job description. More runs than jobs should not
-    be possible. Either the <code>sessionStorage</code> restore path in
-    <code>JobContextBar</code> bypasses <code>trackJobLoaded</code>, or a run can start without
-    a job.</p>
+<h3>Real traffic — production only, 2026-08-05 → 2026-09-02</h3>
+<div class="wrap">
+<table>
+<tbody>
+<tr><th>Active users</th><td class="num"><strong>46</strong></td></tr>
+<tr><th>Sessions</th><td class="num">74</td></tr>
+<tr><th>Page views</th><td class="num">130</td></tr>
+<tr><th>Engagement rate</th><td class="num"><strong>59.5%</strong></td></tr>
+</tbody>
+</table>
 </div>
 
-<h3>Engagement</h3>
-<p><code>cta_click</code> 13 events / 12 users — 12 <code>home_interview_me_now</code>, 1
-<code>home_explorations</code>. <code>nav_click</code> 25 / 7 users, dominated by Dance Menu
-(16). <code>contact_click</code> 3 / 3 users, <strong>all <code>method: calendar</code></strong>
-— the 90-day total is also 3, so all are recent.</p>
+<div class="wrap">
+<table>
+<thead><tr><th>Page</th><th class="num">Views</th><th class="num">Users</th></tr></thead>
+<tbody>
+<tr><td><code>/</code></td><td class="num">47</td><td class="num">23</td></tr>
+<tr><td><code>/dance-menu</code></td><td class="num">39</td><td class="num">9</td></tr>
+<tr><td><code>/hire-me</code></td><td class="num"><strong>7</strong></td><td class="num"><strong>7</strong></td></tr>
+<tr><td><code>/song-dedication</code></td><td class="num">6</td><td class="num">3</td></tr>
+</tbody>
+</table>
+</div>
+
+<p>Sources: <code>(direct)</code> 62 sessions · google/organic 6 · YouTube referral 4 ·
+bing/organic 1 · linkedin.com referral 1. The engagement rate is roughly triple what the
+blended number showed — real visitors engage far better than the property has been
+reporting.</p>
+
+<h3>The <code>/hire-me</code> funnel — production only</h3>
+<div class="wrap">
+<table>
+<thead><tr><th>Event</th><th class="num">Production</th><th class="num">localhost</th></tr></thead>
+<tbody>
+<tr><td><code>tool_job_loaded</code></td><td class="num"><strong>0</strong></td><td class="num">62</td></tr>
+<tr><td><code>tool_run_started</code></td><td class="num"><strong>0</strong></td><td class="num">74</td></tr>
+<tr><td><code>tool_run_completed</code></td><td class="num"><strong>0</strong></td><td class="num">20</td></tr>
+<tr><td><code>tool_chat_message</code></td><td class="num"><strong>0</strong></td><td class="num">53</td></tr>
+<tr><td><code>tool_download</code></td><td class="num"><strong>0</strong></td><td class="num">0</td></tr>
+<tr><td><code>contact_click</code></td><td class="num"><strong>0</strong></td><td class="num">9</td></tr>
+<tr><td><code>cta_click</code></td><td class="num">4 (3 users)</td><td class="num">28</td></tr>
+<tr><td><code>nav_click</code></td><td class="num">33 (7 users)</td><td class="num">0</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="callout">
+  <span class="lbl">No real visitor has ever used the /hire-me tool</span>
+  <p>Every generation run in every earlier version of this document — the 11 started, the 3
+    completed, the 8 that went dark — was localhost. <code>/hire-me</code> has had 7 production
+    views at 23s.</p>
+  <p>That does not make W1–W4 wrong: the code defects they fixed were real, found by reading
+    code rather than by reading these numbers. It does mean the funnel cannot yet be used to
+    judge whether the fixes helped, because there is no traffic in it.</p>
+</div>
 
 <h3>Search — Search Console, 2026-08-02 → 2026-08-29</h3>
 <p>49 impressions, 1 click (on <code>/explorations</code>, 20% CTR). Homepage 57 impressions at
 position 18.1. <code>photo-fun.samkirk.com</code> 40 impressions at position <strong>51.1</strong>.
 Query mix is name variants plus photo-fun variants. <strong>No query anywhere in the 5–20
-striking-distance band</strong>, so there is nothing cheap to optimise — acquisition is a
-months-long content play, not a tuning exercise.</p>
+striking-distance band.</strong> Search Console is unaffected by the tag problem — it measures
+Google's index, not our page loads.</p>
 
 <h3>What is working</h3>
 <ul>
@@ -211,17 +224,18 @@ months-long content play, not a tuning exercise.</p>
     also started a run.</li>
   <li><strong>Both home-page conversion buttons are covered by E2E</strong>, including a live
     booking lifecycle, in <code>web/e2e/home-ctas.spec.ts</code>.</li>
+  <li><strong>W1–W4 shipped 2026-09-02</strong> (<code>653f244</code>): fit-answer failures are
+    reported, the job input opens on arrival with a two-sentence intro, the dance-menu upload
+    previews file contents before publishing, and run duration is recorded.</li>
 </ul>
 
 <h2 id="donow">2. Do now</h2>
 
-<p><strong>Listed in descending priority.</strong> W1 is three lines and unlocks the funnel's
-biggest unknown: of 11 runs started, 8 never reported an outcome. W2 has the highest ceiling but
-is the largest change and carries the one real decision. W3 is preventive — its symptom has
-cleared, but the weakness that produced it has not. W4 is genuine and informs nothing currently
-blocked.</p>
+<p><strong>W1–W4 are done and shipped</strong> (<code>653f244</code>, 2026-09-02). They are kept
+below as the record of what changed and why; none needs further work.</p>
 
-<p><strong>Nothing on this list is a live user-facing defect any more.</strong></p>
+<p><strong>W5 is new and is the only open item in this repository.</strong> It is not on the
+site — it is the reason none of the numbers above could be trusted.</p>
 
 <p><strong>The photo-fun work is tracked separately in <a href="#photofun">§4</a></strong>
 because it lives in a different repository and needs a push approval — not because it ranks
@@ -229,14 +243,41 @@ below this list.</p>
 
 <div class="wrap">
 <table>
-<thead><tr><th>#</th><th>Item</th><th>Type</th><th>Approval</th></tr></thead>
+<thead><tr><th>#</th><th>Item</th><th>Type</th><th>Status</th></tr></thead>
 <tbody>
-<tr><td><strong>W1</strong></td><td><code>answerFitQuestion</code> reports no failures</td><td><span class="tag tag-bug">BUG</span></td><td>none</td></tr>
-<tr><td><strong>W2</strong></td><td><code>/hire-me</code> landing page</td><td><span class="tag tag-gap">UX</span></td><td>judgement call on the new entry point</td></tr>
-<tr><td><strong>W3</strong></td><td>Dance menu: extension treated as identity</td><td><span class="tag tag-gap">HARDENING</span></td><td>none</td></tr>
-<tr><td><strong>W4</strong></td><td>Run duration never recorded</td><td><span class="tag tag-gap">MEASUREMENT</span></td><td>none</td></tr>
+<tr><td><strong>W5</strong></td><td>GA4 tag loads outside production</td><td><span class="tag tag-bug">BUG</span></td><td><strong>done, uncommitted — not deployed</strong></td></tr>
+<tr><td>W1</td><td><code>answerFitQuestion</code> reports no failures</td><td><span class="tag tag-bug">BUG</span></td><td>shipped <code>653f244</code></td></tr>
+<tr><td>W2</td><td><code>/hire-me</code> landing page</td><td><span class="tag tag-gap">UX</span></td><td>shipped <code>653f244</code></td></tr>
+<tr><td>W3</td><td>Dance menu: extension treated as identity</td><td><span class="tag tag-gap">HARDENING</span></td><td>shipped <code>653f244</code></td></tr>
+<tr><td>W4</td><td>Run duration never recorded</td><td><span class="tag tag-gap">MEASUREMENT</span></td><td>shipped <code>653f244</code></td></tr>
 </tbody>
 </table>
+</div>
+
+<h3 id="w5">W5 — GA4 tag loaded outside production</h3>
+
+<p><code>layout.tsx</code> gated the gtag snippet only on the measurement ID being configured,
+which it always is. Development and preview traffic therefore reported into the production
+property — 86% of the last 28 days' "users" (§1).</p>
+
+<p><strong>The fix.</strong> A pure <code>shouldLoadAnalytics()</code> in
+<code>web/src/lib/analytics-gate.ts</code>, used by <code>layout.tsx</code>. It loads the tag
+only when a real measurement ID is set <strong>and</strong>
+<code>VERCEL_ENV === "production"</code> <strong>and</strong> the E2E flag is absent. Six unit
+tests cover the matrix; verified in a live browser that on localhost <code>window.gtag</code> is
+undefined, <code>dataLayer</code> is absent, and no tag-manager script is requested.</p>
+
+<p><code>e2e/home-ctas.spec.ts</code> needed its GA harness reworked: it previously read
+<code>dataLayer</code> because the real snippet replaced any stub it installed. With the tag
+gated off, <code>trackEvent</code> no-ops, so the harness now installs its own <code>gtag</code>
+stub — which it could not do before. It still pushes into <code>dataLayer</code>, so it keeps
+working if pointed at a build where the real tag loads.</p>
+
+<div class="note">
+  <span class="lbl">Known residue</span>
+  <p>The CI <code>smoke-test</code> job runs against the production deployment, so its page loads
+  still register. That is a handful per deploy rather than hundreds, and distinguishing it would
+  mean threading the bypass secret into the gate. Recorded, not fixed.</p>
 </div>
 
 <h3 id="w1">W1 — <code>answerFitQuestion</code> reports no failures</h3>
@@ -411,10 +452,15 @@ indexing gaps. Those gaps are real (position 51.1) but are a separate change.</p
 <h2 id="standing">5. Standing decisions</h2>
 <ul>
   <li><strong>The "Book a Call" CTA stays on the home page</strong>, above the "Hiring Manager?"
-    section. It is used — 3 <code>contact_click</code> events from 3 users, all
-    <code>method: calendar</code> — and the booking flow now has E2E coverage including a live
-    booking lifecycle. The home page carries two conversion paths and both show real use; neither
-    is demoted for the other.</li>
+    section. The decision stands on the work invested in it and the E2E coverage it now carries,
+    including a live booking lifecycle.
+    <p style="margin-top:8px"><strong>The click evidence cited for it does not survive §1.</strong>
+    All 9 <code>contact_click</code> events in the window are localhost — our own E2E test
+    clicking the booking button. Production <code>contact_click</code> is <strong>0</strong>. The
+    earlier reversal cited "3 users, all <code>method: calendar</code>" as proof the CTA was
+    used; that was our test suite. Production has 4 <code>cta_click</code> events from 3 users and
+    no contact clicks at all, so neither home-page CTA has demonstrated real use yet. Keeping the
+    CTA is a judgement about the site's purpose, not a conclusion from data.</p></li>
   <li><strong>The captcha stays where it is, on page load, and stays at reCAPTCHA v2
     checkbox.</strong> <code>ToolGate</code> wraps the chat panel at
     <code>hire-me/page.tsx:69</code>, so a first-time visitor sees the checkbox before using the
@@ -448,6 +494,7 @@ indexing gaps. Those gaps are real (position 51.1) but are a separate change.</p
 <table>
 <thead><tr><th>File</th><th>Change</th></tr></thead>
 <tbody>
+<tr><td><code>web/src/lib/analytics-gate.ts</code></td><td><strong>W5</strong> — <code>shouldLoadAnalytics()</code>; consumed by <code>layout.tsx</code>; harness reworked in <code>e2e/home-ctas.spec.ts</code></td></tr>
 <tr><td><code>web/src/lib/dance-menu-upload.ts</code></td><td><strong>W3</strong> — surface each file's first line in the admin UI before publish; optional advisory <code>.txt</code> check</td></tr>
 <tr><td><code>web/src/hooks/useHireMe.ts</code></td><td><strong>W1</strong> failure event in the <code>answerFitQuestion</code> catch (~line 692); <strong>W4</strong> <code>durationMs</code> at lines 408, 670, 761</td></tr>
 <tr><td><code>web/src/app/hire-me/page.tsx</code></td><td><strong>W2</strong> cut intro copy, promote primary action, zero-input chat path</td></tr>
