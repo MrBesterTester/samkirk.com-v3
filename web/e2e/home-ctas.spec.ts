@@ -20,19 +20,28 @@ type GaCall = [string, string, Record<string, unknown>?];
 /**
  * Read the GA4 events the trackers emitted.
  *
- * The app hard-codes a measurement ID (lib/seo.ts), so the real gtag snippet
- * loads and replaces any stub we install — which is why this reads the
- * dataLayer the snippet pushes into rather than a stub of our own. Seeding the
- * array first means it exists even if the GA script itself is blocked, and the
- * snippet's `dataLayer || []` keeps what we seeded.
+ * The real gtag snippet only loads on production deployments now
+ * (lib/analytics-gate.ts), so on localhost nothing defines `window.gtag` and
+ * `trackEvent` would no-op. This installs a stub that records calls, which the
+ * previous version could not do because the real snippet replaced it.
+ *
+ * The stub pushes into `dataLayer`, the same array the real snippet uses, so
+ * this keeps working unchanged if the suite is ever pointed at a build where
+ * the real tag does load — the snippet's own `dataLayer || []` preserves what
+ * we seeded, and both sets of calls land in one place.
  *
  * gtag pushes its raw `arguments` object, so each entry is array-like rather
  * than an array; it is normalised in-page before crossing into Node.
  */
 async function captureGaEvents(page: Page): Promise<() => Promise<GaCall[]>> {
   await page.addInitScript(() => {
-    (window as unknown as { dataLayer: unknown[] }).dataLayer =
-      (window as unknown as { dataLayer?: unknown[] }).dataLayer || [];
+    const layer = ((window as unknown as { dataLayer?: unknown[] }).dataLayer ||
+      []) as unknown[];
+    (window as unknown as { dataLayer: unknown[] }).dataLayer = layer;
+    (window as unknown as { gtag?: (...args: unknown[]) => void }).gtag =
+      function (...args: unknown[]) {
+        layer.push(args);
+      };
   });
 
   return () =>

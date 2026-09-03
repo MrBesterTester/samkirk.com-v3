@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Script from "next/script";
+
+import { shouldLoadAnalytics } from "@/lib/analytics-gate";
 import { Header, Footer } from "@/components";
 import {
   SITE_URL,
@@ -131,8 +133,14 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(profilePageJsonLd) }}
         />
 
-        {/* Google Analytics 4 — only loads when a real measurement ID is configured */}
-        {GA_MEASUREMENT_ID && !GA_MEASUREMENT_ID.includes("XXXXXXXXXX") && (
+        {/* Google Analytics 4 — production deployments only. Development and
+            E2E traffic must not reach the property the site is judged by; see
+            lib/analytics-gate.ts. */}
+        {shouldLoadAnalytics({
+          measurementId: GA_MEASUREMENT_ID,
+          vercelEnv: process.env.VERCEL_ENV,
+          e2eTesting: process.env.NEXT_PUBLIC_E2E_TESTING,
+        }) && (
           <>
             <Script
               src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
