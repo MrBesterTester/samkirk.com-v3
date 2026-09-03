@@ -1,38 +1,43 @@
 # Interview Transcript
 
 **Candidate:** Sam Kirk
-**Date:** 8/31/2026
+**Date:** 9/2/2026
 **Total Messages:** 4
 
 ---
 
-**Interviewer:** *(6:50:01 PM)*
+**Interviewer:** *(9:17:35 PM)*
 
 What programming languages do you know?
 
 ---
 
-**Sam Kirk:** *(6:50:01 PM)*
+**Sam Kirk:** *(9:17:35 PM)*
 
-I have a strong command of several programming languages, accumulated over my 45+ years in the industry. My primary languages include Python, which I've used for over 8 years across multiple roles, and C, with more than 15 years of experience. More recently, I've also gained over 4 years of experience with TypeScript and 1+ year with Rust, particularly in my current consulting work.
+I have a strong command of several programming languages, developed over my extensive career. My primary languages include:
 
-Beyond these core languages, I have experience with C++ from my time at LTX-Credence, and I've worked extensively with assembly languages like 68K and 8080 during my early career at companies like Motorola, IBM/ROLM, and TRW/Vidar. I also have experience with Perl, Java (specifically with Flexstar), and MacPascal for specialized applications.
+*   **C:** I have over 15 years of experience with C, using it in numerous roles from TRW/Vidar in 1980 through my consulting work in 1998-2000, and at companies like ROLM/IBM, Frox, Media Vision, ESS, Teradyne, Sun Microsystems, and AOptix.
+*   **Python:** I have 8+ years of experience with Python, starting at LTX-Credence in 2012 and continuing through my current consulting work at SAK Consulting. I've utilized it at Talis BioMedical, Excelfore, and Cadence for various applications including automation, data visualization, and embedded software.
+*   **TypeScript:** I have 4+ years of experience with TypeScript, primarily in my current role at SAK Consulting for full-stack web development, including my personal portfolio website and AI tools.
+*   **Rust:** I have 1+ year of experience with Rust, using it for backend development in projects like the Tensor Logic interactive demo at SAK Consulting.
+
+Additionally, I have experience with C++ (2 years at LTX-Credence), 68K/8080 Assembly (5+ years at Motorola, ROLM/IBM, Frox, and TRW/Vidar), and Perl (at OCZ Technology). I also have a deep understanding of Linux/Unix, which I've used continuously since 1980 across almost all my positions.
 
 ---
 
-**Interviewer:** *(6:50:01 PM)*
+**Interviewer:** *(9:17:35 PM)*
 
 Tell me about your most recent role.
 
 ---
 
-**Sam Kirk:** *(6:50:01 PM)*
+**Sam Kirk:** *(9:17:35 PM)*
 
-Since March 2022, I have been working as the Chief Consulting Engineer at my own firm, Samuel A. Kirk Consulting. In this role, I've been deeply immersed in AI-assisted software development, specifically focusing on applying generative AI to testing and documentation.
+My most recent role is as Chief Consulting Engineer at my own consultancy, Samuel A. Kirk Consulting, which I started in March 2022 and continue to run. In this capacity, I focus heavily on AI-assisted software development, with a particular emphasis on applying generative AI to testing and documentation.
 
-My work involves full-stack development, leveraging tools like Cursor and Claude Code, and building products that address real-world problems. I've undertaken a self-study, graduate-level course in genAI application to software development, with a strong emphasis on creating up-to-date documentation that is readable by both chatbots and developers. I've also become proficient in prompt engineering, utilizing tools such as Perplexity.ai for research, Claude Code for development, and ChatGPT for general tasks and second opinions.
+My work involves full-stack development using modern technologies such as TypeScript, React, Next.js, and Rust for backend services. I extensively leverage AI tools like Cursor, Claude Code, ChatGPT, and Perplexity.ai for prompt engineering, research, and code generation, becoming adept at what I call being a "ChatBot Boss." I also integrate cloud AI services like Vertex AI and Google Gemini into my projects.
 
-A significant part of my recent work includes developing my personal portfolio website, samkirk.com, which features AI-powered tools for hiring managers like "How Do I Fit?", "Custom Resume Generator," and "Interview Me NOW." I've also built an AI-powered photo transformation app called "Photo Fun" and an interactive educational demo for "Tensor Logic" with a Rust/Axum backend. My technology stack in this role primarily includes TypeScript, Python, Rust, React, Next.js, and various Google Cloud AI services like Vertex AI and Google Gemini.
+A significant part of this role has been a self-study in applying genAI to software development, which has led to several impactful projects. These include my personal portfolio website, samkirk.com, and a suite of AI-powered "Hire Me" tools designed for hiring managers. I also developed "Photo Fun," an AI-powered photo transformation app, and various creative and exploratory projects that showcase advanced AI techniques and diverse programming paradigms. Through these projects, I've applied my decades of experience in test automation to ensure robust and well-documented solutions.
 
 ---
 
