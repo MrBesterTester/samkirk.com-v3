@@ -70,20 +70,32 @@ export function ContactLink({
  * A static artifact download (an exploration write-up). `artifactId` is stable
  * even if the underlying filename changes, which the automatic `file_download`
  * event cannot promise.
+ *
+ * `openInNewTab` opens the file as a page instead of downloading it directly.
+ * Use it where Vercel's bot-protection challenge can intercept the request: a
+ * direct download cannot run the challenge, so the browser saves the
+ * "Vercel Security Checkpoint" page under the file's name, while a page
+ * navigation passes the challenge and then shows the file (seen with the TARE
+ * brief PDF in Safari, Oct 20, 2026).
  */
 export function DownloadLink({
   href,
   artifactId,
-  downloadName,
   className,
   children,
-}: BaseProps & { artifactId: string; downloadName: string }) {
+  ...target
+}: BaseProps & { artifactId: string } & (
+    | { downloadName: string; openInNewTab?: false }
+    | { openInNewTab: true; downloadName?: never }
+  )) {
   return (
     <a
       href={href}
-      download={downloadName}
       className={className}
       onClick={() => trackArtifactDownload(artifactId)}
+      {...(target.openInNewTab
+        ? { target: "_blank", rel: "noopener noreferrer" }
+        : { download: target.downloadName })}
     >
       {children}
     </a>
