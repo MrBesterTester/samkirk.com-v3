@@ -53,6 +53,14 @@ describe("Explorations hub page", () => {
       name: /safer ai/i,
     });
     expect(saferAiLink).toHaveAttribute("href", "/explorations/safer-ai");
+
+    const chatbotsLink = screen.getByRole("link", {
+      name: /chatbots & instruments/i,
+    });
+    expect(chatbotsLink).toHaveAttribute(
+      "href",
+      "/explorations/chatbots-and-instruments"
+    );
   });
 
   it("renders descriptions for each exploration topic", () => {

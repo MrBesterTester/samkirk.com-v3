@@ -1,5 +1,7 @@
 # Developer Guide
 
+Oct 20, 2026, 6:45 AM PDT
+
 This is the day-to-day reference for samkirk-v3 development. It covers the AI-assisted development methodology, test suites, CLI commands, automated workflows via `/do-work`, manual verifications, and release qualification.
 
 ---
@@ -165,22 +167,24 @@ Open `http://localhost:3000`. If the dev server gets into a bad state (stale cac
 
 ## Deploying to Production
 
-The site is deployed to **Vercel** with auto-deploy on push. GCP provides backend services only (Firestore, Cloud Storage, Vertex AI).
+The site is deployed to **Vercel** by the GitHub Actions CI pipeline on every push to `main`. Production deploys go through CI (`.github/workflows/ci.yml`, job `deploy`). Vercel's own Git auto-deploy was disabled when this pipeline was set up (July 2026 handoff); confirm in the Vercel project's Git settings before relying on branch pushes producing previews. GCP provides backend services only (Firestore, Cloud Storage, Vertex AI).
 
 > **Cloud Run (decommissioned):** The site was previously on Cloud Run. See `docs/GCP-DEPLOY.md` for historical reference and GCP backend service setup (IAM, secrets, etc.).
 
 ### How the pipeline works
 
 ```
-npm run test:all → /ship → push to main → GitHub Actions CI → Vercel auto-deploy
-                                             (gitleaks, CodeQL,     (build, deploy,
-                                              type check, lint,      SSL, CDN)
-                                              build)
+npm run test:all → /ship → push to main → GitHub Actions CI ─────────────────→ Vercel
+                                             build-and-test, security-scan        (CI job `deploy`:
+                                             (type check, lint, build,             vercel build --prod,
+                                              gitleaks, npm audit, CodeQL)          vercel deploy --prebuilt --prod)
+                                             then deploy, then smoke-test
 ```
 
-Pushing to `main` triggers two things automatically:
-1. **GitHub Actions CI** — gitleaks secret scan, CodeQL analysis, type check, lint, production build
-2. **Vercel auto-deploy** — builds and deploys the site, provisions SSL, serves via CDN
+Pushing to `main` runs one GitHub Actions workflow:
+1. **build-and-test** and **security-scan**, in parallel: type check, lint, production build; gitleaks secret scan, npm audit, CodeQL analysis
+2. **deploy**, only after both pass: `vercel build --prod`, then `vercel deploy --prebuilt --prod` with the `VERCEL_TOKEN` secret; Vercel provisions SSL and serves via CDN
+3. **smoke-test** against the deployed site
 
 ### Standard release workflow
 

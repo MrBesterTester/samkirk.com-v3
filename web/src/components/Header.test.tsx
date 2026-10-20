@@ -109,6 +109,13 @@ describe("Header", () => {
     expect(explorationsLinks[0]).toHaveAttribute("href", "/explorations");
   });
 
+  it("lists Chatbots & Instruments under Explorations", () => {
+    render(<Header />);
+
+    const links = screen.getAllByRole("link", { name: /^chatbots & instruments$/i });
+    expect(links[0]).toHaveAttribute("href", "/explorations/chatbots-and-instruments");
+  });
+
   it("renders the desktop navigation", () => {
     render(<Header />);
 

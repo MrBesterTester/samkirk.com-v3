@@ -108,6 +108,17 @@ test.describe("Machine Learning & Robotics Pages - Render Correctly", () => {
 });
 
 test.describe("Exploration Pages - Render Correctly", () => {
+  test("chatbots and instruments page loads with its images and PDF", async ({ page, request }) => {
+    await page.goto("/explorations/chatbots-and-instruments");
+    await expect(page.getByRole("heading", { level: 1 }).first()).toBeVisible();
+    for (const img of await page.locator('img[src*="tare"]').all()) {
+      await expect.poll(() => img.evaluate((el) => (el as HTMLImageElement).naturalWidth)).toBeGreaterThan(0);
+    }
+    const pdf = await request.get("/static/tare-technical-brief.pdf");
+    expect(pdf.status()).toBe(200);
+    expect(pdf.headers()["content-type"]).toContain("application/pdf");
+  });
+
   test("math physics guide page loads", async ({ page }) => {
     await page.goto("/explorations/math-physics-guide");
     // .first() — pages that server-render a static write-up have a second <h1>

@@ -30,6 +30,7 @@ const baseNavLinks = [
       { href: "/explorations/tensor-logic", label: "Tensor Logic" },
       { href: "/explorations/math-physics-guide", label: "Principal Equations" },
       { href: "/explorations/safer-ai", label: "Safer AI" },
+      { href: "/explorations/chatbots-and-instruments", label: "Chatbots & Instruments" },
     ],
   },
 ];

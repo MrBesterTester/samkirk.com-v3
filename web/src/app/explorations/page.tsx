@@ -70,6 +70,12 @@ const explorations: Exploration[] = [
     description:
       "A research project proposal for the Anthropic Fellows Program 2026 — adapting Nancy Leveson's STAMP/STPA/CAST system-safety framework to deployed LLMs, with Claude's safety evaluation and red-teaming pipeline as the case study.",
   },
+  {
+    href: "/explorations/chatbots-and-instruments",
+    title: "Chatbots & Instruments",
+    description:
+      "TARE, my version of Anthropic's Model Hardware Standard (MHS): AI agents operate four simulated lab instruments, and every command is checked against the instrument's own readback.",
+  },
 ];
 
 export default function ExplorationsPage() {

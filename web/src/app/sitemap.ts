@@ -88,5 +88,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "yearly",
       priority: 0.6,
     },
+    {
+      url: `${SITE_URL}/explorations/chatbots-and-instruments`,
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
   ];
 }
