@@ -107,6 +107,28 @@ test.describe("Machine Learning & Robotics Pages - Render Correctly", () => {
   });
 });
 
+test.describe("Exploration artifacts open as pages", () => {
+  // Each write-up's button must open its file in a new tab (no `download` attribute):
+  // a direct download cannot pass Vercel's bot-protection challenge (Oct 20, 2026).
+  for (const [route, file, type] of [
+    ["/explorations/category-theory", "/static/category-theory.html", "text/html"],
+    ["/explorations/dance-instruction", "/static/dance-instruction.html", "text/html"],
+    ["/explorations/uber-level-ai-skills", "/static/uber-level-ai-skills.html", "text/html"],
+    ["/explorations/safer-ai", "/static/safer-ai.html", "text/html"],
+    ["/explorations/chatbots-and-instruments", "/static/tare-technical-brief.pdf", "application/pdf"],
+  ] as const) {
+    test(`${route} opens ${file} in a new tab`, async ({ page, request }) => {
+      await page.goto(route);
+      const link = page.locator(`a[href="${file}"]`).first();
+      await expect(link).toHaveAttribute("target", "_blank");
+      await expect(link).not.toHaveAttribute("download", /.*/);
+      const res = await request.get(file);
+      expect(res.status()).toBe(200);
+      expect(res.headers()["content-type"]).toContain(type);
+    });
+  }
+});
+
 test.describe("Exploration Pages - Render Correctly", () => {
   test("chatbots and instruments page loads with its images and PDF", async ({ page, request }) => {
     await page.goto("/explorations/chatbots-and-instruments");

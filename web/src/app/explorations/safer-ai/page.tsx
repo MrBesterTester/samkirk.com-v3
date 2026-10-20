@@ -46,7 +46,6 @@ export default function SaferAIPage() {
       <div className="mt-6">
         <DownloadLink
           href="/static/safer-ai.html"
-          downloadName="Leveson_Research_Project_Proposal_2026-04-24.html"
           artifactId="safer-ai"
           className="inline-flex items-center gap-2 rounded-lg border border-border bg-primary px-4 py-2 text-sm font-medium text-text-secondary shadow-sm transition-colors hover:border-accent hover:bg-secondary"
         >
@@ -63,7 +62,7 @@ export default function SaferAIPage() {
               d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
             />
           </svg>
-          Download HTML
+          Open HTML version
         </DownloadLink>
       </div>
 

@@ -193,7 +193,6 @@ export default function ChatbotsAndInstrumentsPage() {
       <div className="mt-6 flex flex-wrap gap-3">
         <DownloadLink
           href="/static/tare-technical-brief.pdf"
-          openInNewTab
           artifactId="tare-technical-brief"
           className={button}
         >
