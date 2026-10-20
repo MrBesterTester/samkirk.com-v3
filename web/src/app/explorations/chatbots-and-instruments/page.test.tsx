@@ -14,12 +14,17 @@ describe("Chatbots & Instruments page", () => {
     ).toBeInTheDocument();
   });
 
-  it("offers the four-page brief as a PDF download", () => {
+  it("opens the four-page brief PDF in a new tab", () => {
     render(<ChatbotsAndInstrumentsPage />);
 
-    const pdf = screen.getByRole("link", { name: /download the 4-page brief/i });
+    // A direct download (the `download` attribute) cannot pass Vercel's bot-protection
+    // challenge: Safari saved the "Vercel Security Checkpoint" page as the PDF (Oct 20, 2026).
+    // Opening the file as a page lets the challenge run, then Safari shows the PDF.
+    const pdf = screen.getByRole("link", { name: /4-page brief/i });
     expect(pdf).toHaveAttribute("href", "/static/tare-technical-brief.pdf");
-    expect(pdf).toHaveAttribute("download", "TARE-Technical-Brief-2026-10-14.pdf");
+    expect(pdf).not.toHaveAttribute("download");
+    expect(pdf).toHaveAttribute("target", "_blank");
+    expect(pdf).toHaveAttribute("rel", "noopener noreferrer");
   });
 
   it("links the GitHub repository and the LinkedIn post", () => {
