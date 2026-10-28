@@ -37,7 +37,7 @@ config({ path: resolve(__dirname, "../.env.local") });
 
 import { Firestore, Timestamp } from "@google-cloud/firestore";
 import { Storage } from "@google-cloud/storage";
-import { VertexAI } from "@google-cloud/vertexai";
+import { GoogleGenAI, type Content, type ContentUnion } from "@google/genai";
 import { z } from "zod";
 
 // ============================================================================
@@ -1511,7 +1511,8 @@ Generated at: ${new Date().toISOString()}
   try {
     // Initialize Vertex AI client
     log("Initializing Vertex AI client...");
-    const vertexAI = new VertexAI({
+    const vertexAI = new GoogleGenAI({
+      vertexai: true,
       project: env.GCP_PROJECT_ID,
       location: env.VERTEX_AI_LOCATION,
     });
@@ -1519,32 +1520,28 @@ Generated at: ${new Date().toISOString()}
 
     // Get generative model
     log(`Getting model: ${env.VERTEX_AI_MODEL}...`);
-    const model = vertexAI.getGenerativeModel({
-      model: env.VERTEX_AI_MODEL,
-      generationConfig: {
-        temperature: 0.3,
-        maxOutputTokens: 256,
-      },
-    });
+    const generate = (contents: Content[]) =>
+      vertexAI.models.generateContent({
+        model: env.VERTEX_AI_MODEL,
+        contents,
+        config: {
+          temperature: 0.3,
+          maxOutputTokens: 256,
+        },
+      });
     log("Model loaded", true);
 
     // Test 1: Simple content generation
     log("Testing simple content generation...");
     const simplePrompt = "Respond with exactly: 'Hello from Vertex AI smoke test!'";
     
-    const simpleResult = await model.generateContent({
-      contents: [{ role: "user", parts: [{ text: simplePrompt }] }],
-    });
+    const simpleResponse = await generate([{ role: "user", parts: [{ text: simplePrompt }] }]);
 
-    const simpleResponse = simpleResult.response;
     if (!simpleResponse.candidates || simpleResponse.candidates.length === 0) {
       throw new Error("No candidates in response");
     }
 
-    const simpleText = simpleResponse.candidates[0].content.parts
-      .filter((p): p is { text: string } => "text" in p)
-      .map((p) => p.text)
-      .join("");
+    const simpleText = simpleResponse.text ?? "";
 
     log(`Response: "${simpleText.substring(0, 100)}..."`, true);
 
@@ -1564,19 +1561,13 @@ Generated at: ${new Date().toISOString()}
   "confidence": 0.9
 }`;
 
-    const jsonResult = await model.generateContent({
-      contents: [{ role: "user", parts: [{ text: jsonPrompt }] }],
-    });
+    const jsonResponse = await generate([{ role: "user", parts: [{ text: jsonPrompt }] }]);
 
-    const jsonResponse = jsonResult.response;
     if (!jsonResponse.candidates || jsonResponse.candidates.length === 0) {
       throw new Error("No candidates in JSON response");
     }
 
-    const jsonText = jsonResponse.candidates[0].content.parts
-      .filter((p): p is { text: string } => "text" in p)
-      .map((p) => p.text)
-      .join("")
+    const jsonText = (jsonResponse.text ?? "")
       .trim();
 
     // Try to parse as JSON
@@ -1752,18 +1743,21 @@ AI/ML: TensorFlow, LangChain, RAG systems`,
 
     // Step 11.2: Test resume generation with Vertex AI
     log("Initializing Vertex AI for resume generation...");
-    const vertexAI = new VertexAI({
+    const vertexAI = new GoogleGenAI({
+      vertexai: true,
       project: env.GCP_PROJECT_ID,
       location: env.VERTEX_AI_LOCATION,
     });
 
-    const model = vertexAI.getGenerativeModel({
-      model: env.VERTEX_AI_MODEL,
-      generationConfig: {
-        temperature: 0.4,
-        maxOutputTokens: 4096,
-      },
-    });
+    const generate = (contents: Content[]) =>
+      vertexAI.models.generateContent({
+        model: env.VERTEX_AI_MODEL,
+        contents,
+        config: {
+          temperature: 0.4,
+          maxOutputTokens: 4096,
+        },
+      });
 
     // Build the resume context
     const resumeContext = testChunks
@@ -1791,21 +1785,15 @@ ${resumeContext}
 Generate a tailored resume JSON. Only include facts from the resume context.`;
 
     log("Generating tailored resume with Vertex AI...");
-    const result = await model.generateContent({
-      contents: [
-        { role: "user", parts: [{ text: systemPrompt + "\n\n" + userPrompt }] },
-      ],
-    });
+    const response = await generate([
+      { role: "user", parts: [{ text: systemPrompt + "\n\n" + userPrompt }] },
+    ]);
 
-    const response = result.response;
     if (!response.candidates || response.candidates.length === 0) {
       throw new Error("No candidates in resume generation response");
     }
 
-    const responseText = response.candidates[0].content.parts
-      .filter((p): p is { text: string } => "text" in p)
-      .map((p) => p.text)
-      .join("")
+    const responseText = (response.text ?? "")
       .trim();
 
     // Parse JSON response
@@ -2098,18 +2086,22 @@ Location: Open to remote work, based in San Francisco Bay Area`,
 
     // Step 12.2: Initialize Vertex AI for chat
     log("Initializing Vertex AI for interview chat...");
-    const vertexAI = new VertexAI({
+    const vertexAI = new GoogleGenAI({
+      vertexai: true,
       project: env.GCP_PROJECT_ID,
       location: env.VERTEX_AI_LOCATION,
     });
 
-    const model = vertexAI.getGenerativeModel({
-      model: env.VERTEX_AI_MODEL,
-      generationConfig: {
-        temperature: 0.7,
-        maxOutputTokens: 1024,
-      },
-    });
+    const generate = (contents: Content[], systemInstruction?: ContentUnion) =>
+      vertexAI.models.generateContent({
+        model: env.VERTEX_AI_MODEL,
+        contents,
+        config: {
+          temperature: 0.7,
+          maxOutputTokens: 1024,
+          ...(systemInstruction && { systemInstruction }),
+        },
+      });
     log("Vertex AI initialized", true);
 
     // Step 12.3: Build context and system prompt
@@ -2146,20 +2138,13 @@ ${resumeContext}
         { role: "user" as const, parts: [{ text: testCase.question }] },
       ];
 
-      const result = await model.generateContent({
-        contents,
-        systemInstruction: { role: "system", parts: [{ text: systemPrompt }] },
-      });
+      const response = await generate(contents, systemPrompt);
 
-      const response = result.response;
       if (!response.candidates || response.candidates.length === 0) {
         throw new Error("No candidates in response");
       }
 
-      const responseText = response.candidates[0].content.parts
-        .filter((p): p is { text: string } => "text" in p)
-        .map((p) => p.text)
-        .join("")
+      const responseText = (response.text ?? "")
         .trim();
 
       // Verify response contains expected topics
@@ -2190,23 +2175,19 @@ ${resumeContext}
     log("Testing off-topic redirection...");
     const offTopicQuestion = "What are your political views?";
 
-    const offTopicResult = await model.generateContent({
-      contents: [
+    const offTopicResponse = await generate(
+      [
         ...conversationHistory,
         { role: "user" as const, parts: [{ text: offTopicQuestion }] },
       ],
-      systemInstruction: { role: "system", parts: [{ text: systemPrompt }] },
-    });
+      systemPrompt
+    );
 
-    const offTopicResponse = offTopicResult.response;
-    if (!offTopicResponse.candidates || offTopicResponse.candidates.length === 0) {
+        if (!offTopicResponse.candidates || offTopicResponse.candidates.length === 0) {
       throw new Error("No candidates in off-topic response");
     }
 
-    const offTopicText = offTopicResponse.candidates[0].content.parts
-      .filter((p): p is { text: string } => "text" in p)
-      .map((p) => p.text)
-      .join("")
+    const offTopicText = (offTopicResponse.text ?? "")
       .trim()
       .toLowerCase();
 

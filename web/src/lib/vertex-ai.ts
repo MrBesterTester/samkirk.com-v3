@@ -1,14 +1,12 @@
 import "server-only";
 
 import {
-  VertexAI,
+  GoogleGenAI,
   HarmCategory,
   HarmBlockThreshold,
-  GenerateContentResult,
-  GenerationConfig,
+  GenerateContentResponse,
   Content,
-  Part,
-} from "@google-cloud/vertexai";
+} from "@google/genai";
 import { getEnv } from "./env";
 import { getGcpCredentials } from "./gcp-credentials";
 import {
@@ -200,16 +198,22 @@ export function assertResponseComplete(
 // Singleton Client
 // ============================================================================
 
-let vertexAiInstance: VertexAI | null = null;
+let vertexAiInstance: GoogleGenAI | null = null;
 
 /**
- * Get the singleton Vertex AI client instance.
+ * Get the singleton Gen AI client, in Vertex AI mode.
+ *
+ * Uses @google/genai rather than @google-cloud/vertexai: Google stopped
+ * supporting Gemini in Vertex AI SDK releases after June 2026, and the old SDK
+ * built a regional endpoint from the location, which cannot reach models
+ * offered only at `global` (gemini-3.5-flash-lite).
  */
-export function getVertexAI(): VertexAI {
+export function getVertexAI(): GoogleGenAI {
   if (!vertexAiInstance) {
     const env = getEnv();
     const credentials = getGcpCredentials();
-    vertexAiInstance = new VertexAI({
+    vertexAiInstance = new GoogleGenAI({
+      vertexai: true,
       project: env.GCP_PROJECT_ID,
       location: env.VERTEX_AI_LOCATION,
       ...(credentials && { googleAuthOptions: { credentials } }),
@@ -257,6 +261,90 @@ const DEFAULT_SAFETY_SETTINGS = [
 // ============================================================================
 
 /**
+ * Send one generateContent request and wrap transport failures.
+ */
+async function requestCompletion(
+  contents: Content[],
+  options: Pick<
+    GenerateOptions,
+    | "systemInstruction"
+    | "temperature"
+    | "maxOutputTokens"
+    | "topP"
+    | "topK"
+    | "thinkingBudget"
+  >
+): Promise<GenerateContentResponse> {
+  const { systemInstruction, thinkingBudget, ...sampling } = options;
+  const env = getEnv();
+
+  try {
+    return await getVertexAI().models.generateContent({
+      model: env.VERTEX_AI_MODEL,
+      contents,
+      config: {
+        ...sampling,
+        safetySettings: DEFAULT_SAFETY_SETTINGS,
+        ...(systemInstruction ? { systemInstruction } : {}),
+        ...(thinkingBudget !== undefined
+          ? { thinkingConfig: { thinkingBudget } }
+          : {}),
+      },
+    });
+  } catch (error) {
+    throw new GenerationError(
+      `Failed to generate content: ${error instanceof Error ? error.message : String(error)}`,
+      error instanceof Error ? error : undefined
+    );
+  }
+}
+
+function mapSafetyRatings(
+  ratings: NonNullable<GenerateContentResponse["candidates"]>[number]["safetyRatings"]
+): Array<{ category: string; probability: string }> | undefined {
+  return ratings?.map((r) => ({
+    category: String(r.category),
+    probability: String(r.probabilityScore ?? r.probability ?? "UNKNOWN"),
+  }));
+}
+
+/**
+ * Pull the visible answer out of a response.
+ *
+ * Thought parts (`thought: true`) are the model's reasoning, not its answer;
+ * they only appear if includeThoughts is set, but are excluded regardless.
+ *
+ * @throws ContentBlockedError when no candidate content came back
+ * @throws GenerationError when the candidate carries no text
+ */
+function extractCandidateText(response: GenerateContentResponse): {
+  candidate: NonNullable<GenerateContentResponse["candidates"]>[number];
+  generatedText: string;
+} {
+  const candidate = response.candidates?.[0];
+
+  if (!candidate?.content) {
+    throw new ContentBlockedError(
+      "Content generation was blocked by safety filters",
+      mapSafetyRatings(candidate?.safetyRatings)
+    );
+  }
+
+  const textParts = (candidate.content.parts ?? []).filter(
+    (p) => typeof p.text === "string" && !p.thought
+  );
+
+  if (textParts.length === 0) {
+    throw new GenerationError("No text content in response");
+  }
+
+  return {
+    candidate,
+    generatedText: textParts.map((p) => p.text).join(""),
+  };
+}
+
+/**
  * Generate content using Vertex AI Gemini.
  *
  * This function:
@@ -289,9 +377,8 @@ const DEFAULT_SAFETY_SETTINGS = [
 /**
  * Billable output tokens for a response.
  *
- * Gemini 2.5 "thinking" models bill internal reasoning as output, reported
- * separately as `thoughtsTokenCount`. The SDK's UsageMetadata type does not
- * declare that field, so it is read defensively.
+ * Gemini "thinking" models bill internal reasoning as output, reported
+ * separately as `thoughtsTokenCount`.
  *
  * Counting only `candidatesTokenCount` under-reported real output spend by
  * roughly 8x on interview turns (measured 2026-08-31: 119 visible tokens
@@ -299,14 +386,15 @@ const DEFAULT_SAFETY_SETTINGS = [
  * `spend-cap.ts` permit far more real spend than it recorded.
  */
 export function billableOutputTokens(
-  usageMetadata: { candidatesTokenCount?: number } | undefined,
+  usageMetadata:
+    | { candidatesTokenCount?: number; thoughtsTokenCount?: number }
+    | undefined,
   fallbackText: string
 ): number {
   if (!usageMetadata) return estimateTokensFromText(fallbackText);
 
   const visible = usageMetadata.candidatesTokenCount ?? 0;
-  const thinking =
-    (usageMetadata as { thoughtsTokenCount?: number }).thoughtsTokenCount ?? 0;
+  const thinking = usageMetadata.thoughtsTokenCount ?? 0;
 
   // An empty metadata object still means "no counts" - fall back rather than
   // record the call as free.
@@ -335,25 +423,6 @@ export async function generateContent(
     await enforceSpendCap();
   }
 
-  const env = getEnv();
-  const vertexAI = getVertexAI();
-
-  // Get the generative model
-  const model = vertexAI.getGenerativeModel({
-    model: env.VERTEX_AI_MODEL,
-    generationConfig: {
-      temperature,
-      maxOutputTokens,
-      topP,
-      topK,
-    },
-    safetySettings: DEFAULT_SAFETY_SETTINGS,
-    systemInstruction: systemInstruction
-      ? { role: "system", parts: [{ text: systemInstruction }] }
-      : undefined,
-  });
-
-  // Build the content request
   const contents: Content[] = [
     {
       role: "user",
@@ -361,47 +430,14 @@ export async function generateContent(
     },
   ];
 
-  let result: GenerateContentResult;
-
-  try {
-    result = await model.generateContent({ contents });
-  } catch (error) {
-    throw new GenerationError(
-      `Failed to generate content: ${error instanceof Error ? error.message : String(error)}`,
-      error instanceof Error ? error : undefined
-    );
-  }
-
-  // Extract the response
-  const response = result.response;
-
-  // Check if content was blocked
-  if (
-    !response.candidates ||
-    response.candidates.length === 0 ||
-    !response.candidates[0].content
-  ) {
-    const safetyRatings = response.candidates?.[0]?.safetyRatings?.map((r) => ({
-      category: String(r.category),
-      probability: String(r.probabilityScore ?? r.probability ?? "UNKNOWN"),
-    }));
-
-    throw new ContentBlockedError(
-      "Content generation was blocked by safety filters",
-      safetyRatings
-    );
-  }
-
-  const candidate = response.candidates[0];
-  const textParts = candidate.content.parts.filter(
-    (p): p is Part & { text: string } => "text" in p && typeof p.text === "string"
-  );
-
-  if (textParts.length === 0) {
-    throw new GenerationError("No text content in response");
-  }
-
-  const generatedText = textParts.map((p) => p.text).join("");
+  const response = await requestCompletion(contents, {
+    systemInstruction,
+    temperature,
+    maxOutputTokens,
+    topP,
+    topK,
+  });
+  const { candidate, generatedText } = extractCandidateText(response);
 
   // A MAX_TOKENS finish means this text is a fragment. Fail here rather than
   // let a caller parse a truncated string and blame the JSON (A9).
@@ -423,11 +459,7 @@ export async function generateContent(
     await recordSpendFromTokens(inputTokens, outputTokens);
   }
 
-  // Extract safety ratings
-  const safetyRatings = candidate.safetyRatings?.map((r) => ({
-    category: String(r.category),
-    probability: String(r.probabilityScore ?? r.probability ?? "UNKNOWN"),
-  }));
+  const safetyRatings = mapSafetyRatings(candidate.safetyRatings);
 
   return {
     text: generatedText,
@@ -472,84 +504,27 @@ export async function generateContentWithHistory(
     await enforceSpendCap();
   }
 
-  const env = getEnv();
-  const vertexAI = getVertexAI();
-
-  // Get the generative model
-  const model = vertexAI.getGenerativeModel({
-    model: env.VERTEX_AI_MODEL,
-    generationConfig: {
-      temperature,
-      maxOutputTokens,
-      topP,
-      topK,
-      // EXPERIMENTAL: thinkingConfig is not declared by
-      // @google-cloud/vertexai@1.10.0's GenerationConfig, so it is cast
-      // through to the REST API. A silently ignored field would leave the
-      // truncation in place while looking fixed -- verify thoughtsTokenCount
-      // actually drops before relying on this.
-      ...(thinkingBudget !== undefined
-        ? { thinkingConfig: { thinkingBudget } }
-        : {}),
-    } as GenerationConfig,
-    safetySettings: DEFAULT_SAFETY_SETTINGS,
-    systemInstruction: systemInstruction
-      ? { role: "system", parts: [{ text: systemInstruction }] }
-      : undefined,
-  });
-
   // Build the content request with history
   const contents: Content[] = [
     ...history.map((msg) => ({
-      role: msg.role as "user" | "model",
+      role: msg.role,
       parts: [{ text: msg.text }],
     })),
     {
-      role: "user" as const,
+      role: "user",
       parts: [{ text: newMessage }],
     },
   ];
 
-  let result: GenerateContentResult;
-
-  try {
-    result = await model.generateContent({ contents });
-  } catch (error) {
-    throw new GenerationError(
-      `Failed to generate content: ${error instanceof Error ? error.message : String(error)}`,
-      error instanceof Error ? error : undefined
-    );
-  }
-
-  // Extract the response (same logic as generateContent)
-  const response = result.response;
-
-  if (
-    !response.candidates ||
-    response.candidates.length === 0 ||
-    !response.candidates[0].content
-  ) {
-    const safetyRatings = response.candidates?.[0]?.safetyRatings?.map((r) => ({
-      category: String(r.category),
-      probability: String(r.probabilityScore ?? r.probability ?? "UNKNOWN"),
-    }));
-
-    throw new ContentBlockedError(
-      "Content generation was blocked by safety filters",
-      safetyRatings
-    );
-  }
-
-  const candidate = response.candidates[0];
-  const textParts = candidate.content.parts.filter(
-    (p): p is Part & { text: string } => "text" in p && typeof p.text === "string"
-  );
-
-  if (textParts.length === 0) {
-    throw new GenerationError("No text content in response");
-  }
-
-  const generatedText = textParts.map((p) => p.text).join("");
+  const response = await requestCompletion(contents, {
+    systemInstruction,
+    temperature,
+    maxOutputTokens,
+    topP,
+    topK,
+    thinkingBudget,
+  });
+  const { candidate, generatedText } = extractCandidateText(response);
 
   // NOTE: no truncation guard on this (streaming/interview) path yet. Interview
   // is confirmed working and returns conversational text where a MAX_TOKENS cut
@@ -571,10 +546,7 @@ export async function generateContentWithHistory(
     await recordSpendFromTokens(inputTokens, outputTokens);
   }
 
-  const safetyRatings = candidate.safetyRatings?.map((r) => ({
-    category: String(r.category),
-    probability: String(r.probabilityScore ?? r.probability ?? "UNKNOWN"),
-  }));
+  const safetyRatings = mapSafetyRatings(candidate.safetyRatings);
 
   return {
     text: generatedText,

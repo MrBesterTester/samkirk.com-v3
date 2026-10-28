@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 
 // Mock server-only before importing the module
 vi.mock("server-only", () => ({}));
@@ -7,9 +7,22 @@ vi.mock("server-only", () => ({}));
 vi.mock("./env", () => ({
   getEnv: vi.fn(() => ({
     GCP_PROJECT_ID: "test-project",
-    VERTEX_AI_LOCATION: "us-central1",
-    VERTEX_AI_MODEL: "gemini-pro",
+    VERTEX_AI_LOCATION: "global",
+    VERTEX_AI_MODEL: "gemini-3.5-flash-lite",
   })),
+}));
+
+// Mock the Gen AI client; keep the SDK's real enums.
+const { mockGenerateContent, mockGoogleGenAI } = vi.hoisted(() => {
+  const mockGenerateContent = vi.fn();
+  const mockGoogleGenAI = vi.fn(function () {
+    return { models: { generateContent: mockGenerateContent } };
+  });
+  return { mockGenerateContent, mockGoogleGenAI };
+});
+vi.mock("@google/genai", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@google/genai")>()),
+  GoogleGenAI: mockGoogleGenAI,
 }));
 
 // Mock spend cap
@@ -26,6 +39,10 @@ vi.mock("./spend-cap", () => ({
 import {
   ContentBlockedError,
   GenerationError,
+  TruncatedResponseError,
+  generateContent,
+  generateContentWithHistory,
+  resetVertexAI,
   isSpendCapError,
   isContentBlockedError,
   isGenerationError,
@@ -195,5 +212,167 @@ describe("Error inheritance", () => {
 
     expect(error.stack).toBeDefined();
     expect(error.stack).toContain("ContentBlockedError");
+  });
+});
+
+// ============================================================================
+// Tests: Gen AI SDK request and response handling
+// ============================================================================
+
+function sdkResponse(overrides: {
+  parts?: Array<{ text?: string; thought?: boolean }>;
+  finishReason?: string;
+  usageMetadata?: Record<string, number>;
+  candidates?: unknown[];
+} = {}) {
+  return {
+    candidates: overrides.candidates ?? [
+      {
+        content: {
+          role: "model",
+          parts: overrides.parts ?? [{ text: "Hello from Gemini" }],
+        },
+        finishReason: overrides.finishReason ?? "STOP",
+        safetyRatings: [
+          { category: "HARM_CATEGORY_HATE_SPEECH", probability: "NEGLIGIBLE" },
+        ],
+      },
+    ],
+    usageMetadata: overrides.usageMetadata ?? {
+      promptTokenCount: 100,
+      candidatesTokenCount: 20,
+      thoughtsTokenCount: 30,
+    },
+  };
+}
+
+describe("Gen AI client", () => {
+  beforeEach(() => {
+    resetVertexAI();
+    mockGoogleGenAI.mockClear();
+    mockGenerateContent.mockReset();
+  });
+
+  it("is built in Vertex AI mode with project and location from env", async () => {
+    mockGenerateContent.mockResolvedValue(sdkResponse());
+
+    await generateContent("Hi", { skipSpendCap: true });
+
+    expect(mockGoogleGenAI).toHaveBeenCalledWith(
+      expect.objectContaining({
+        vertexai: true,
+        project: "test-project",
+        location: "global",
+      })
+    );
+  });
+
+  it("sends the model, prompt and config in one request", async () => {
+    mockGenerateContent.mockResolvedValue(sdkResponse());
+
+    await generateContent("Analyze this job", {
+      systemInstruction: "You are a fit analyzer",
+      temperature: 0.3,
+      maxOutputTokens: 16384,
+      skipSpendCap: true,
+    });
+
+    const request = mockGenerateContent.mock.calls[0][0];
+    expect(request.model).toBe("gemini-3.5-flash-lite");
+    expect(request.contents).toEqual([
+      { role: "user", parts: [{ text: "Analyze this job" }] },
+    ]);
+    expect(request.config).toMatchObject({
+      systemInstruction: "You are a fit analyzer",
+      temperature: 0.3,
+      maxOutputTokens: 16384,
+      topP: 0.9,
+      topK: 40,
+    });
+    expect(request.config.safetySettings).toHaveLength(4);
+  });
+
+  it("returns visible text only, never thought parts", async () => {
+    mockGenerateContent.mockResolvedValue(
+      sdkResponse({
+        parts: [
+          { text: "reasoning...", thought: true },
+          { text: "The answer." },
+        ],
+      })
+    );
+
+    const result = await generateContent("Q", { skipSpendCap: true });
+
+    expect(result.text).toBe("The answer.");
+  });
+
+  it("bills thinking tokens as output", async () => {
+    mockGenerateContent.mockResolvedValue(sdkResponse());
+
+    const result = await generateContent("Q", { skipSpendCap: true });
+
+    expect(result.usage).toEqual({
+      inputTokens: 100,
+      outputTokens: 50,
+      totalTokens: 150,
+    });
+  });
+
+  it("throws TruncatedResponseError on a MAX_TOKENS finish", async () => {
+    mockGenerateContent.mockResolvedValue(
+      sdkResponse({ finishReason: "MAX_TOKENS", parts: [{ text: '{"a": "tru' }] })
+    );
+
+    await expect(
+      generateContent("Q", { skipSpendCap: true })
+    ).rejects.toBeInstanceOf(TruncatedResponseError);
+  });
+
+  it("throws ContentBlockedError when no candidate comes back", async () => {
+    mockGenerateContent.mockResolvedValue(sdkResponse({ candidates: [] }));
+
+    await expect(
+      generateContent("Q", { skipSpendCap: true })
+    ).rejects.toBeInstanceOf(ContentBlockedError);
+  });
+
+  it("wraps SDK failures in GenerationError", async () => {
+    mockGenerateContent.mockRejectedValue(new Error("400 INVALID_ARGUMENT"));
+
+    await expect(
+      generateContent("Q", { skipSpendCap: true })
+    ).rejects.toThrow(/Failed to generate content: 400 INVALID_ARGUMENT/);
+  });
+
+  it("sends history in order, then the new message", async () => {
+    mockGenerateContent.mockResolvedValue(sdkResponse());
+
+    await generateContentWithHistory(
+      [
+        { role: "user", text: "Hi" },
+        { role: "model", text: "Hello" },
+      ],
+      "Tell me about Sam",
+      { skipSpendCap: true }
+    );
+
+    expect(mockGenerateContent.mock.calls[0][0].contents).toEqual([
+      { role: "user", parts: [{ text: "Hi" }] },
+      { role: "model", parts: [{ text: "Hello" }] },
+      { role: "user", parts: [{ text: "Tell me about Sam" }] },
+    ]);
+  });
+
+  it("returns a MAX_TOKENS finish from history calls instead of throwing", async () => {
+    mockGenerateContent.mockResolvedValue(
+      sdkResponse({ finishReason: "MAX_TOKENS" })
+    );
+
+    const result = await generateContentWithHistory([], "Q", {
+      skipSpendCap: true,
+    });
+
+    expect(result.finishReason).toBe("MAX_TOKENS");
   });
 });
