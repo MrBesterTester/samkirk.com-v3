@@ -426,7 +426,7 @@ Analyze how well Sam fits this role. Respond with JSON only (no markdown):
   if (usageMetadata) {
     const inputTokens = usageMetadata.promptTokenCount ?? 0;
     const outputTokens = usageMetadata.candidatesTokenCount ?? 0;
-    const estimatedCost = (inputTokens / 1000) * 0.00125 + (outputTokens / 1000) * 0.00375;
+    const estimatedCost = (inputTokens / 1000) * 0.0003 + (outputTokens / 1000) * 0.0025;
     log(`Token usage: ${inputTokens} input, ${outputTokens} output`);
     log(`Estimated cost: $${estimatedCost.toFixed(4)}`);
   }
@@ -711,7 +711,7 @@ Generate a tailored 2-page professional resume as specified. Remember:
   if (usageMetadata) {
     const inputTokens = usageMetadata.promptTokenCount ?? 0;
     const outputTokens = usageMetadata.candidatesTokenCount ?? 0;
-    const estimatedCost = (inputTokens / 1000) * 0.00125 + (outputTokens / 1000) * 0.00375;
+    const estimatedCost = (inputTokens / 1000) * 0.0003 + (outputTokens / 1000) * 0.0025;
     log(`Token usage: ${inputTokens} input, ${outputTokens} output`);
     log(`Estimated cost: $${estimatedCost.toFixed(4)}`);
   }

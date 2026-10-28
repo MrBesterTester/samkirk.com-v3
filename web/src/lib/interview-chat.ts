@@ -58,15 +58,15 @@ export const INTERVIEW_TEMPERATURE = 0.7;
 /**
  * Maximum output tokens for interview responses (thinking + visible answer).
  *
- * Raised from 1024 on 2026-08-31. With thinking bounded by
- * INTERVIEW_THINKING_LEVEL, a broad question ("walk me through Sam's entire
+ * Raised from 1024 on 2026-08-31. With thinking bounded (then a 256-token
+ * budget; now INTERVIEW_THINKING_LEVEL), a broad question ("walk me through Sam's entire
  * career history") still needed 861 answer tokens and hit the old cap, so
  * hiring managers asking the widest questions got fragments.
  *
  * Cost impact is small and bounded by the controls SPECIFICATION.md §10
  * actually specifies -- 10 requests/10 min and the $20/month cap -- not by this
- * number. At the conservative $0.00375/1K output rate the worst case is about
- * $0.0077 more per turn, and bounding thinking already cut typical billable
+ * number. At the $0.0025/1K output rate (gemini-3.5-flash-lite) the worst case
+ * is about $0.0051 more per turn, and bounding thinking already cut typical billable
  * output from 1020 to 458.
  */
 export const INTERVIEW_MAX_TOKENS = 3072;

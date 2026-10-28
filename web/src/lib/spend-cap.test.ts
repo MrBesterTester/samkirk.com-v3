@@ -235,10 +235,12 @@ describe("spend-cap module", () => {
     });
 
     it("scales linearly with input tokens", () => {
-      const cost1k = estimateLlmCost(1000, 0);
-      const cost2k = estimateLlmCost(2000, 0);
+      // 10K tokens, so both costs sit above MIN_COST_PER_CALL_USD.
+      const cost10k = estimateLlmCost(10000, 0);
+      const cost20k = estimateLlmCost(20000, 0);
 
-      expect(cost2k).toBeCloseTo(cost1k * 2, 10);
+      expect(cost10k).toBeGreaterThan(MIN_COST_PER_CALL_USD);
+      expect(cost20k).toBeCloseTo(cost10k * 2, 10);
     });
 
     it("scales linearly with output tokens", () => {

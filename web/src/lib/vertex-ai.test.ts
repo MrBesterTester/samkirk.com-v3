@@ -31,7 +31,7 @@ vi.mock("./spend-cap", () => ({
   recordSpendFromTokens: vi.fn(),
   estimateTokensFromText: vi.fn((text: string) => Math.ceil(text.length / 4)),
   estimateLlmCost: vi.fn((input: number, output: number) =>
-    (input / 1000) * 0.00125 + (output / 1000) * 0.00375
+    (input / 1000) * 0.0003 + (output / 1000) * 0.0025
   ),
 }));
 

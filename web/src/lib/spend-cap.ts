@@ -25,17 +25,20 @@ export const DEFAULT_MONTHLY_BUDGET_USD = SPEND_CAP_USD;
 // ============================================================================
 
 /**
- * Estimated cost per 1000 input tokens in USD.
- * Based on Gemini Pro pricing (conservative estimate).
- * Actual pricing varies by model; this is a safe upper bound.
+ * Cost per 1000 input tokens in USD: gemini-3.5-flash-lite on the global
+ * endpoint, $0.30 per 1M (Google's Generative AI pricing, read 2026-10-28).
+ *
+ * Must match the model in VERTEX_AI_MODEL. A price below the real one lets
+ * actual spend pass the monthly cap unnoticed: gemini-3.8-flash would need
+ * 0.0015 / 0.0075 from Jan 1, 2027.
  */
-export const COST_PER_1K_INPUT_TOKENS_USD = 0.00125;
+export const COST_PER_1K_INPUT_TOKENS_USD = 0.0003;
 
 /**
- * Estimated cost per 1000 output tokens in USD.
- * Based on Gemini Pro pricing (conservative estimate).
+ * Cost per 1000 output tokens in USD, thinking included: gemini-3.5-flash-lite
+ * on the global endpoint, $2.50 per 1M.
  */
-export const COST_PER_1K_OUTPUT_TOKENS_USD = 0.00375;
+export const COST_PER_1K_OUTPUT_TOKENS_USD = 0.0025;
 
 /**
  * Minimum cost to record per LLM call (floor to avoid rounding to zero).

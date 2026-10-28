@@ -31,8 +31,8 @@ import { z } from "zod";
 
 // Mirrored from src/lib/spend-cap.ts (server-only guard prevents direct import)
 const SPEND_CAP_USD = 20;
-const COST_PER_1K_INPUT_TOKENS_USD = 0.00125;
-const COST_PER_1K_OUTPUT_TOKENS_USD = 0.00375;
+const COST_PER_1K_INPUT_TOKENS_USD = 0.0003;
+const COST_PER_1K_OUTPUT_TOKENS_USD = 0.0025;
 const MIN_COST_PER_CALL_USD = 0.001;
 const DEFAULT_MONTHLY_BUDGET_USD = SPEND_CAP_USD;
 

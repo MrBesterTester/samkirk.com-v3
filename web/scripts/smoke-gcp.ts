@@ -1591,7 +1591,7 @@ Generated at: ${new Date().toISOString()}
     // Calculate estimated cost (conservative estimate)
     const inputTokens = usageMetadata?.promptTokenCount ?? 50;
     const outputTokens = usageMetadata?.candidatesTokenCount ?? 50;
-    const estimatedCost = (inputTokens / 1000) * 0.00125 + (outputTokens / 1000) * 0.00375;
+    const estimatedCost = (inputTokens / 1000) * 0.0003 + (outputTokens / 1000) * 0.0025;
     
     // Record the spend
     await firestore.runTransaction(async (transaction) => {
