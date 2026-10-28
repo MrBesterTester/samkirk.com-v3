@@ -1,0 +1,36 @@
+{
+  "overallScore": "Partial",
+  "recommendation": "While Sam brings deep Python and TypeScript expertise alongside recent AI application building, his background lacks professional experience with mainstream ML frameworks (TensorFlow, PyTorch) and container orchestration (Docker, Kubernetes).",
+  "categories": [
+    {
+      "name": "Technical Skills",
+      "score": "Partial",
+      "rationale": "Sam has strong proficiency in Python (8+ years) and TypeScript (4+ years) with GCP exposure (Vertex AI, Cloud Firestore), but his resume does not show professional experience with TensorFlow, PyTorch, Docker, or Kubernetes.",
+      "citations": [
+        "Employment History > Chief Consulting Engineer — SAK Consulting (Current, 2022-present)",
+        "Aggregated Skills Summary > Primary Technologies — Years of Experience"
+      ]
+    },
+    {
+      "name": "Experience Level",
+      "score": "Well",
+      "rationale": "Sam has over 45 years of Silicon Valley engineering experience, significantly exceeding the requirement for 5+ years of software engineering experience.",
+      "citations": [
+        "Samuel A. Kirk",
+        "Career Summary"
+      ]
+    },
+    {
+      "name": "Location Fit",
+      "score": "Well",
+      "rationale": "The position is fully remote (US), and Sam is based in Fremont, CA, easily matching the geographic requirement.",
+      "citations": [
+        "Employment History > Chief Consulting Engineer — SAK Consulting (Current, 2022-present)"
+      ]
+    }
+  ],
+  "unknowns": [
+    "Experience with production-grade container orchestration (Docker, Kubernetes)",
+    "Hands-on experience with deep learning frameworks like TensorFlow or PyTorch"
+  ]
+}

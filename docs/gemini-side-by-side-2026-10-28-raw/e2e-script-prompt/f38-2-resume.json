@@ -1,0 +1,145 @@
+{
+  "header": {
+    "name": "Sam Kirk",
+    "title": "Senior Software Engineer - AI Platform",
+    "email": "sam@samkirk.com",
+    "location": "Fremont, CA"
+  },
+  "summary": "Senior Software Engineer with extensive experience in Python, TypeScript, and Google Cloud AI infrastructure, backed by decades of designing scalable software architectures and data systems. Proven record deploying generative AI applications using Vertex AI and Google Gemini, building automated data processing pipelines, and mentoring engineering talent.",
+  "skills": [
+    {
+      "category": "Programming Languages",
+      "items": [
+        "Python",
+        "TypeScript",
+        "C++",
+        "C",
+        "Rust"
+      ]
+    },
+    {
+      "category": "Cloud & AI Platforms",
+      "items": [
+        "Google Cloud Platform (GCP)",
+        "Vertex AI",
+        "Google Gemini",
+        "Google Cloud Firestore",
+        "Cloud Storage",
+        "Firebase",
+        "REST APIs"
+      ]
+    },
+    {
+      "category": "Data & Analysis",
+      "items": [
+        "NumPy",
+        "Pandas",
+        "Matplotlib",
+        "SQL Databases",
+        "Time-Series Data Analysis",
+        "Linux/Unix"
+      ]
+    },
+    {
+      "category": "Software Architecture & Testing",
+      "items": [
+        "Next.js",
+        "React",
+        "Playwright",
+        "Vitest",
+        "Selenium",
+        "Git",
+        "Continuous Integration",
+        "Object-Oriented Design"
+      ]
+    },
+    {
+      "category": "AI Development Tools",
+      "items": [
+        "Cursor",
+        "Claude Code",
+        "GitHub Copilot",
+        "ChatGPT",
+        "Perplexity.ai",
+        "Prompt Engineering"
+      ]
+    }
+  ],
+  "experience": [
+    {
+      "title": "Chief Consulting Engineer",
+      "company": "Samuel A. Kirk Consulting",
+      "dateRange": "2022 - Present",
+      "bullets": [
+        "Architected full-stack AI-powered applications utilizing TypeScript, React, Next.js, and Google Cloud services including Vertex AI, Firestore, and Cloud Storage.",
+        "Built the 'Hire Me' AI Tools Suite utilizing Vertex AI for automated job fit analysis, factual resume generation, and interactive conversational Q&A chatbots.",
+        "Engineered Photo Fun, an AI photo transformation web application integrating Google Gemini and Vertex AI for production deployment on Vercel.",
+        "Implemented Tensor Logic interactive platform exploring symbolic and neural AI paradigms with a TypeScript/Vite frontend and a Rust/Axum backend.",
+        "Applied advanced generative AI-assisted workflows (Cursor, Claude Code, GitHub Copilot) for rapid full-stack system implementation, automated testing, and documentation."
+      ]
+    },
+    {
+      "title": "Test Engineer III - Embedded Software",
+      "company": "Talis BioMedical",
+      "dateRange": "2020 - 2022",
+      "bullets": [
+        "Developed and maintained automated software verification and regression testing suites for medical instruments in Python.",
+        "Created comprehensive API reference documentation hosted on internal web platforms using automated Sphinx documentation extensions.",
+        "Proposed and designed an end-to-end continuous integration and remote target testing architecture for instrument firmware and software verification."
+      ]
+    },
+    {
+      "title": "Software Development Engineer in Test (SDET)",
+      "company": "Excelfore Corp",
+      "dateRange": "2018 - 2019",
+      "bullets": [
+        "Architected a scalable, highly object-oriented test framework in Python mediating between cloud servers and vehicular endpoints to verify Over-the-Air (OTA) firmware updates.",
+        "Engineered concurrent application log following and telemetry monitoring during live execution across multiple logging tiers.",
+        "Implemented dynamic, modular test procedure loading with full context management of system resources and two levels of stop-on-fail execution control.",
+        "Constructed structured YAML configuration pipelines for extensive test parameterization across distributed hardware and server environments."
+      ]
+    },
+    {
+      "title": "Sr. Diagnostic Software Engineer",
+      "company": "Cadence Design Systems",
+      "dateRange": "2015 - 2017",
+      "bullets": [
+        "Created telemetry data log visualization and processing pipelines using Python, NumPy, Pandas, and Matplotlib across multidimensional measurement streams.",
+        "Constructed relational SQL databases for parsed, cleaned telemetry logs and implemented time-series cross-tabulation of system status words.",
+        "Developed automated environmental data logging synchronized with system test logs in Python to correlate operational telemetry with physical metrics in time.",
+        "Authored all digital and analog control software in Python on Debian Linux across multi-microcomputer test controller environments."
+      ]
+    },
+    {
+      "title": "Sr. Software Engineer",
+      "company": "LTX-Credence",
+      "dateRange": "2012 - 2014",
+      "bullets": [
+        "Developed timing calibration software in C++ and Python for a 192-channel digital Automated Test Equipment (ATE) instrument.",
+        "Engineered automated pipelines using custom Python scripts to generate complex XML test patterns.",
+        "Co-designed four separate production applications of a generic parallel, binary search object for precision calibration."
+      ]
+    },
+    {
+      "title": "Sr. Test Program Engineer",
+      "company": "OCZ Technology",
+      "dateRange": "2010 - 2012",
+      "bullets": [
+        "Developed functional and performance test software on Linux platforms using C, Perl, and Java integrated with backend SQL databases.",
+        "Mentored a new college graduate engineer in test development methodology and storage test architecture."
+      ]
+    }
+  ],
+  "education": [
+    {
+      "degree": "MS, Applied Math & Systems Sciences",
+      "institution": "University of Louisville",
+      "year": "1982"
+    },
+    {
+      "degree": "BA, Philosophy & Mathematics",
+      "institution": "Ohio State University",
+      "year": "1973"
+    }
+  ]
+}

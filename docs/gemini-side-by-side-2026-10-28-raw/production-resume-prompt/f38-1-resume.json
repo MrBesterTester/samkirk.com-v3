@@ -1,0 +1,161 @@
+{
+  "header": {
+    "name": "Sam Kirk",
+    "title": "Senior Software Engineer - AI Platform",
+    "email": "sam@samkirk.com",
+    "location": "Fremont, CA",
+    "linkedIn": "linkedin.com/in/samuelkirk",
+    "website": "samkirk.com"
+  },
+  "summary": "Accomplished Senior Software Engineer with over 8 years of Python experience, 4+ years of TypeScript development, and extensive expertise building AI-integrated applications on Google Cloud (Vertex AI, Firestore). Skilled in designing full-stack systems, telemetry data processing with numpy and pandas, and scalable automated testing architectures. Proven mentor with decades of software engineering leadership in Silicon Valley.",
+  "skills": [
+    {
+      "category": "Cloud & AI Platforms",
+      "items": [
+        "Google Cloud (GCP)",
+        "Vertex AI",
+        "Google Gemini API",
+        "Firestore",
+        "Firebase",
+        "Cloud Storage"
+      ]
+    },
+    {
+      "category": "Programming Languages",
+      "items": [
+        "Python",
+        "TypeScript",
+        "Rust",
+        "C++",
+        "C",
+        "SQL"
+      ]
+    },
+    {
+      "category": "Data & Analysis",
+      "items": [
+        "numpy",
+        "pandas",
+        "matplotlib",
+        "Time-series Analysis",
+        "Data Logging & Telemetry"
+      ]
+    },
+    {
+      "category": "Frameworks & Tools",
+      "items": [
+        "React",
+        "Next.js",
+        "Vite",
+        "Axum",
+        "Vitest",
+        "Playwright",
+        "Tailwind CSS",
+        "Git",
+        "Linux (Debian, RHEL, Ubuntu)"
+      ]
+    },
+    {
+      "category": "AI Development Workflows",
+      "items": [
+        "Claude Code",
+        "Cursor",
+        "GitHub Copilot",
+        "ChatGPT",
+        "Perplexity.ai"
+      ]
+    }
+  ],
+  "experience": [
+    {
+      "title": "Chief Consulting Engineer",
+      "company": "Samuel A. Kirk Consulting",
+      "dateRange": "2022 - Present",
+      "location": "Fremont, CA",
+      "bullets": [
+        "Architected full-stack web applications using TypeScript, React, Next.js, and Google Cloud infrastructure including Vertex AI, Firestore, and Cloud Storage.",
+        "Built the 'Hire Me' AI Tools Suite powered by Vertex AI, featuring automated job-fit scoring, dynamic factual resume generation, and interactive conversational Q&A.",
+        "Developed 'Photo Fun', an AI image transformation application integrating Google Gemini, TypeScript, Vite, and Firebase, hosted on Vercel with Vertex AI for production.",
+        "Constructed 'Tensor Logic', an interactive educational AI application demonstrating neural and symbolic AI paradigms with a TypeScript/Vite frontend and a Rust/Axum backend on Shuttle.rs.",
+        "Created end-to-end testing and verification suites using Vitest and Playwright to maintain high quality and reliability across AI-driven applications."
+      ]
+    },
+    {
+      "title": "Test Engineer III - Embedded Software",
+      "company": "Talis BioMedical",
+      "dateRange": "2020 - 2022",
+      "location": "Menlo Park, CA",
+      "bullets": [
+        "Developed Python-based verification testing and automation for medical point-of-care diagnostic instruments.",
+        "Built comprehensive API reference documentation hosted on internal web infrastructure using a novel Sphinx extension.",
+        "Implemented instrument software verification suites comprising 9 USB-based update verification tests and regression testing.",
+        "Proposed and designed remote-access continuous integration and real target testing architecture covering all physical interfaces."
+      ]
+    },
+    {
+      "title": "Software Development Engineer in Test (SDET)",
+      "company": "Excelfore Corp",
+      "dateRange": "2018 - 2019",
+      "location": "Fremont, CA",
+      "bullets": [
+        "Engineered an object-oriented Python test framework mediating between cloud servers and hardware endpoints to verify Over the Air (OTA) firmware updates.",
+        "Designed the test framework for high scalability, incorporating three levels of logging and modular, dynamically loaded test procedures.",
+        "Implemented real-time concurrent application log monitoring and dual-level stop-on-fail execution controls on Ubuntu Linux.",
+        "Created comprehensive YAML configuration files for flexible test suite parameterization and context management of system resources."
+      ]
+    },
+    {
+      "title": "Sr. Diagnostic Software Engineer",
+      "company": "Cadence Design Systems",
+      "dateRange": "2015 - 2017",
+      "location": "San Jose, CA",
+      "bullets": [
+        "Constructed telemetry event log analysis and visualization pipelines using Python, numpy, pandas, and matplotlib across multi-dimensional system status metrics.",
+        "Engineered time-series plotting and cross-tabulation tools for telemetry data streams from built-in hardware monitors.",
+        "Constructed SQL databases for parsed, cleaned test data correlated synchronously with environmental and system-level test logs in Python.",
+        "Wrote digital and analog control software in Python running on Debian Linux across microcomputer test nodes."
+      ]
+    },
+    {
+      "title": "Sr. Software Engineer",
+      "company": "LTX-Credence",
+      "dateRange": "2012 - 2014",
+      "location": "Milpitas, CA",
+      "bullets": [
+        "Authored custom Python scripts to generate XML timing patterns for high-speed digital instrument calibration.",
+        "Designed and implemented timing calibration software in C++ for a 192-channel digital ATE instrument.",
+        "Co-designed four distinct applications of a generic parallel, binary search object."
+      ]
+    },
+    {
+      "title": "Sr. Test Program Engineer",
+      "company": "OCZ Technology",
+      "dateRange": "2010 - 2012",
+      "location": "San Jose, CA",
+      "bullets": [
+        "Developed functional and performance test suites on Linux test platforms with SQL database integration for enterprise SSDs.",
+        "Mentored a new college graduate engineer in test development methodologies and Linux scripting practices."
+      ]
+    }
+  ],
+  "education": [
+    {
+      "degree": "MS, Applied Math & Systems Sciences",
+      "institution": "University of Louisville",
+      "year": "1982",
+      "details": "Louisville, KY"
+    },
+    {
+      "degree": "BA, Philosophy & Mathematics",
+      "institution": "Ohio State University",
+      "year": "1973",
+      "details": "Columbus, OH"
+    }
+  ],
+  "additionalSections": [
+    {
+      "title": "Technical Domains & Platforms",
+      "content": "Deep background across Linux/Unix systems since 1980, server platforms, automated measurement, cloud AI API integration (Google Vertex AI, Google Gemini), data telemetry pipelines, and continuous integration workflows."
+    }
+  ]
+}

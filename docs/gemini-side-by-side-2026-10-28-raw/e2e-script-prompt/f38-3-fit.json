@@ -1,0 +1,38 @@
+{
+  "overallScore": "Partial",
+  "recommendation": "Sam brings extensive software engineering experience with strong proficiency in Python, TypeScript, and Google Cloud AI integrations, but lacks documented professional background with core ML frameworks like TensorFlow/PyTorch and container orchestration (Docker/Kubernetes).",
+  "categories": [
+    {
+      "name": "Technical Skills",
+      "score": "Partial",
+      "rationale": "Sam strongly meets the requirements for Python (8+ years), TypeScript (4+ years), and GCP (Vertex AI, Firestore, Cloud Storage). However, he lacks documented production experience with containerization technologies (Docker, Kubernetes) and core ML frameworks (TensorFlow, PyTorch), with ML and deep learning noted as personal interests rather than professional experience.",
+      "citations": [
+        "Aggregated Skills Summary > Primary Technologies — Years of Experience",
+        "Employment History > Chief Consulting Engineer — SAK Consulting (Current, 2022-present) > Projects — Software & Web Development",
+        "Areas of Interest"
+      ]
+    },
+    {
+      "name": "Experience Level",
+      "score": "Well",
+      "rationale": "The role requires 5+ years of software engineering experience for a Senior level position. Sam brings over 45 years of software engineering, diagnostics, and test automation experience, including recent senior consulting work in AI-assisted full-stack development.",
+      "citations": [
+        "Career Summary",
+        "Career Summary > Cumulative Experience by Role Type",
+        "Employment History > Chief Consulting Engineer — SAK Consulting (Current, 2022-present)"
+      ]
+    },
+    {
+      "name": "Location Fit",
+      "score": "Well",
+      "rationale": "The role is fully remote within the United States. Sam resides in Fremont, CA, satisfying the location requirement.",
+      "citations": [
+        "Samuel A. Kirk > Contact Information"
+      ]
+    }
+  ],
+  "unknowns": [
+    "Whether Sam has unlisted exposure to Docker, Kubernetes, or containerized deployments",
+    "Hands-on depth with distributed systems and model productionization pipelines"
+  ]
+}

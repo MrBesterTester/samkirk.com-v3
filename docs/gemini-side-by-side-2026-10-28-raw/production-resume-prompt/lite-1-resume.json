@@ -1,0 +1,142 @@
+{
+  "header": {
+    "name": "Sam Kirk",
+    "title": "Senior Software Engineer - AI Platform",
+    "email": "sam@samkirk.com",
+    "location": "Fremont, CA",
+    "linkedIn": "linkedin.com/in/samuelkirk",
+    "website": "samkirk.com"
+  },
+  "summary": "Senior Software Engineer and Chief Consulting Engineer with extensive expertise in full-stack development, Python, TypeScript, and AI-assisted tooling. Proven background in designing and scaling test automation, data processing pipelines, and cloud-integrated applications utilizing Google Cloud and Vertex AI.",
+  "skills": [
+    {
+      "category": "Programming Languages",
+      "items": [
+        "Python",
+        "TypeScript",
+        "C",
+        "C++",
+        "Rust"
+      ]
+    },
+    {
+      "category": "Cloud & Infrastructure",
+      "items": [
+        "Google Cloud Platform (GCP)",
+        "Vertex AI",
+        "Google Cloud Firestore",
+        "Firebase",
+        "Vercel",
+        "Linux",
+        "Git"
+      ]
+    },
+    {
+      "category": "Testing & Frameworks",
+      "items": [
+        "React",
+        "Next.js",
+        "Tailwind CSS",
+        "Vitest",
+        "Playwright",
+        "Selenium",
+        "PyTest",
+        "numpy",
+        "pandas",
+        "matplotlib"
+      ]
+    },
+    {
+      "category": "AI & GenAI Tools",
+      "items": [
+        "Cursor",
+        "Claude Code",
+        "GitHub Copilot",
+        "Google Gemini",
+        "Perplexity.ai",
+        "ChatGPT"
+      ]
+    }
+  ],
+  "experience": [
+    {
+      "title": "Chief Consulting Engineer",
+      "company": "Samuel A. Kirk Consulting",
+      "dateRange": "3/2022 - Present",
+      "location": "Fremont, CA",
+      "bullets": [
+        "Architected and developed full-stack web applications and AI-powered hiring manager tools using TypeScript, React, Next.js, and Tailwind CSS.",
+        "Integrated Google Cloud backend services including Vertex AI, Cloud Firestore, and Cloud Storage for advanced data processing and AI applications.",
+        "Engineered AI-powered photo transformation applications utilizing Google Gemini and Vertex AI deployed on Vercel.",
+        "Conducted self-directed graduate-level study on generative AI applied to software development, testing, and automated documentation."
+      ]
+    },
+    {
+      "title": "Test Engineer III - Embedded Software",
+      "company": "Talis BioMedical",
+      "dateRange": "2/2020 - 3/2022",
+      "location": "Menlo Park, CA",
+      "bullets": [
+        "Developed and verified instrument software using Python for medical point-of-care test instruments.",
+        "Created comprehensive documentation including User Manuals on Confluence and API Reference documentation via Sphinx extensions.",
+        "Performed cellular radio modem testing and supported over-the-air (OTA) verification with specialized RF test equipment.",
+        "Configured complete remote access test platforms for continuous integration and real target testing."
+      ]
+    },
+    {
+      "title": "Software Development Engineer in Test (SDET)",
+      "company": "Excelfore Corp",
+      "dateRange": "10/2018 - 4/2019",
+      "location": "Fremont, CA",
+      "bullets": [
+        "Developed highly object-oriented test frameworks in Python 2.7 for automotive Over-the-Air (OTA) firmware update testing.",
+        "Implemented modular, dynamically loaded test procedures with full resource context management and multi-level logging.",
+        "Created extensive YAML configuration files for test parameterization and streamlined test execution control.",
+        "Utilized Linux utilities and Python modules (Selenium, paramiko, subprocess, json) for robust system integration."
+      ]
+    },
+    {
+      "title": "Sr. Diagnostic Software Engineer",
+      "company": "Cadence Design Systems",
+      "dateRange": "10/2015 - 3/2017",
+      "location": "San Jose, CA",
+      "bullets": [
+        "Developed hardware and software configurations for standalone production test stations running on RHEL 6.3.",
+        "Wrote all analog and digital software in Python 2.7 running on Debian Linux for a 5-microcomputer BeagleBone Black cooling unit test station.",
+        "Created telemetry event data log visualizations using numpy, pandas, and matplotlib across multiple measurement dimensions.",
+        "Constructed SQL databases for parsed, cleaned telemetry data and synchronized environmental data collection with system-level testing."
+      ]
+    },
+    {
+      "title": "Sr. Software Engineer",
+      "company": "LTX-Credence",
+      "dateRange": "10/2012 - 9/2014",
+      "location": "Milpitas, CA",
+      "bullets": [
+        "Designed and implemented timing calibration features for a 192-channel digital Automatic Test Equipment (ATE) instrument using C++ and Python.",
+        "Generated custom XML timing patterns using automated Python scripts to support complex testing configurations.",
+        "Co-designed parallel, binary search object-oriented software components."
+      ]
+    }
+  ],
+  "education": [
+    {
+      "degree": "MS, Applied Math & Systems Sciences",
+      "institution": "University of Louisville",
+      "year": "1982",
+      "details": "Thesis focused on online diagnostic software for digital telephone switch systems."
+    },
+    {
+      "degree": "BA, Philosophy & Mathematics",
+      "institution": "Ohio State University",
+      "year": "1973",
+      "details": ""
+    }
+  ],
+  "additionalSections": [
+    {
+      "title": "Featured Projects",
+      "content": "samkirk.com: Personal portfolio and full-stack application built with TypeScript, React, Next.js, and Google Cloud (Vertex AI, Firestore). Hire Me AI Tools Suite: Vertex AI-powered tools for fit analysis, custom resume generation, and interactive career Q&A. Photo Fun: AI photo transformation app leveraging Google Gemini, Vertex AI, and Firebase."
+    }
+  ]
+}

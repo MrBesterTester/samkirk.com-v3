@@ -1,0 +1,140 @@
+{
+  "header": {
+    "name": "Sam Kirk",
+    "title": "Senior Software Engineer - AI Platform",
+    "email": "sam@samkirk.com",
+    "location": "Fremont, CA",
+    "linkedIn": "linkedin.com/in/samuelkirk",
+    "website": "samkirk.com"
+  },
+  "summary": "Senior Software Engineer and Consultant with extensive experience building full-stack applications, automated testing frameworks, and scalable systems using TypeScript, Python, and cloud infrastructure. Proven expertise in integrating AI platforms and cloud services, developing robust testing pipelines, and leveraging modern AI-assisted development tools.",
+  "skills": [
+    {
+      "category": "Programming Languages",
+      "items": [
+        "TypeScript",
+        "Python",
+        "Rust",
+        "C",
+        "C++"
+      ]
+    },
+    {
+      "category": "Cloud & Infrastructure",
+      "items": [
+        "Google Cloud (GCP)",
+        "Firebase",
+        "Vertex AI",
+        "Google Cloud Firestore",
+        "Linux/Unix",
+        "Git"
+      ]
+    },
+    {
+      "category": "Web & Full-Stack",
+      "items": [
+        "React",
+        "Next.js",
+        "Vite",
+        "Tailwind CSS",
+        "Playwright",
+        "Vitest"
+      ]
+    },
+    {
+      "category": "AI & Testing Frameworks",
+      "items": [
+        "Google Gemini",
+        "Cursor",
+        "Claude Code",
+        "GitHub Copilot",
+        "Selenium",
+        "Pandas",
+        "NumPy",
+        "Matplotlib"
+      ]
+    }
+  ],
+  "experience": [
+    {
+      "title": "Chief Consulting Engineer",
+      "company": "Samuel A. Kirk Consulting",
+      "dateRange": "3/2022 - Present",
+      "location": "Fremont, CA",
+      "bullets": [
+        "Developed full-stack web applications and AI-powered tools using TypeScript, React, Next.js, and Tailwind CSS.",
+        "Built and integrated cloud-backed AI features leveraging Google Cloud Vertex AI, Google Gemini, and Google Cloud Firestore.",
+        "Created custom AI tools and applications including personal portfolio (samkirk.com), hiring manager evaluation tools, and photo transformation utilities.",
+        "Utilized modern AI-assisted development workflows and tools including Cursor, Claude Code, ChatGPT, and Perplexity.ai for full-stack software development and testing.",
+        "Developed backend services using Rust (Axum, Shuttle.rs) for specialized computational web applications."
+      ]
+    },
+    {
+      "title": "Test Engineer III - Embedded Software",
+      "company": "Talis BioMedical",
+      "dateRange": "2/2020 - 3/2022",
+      "location": "Menlo Park, CA",
+      "bullets": [
+        "Developed testing solutions and verification frameworks using Python for medical point-of-care test instruments.",
+        "Created comprehensive technical documentation, user manuals on Confluence, and API reference documentation using Sphinx extensions.",
+        "Conducted verification testing for instrument software, including USB-based updates and regression tests.",
+        "Configured complete remote access test environments for continuous integration and real target testing."
+      ]
+    },
+    {
+      "title": "Software Development Engineer in Test (SDET)",
+      "company": "Excelfore Corp",
+      "dateRange": "10/2018 - 4/2019",
+      "location": "Fremont, CA",
+      "bullets": [
+        "Developed highly object-oriented test frameworks in Python 2.7 for automotive Over-the-Air (OTA) firmware update testing.",
+        "Built scalable test architectures that mediated between cloud servers and hardware sets to verify application logs and updates.",
+        "Implemented concurrent application log tracking, stop-on-fail control, and extensive YAML configuration files for test parameterization.",
+        "Managed source control and issue tracking using GitLab, Jira, and Confluence on Ubuntu Linux."
+      ]
+    },
+    {
+      "title": "Sr. Diagnostic Software Engineer",
+      "company": "Cadence Design Systems",
+      "dateRange": "10/2015 - 3/2017",
+      "location": "San Jose, CA",
+      "bullets": [
+        "Developed hardware and software configurations for standalone Production Test stations running on RHEL 6.3.",
+        "Authored all analog and digital software in Python 2.7 running Debian Linux across BeagleBone Black microcomputers for custom test station calibration and control.",
+        "Created telemetry event data log visualizations and constructed SQL databases using NumPy, Pandas, and Matplotlib.",
+        "Developed environmental data collection and logging synchronous with system-level test execution in Python."
+      ]
+    },
+    {
+      "title": "Sr. Software Engineer",
+      "company": "LTX-Credence",
+      "dateRange": "10/2012 - 9/2014",
+      "location": "Milpitas, CA",
+      "bullets": [
+        "Designed and implemented timing calibration features for digital Automatic Test Equipment (ATE) instruments using C++ and Python.",
+        "Generated custom XML timing patterns using Python scripts to support complex hardware test routines.",
+        "Co-designed multiple applications of generic parallel, binary search object structures."
+      ]
+    }
+  ],
+  "education": [
+    {
+      "degree": "MS, Applied Math & Systems Sciences",
+      "institution": "University of Louisville",
+      "year": "1982",
+      "details": ""
+    },
+    {
+      "degree": "BA, Philosophy & Mathematics",
+      "institution": "Ohio State University",
+      "year": "1973",
+      "details": ""
+    }
+  ],
+  "additionalSections": [
+    {
+      "title": "Key Projects & AI Tools",
+      "content": "samkirk.com: Personal portfolio and full-stack web application built with TypeScript, React, Next.js, Tailwind CSS, Vertex AI, and Firestore. Hire Me AI Tools Suite: Vertex AI-powered tools for hiring managers including fit analysis and custom resume generation. Photo Fun: AI-powered photo transformation app using Google Gemini and Firebase. Tensor Logic: Educational interactive demo bridging neural and symbolic AI with a TypeScript/Vite frontend and Rust/Axum backend."
+    }
+  ]
+}

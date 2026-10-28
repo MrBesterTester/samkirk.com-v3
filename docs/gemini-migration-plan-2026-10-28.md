@@ -4,13 +4,12 @@ Oct 28, 2026, 11:47 AM PDT
 
 ## Next steps
 
-1. **Sam:** run `gcloud auth application-default login` so local tests can reach Vertex AI again (the smoke test failed on expired credentials today). Blocks steps 2–5.
-2. Switch the SDK and model in code (steps A–D below), with every unit test passing.
-3. Run the three tools against the real model and compare them with today's 2.5 Flash fixtures; Sam reviews the side-by-side.
-4. **Sam approves**, then update Vercel production (`VERTEX_AI_MODEL`, `VERTEX_AI_LOCATION`) and deploy.
-5. Live check on samkirk.com/hire-me: fit, résumé, interview.
+1. **Sam:** read [the side-by-side](gemini-side-by-side-2026-10-28.md) and approve 3.5 Flash-Lite (recommended) or choose 3.8 Flash.
+2. **Sam approves step F**, then set Vercel production `VERTEX_AI_MODEL=gemini-3.5-flash-lite` and `VERTEX_AI_LOCATION=global`, merge branch `gemini-3.5-flash-lite` to `main`, and deploy (step G needs the push).
+3. Live check on samkirk.com/hire-me: fit, résumé, interview.
+4. Follow-ups: give `scripts/e2e-real-llm.ts` production's résumé prompt (its own prompt invents Docker on 3.5 Flash-Lite); decide whether résumés under the 600-word floor need a prompt change.
 
-**State:** production runs `gemini-2.5-flash` in `us-central1`, retired by Google on Oct 20, 2026; all three Hire Me tools still answered on Oct 28, so the shutdown is not yet enforced, and it can stop without notice. Nothing has been changed yet.
+**State (Oct 28, 2026, 12:23 PM PDT):** steps A–E are done on local branch `gemini-3.5-flash-lite` (not pushed). 1,457 unit tests, smoke section 10 and the real-LLM E2E pass on `gemini-3.5-flash-lite` at `global`. Production still runs `gemini-2.5-flash` in `us-central1`. Blocked on Sam's approval for F and G.
 
 ## Contents
 
@@ -59,11 +58,11 @@ Gemini 3.6 Flash (retires Nov 19, 2026) and 3.7 Flash (Jan 28, 2027) are too clo
 
 | Step | Change | Proof |
 |---|---|---|
-| A | Replace `@google-cloud/vertexai` with `@google/genai` in `vertex-ai.ts` and both scripts; keep the token accounting (visible plus thinking) | `npm test` passes (all 1,232); `npm run smoke:gcp -- --section=10` passes on the new model |
-| B | `thinkingBudget` → `thinkingLevel` (interview LOW or MINIMAL; fit and résumé at the model default) | Unit tests for interview chat and vertex-ai updated first and failing, then passing |
-| C | Spend-cap prices set to the chosen model | `spend-cap.test.ts` passes with the new constants |
-| D | `.env.local`, `.env.local.example`, fixtures → new model and `global` | `grep -r gemini-2.5-flash web/src web/scripts` returns nothing |
-| E | Real-model run of fit, résumé and interview on the fixtures | `npm run test:e2e:real` passes; no truncation flags; side-by-side with the 2.5 Flash fixtures for Sam |
+| A ✓ | Replace `@google-cloud/vertexai` with `@google/genai` in `vertex-ai.ts` and both scripts; keep the token accounting (visible plus thinking) | `npm test` passes (1,457 on Oct 28); `npm run smoke:gcp -- --section=10` passes on the new model |
+| B ✓ | `thinkingBudget` → `thinkingLevel` (interview MINIMAL, measured; fit and résumé at the model default) | Unit tests for interview chat and vertex-ai updated first and failing, then passing |
+| C ✓ | Spend-cap prices set to the chosen model | `spend-cap.test.ts` passes with the new constants |
+| D ✓ | `.env.local`, `.env.local.example`, fixtures → new model and `global` | `grep -r gemini-2.5-flash web/src web/scripts` returns nothing |
+| E ✓ | Real-model run of fit, résumé and interview on the fixtures | `npm run test:e2e:real` passes; no truncation flags; side-by-side with the 2.5 Flash fixtures for Sam |
 | F | Vercel production variables, then deploy (Sam approves both) | `vercel env run -e production -- printenv VERTEX_AI_MODEL VERTEX_AI_LOCATION` shows the new values |
 | G | Live check | All three tools answer on samkirk.com/hire-me; footer shows the new deploy |
 

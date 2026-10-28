@@ -1,0 +1,143 @@
+{
+  "header": {
+    "name": "Sam Kirk",
+    "title": "Senior Software Engineer - AI Platform",
+    "email": "sam@samkirk.com",
+    "location": "Fremont, CA",
+    "linkedIn": "linkedin.com/in/samuelkirk",
+    "website": "samkirk.com"
+  },
+  "summary": "Senior Software Engineer with 4+ years of dedicated AI-assisted software development and 8+ years of Python expertise, specializing in building robust systems and integrating advanced AI capabilities. Proven ability to leverage Google Cloud Platform (Vertex AI, Firestore) and Large Language Models (LLMs) to design and implement innovative solutions, with a strong professional vision for applying Machine Learning to fault isolation and prognostics.",
+  "skills": [
+    {
+      "category": "Programming Languages",
+      "items": [
+        "Python (8+ years)",
+        "TypeScript (4+ years)",
+        "Rust",
+        "C++",
+        "C"
+      ]
+    },
+    {
+      "category": "Cloud & AI Platforms",
+      "items": [
+        "Google Cloud Platform (Vertex AI, Firestore, Cloud Storage)",
+        "Firebase",
+        "Vercel"
+      ]
+    },
+    {
+      "category": "AI/ML Tools & Concepts",
+      "items": [
+        "LLMs (Google Gemini, Claude Code, ChatGPT, Perplexity.ai)",
+        "AI-Assisted Development (Cursor, GitHub Copilot)",
+        "Prompt Engineering",
+        "AI Paradigms (Bayesian, Neurosymbolic, Neural)",
+        "Data Visualization (NumPy, Pandas, Matplotlib)"
+      ]
+    },
+    {
+      "category": "Web Technologies",
+      "items": [
+        "React",
+        "Next.js",
+        "Vite",
+        "Tailwind CSS"
+      ]
+    },
+    {
+      "category": "Development & Tools",
+      "items": [
+        "Git",
+        "Linux",
+        "Vitest",
+        "Playwright",
+        "YAML",
+        "Selenium",
+        "Confluence",
+        "Jira"
+      ]
+    }
+  ],
+  "experience": [
+    {
+      "title": "Chief Consulting Engineer",
+      "company": "Samuel A. Kirk Consulting",
+      "dateRange": "2022 - Present",
+      "location": "Fremont, CA",
+      "bullets": [
+        "Led full-stack development of AI-powered tools, including a Custom Resume Generator and a Job Fit Analyzer, utilizing TypeScript, React, Next.js, and Google Cloud Platform (Vertex AI, Firestore).",
+        "Developed an AI-powered photo transformation app using Google Gemini, TypeScript, React, and Firebase, prototyped on aistudio.google.com and deployed on Vercel.",
+        "Designed and implemented 'Tensor Logic,' an educational interactive demo bridging neural and symbolic AI paradigms, featuring a TypeScript/Vite frontend and a Rust/Axum backend on Shuttle.rs.",
+        "Utilized advanced LLMs (Claude Code, ChatGPT, Perplexity.ai) and AI-assisted development tools (Cursor, GitHub Copilot) for efficient software development, testing, and documentation.",
+        "Built and maintained personal portfolio website (samkirk.com) integrating AI-powered features and showcasing full-stack development expertise."
+      ]
+    },
+    {
+      "title": "Sr. Diagnostic Software Engineer",
+      "company": "Cadence Design Systems",
+      "dateRange": "2015 - 2017",
+      "location": "San Jose, CA",
+      "bullets": [
+        "Developed Python 2.7 software for 5 BeagleBone Black microcomputers to emulate a 3KW cooling unit, including custom calibration and control of sensors.",
+        "Created telemetry event data log visualization using Python 2.7 with NumPy, Pandas, and Matplotlib for multi-dimensional system monitoring.",
+        "Developed host production test programs within an existing Python framework for rack cooling units.",
+        "Constructed SQL databases for parsed and cleaned telemetry data, enabling time-series plots and cross-tabulation analysis.",
+        "Developed environmental data collection and logging in Python, ensuring time-correlated environmental and system-level test data."
+      ]
+    },
+    {
+      "title": "Software Development Engineer in Test (SDET)",
+      "company": "Excelfore Corp",
+      "dateRange": "2018 - 2019",
+      "location": "Fremont, CA",
+      "bullets": [
+        "Developed a highly object-oriented test framework in Python 2.7 for automotive Over the Air (OTA) firmware update testing, mediating between cloud servers and vehicular hardware.",
+        "Revised test framework for expansion and scalability, implementing three levels of logging and two levels of stop-on-fail control.",
+        "Implemented iteration over modular, dynamically loaded test procedures with full context management of resources.",
+        "Created extensive YAML configuration files for flexible test parameterization and managed concurrent application log following during test execution."
+      ]
+    },
+    {
+      "title": "Sr. Software Engineer",
+      "company": "LTX-Credence",
+      "dateRange": "2012 - 2014",
+      "location": "Milpitas, CA",
+      "bullets": [
+        "Designed and implemented Drive Alignment and Compare Alignment timing calibration in C++ for a 192-channel digital ATE instrument.",
+        "Developed custom Python scripts to generate various XML timing patterns for calibration implementations.",
+        "Co-designed four separate applications of a generic parallel, binary search object for complex calibration tasks."
+      ]
+    },
+    {
+      "title": "Sr. Test Program Engineer",
+      "company": "OCZ Technology",
+      "dateRange": "2010 - 2012",
+      "location": "San Jose, CA",
+      "bullets": [
+        "Developed functional and performance tests for SSDs with SATA, SAS, and PCIe interfaces on Linux platforms using C and Perl.",
+        "Created a Linux PC-based test station platform for JEDEC Endurance Testing with complete physical enumeration of DUTs for power cycle resumption.",
+        "Mentored a new college graduate in SSD test development, guiding them through test methodologies and implementation."
+      ]
+    }
+  ],
+  "education": [
+    {
+      "degree": "MS, Applied Math & Systems Sciences",
+      "institution": "University of Louisville",
+      "year": "1982"
+    },
+    {
+      "degree": "BA, Philosophy & Mathematics",
+      "institution": "Ohio State University",
+      "year": "1973"
+    }
+  ],
+  "additionalSections": [
+    {
+      "title": "Professional Vision & Goals",
+      "content": "Committed to advancing machine learning applications for hardware diagnostics, focusing on fault isolation and prognostics through time-series analysis. Aims to leverage AI for automated testing and anomaly detection in hardware, utilizing Python packages like Hypothesis for property-based testing and AI-assisted code generation with tools like GitHub Copilot. Advocates for an ideal test stack architecture combining robust C/C++ libraries with a Python superstructure for leveraging public domain ML/AI libraries."
+    }
+  ]
+}

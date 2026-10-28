@@ -1,0 +1,149 @@
+{
+  "header": {
+    "name": "Sam Kirk",
+    "title": "Senior Software Engineer - AI Platform & Cloud Services",
+    "email": "sam@samkirk.com",
+    "location": "Fremont, CA"
+  },
+  "summary": "Versatile Senior Software Engineer with over 8 years of Python experience, 4+ years of TypeScript development, and a strong background in AI integration and cloud architectures. Proven expertise in building production applications with Google Cloud Platform, Vertex AI, and Google Gemini, paired with extensive experience developing data analysis pipelines and automated software systems. Accomplished technical leader with a track record of building robust services, engineering data visualization platforms, and mentoring junior engineers.",
+  "skills": [
+    {
+      "category": "Languages",
+      "items": [
+        "Python",
+        "TypeScript",
+        "C++",
+        "C",
+        "Rust",
+        "SQL",
+        "Perl"
+      ]
+    },
+    {
+      "category": "Cloud & AI Platforms",
+      "items": [
+        "Google Cloud Platform (GCP)",
+        "Vertex AI",
+        "Google Gemini",
+        "Google Cloud Firestore",
+        "Firebase",
+        "Cloud Storage"
+      ]
+    },
+    {
+      "category": "Data & Analysis",
+      "items": [
+        "numpy",
+        "pandas",
+        "matplotlib",
+        "Time-Series Analysis",
+        "Data Cleaning",
+        "Cross-Tabulation",
+        "Telemetry Processing"
+      ]
+    },
+    {
+      "category": "Frameworks & Tools",
+      "items": [
+        "Next.js",
+        "React",
+        "Vite",
+        "Tailwind CSS",
+        "Axum",
+        "Linux/Unix (RHEL, Debian, Ubuntu)",
+        "Git",
+        "GitLab"
+      ]
+    },
+    {
+      "category": "Testing & Architecture",
+      "items": [
+        "Vitest",
+        "Playwright",
+        "Selenium",
+        "API Documentation (Sphinx)",
+        "Automated Test Harnesses",
+        "Object-Oriented Design"
+      ]
+    }
+  ],
+  "experience": [
+    {
+      "title": "Chief Consulting Engineer",
+      "company": "Samuel A. Kirk Consulting",
+      "dateRange": "2022 - Present",
+      "bullets": [
+        "Architected and deployed full-stack cloud and AI applications using TypeScript, Next.js, React, Tailwind CSS, and Python, leveraging Google Cloud Platform services including Vertex AI, Firestore, and Cloud Storage.",
+        "Built the 'Hire Me' AI Tools Suite powered by Vertex AI, designing generative AI workflows, automated analysis engines, and interactive chatbot services with source citation and downloadable transcripts.",
+        "Engineered 'Photo Fun', a cloud-hosted generative AI image transformation service built with TypeScript, React, Vite, Firebase, and the Google Gemini model API, successfully migrating prototypes from AI Studio into production on Vertex AI.",
+        "Created 'Tensor Logic', an educational interactive platform bridging neural and symbolic AI paradigms across 8 interactive modules using TypeScript/Vite on the frontend and Rust/Axum on the backend deployed to Shuttle.rs.",
+        "Implemented end-to-end automated testing pipelines utilizing Vitest and Playwright to validate application logic, data flow integrity, and third-party AI API service integrations."
+      ]
+    },
+    {
+      "title": "Test Engineer III - Embedded Software",
+      "company": "Talis BioMedical",
+      "dateRange": "2020 - 2022",
+      "bullets": [
+        "Authored system automation, verification tests, and internal tools using Python for complex point-of-care medical instrument platforms.",
+        "Created an internal technical documentation platform featuring user manuals on Confluence and an automated API reference guide using a custom Sphinx documentation extension hosted internally.",
+        "Proposed and developed architectural blueprints for continuous integration and real-target verification testing, enabling complete remote access and automated execution across all ports, displays, and controls.",
+        "Executed verification and regression testing suites for instrument software and USB-based firmware distribution systems, ensuring regulatory adherence and operational stability."
+      ]
+    },
+    {
+      "title": "Software Development Engineer in Test (SDET)",
+      "company": "Excelfore Corp",
+      "dateRange": "2018 - 2019",
+      "bullets": [
+        "Designed and implemented a scalable, highly object-oriented test framework in Python to mediate between cloud backend servers and distributed vehicular hardware units for OTA firmware validation.",
+        "Built concurrent log monitoring services to follow live application logs during execution, incorporating multi-level logging and two-tier stop-on-fail execution controls.",
+        "Engineered dynamic test procedure loaders with comprehensive resource context management, driven by modular YAML configurations for complex test parameterization.",
+        "Integrated networking and communication utilities across Ubuntu Linux utilizing paramiko, Selenium, subprocess, json, and socket-level serial interfaces, tracking issues via GitLab and Jira."
+      ]
+    },
+    {
+      "title": "Sr. Diagnostic Software Engineer",
+      "company": "Cadence Design Systems",
+      "dateRange": "2015 - 2017",
+      "bullets": [
+        "Engineered large-scale telemetry data processing and visualization tools in Python using numpy, pandas, and matplotlib to analyze complex multi-dimensional system data streams.",
+        "Constructed relational SQL databases for parsing, cleaning, and aggregating high-volume time-series telemetry measurements and status word cross-tabulations.",
+        "Designed time-synchronized data collection software in Python to correlate environmental measurements with system-level event logs across complex digital logic verification systems.",
+        "Co-developed hardware-software configurations for production test stations, writing full-stack analog and digital control software in Python on Debian Linux across multi-node BeagleBone Black architectures."
+      ]
+    },
+    {
+      "title": "Sr. Software Engineer",
+      "company": "LTX-Credence",
+      "dateRange": "2012 - 2014",
+      "bullets": [
+        "Engineered precision timing calibration software for 192-channel digital Automated Test Equipment (ATE) instruments using C++ and Python.",
+        "Developed custom Python automation scripts to generate complex XML-based timing pattern datasets used for digital pin calibration and signal alignment.",
+        "Co-designed and implemented four production applications leveraging a generic parallel binary search object to optimize calibration speed and alignment accuracy."
+      ]
+    },
+    {
+      "title": "Sr. Test Program Engineer",
+      "company": "OCZ Technology",
+      "dateRange": "2010 - 2012",
+      "bullets": [
+        "Mentored a new college graduate in software testing methodology, test development fundamentals, and Linux test automation best practices.",
+        "Developed functional and performance test programs on Linux-based and Flexstar test platforms using C, Perl, Java, and SQL databases.",
+        "Constructed a 32-DUT Linux PC-based endurance test platform from scratch, establishing complete physical device enumeration across serial numbers for state resumption after power cycles."
+      ]
+    }
+  ],
+  "education": [
+    {
+      "degree": "MS, Applied Math & Systems Sciences",
+      "institution": "University of Louisville",
+      "year": "1982"
+    },
+    {
+      "degree": "BA, Philosophy & Mathematics",
+      "institution": "Ohio State University",
+      "year": "1973"
+    }
+  ]
+}

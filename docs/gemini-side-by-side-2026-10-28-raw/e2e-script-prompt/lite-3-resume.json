@@ -1,0 +1,162 @@
+{
+  "header": {
+    "name": "Sam Kirk",
+    "title": "Senior Software & AI Platform Engineer",
+    "email": "sam@samkirk.com",
+    "location": "Fremont, CA"
+  },
+  "summary": "Senior Software Engineer with extensive expertise in Python, TypeScript, Linux, and scalable test and automation frameworks. Proven background designing and productionizing software systems, building robust APIs, and applying machine learning concepts to complex engineering platforms.",
+  "skills": [
+    {
+      "category": "Programming Languages",
+      "items": [
+        "Python",
+        "TypeScript",
+        "C",
+        "C++",
+        "Rust"
+      ]
+    },
+    {
+      "category": "Cloud & Containerization",
+      "items": [
+        "Google Cloud Platform (GCP)",
+        "Vertex AI",
+        "Google Cloud Firestore",
+        "Firebase",
+        "Vercel",
+        "Linux",
+        "Unix"
+      ]
+    },
+    {
+      "category": "Machine Learning & Frameworks",
+      "items": [
+        "Vertex AI",
+        "Google Gemini",
+        "numpy",
+        "pandas",
+        "matplotlib"
+      ]
+    },
+    {
+      "category": "Testing & Automation",
+      "items": [
+        "Selenium",
+        "paramiko",
+        "Vitest",
+        "Playwright",
+        "Automated Testing",
+        "Test Frameworks"
+      ]
+    },
+    {
+      "category": "Tools & Version Control",
+      "items": [
+        "Git",
+        "GitLab",
+        "Jira",
+        "Confluence",
+        "Cursor",
+        "Claude Code",
+        "GitHub Copilot",
+        "Docker/Container ecosystem equivalents"
+      ]
+    }
+  ],
+  "experience": [
+    {
+      "title": "Chief Consulting Engineer",
+      "company": "Samuel A. Kirk Consulting",
+      "dateRange": "2022 - Present",
+      "bullets": [
+        "Architected full-stack applications and AI-powered tools using TypeScript, React, Next.js, and Tailwind CSS.",
+        "Integrated Google Cloud Platform backend services including Vertex AI, Google Cloud Firestore, and Cloud Storage.",
+        "Built specialized hiring manager AI tools suite (How Do I Fit?, Custom Resume Generator, Interview Me NOW) powered by Vertex AI.",
+        "Developed Photo Fun, an AI-powered photo transformation application utilizing Google Gemini and Firebase.",
+        "Employed modern genAI-assisted development environments including Cursor, Claude Code, and GitHub Copilot."
+      ]
+    },
+    {
+      "title": "Test Engineer III - Embedded Software",
+      "company": "Talis BioMedical",
+      "dateRange": "2020 - 2022",
+      "bullets": [
+        "Conducted cellular radio modem testing and supported 3rd-party out-of-house OTA testing using Rohde and Schwarz CMW290.",
+        "Calibrated custom test instruments for controlled pneumatic loading and verified instrument software updates.",
+        "Created comprehensive documentation including User Manuals on Confluence and API Reference documentation using Sphinx.",
+        "Established complete remote access setups for continuous integration and continuous real target testing.",
+        "Investigated and resolved issues across prototype medical point-of-care test instruments."
+      ]
+    },
+    {
+      "title": "Software Development Engineer in Test (SDET)",
+      "company": "Excelfore Corp",
+      "dateRange": "2018 - 2019",
+      "bullets": [
+        "Developed highly object-oriented test frameworks in Python 2.7 for automotive Over-the-Air (OTA) firmware update testing.",
+        "Built frameworks mediating between cloud servers and vehicular hardware sets to verify application logs and OTA updates.",
+        "Implemented concurrent application log following, stop-on-fail control, and resource context management during test execution.",
+        "Created extensive YAML configuration files for test parameterization using Python modules such as Selenium, paramiko, logging, and json.",
+        "Managed source control via GitLab, bug tracking via Jira, and documentation via Confluence on Ubuntu Linux."
+      ]
+    },
+    {
+      "title": "Sr. Diagnostic Software Engineer",
+      "company": "Cadence Design Systems",
+      "dateRange": "2015 - 2017",
+      "bullets": [
+        "Developed hardware and software configuration for standalone Production Test stations in the High-Speed Verification division.",
+        "Wrote all analog and digital software in Python 2.7 running on Debian Linux for BeagleBone Black microcomputers.",
+        "Created telemetry event data log visualization systems using numpy, pandas, and matplotlib.",
+        "Constructed SQL databases for parsed and cleaned data streams from built-in system monitors.",
+        "Developed environmental data collection and logging synchronous with system-level test logging in Python."
+      ]
+    },
+    {
+      "title": "Sr. Software Engineer",
+      "company": "LTX-Credence",
+      "dateRange": "2012 - 2014",
+      "bullets": [
+        "Designed and implemented Span Adjustment, Drive Alignment, and Compare Alignment timing calibration for a 192-channel digital ATE instrument in C++ and Python.",
+        "Generated custom digital pin patterns in XML using custom Python scripts.",
+        "Co-designed four separate applications of a generic parallel, binary search object.",
+        "Focused on Automatic Test Equipment (ATE) and high-speed timing calibration."
+      ]
+    },
+    {
+      "title": "Sr. Test Program Engineer",
+      "company": "OCZ Technology",
+      "dateRange": "2010 - 2012",
+      "bullets": [
+        "Developed functional and performance testing procedures for Solid State Drives (SSDs) with SATA, SAS, and PCIe interfaces.",
+        "Built in-house Linux test frameworks utilizing C, Perl, and gnuplot.",
+        "Developed Reliability Demo Testing (RDT) scripts on Flexstar Java platforms integrated with SQL databases.",
+        "Engineered a Linux PC-based test station platform featuring complete physical enumeration of devices under test by serial number."
+      ]
+    },
+    {
+      "title": "Diagnostic Software Engineer",
+      "company": "Sun Microsystems",
+      "dateRange": "2006 - 2008",
+      "bullets": [
+        "Ported UltraSPARC T1 and UltraSPARC VF CPU Power-On Self Test (POST) software to telco-oriented and NEBS-qualified NEBS chassis.",
+        "Ported online diagnostics for MPC885-based service processors running Linux.",
+        "Resolved over 20 bugs on ethernet loopback test programs across Sun platforms as lead netlbtest engineer.",
+        "Ported detailed register-level simulation tests to online IODiag programs for silicon verification of embedded Network Interface Units (NIU)."
+      ]
+    }
+  ],
+  "education": [
+    {
+      "degree": "MS, Applied Math & Systems Sciences",
+      "institution": "University of Louisville",
+      "year": "1982"
+    },
+    {
+      "degree": "BA, Philosophy & Mathematics",
+      "institution": "Ohio State University",
+      "year": "1973"
+    }
+  ]
+}

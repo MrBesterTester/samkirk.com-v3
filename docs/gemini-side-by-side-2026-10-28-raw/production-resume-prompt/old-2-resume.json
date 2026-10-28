@@ -1,0 +1,162 @@
+{
+  "header": {
+    "name": "Sam Kirk",
+    "title": "Senior Software Engineer, AI Platform",
+    "email": "sam@samkirk.com",
+    "location": "Fremont, CA",
+    "linkedIn": "https://www.linkedin.com/in/samuelkirk/",
+    "website": "https://www.samkirk.com"
+  },
+  "summary": "Highly experienced Senior Software Engineer with 45+ years in Silicon Valley, specializing in AI/ML platform development, automated testing, and diagnostic software. Proven expertise in building scalable ML infrastructure, productionizing models, and developing full-stack applications with Python, TypeScript, and cloud-native AI services. Passionate about applying Machine Learning for fault isolation, anomaly detection, and enhancing software development through GenAI.",
+  "skills": [
+    {
+      "category": "Programming Languages",
+      "items": [
+        "Python (8+ years)",
+        "TypeScript (4+ years)",
+        "C (15+ years)",
+        "C++",
+        "Rust"
+      ]
+    },
+    {
+      "category": "AI/ML & GenAI",
+      "items": [
+        "Vertex AI",
+        "Google Gemini",
+        "LLMs & RAG Systems (Application)",
+        "Prompt Engineering",
+        "AI-Assisted Development (Cursor, Claude Code, ChatGPT, GitHub Copilot)",
+        "Machine Learning for Diagnostics & Prognostics",
+        "Time-Series Analysis"
+      ]
+    },
+    {
+      "category": "Cloud & Infrastructure",
+      "items": [
+        "Google Cloud (Firestore, Vertex AI)",
+        "Firebase",
+        "Vercel",
+        "Shuttle.rs",
+        "Linux/Unix",
+        "CI/CD (Continuous Integration)"
+      ]
+    },
+    {
+      "category": "Frameworks & Libraries",
+      "items": [
+        "React",
+        "Next.js",
+        "Vite",
+        "Tailwind CSS",
+        "numpy",
+        "pandas",
+        "matplotlib",
+        "Selenium",
+        "paramiko",
+        "Vitest",
+        "Playwright"
+      ]
+    },
+    {
+      "category": "Testing & Automation",
+      "items": [
+        "Automated Test Frameworks",
+        "Diagnostic Software",
+        "Test Station Construction",
+        "Property-Based Testing (Conceptual)",
+        "API Testing",
+        "Firmware Testing",
+        "Data Visualization"
+      ]
+    },
+    {
+      "category": "Tools & Methodologies",
+      "items": [
+        "Git",
+        "Jira",
+        "Confluence",
+        "Sphinx",
+        "YAML Configuration",
+        "Object-Oriented Design"
+      ]
+    }
+  ],
+  "experience": [
+    {
+      "title": "Chief Consulting Engineer",
+      "company": "Samuel A. Kirk Consulting",
+      "dateRange": "March 2022 - Present",
+      "location": "Fremont, CA",
+      "bullets": [
+        "Developed AI-powered 'Hire Me' tools suite using Vertex AI, Google Gemini, and Google Cloud Firestore, providing detailed job fit analysis and custom resume generation.",
+        "Built full-stack web applications (samkirk.com, Photo Fun) with TypeScript, React, Next.js, and Google Cloud backend, integrating AI services for interactive experiences.",
+        "Pioneered GenAI-assisted software development using Cursor, Claude Code, and ChatGPT for full-stack development, testing, and up-to-date documentation.",
+        "Designed and implemented 'Tensor Logic' interactive demo, bridging neural and symbolic AI paradigms with a Rust/Axum backend and TypeScript/Vite frontend."
+      ]
+    },
+    {
+      "title": "Sr. Diagnostic Software Engineer",
+      "company": "Cadence Design Systems",
+      "dateRange": "October 2015 - March 2017",
+      "location": "San Jose, CA",
+      "bullets": [
+        "Co-designed and developed a test station for a Cooling Unit, including custom hardware and Python 2.7 software for 5 BeagleBone Black microcomputers.",
+        "Created telemetry event data log visualization using numpy, pandas, and matplotlib, constructing SQL databases for parsed, cleaned data.",
+        "Developed the host production test program for a rack's cooling unit within an existing Python framework for hi-speed digital logic emulation.",
+        "Implemented environmental data collection and logging synchronous with system-level test logging in Python for correlated time-series analysis."
+      ]
+    },
+    {
+      "title": "Test Engineer III - Embedded Software",
+      "company": "Talis BioMedical",
+      "dateRange": "February 2020 - March 2022",
+      "location": "Menlo Park, CA",
+      "bullets": [
+        "Proposed and implemented a fully wrapped instrument testing approach with complete remote access for continuous integration and real target testing.",
+        "Created an API Reference document using a novel Sphinx extension, hosted on an internal web site, enhancing developer and chatbot readability.",
+        "Investigated and proposed solutions for bad audio output in prototype instruments, demonstrating strong diagnostic and problem-solving skills."
+      ]
+    },
+    {
+      "title": "Software Development Engineer in Test (SDET)",
+      "company": "Excelfore Corp",
+      "dateRange": "October 2018 - April 2019",
+      "location": "Fremont, CA",
+      "bullets": [
+        "Developed a highly object-oriented test framework in Python 2.7 for automotive OTA firmware update testing, mediating between cloud server and vehicular hardware.",
+        "Revised the test framework for expansion and scalability, implementing three levels of logging and two levels of stop-on-fail control for execution.",
+        "Created extensive YAML configuration files for test parameterization and managed resources for modular, dynamically loaded test procedures."
+      ]
+    },
+    {
+      "title": "Sr. Software Engineer",
+      "company": "LTX-Credence",
+      "dateRange": "October 2012 - September 2014",
+      "location": "Milpitas, CA",
+      "bullets": [
+        "Designed and implemented Span Adjustment, Drive Alignment, and Compare Alignment timing calibration for a 192-channel digital ATE instrument using C++.",
+        "Developed custom Python scripts for generating many different XML timing patterns, demonstrating early Python usage in test automation.",
+        "Co-designed 4 separate applications of a generic parallel, binary search object, applicable to efficient data processing and analysis."
+      ]
+    }
+  ],
+  "education": [
+    {
+      "degree": "MS, Applied Math & Systems Sciences",
+      "institution": "University of Louisville",
+      "year": "1982"
+    },
+    {
+      "degree": "BA, Philosophy & Mathematics",
+      "institution": "Ohio State University",
+      "year": "1973"
+    }
+  ],
+  "additionalSections": [
+    {
+      "title": "Professional Vision",
+      "content": "Committed to applying Machine Learning to improve diagnostic fault isolation and enable anomaly detection and forecasting of hardware faults (prognostics) using time-series analysis. Advocates for property-based testing with Python packages like Hypothesis and AI-assisted test code generation using tools like GitHub Copilot for white box environments. Proposes an ideal test stack architecture founded on C/C++ libraries wrapped with Python, leveraging public domain ML libraries and PyTest for measurement and evaluation. Utilizes block diagram-driven test methodology for precise fault isolation and inference through tagged test results, enhancing diagnostic capabilities."
+    }
+  ]
+}

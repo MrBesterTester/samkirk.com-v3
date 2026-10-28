@@ -1,0 +1,138 @@
+{
+  "header": {
+    "name": "Sam Kirk",
+    "title": "Senior Software Engineer - AI Platform",
+    "email": "sam@samkirk.com",
+    "location": "Fremont, CA",
+    "linkedIn": "linkedin.com/in/samuelkirk",
+    "website": "samkirk.com"
+  },
+  "summary": "Senior Software Engineer and Chief Consulting Engineer with extensive expertise in full-stack development, Python, TypeScript, and AI-assisted software systems. Proven track record of designing scalable test automation frameworks, data visualization pipelines, and cloud-integrated solutions. Expert in leveraging generative AI tools and cloud platforms to build robust, production-ready applications.",
+  "skills": [
+    {
+      "category": "Programming Languages",
+      "items": [
+        "Python",
+        "TypeScript",
+        "C",
+        "Rust",
+        "C++"
+      ]
+    },
+    {
+      "category": "Cloud & AI Platforms",
+      "items": [
+        "Google Cloud Platform (GCP)",
+        "Vertex AI",
+        "Google Gemini",
+        "Firebase",
+        "Google Cloud Firestore"
+      ]
+    },
+    {
+      "category": "Data & Visualization",
+      "items": [
+        "NumPy",
+        "Pandas",
+        "Matplotlib",
+        "SQL Databases"
+      ]
+    },
+    {
+      "category": "Tools & Frameworks",
+      "items": [
+        "React",
+        "Next.js",
+        "Tailwind CSS",
+        "Git",
+        "Linux/Unix",
+        "Cursor",
+        "Claude Code",
+        "Playwright",
+        "Vitest"
+      ]
+    }
+  ],
+  "experience": [
+    {
+      "title": "Chief Consulting Engineer",
+      "company": "Samuel A. Kirk Consulting",
+      "dateRange": "3/2022 - Present",
+      "location": "Fremont, CA",
+      "bullets": [
+        "Architected and developed samkirk.com, a personal portfolio website with a Google Cloud backend (Vertex AI, Firestore, Cloud Storage) utilizing TypeScript, React, Next.js, and Tailwind CSS.",
+        "Built Vertex AI-powered 'Hire Me' tools for hiring managers, including automated fit analysis, customized resume generation, and interactive Q&A chatbots.",
+        "Developed Photo Fun, an AI-powered photo transformation application utilizing Google Gemini, TypeScript, React, Vite, and Firebase, hosted on Vercel with Vertex AI production integration.",
+        "Utilized advanced genAI development workflows extensively with Cursor, Claude Code, ChatGPT, and Perplexity.ai for full-stack software development, testing, and documentation.",
+        "Engineered Tensor Logic, an interactive educational demo bridging neural and symbolic AI using a TypeScript/Frontend and Rust/Axum backend deployed on Shuttle.rs."
+      ]
+    },
+    {
+      "title": "Test Engineer III - Embedded Software",
+      "company": "Talis BioMedical",
+      "dateRange": "2/2020 - 3/2022",
+      "location": "Menlo Park, CA",
+      "bullets": [
+        "Conducted cellular radio modem testing and supported 3rd-party OTA testing using Rohde and Schwarz CMW290 instrumentation.",
+        "Created comprehensive documentation including a User Manual on Confluence and an API Reference doc using novel Sphinx extensions hosted on internal web sites.",
+        "Performed verification testing for instrument software, executing USB-based updates and manual regression tests.",
+        "Designed complete remote access environments for continuous integration and continuous real-target testing covering all system ports, buttons, and user screens."
+      ]
+    },
+    {
+      "title": "Software Development Engineer in Test (SDET)",
+      "company": "Excelfore Corp",
+      "dateRange": "10/2018 - 4/2019",
+      "location": "Fremont, CA",
+      "bullets": [
+        "Developed a highly object-oriented test framework in Python 2.7 for automotive Over-the-Air (OTA) firmware update testing.",
+        "Implemented framework expansion and scalability featuring 3 levels of logging, stop-on-fail control, and dynamic loading of modular test procedures.",
+        "Created extensive YAML configuration files for test parameterization, utilizing Selenium, paramiko, subprocess, and JSON modules.",
+        "Conducted development in Ubuntu Linux environments utilizing GitLab for source control and Jira for issue tracking."
+      ]
+    },
+    {
+      "title": "Sr. Diagnostic Software Engineer",
+      "company": "Cadence Design Systems",
+      "dateRange": "10/2015 - 3/2017",
+      "location": "San Jose, CA",
+      "bullets": [
+        "Developed hardware and software configurations for 3 standalone Production Test stations in the High-Speed Verification division running RHEL 6.3.",
+        "Co-designed and developed a test station cooling unit featuring a custom Device Interface Board and 5 BeagleBone Black microcomputers, writing all analog and digital software in Python 2.7 on Debian Linux.",
+        "Created telemetry event data log visualization using NumPy, Pandas, and Matplotlib for real-time analysis of streaming status data across multiple measurement dimensions.",
+        "Constructed SQL databases for parsed and cleaned data, synchronously correlating environmental data collection with system-level test logging."
+      ]
+    },
+    {
+      "title": "Sr. Software Engineer",
+      "company": "LTX-Credence",
+      "dateRange": "10/2012 - 9/2014",
+      "location": "Milpitas, CA",
+      "bullets": [
+        "Designed and implemented timing calibration features including Span Adjustment, Drive Alignment, and Compare Alignment for digital ATE instruments using C++ and Python.",
+        "Generated diverse XML timing patterns via custom Python scripts to support complex calibration workflows.",
+        "Co-designed four separate applications utilizing a generic parallel, binary search object."
+      ]
+    }
+  ],
+  "education": [
+    {
+      "degree": "MS, Applied Math & Systems Sciences",
+      "institution": "University of Louisville",
+      "year": "1982",
+      "details": "Thesis: On-line diagnostic program for remote satellite telephone switches"
+    },
+    {
+      "degree": "BA, Philosophy & Mathematics",
+      "institution": "Ohio State University",
+      "year": "1973",
+      "details": ""
+    }
+  ],
+  "additionalSections": [
+    {
+      "title": "Selected Professional Development",
+      "content": "Completed a self-study, graduate-level course on generative AI applied to software development, emphasizing robust testing and developer-readable documentation."
+    }
+  ]
+}

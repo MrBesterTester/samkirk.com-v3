@@ -1,0 +1,37 @@
+{
+  "overallScore": "Partial",
+  "recommendation": "Sam brings extensive software engineering experience with strong proficiency in Python, TypeScript, and Google Cloud/Vertex AI, but he lacks direct experience with required ML frameworks like TensorFlow/PyTorch, containerization tools like Docker and Kubernetes, and building production ML pipelines.",
+  "categories": [
+    {
+      "name": "Technical Skills",
+      "score": "Partial",
+      "rationale": "Sam meets the requirements for Python (8+ years), TypeScript (4+ years), and GCP (Vertex AI, Firestore, Cloud Storage), along with hands-on generative AI integration experience. However, he lacks professional experience with required ML frameworks (TensorFlow, PyTorch), containerization technologies (Docker, Kubernetes), and building distributed ML training or inference infrastructure.",
+      "citations": [
+        "Aggregated Skills Summary > Primary Technologies — Years of Experience",
+        "Employment History > Chief Consulting Engineer — SAK Consulting (Current, 2022-present) > Projects — Software & Web Development",
+        "Areas of Interest"
+      ]
+    },
+    {
+      "name": "Experience Level",
+      "score": "Well",
+      "rationale": "The role requires 5+ years of software engineering experience. Sam easily exceeds this requirement with over 45 years of software, firmware, and test development experience in Silicon Valley, including multiple senior and staff-level engineering roles.",
+      "citations": [
+        "Career Summary",
+        "Career Summary > Cumulative Experience by Role Type"
+      ]
+    },
+    {
+      "name": "Location Fit",
+      "score": "Well",
+      "rationale": "The position is fully remote within the United States. Sam resides in Fremont, CA, satisfying the location requirement.",
+      "citations": [
+        "Samuel A. Kirk > Contact Information"
+      ]
+    }
+  ],
+  "unknowns": [
+    "Whether Sam has unlisted personal or self-study experience with Docker, Kubernetes, TensorFlow, or PyTorch.",
+    "The extent of Sam's distributed systems experience at cloud scale."
+  ]
+}

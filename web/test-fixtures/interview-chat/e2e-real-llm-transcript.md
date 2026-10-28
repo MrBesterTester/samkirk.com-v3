@@ -1,43 +1,51 @@
 # Interview Transcript
 
 **Candidate:** Sam Kirk
-**Date:** 9/2/2026
+**Date:** 10/28/2026
 **Total Messages:** 4
 
 ---
 
-**Interviewer:** *(9:17:35 PM)*
+**Interviewer:** *(12:03:47 PM)*
 
 What programming languages do you know?
 
 ---
 
-**Sam Kirk:** *(9:17:35 PM)*
+**Sam Kirk:** *(12:03:47 PM)*
 
-I have a strong command of several programming languages, developed over my extensive career. My primary languages include:
+Over my 45+ years in Silicon Valley, I have worked with a wide range of programming languages tailored to the needs of embedded firmware, hardware test automation, systems diagnostics, and modern full-stack web development. 
 
-*   **C:** I have over 15 years of experience with C, using it in numerous roles from TRW/Vidar in 1980 through my consulting work in 1998-2000, and at companies like ROLM/IBM, Frox, Media Vision, ESS, Teradyne, Sun Microsystems, and AOptix.
-*   **Python:** I have 8+ years of experience with Python, starting at LTX-Credence in 2012 and continuing through my current consulting work at SAK Consulting. I've utilized it at Talis BioMedical, Excelfore, and Cadence for various applications including automation, data visualization, and embedded software.
-*   **TypeScript:** I have 4+ years of experience with TypeScript, primarily in my current role at SAK Consulting for full-stack web development, including my personal portfolio website and AI tools.
-*   **Rust:** I have 1+ year of experience with Rust, using it for backend development in projects like the Tensor Logic interactive demo at SAK Consulting.
+My primary programming languages include:
+- **C:** My primary systems language with over 15 years of experience across companies like Sun Microsystems, Teradyne, ESS Technology, Media Vision, and AOptix, used heavily for hardware diagnostics, Power-On Self-Test (POST), and embedded firmware.
+- **Python:** Over 8 years of experience, spanning roles from LTX-Credence and Cadence Design Systems to Excelfore, Talis BioMedical, and my current consulting work. I use it extensively for test automation, data visualization (with numpy, pandas, and matplotlib), and scripting.
+- **TypeScript:** 4+ years of professional experience through SAK Consulting (2022–present), building modern full-stack applications, interactive web tools, and my personal portfolio site (`samkirk.com`) using React and Next.js.
+- **Rust:** 1+ years of experience utilizing it for backend development, such as building the backend for my "Tensor Logic" interactive demo using Axum and Shuttle.rs.
+- **Assembly Languages:** Extensive experience (5+ years) writing low-level code, including MC68020/68K, 8080, MC56001 DSP assembly, and Z8000 for firmware, POST, and digital audio subsystems.
+- **C++:** Used during my time at LTX-Credence for developing high-speed timing calibration algorithms on digital ATE instruments.
 
-Additionally, I have experience with C++ (2 years at LTX-Credence), 68K/8080 Assembly (5+ years at Motorola, ROLM/IBM, Frox, and TRW/Vidar), and Perl (at OCZ Technology). I also have a deep understanding of Linux/Unix, which I've used continuously since 1980 across almost all my positions.
+Additionally, I've worked with various scripting and domain-specific tools like Perl, shell scripting, Scilab, and MacPascal across my career in test engineering and diagnostics.
 
 ---
 
-**Interviewer:** *(9:17:35 PM)*
+**Interviewer:** *(12:03:47 PM)*
 
 Tell me about your most recent role.
 
 ---
 
-**Sam Kirk:** *(9:17:35 PM)*
+**Sam Kirk:** *(12:03:47 PM)*
 
-My most recent role is as Chief Consulting Engineer at my own consultancy, Samuel A. Kirk Consulting, which I started in March 2022 and continue to run. In this capacity, I focus heavily on AI-assisted software development, with a particular emphasis on applying generative AI to testing and documentation.
+In my most recent role, I have been working as the Chief Consulting Engineer at my own consultancy, SAK Consulting, based in Fremont, CA, since March 2022. 
 
-My work involves full-stack development using modern technologies such as TypeScript, React, Next.js, and Rust for backend services. I extensively leverage AI tools like Cursor, Claude Code, ChatGPT, and Perplexity.ai for prompt engineering, research, and code generation, becoming adept at what I call being a "ChatBot Boss." I also integrate cloud AI services like Vertex AI and Google Gemini into my projects.
+In this role, I focus on AI-assisted software development and applying generative AI to testing, documentation, and full-stack web engineering. I've spent the last few years completing an intensive self-study graduate-level course on GenAI applied to software development—becoming a journeyman "ChatBot Boss" utilizing tools like Claude Code (with Sonnet), Cursor, Perplexity Pro, and GitHub Copilot.
 
-A significant part of this role has been a self-study in applying genAI to software development, which has led to several impactful projects. These include my personal portfolio website, samkirk.com, and a suite of AI-powered "Hire Me" tools designed for hiring managers. I also developed "Photo Fun," an AI-powered photo transformation app, and various creative and exploratory projects that showcase advanced AI techniques and diverse programming paradigms. Through these projects, I've applied my decades of experience in test automation to ensure robust and well-documented solutions.
+Some of my key projects during this time include:
+- **samkirk.com:** Developing my personal portfolio website and an interactive "Hire Me" AI tools suite (using TypeScript, React, and Next.js backed by Google Cloud Vertex AI and Firestore) which features tools like a job fit analyzer, a custom resume generator, and an interactive interview chatbot.
+- **Tensor Logic:** Building an educational interactive demo bridging neural and symbolic AI, utilizing a TypeScript/Vite frontend and a Rust/Axum backend deployed on Shuttle.rs.
+- **Photo Fun:** Creating an AI-powered photo transformation app using Google Gemini, React, and Firebase.
+
+This consulting work brings together my decades of experience in test automation and systems software with modern, cutting-edge AI tools to build reliable, high-performance applications.
 
 ---
 
