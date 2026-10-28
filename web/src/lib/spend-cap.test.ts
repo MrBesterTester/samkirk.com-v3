@@ -207,6 +207,23 @@ describe("spend-cap module", () => {
     });
   });
 
+  describe("price constants", () => {
+    // gemini-3.5-flash-lite on the global endpoint: $0.30 input / $2.50 output
+    // per 1M tokens (Google's Generative AI pricing page, read 2026-10-28).
+    it("uses the 3.5 Flash-Lite global input price", () => {
+      expect(COST_PER_1K_INPUT_TOKENS_USD).toBe(0.0003);
+    });
+
+    it("uses the 3.5 Flash-Lite global output price", () => {
+      expect(COST_PER_1K_OUTPUT_TOKENS_USD).toBe(0.0025);
+    });
+
+    it("prices a typical résumé call at about $0.012", () => {
+      // Prompt size recorded in resume-generator.ts: ~8,700 in, ~3,900 out.
+      expect(estimateLlmCost(8700, 3900)).toBeCloseTo(0.01236, 5);
+    });
+  });
+
   describe("estimateLlmCost", () => {
     it("calculates cost based on token counts", () => {
       // 1000 input + 1000 output
