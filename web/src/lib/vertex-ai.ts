@@ -309,48 +309,96 @@ async function requestCompletion(
   }
 }
 
-function mapSafetyRatings(
-  ratings: NonNullable<GenerateContentResponse["candidates"]>[number]["safetyRatings"]
-): Array<{ category: string; probability: string }> | undefined {
-  return ratings?.map((r) => ({
+/** Finish reasons that mean the model withheld its answer. */
+const BLOCKED_FINISH_REASONS = new Set([
+  "SAFETY",
+  "PROHIBITED_CONTENT",
+  "BLOCKLIST",
+  "SPII",
+  "IMAGE_SAFETY",
+]);
+
+/**
+ * Turn a response into a GenerateResult: pull out the visible answer, record
+ * spend, and classify failures.
+ *
+ * Spend is recorded before any truncation error is thrown, because Google
+ * bills a truncated call (thinking included) like any other. Thought parts
+ * (`thought: true`) are reasoning, not the answer; they only appear if
+ * includeThoughts is set, but are excluded regardless.
+ *
+ * @param promptText - all prompt text, for estimating tokens if usage is absent
+ * @param throwOnTruncation - true where a fragment would break the caller
+ *   (JSON parsing); the interview labels fragments instead
+ * @throws ContentBlockedError when no answer came back for safety reasons
+ * @throws TruncatedResponseError on MAX_TOKENS (always, if no text came back)
+ * @throws GenerationError when the candidate carries no text otherwise
+ */
+async function finishGeneration(
+  response: GenerateContentResponse,
+  promptText: string,
+  skipSpendCap: boolean,
+  throwOnTruncation: boolean
+): Promise<GenerateResult> {
+  const candidate = response.candidates?.[0];
+  const finishReason = candidate?.finishReason
+    ? String(candidate.finishReason)
+    : undefined;
+  const safetyRatings = candidate?.safetyRatings?.map((r) => ({
     category: String(r.category),
     probability: String(r.probabilityScore ?? r.probability ?? "UNKNOWN"),
   }));
-}
-
-/**
- * Pull the visible answer out of a response.
- *
- * Thought parts (`thought: true`) are the model's reasoning, not its answer;
- * they only appear if includeThoughts is set, but are excluded regardless.
- *
- * @throws ContentBlockedError when no candidate content came back
- * @throws GenerationError when the candidate carries no text
- */
-function extractCandidateText(response: GenerateContentResponse): {
-  candidate: NonNullable<GenerateContentResponse["candidates"]>[number];
-  generatedText: string;
-} {
-  const candidate = response.candidates?.[0];
 
   if (!candidate?.content) {
     throw new ContentBlockedError(
       "Content generation was blocked by safety filters",
-      mapSafetyRatings(candidate?.safetyRatings)
+      safetyRatings
     );
   }
 
-  const textParts = (candidate.content.parts ?? []).filter(
-    (p) => typeof p.text === "string" && !p.thought
-  );
+  const generatedText = (candidate.content.parts ?? [])
+    .filter((p) => typeof p.text === "string" && !p.thought)
+    .map((p) => p.text)
+    .join("");
 
-  if (textParts.length === 0) {
+  const usageMetadata = response.usageMetadata;
+  const inputTokens =
+    usageMetadata?.promptTokenCount ?? estimateTokensFromText(promptText);
+  const outputTokens = billableOutputTokens(usageMetadata, generatedText);
+  const estimatedCostUsd = estimateLlmCost(inputTokens, outputTokens);
+
+  if (!skipSpendCap) {
+    await recordSpendFromTokens(inputTokens, outputTokens);
+  }
+
+  if (generatedText === "") {
+    if (finishReason && BLOCKED_FINISH_REASONS.has(finishReason)) {
+      throw new ContentBlockedError(
+        "Content generation was blocked by safety filters",
+        safetyRatings
+      );
+    }
+    // Thinking can use the whole budget before any answer is written.
+    assertResponseComplete(finishReason, 0);
     throw new GenerationError("No text content in response");
   }
 
+  // A MAX_TOKENS finish means this text is a fragment. Fail here rather than
+  // let a caller parse a truncated string and blame the JSON (A9).
+  if (throwOnTruncation) {
+    assertResponseComplete(finishReason, generatedText.length);
+  }
+
   return {
-    candidate,
-    generatedText: textParts.map((p) => p.text).join(""),
+    text: generatedText,
+    usage: {
+      inputTokens,
+      outputTokens,
+      totalTokens: inputTokens + outputTokens,
+    },
+    estimatedCostUsd,
+    safetyRatings,
+    finishReason,
   };
 }
 
@@ -426,6 +474,7 @@ export async function generateContent(
     topP = 0.9,
     topK = 40,
     skipSpendCap = false,
+    thinkingLevel,
   } = options;
 
   // Enforce spend cap before making the call
@@ -446,44 +495,10 @@ export async function generateContent(
     maxOutputTokens,
     topP,
     topK,
+    thinkingLevel,
   });
-  const { candidate, generatedText } = extractCandidateText(response);
 
-  // A MAX_TOKENS finish means this text is a fragment. Fail here rather than
-  // let a caller parse a truncated string and blame the JSON (A9).
-  assertResponseComplete(
-    candidate.finishReason ? String(candidate.finishReason) : undefined,
-    generatedText.length,
-  );
-
-  // Extract usage metadata
-  const usageMetadata = response.usageMetadata;
-  const inputTokens = usageMetadata?.promptTokenCount ?? estimateTokensFromText(prompt);
-  const outputTokens = billableOutputTokens(usageMetadata, generatedText);
-  const totalTokens = inputTokens + outputTokens;
-
-  // Calculate and record spend
-  const estimatedCostUsd = estimateLlmCost(inputTokens, outputTokens);
-
-  if (!skipSpendCap) {
-    await recordSpendFromTokens(inputTokens, outputTokens);
-  }
-
-  const safetyRatings = mapSafetyRatings(candidate.safetyRatings);
-
-  return {
-    text: generatedText,
-    usage: {
-      inputTokens,
-      outputTokens,
-      totalTokens,
-    },
-    estimatedCostUsd,
-    safetyRatings,
-    finishReason: candidate.finishReason
-      ? String(candidate.finishReason)
-      : undefined,
-  };
+  return finishGeneration(response, prompt, skipSpendCap, true);
 }
 
 /**
@@ -534,43 +549,12 @@ export async function generateContentWithHistory(
     topK,
     thinkingLevel,
   });
-  const { candidate, generatedText } = extractCandidateText(response);
 
-  // NOTE: no truncation guard on this (streaming/interview) path yet. Interview
-  // is confirmed working and returns conversational text where a MAX_TOKENS cut
-  // is degraded-but-usable, not broken JSON. Adding a throwing guard here needs
-  // its own verification of interview's real finishReason first (A9 follow-up).
-
-  // Estimate tokens from full conversation
+  // No truncation guard on this path: interview text is conversational, so a
+  // MAX_TOKENS cut is labelled by the caller (INTERVIEW_TRUNCATION_NOTICE)
+  // rather than thrown.
   const fullPrompt = [...history.map((m) => m.text), newMessage].join("\n\n");
-  const usageMetadata = response.usageMetadata;
-  const inputTokens =
-    usageMetadata?.promptTokenCount ?? estimateTokensFromText(fullPrompt);
-  const outputTokens = billableOutputTokens(usageMetadata, generatedText);
-  const totalTokens = inputTokens + outputTokens;
-
-  // Calculate and record spend
-  const estimatedCostUsd = estimateLlmCost(inputTokens, outputTokens);
-
-  if (!skipSpendCap) {
-    await recordSpendFromTokens(inputTokens, outputTokens);
-  }
-
-  const safetyRatings = mapSafetyRatings(candidate.safetyRatings);
-
-  return {
-    text: generatedText,
-    usage: {
-      inputTokens,
-      outputTokens,
-      totalTokens,
-    },
-    estimatedCostUsd,
-    safetyRatings,
-    finishReason: candidate.finishReason
-      ? String(candidate.finishReason)
-      : undefined,
-  };
+  return finishGeneration(response, fullPrompt, skipSpendCap, false);
 }
 
 // ============================================================================
