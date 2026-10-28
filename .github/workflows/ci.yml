@@ -157,8 +157,12 @@ jobs:
   # shipped. The deploy job's own health check only asks Vercel whether the
   # deployment reached READY — it never requests a page, so a deploy that builds
   # and serves 500s would still pass it.
+  #
+  # Pinned to 24.04: ubuntu-latest now resolves to 26.04, and Playwright only
+  # supports 26.04 from 1.61 (web/ locks 1.58.1), so `playwright install
+  # --with-deps` refuses to run there. Unpin after upgrading @playwright/test.
   smoke-test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     needs: deploy
 
     steps:
