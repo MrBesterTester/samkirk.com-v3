@@ -375,4 +375,40 @@ describe("Gen AI client", () => {
 
     expect(result.finishReason).toBe("MAX_TOKENS");
   });
+
+  it("sends thinkingLevel as the Gemini 3 thinking config", async () => {
+    mockGenerateContent.mockResolvedValue(sdkResponse());
+
+    await generateContentWithHistory([], "Q", {
+      thinkingLevel: "LOW",
+      skipSpendCap: true,
+    });
+
+    expect(mockGenerateContent.mock.calls[0][0].config.thinkingConfig).toEqual({
+      thinkingLevel: "LOW",
+    });
+  });
+
+  it("never sends a thinkingBudget, which Gemini 3 rejects intermittently", async () => {
+    mockGenerateContent.mockResolvedValue(sdkResponse());
+
+    await generateContentWithHistory([], "Q", {
+      thinkingBudget: 256,
+      skipSpendCap: true,
+    } as never);
+
+    expect(
+      mockGenerateContent.mock.calls[0][0].config.thinkingConfig?.thinkingBudget
+    ).toBeUndefined();
+  });
+
+  it("leaves thinking at the model default when no level is given", async () => {
+    mockGenerateContent.mockResolvedValue(sdkResponse());
+
+    await generateContent("Q", { skipSpendCap: true });
+
+    expect(mockGenerateContent.mock.calls[0][0].config).not.toHaveProperty(
+      "thinkingConfig"
+    );
+  });
 });

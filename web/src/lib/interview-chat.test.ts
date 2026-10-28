@@ -665,6 +665,17 @@ describe("processMessage", () => {
       );
     });
 
+    it("asks Gemini 3 for a LOW thinking level, not a token budget", async () => {
+      // Gemini 3 replaces thinkingBudget with thinkingLevel; sending the old
+      // field "can cause intermittent 400: INVALID_ARGUMENT errors" (Google,
+      // Thinking docs). LOW is offered by both 3.5 Flash-Lite and 3.8 Flash.
+      await processMessage(mockConversation, "What are your skills?");
+
+      const options = vi.mocked(generateContentWithHistory).mock.calls[0][2];
+      expect(options).toMatchObject({ thinkingLevel: "LOW" });
+      expect(options).not.toHaveProperty("thinkingBudget");
+    });
+
     it("saves transcript after successful message", async () => {
       await processMessage(mockConversation, "Tell me about your experience");
 
