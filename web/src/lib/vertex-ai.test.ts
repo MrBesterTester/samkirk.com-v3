@@ -411,4 +411,50 @@ describe("Gen AI client", () => {
       "thinkingConfig"
     );
   });
+
+  it("forwards thinkingLevel on single-turn calls too", async () => {
+    mockGenerateContent.mockResolvedValue(sdkResponse());
+
+    await generateContent("Q", { thinkingLevel: "MINIMAL", skipSpendCap: true });
+
+    expect(mockGenerateContent.mock.calls[0][0].config.thinkingConfig).toEqual({
+      thinkingLevel: "MINIMAL",
+    });
+  });
+
+  it("treats a SAFETY finish with no text as blocked, not a failure", async () => {
+    mockGenerateContent.mockResolvedValue(
+      sdkResponse({
+        candidates: [{ content: { role: "model" }, finishReason: "SAFETY" }],
+      })
+    );
+
+    await expect(
+      generateContentWithHistory([], "Q", { skipSpendCap: true })
+    ).rejects.toBeInstanceOf(ContentBlockedError);
+  });
+
+  it("reports truncation when thinking used the whole budget", async () => {
+    mockGenerateContent.mockResolvedValue(
+      sdkResponse({ finishReason: "MAX_TOKENS", parts: [] })
+    );
+
+    await expect(
+      generateContent("Q", { skipSpendCap: true })
+    ).rejects.toBeInstanceOf(TruncatedResponseError);
+  });
+
+  it("records spend for a truncated call, since Google bills it", async () => {
+    const { recordSpendFromTokens } = await import("./spend-cap");
+    vi.mocked(recordSpendFromTokens).mockClear();
+    mockGenerateContent.mockResolvedValue(
+      sdkResponse({ finishReason: "MAX_TOKENS" })
+    );
+
+    await expect(generateContent("Q")).rejects.toBeInstanceOf(
+      TruncatedResponseError
+    );
+    expect(recordSpendFromTokens).toHaveBeenCalledWith(100, 50);
+  });
 });
+
