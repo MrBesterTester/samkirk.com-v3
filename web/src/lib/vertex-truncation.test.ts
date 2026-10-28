@@ -7,7 +7,7 @@ import {
 import { estimateTokensFromText } from "./spend-cap";
 
 /**
- * These exist because of A9 (2026-07-15): after the gemini-2.5-flash swap,
+ * These exist because of A9 (2026-07-15): after the Gemini 2.5 Flash swap,
  * Resume and Fit returned "Failed to parse LLM response as JSON". The JSON was
  * not malformed -- the model hit MAX_TOKENS (thinking ate the budget) and was
  * cut off mid-string. generateContent returned finishReason but no caller read

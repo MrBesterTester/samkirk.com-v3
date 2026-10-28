@@ -75,7 +75,7 @@ export const INTERVIEW_MAX_TOKENS = 3072;
  * Reasoning effort per interview turn.
  *
  * Thinking is billed as output and charged against INTERVIEW_MAX_TOKENS. Left
- * unbounded on gemini-2.5-flash it consumed 901 of the 1024 available on
+ * unbounded on Gemini 2.5 Flash it consumed 901 of the 1024 available on
  * 2026-08-31, leaving 119 for the answer, which was cut off mid-sentence and
  * served as success; a 256-token budget fixed that. Gemini 3 takes a level
  * instead of a budget. LOW keeps reasoning short and is offered by both
