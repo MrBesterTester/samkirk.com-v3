@@ -938,10 +938,11 @@ ${resumeContext}
       contents,
       config: {
         temperature: 0.7,
-        maxOutputTokens: 1024,
+        // Mirror INTERVIEW_MAX_TOKENS and INTERVIEW_THINKING_LEVEL in
+        // src/lib/interview-chat.ts, so this tests what production sends.
+        maxOutputTokens: 3072,
         systemInstruction: systemPrompt,
-        // Mirrors INTERVIEW_THINKING_LEVEL in src/lib/interview-chat.ts.
-        thinkingConfig: { thinkingLevel: ThinkingLevel.LOW },
+        thinkingConfig: { thinkingLevel: ThinkingLevel.MINIMAL },
       },
     });
 
