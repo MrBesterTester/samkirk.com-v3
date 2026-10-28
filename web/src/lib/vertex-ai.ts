@@ -6,6 +6,7 @@ import {
   HarmBlockThreshold,
   GenerateContentResponse,
   Content,
+  ThinkingLevel,
 } from "@google/genai";
 import { getEnv } from "./env";
 import { getGcpCredentials } from "./gcp-credentials";
@@ -19,6 +20,12 @@ import {
 // ============================================================================
 // Types
 // ============================================================================
+
+/** A Gemini 3 thinking level, by name. */
+export type GeminiThinkingLevel = Exclude<
+  keyof typeof ThinkingLevel,
+  "THINKING_LEVEL_UNSPECIFIED"
+>;
 
 /**
  * Configuration options for generating content.
@@ -41,13 +48,16 @@ export interface GenerateOptions {
    */
   maxOutputTokens?: number;
   /**
-   * Cap on internal reasoning tokens for Gemini 2.5 "thinking" models.
+   * Gemini 3 thinking level. Omit to use the model default (MINIMAL on
+   * gemini-3.5-flash-lite, MEDIUM on gemini-3.8-flash).
    *
-   * Thinking is billed as output and counts against `maxOutputTokens`, so an
-   * unbounded budget starves the visible answer (measured 2026-08-31: 901 of
-   * 1024 tokens spent thinking, answer truncated at 119 tokens).
+   * Thinking is billed as output and counts against `maxOutputTokens`, so
+   * unbounded reasoning can starve the visible answer (measured 2026-08-31 on
+   * 2.5 Flash: 901 of 1024 tokens spent thinking, answer truncated at 119).
+   * Gemini 3 replaced the old token `thinkingBudget` with this level; sending
+   * a budget can cause intermittent 400 INVALID_ARGUMENT errors.
    */
-  thinkingBudget?: number;
+  thinkingLevel?: GeminiThinkingLevel;
 
   /**
    * Top-p (nucleus) sampling threshold.
@@ -189,7 +199,7 @@ export function assertResponseComplete(
       `Model response was truncated at the output-token limit ` +
         `(finishReason=MAX_TOKENS, ${outputTextLength} chars produced). ` +
         `This is NOT a JSON parse error -- raise maxOutputTokens or lower the ` +
-        `thinking budget. Thinking tokens count against maxOutputTokens.`,
+        `thinking level. Thinking tokens count against maxOutputTokens.`,
     );
   }
 }
@@ -272,10 +282,10 @@ async function requestCompletion(
     | "maxOutputTokens"
     | "topP"
     | "topK"
-    | "thinkingBudget"
+    | "thinkingLevel"
   >
 ): Promise<GenerateContentResponse> {
-  const { systemInstruction, thinkingBudget, ...sampling } = options;
+  const { systemInstruction, thinkingLevel, ...sampling } = options;
   const env = getEnv();
 
   try {
@@ -286,8 +296,8 @@ async function requestCompletion(
         ...sampling,
         safetySettings: DEFAULT_SAFETY_SETTINGS,
         ...(systemInstruction ? { systemInstruction } : {}),
-        ...(thinkingBudget !== undefined
-          ? { thinkingConfig: { thinkingBudget } }
+        ...(thinkingLevel !== undefined
+          ? { thinkingConfig: { thinkingLevel: ThinkingLevel[thinkingLevel] } }
           : {}),
       },
     });
@@ -496,7 +506,7 @@ export async function generateContentWithHistory(
     topP = 0.9,
     topK = 40,
     skipSpendCap = false,
-    thinkingBudget,
+    thinkingLevel,
   } = options;
 
   // Enforce spend cap before making the call
@@ -522,7 +532,7 @@ export async function generateContentWithHistory(
     maxOutputTokens,
     topP,
     topK,
-    thinkingBudget,
+    thinkingLevel,
   });
   const { candidate, generatedText } = extractCandidateText(response);
 

@@ -1,6 +1,11 @@
 import "server-only";
 
-import { generateContentWithHistory, GenerationError, ContentBlockedError } from "./vertex-ai";
+import {
+  generateContentWithHistory,
+  GenerationError,
+  ContentBlockedError,
+  type GeminiThinkingLevel,
+} from "./vertex-ai";
 import {
   checkGuardrails,
   isPersistentlyOffTopic,
@@ -54,7 +59,7 @@ export const INTERVIEW_TEMPERATURE = 0.7;
  * Maximum output tokens for interview responses (thinking + visible answer).
  *
  * Raised from 1024 on 2026-08-31. With thinking bounded by
- * INTERVIEW_THINKING_BUDGET, a broad question ("walk me through Sam's entire
+ * INTERVIEW_THINKING_LEVEL, a broad question ("walk me through Sam's entire
  * career history") still needed 861 answer tokens and hit the old cap, so
  * hiring managers asking the widest questions got fragments.
  *
@@ -67,15 +72,16 @@ export const INTERVIEW_TEMPERATURE = 0.7;
 export const INTERVIEW_MAX_TOKENS = 3072;
 
 /**
- * Cap on internal reasoning tokens per interview turn.
+ * Reasoning effort per interview turn.
  *
- * gemini-2.5-flash bills thinking as output and charges it against
- * INTERVIEW_MAX_TOKENS. Left unbounded it consumed 901 of the 1024 available
- * on 2026-08-31, leaving 119 for the answer, which was cut off mid-sentence
- * and served as success. Bounding reasoning leaves room for the reply AND
- * lowers real spend, since those 901 tokens were billed but never shown.
+ * Thinking is billed as output and charged against INTERVIEW_MAX_TOKENS. Left
+ * unbounded on gemini-2.5-flash it consumed 901 of the 1024 available on
+ * 2026-08-31, leaving 119 for the answer, which was cut off mid-sentence and
+ * served as success; a 256-token budget fixed that. Gemini 3 takes a level
+ * instead of a budget. LOW keeps reasoning short and is offered by both
+ * gemini-3.5-flash-lite and gemini-3.8-flash (MINIMAL is not, on 3.8).
  */
-export const INTERVIEW_THINKING_BUDGET = 256;
+export const INTERVIEW_THINKING_LEVEL: GeminiThinkingLevel = "LOW";
 
 /**
  * Appended when the model runs out of output budget mid-answer.
@@ -697,7 +703,7 @@ export async function processMessage(
       systemInstruction: systemPrompt,
       temperature: INTERVIEW_TEMPERATURE,
       maxOutputTokens: INTERVIEW_MAX_TOKENS,
-      thinkingBudget: INTERVIEW_THINKING_BUDGET,
+      thinkingLevel: INTERVIEW_THINKING_LEVEL,
     });
     assistantContent = stripChunkReferences(result.text);
 
@@ -711,7 +717,7 @@ export async function processMessage(
           conversationId: conversation.conversationId,
           outputTokens: result.usage.outputTokens,
           maxOutputTokens: INTERVIEW_MAX_TOKENS,
-          thinkingBudget: INTERVIEW_THINKING_BUDGET,
+          thinkingLevel: INTERVIEW_THINKING_LEVEL,
         })
       );
       assistantContent += INTERVIEW_TRUNCATION_NOTICE;

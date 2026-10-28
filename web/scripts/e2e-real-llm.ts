@@ -30,7 +30,7 @@ config({ path: resolve(__dirname, "../.env.local") });
 
 import { Firestore, Timestamp } from "@google-cloud/firestore";
 import { Storage } from "@google-cloud/storage";
-import { GoogleGenAI, type Content } from "@google/genai";
+import { GoogleGenAI, ThinkingLevel, type Content } from "@google/genai";
 import { z } from "zod";
 
 // ============================================================================
@@ -916,6 +916,8 @@ ${resumeContext}
         temperature: 0.7,
         maxOutputTokens: 1024,
         systemInstruction: systemPrompt,
+        // Mirrors INTERVIEW_THINKING_LEVEL in src/lib/interview-chat.ts.
+        thinkingConfig: { thinkingLevel: ThinkingLevel.LOW },
       },
     });
 
