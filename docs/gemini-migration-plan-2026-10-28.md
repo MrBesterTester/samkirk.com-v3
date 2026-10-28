@@ -4,12 +4,11 @@ Oct 28, 2026, 11:47 AM PDT
 
 ## Next steps
 
-1. **Sam:** read [the side-by-side](gemini-side-by-side-2026-10-28.md) and approve 3.5 Flash-Lite (recommended) or choose 3.8 Flash.
-2. **Sam approves step F**, then set Vercel production `VERTEX_AI_MODEL=gemini-3.5-flash-lite` and `VERTEX_AI_LOCATION=global`, merge branch `gemini-3.5-flash-lite` to `main`, and deploy (step G needs the push).
-3. Live check on samkirk.com/hire-me: fit, résumé, interview.
-4. Follow-ups: give `scripts/e2e-real-llm.ts` production's résumé prompt (its own prompt invents Docker on 3.5 Flash-Lite); decide whether résumés under the 600-word floor need a prompt change.
+1. Fix the CI smoke-test job: GitHub's `ubuntu-latest` is now Ubuntu 26.04, which the project's Playwright can't install Chromium on, so every push shows CI red after a successful deploy. Pin the runner to `ubuntu-24.04` or upgrade Playwright.
+2. Give `web/scripts/e2e-real-llm.ts` production's résumé prompt; its own prompt invents Docker skills on 3.5 Flash-Lite.
+3. Decide whether résumés under the 600-word floor (3.5 Flash-Lite gives 490 to 565) need a prompt change. The live fit report also credited "container/full-stack familiarity", which the résumé does not support; watch for it.
 
-**State (Oct 28, 2026, 12:23 PM PDT):** steps A–E are done on local branch `gemini-3.5-flash-lite` (not pushed). 1,457 unit tests, smoke section 10 and the real-LLM E2E pass on `gemini-3.5-flash-lite` at `global`. Production still runs `gemini-2.5-flash` in `us-central1`. Blocked on Sam's approval for F and G.
+**State (Oct 28, 2026, 1:19 PM PDT):** migration done. samkirk.com runs `gemini-3.5-flash-lite` at `global` (deploy `v10-28-2026_12:54`, commit `0d8573e`). The live check passed for fit, résumé and interview. Nothing is blocked.
 
 ## Contents
 
@@ -63,8 +62,8 @@ Gemini 3.6 Flash (retires Nov 19, 2026) and 3.7 Flash (Jan 28, 2027) are too clo
 | C ✓ | Spend-cap prices set to the chosen model | `spend-cap.test.ts` passes with the new constants |
 | D ✓ | `.env.local`, `.env.local.example`, fixtures → new model and `global` | `grep -r gemini-2.5-flash web/src web/scripts` returns nothing |
 | E ✓ | Real-model run of fit, résumé and interview on the fixtures | `npm run test:e2e:real` passes; no truncation flags; side-by-side with the 2.5 Flash fixtures for Sam |
-| F | Vercel production variables, then deploy (Sam approves both) | `vercel env run -e production -- printenv VERTEX_AI_MODEL VERTEX_AI_LOCATION` shows the new values |
-| G | Live check | All three tools answer on samkirk.com/hire-me; footer shows the new deploy |
+| F ✓ | Vercel production variables, then deploy (Sam approves both) | Done Oct 28. Both variables are sensitive, so they read back blank; `vercel env run` reads `web/.env.local` first, so it can't prove production's values either. The live check is the proof. CI deploy passed; the smoke-test job failed to install Chromium on Ubuntu 26.04 (unrelated). |
+| G ✓ | Live check | All three tools answer on samkirk.com/hire-me; footer shows the new deploy. Done Oct 28: fit Average, résumé 5 jobs, interview gave the full 18-role career answer untruncated; all four requests 200 in Vercel logs. |
 
 ## Effort
 
