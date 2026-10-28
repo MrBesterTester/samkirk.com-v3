@@ -30,7 +30,12 @@ config({ path: resolve(__dirname, "../.env.local") });
 
 import { Firestore, Timestamp } from "@google-cloud/firestore";
 import { Storage } from "@google-cloud/storage";
-import { GoogleGenAI, ThinkingLevel, type Content } from "@google/genai";
+import {
+  GoogleGenAI,
+  ThinkingLevel,
+  type Content,
+  type GenerateContentResponse,
+} from "@google/genai";
 import { z } from "zod";
 
 // ============================================================================
@@ -165,6 +170,23 @@ interface ResumeContent {
 // ============================================================================
 // Job Field Extraction (simplified for E2E test)
 // ============================================================================
+
+/**
+ * Log thinking and finish reason, and fail on a truncated answer. A
+ * MAX_TOKENS finish means the text is a fragment; without this check the
+ * interview test passed on an answer cut off mid-sentence (2026-10-28).
+ */
+function assertCompleteResponse(response: GenerateContentResponse, label: string): void {
+  const finishReason = response.candidates?.[0]?.finishReason;
+  const usage = response.usageMetadata;
+  log(
+    `${label}: finishReason=${finishReason ?? "unknown"}, ` +
+      `visible=${usage?.candidatesTokenCount ?? "?"}, thinking=${usage?.thoughtsTokenCount ?? 0}`
+  );
+  if (finishReason === "MAX_TOKENS") {
+    throw new Error(`${label} was truncated at the output-token limit (finishReason=MAX_TOKENS)`);
+  }
+}
 
 function extractJobFields(jobText: string): ExtractedJobFields {
   const textLower = jobText.toLowerCase();
@@ -386,6 +408,7 @@ Analyze how well Sam fits this role. Respond with JSON only (no markdown):
   }
 
   const responseText = response.text ?? "";
+  assertCompleteResponse(response, "Fit response");
 
   log(`Response: ${responseText.length} characters`);
 
@@ -668,6 +691,7 @@ Generate a tailored 2-page professional resume as specified. Remember:
   }
 
   const responseText = response.text ?? "";
+  assertCompleteResponse(response, "Resume response");
 
   log(`Response: ${responseText.length} characters`);
 
@@ -951,6 +975,7 @@ ${resumeContext}
     }
 
     const responseText = response.text ?? "";
+    assertCompleteResponse(response, "Interview response");
 
     log(`Response: ${responseText.length} characters`);
     responses.push(responseText);

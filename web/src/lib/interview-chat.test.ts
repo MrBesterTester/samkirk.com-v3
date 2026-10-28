@@ -665,14 +665,16 @@ describe("processMessage", () => {
       );
     });
 
-    it("asks Gemini 3 for a LOW thinking level, not a token budget", async () => {
+    it("asks Gemini 3 for a MINIMAL thinking level, not a token budget", async () => {
       // Gemini 3 replaces thinkingBudget with thinkingLevel; sending the old
       // field "can cause intermittent 400: INVALID_ARGUMENT errors" (Google,
-      // Thinking docs). LOW is offered by both 3.5 Flash-Lite and 3.8 Flash.
+      // Thinking docs). LOW spent 600-950 thinking tokens per turn on
+      // gemini-3.5-flash-lite and truncated at a 1024 cap (measured
+      // 2026-10-28); MINIMAL finished every answer.
       await processMessage(mockConversation, "What are your skills?");
 
       const options = vi.mocked(generateContentWithHistory).mock.calls[0][2];
-      expect(options).toMatchObject({ thinkingLevel: "LOW" });
+      expect(options).toMatchObject({ thinkingLevel: "MINIMAL" });
       expect(options).not.toHaveProperty("thinkingBudget");
     });
 
